@@ -144,6 +144,7 @@ Ses efektleri sözlerde yazdığı gibi söylensin (ör. "pırt pırt", "güm g�
 Süre: yaklaşık 2:30–3:00.
 ÇOK ÖNEMLİ — GİRİŞ: Şarkı en az 8 saniyelik (4 ölçü) tamamen enstrümantal bir girişle başlasın. İlk 8 saniyede hiçbir vokal, konuşma, koro ya da "hey/la la" sesi olmasın; sadece neşeli melodi çalsın. Giriş konuşması bu enstrümantal girişten SONRA başlasın.
 Her kıta arasında 2 ölçü enstrümantal ara olsun.
+ÇOK ÖNEMLİ — NAKARATLAR: Nakaratlar kıtalardan belirgin şekilde daha hızlı, coşkulu ve dikkat çekici olsun. Tempo aynı kalsın ama nakaratta ritim ikiye katlansın (double-time davul, hızlı el çırpma, zil/tef). Çocuk korosu hep bir ağızdan, enerjik söylesin; ses taklitleri kısa, kesik ve vurgulu olsun, her birinde küçük bir efekt (tahta blok, düdük, "boing"). Nakarattan önce kısa trampet rulosu; final nakaratı bir ton yukarı, alkış ve "hey!" ile bitsin.
 Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama:
 [Enstrümantal giriş — 8 saniye, vokal YOK]
 (sadece müzik)
@@ -154,6 +155,7 @@ Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama:
 [Final] ...
 ```
 
+- **Nakarat neden "tempo aynı, ritim iki kat"?** Animasyon tek bir `BEAT` değeriyle senkronlanıyor; şarkının ortasında BPM değişirse kulak/ponpon/dans vuruşu kayar. Hızlı his, double-time davul ve sık el çırpmayla verilir. Bölüm etiketlerine de tarif yazılır: `[Nakarat — hızlı, coşkulu, koro hep bir ağızdan]`.
 - **Neden 8 sn vokalsiz giriş?** Videonun başında söz hapı yokken "Abone ol" bandı (7 sn) gösteriliyor (§6.6). Gemini yine de erken başlarsa bandı elle `--abone` ile başka bir boşluğa koy.
 - **Ticari kullanım:** Gemini çıktısının ticari hakları belirsiz. Uzun vadede **Suno Pro/Premier** (ticari hak veriyor), insan seslendirmen veya hibrit çözüm önerildi.
 - **Yerel model araştırması:**
