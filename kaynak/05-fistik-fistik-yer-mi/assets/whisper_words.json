@@ -1,0 +1,3925 @@
+{
+ "text": " Fıstık film fıstık yer fıstık yerde ne der? Bir fıstık sana bir fıstık bana Kıtır kıtır kıtırdık bütün fıstığı bitirdik Gural gural gural dert olakta daha varval Kurba kiraz yer, kiraz yer de ne der? Bir kiraz sana, bir kiraz bana Vırak vırak vır vır Kirazlar bitti bir bir Gural gural gural Dal da daha kiraz var Öndek mısır yer Mısır yer de ne der Bir mısır sana Bir mısısır bana, Vak, vak, vak, vak, Mısır bitti, bak, bak, gurul gurul gurul dar, gelin sofrada yer var. Fırsız fil fıstık yer fıstık yer de ne der Bir fıstık sana bir fıstık bana Kıtır kıtır kıtırdık bütün fısta bitirdik Gural gural gural dar Gelin sofra daya var hey Gelin sofra daya var Hey! Her yalan, la la la La la la la la la La la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la",
+ "chunks": [
+  {
+   "text": " Fıstık",
+   "timestamp": [
+    5.16,
+    5.98
+   ]
+  },
+  {
+   "text": " film",
+   "timestamp": [
+    5.98,
+    6.38
+   ]
+  },
+  {
+   "text": " fıstık",
+   "timestamp": [
+    6.38,
+    7.06
+   ]
+  },
+  {
+   "text": " yer",
+   "timestamp": [
+    7.06,
+    7.52
+   ]
+  },
+  {
+   "text": " fıstık",
+   "timestamp": [
+    7.52,
+    8.6
+   ]
+  },
+  {
+   "text": " yerde",
+   "timestamp": [
+    8.6,
+    9
+   ]
+  },
+  {
+   "text": " ne",
+   "timestamp": [
+    9.04,
+    9.4
+   ]
+  },
+  {
+   "text": " der?",
+   "timestamp": [
+    9.4,
+    9.7
+   ]
+  },
+  {
+   "text": " Bir",
+   "timestamp": [
+    9.92,
+    10.14
+   ]
+  },
+  {
+   "text": " fıstık",
+   "timestamp": [
+    10.14,
+    11
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    11,
+    12.2
+   ]
+  },
+  {
+   "text": " bir",
+   "timestamp": [
+    12.2,
+    12.48
+   ]
+  },
+  {
+   "text": " fıstık",
+   "timestamp": [
+    12.48,
+    13
+   ]
+  },
+  {
+   "text": " bana",
+   "timestamp": [
+    13.28,
+    13.92
+   ]
+  },
+  {
+   "text": " Kıtır",
+   "timestamp": [
+    14.48,
+    15.12
+   ]
+  },
+  {
+   "text": " kıtır",
+   "timestamp": [
+    15.12,
+    15.72
+   ]
+  },
+  {
+   "text": " kıtırdık",
+   "timestamp": [
+    15.72,
+    17.06
+   ]
+  },
+  {
+   "text": " bütün",
+   "timestamp": [
+    17.06,
+    17.4
+   ]
+  },
+  {
+   "text": " fıstığı",
+   "timestamp": [
+    17.4,
+    18
+   ]
+  },
+  {
+   "text": " bitirdik",
+   "timestamp": [
+    18.06,
+    19.1
+   ]
+  },
+  {
+   "text": " Gural",
+   "timestamp": [
+    19.18,
+    19.74
+   ]
+  },
+  {
+   "text": " gural",
+   "timestamp": [
+    19.74,
+    20.34
+   ]
+  },
+  {
+   "text": " gural",
+   "timestamp": [
+    20.34,
+    20.96
+   ]
+  },
+  {
+   "text": " dert",
+   "timestamp": [
+    20.96,
+    21.52
+   ]
+  },
+  {
+   "text": " olakta",
+   "timestamp": [
+    21.52,
+    22.22
+   ]
+  },
+  {
+   "text": " daha",
+   "timestamp": [
+    22.22,
+    22.72
+   ]
+  },
+  {
+   "text": " varval",
+   "timestamp": [
+    22.72,
+    28.22
+   ]
+  },
+  {
+   "text": " Kurba",
+   "timestamp": [
+    33.28,
+    34.3
+   ]
+  },
+  {
+   "text": " kiraz",
+   "timestamp": [
+    34.3,
+    34.96
+   ]
+  },
+  {
+   "text": " yer,",
+   "timestamp": [
+    34.96,
+    35.18
+   ]
+  },
+  {
+   "text": " kiraz",
+   "timestamp": [
+    35.48,
+    36.32
+   ]
+  },
+  {
+   "text": " yer",
+   "timestamp": [
+    36.32,
+    36.64
+   ]
+  },
+  {
+   "text": " de",
+   "timestamp": [
+    36.64,
+    36.88
+   ]
+  },
+  {
+   "text": " ne",
+   "timestamp": [
+    36.88,
+    37.3
+   ]
+  },
+  {
+   "text": " der?",
+   "timestamp": [
+    37.3,
+    37.58
+   ]
+  },
+  {
+   "text": " Bir",
+   "timestamp": [
+    37.9,
+    38.2
+   ]
+  },
+  {
+   "text": " kiraz",
+   "timestamp": [
+    38.2,
+    38.88
+   ]
+  },
+  {
+   "text": " sana,",
+   "timestamp": [
+    38.88,
+    39.82
+   ]
+  },
+  {
+   "text": " bir",
+   "timestamp": [
+    40.2,
+    40.58
+   ]
+  },
+  {
+   "text": " kiraz",
+   "timestamp": [
+    40.58,
+    41.16
+   ]
+  },
+  {
+   "text": " bana",
+   "timestamp": [
+    41.16,
+    41.48
+   ]
+  },
+  {
+   "text": " Vırak",
+   "timestamp": [
+    42.48,
+    42.98
+   ]
+  },
+  {
+   "text": " vırak",
+   "timestamp": [
+    42.98,
+    43.62
+   ]
+  },
+  {
+   "text": " vır",
+   "timestamp": [
+    43.62,
+    44.48
+   ]
+  },
+  {
+   "text": " vır",
+   "timestamp": [
+    44.12,
+    44.5
+   ]
+  },
+  {
+   "text": " Kirazlar",
+   "timestamp": [
+    44.76,
+    45.58
+   ]
+  },
+  {
+   "text": " bitti",
+   "timestamp": [
+    45.58,
+    46
+   ]
+  },
+  {
+   "text": " bir",
+   "timestamp": [
+    46.18,
+    46.52
+   ]
+  },
+  {
+   "text": " bir",
+   "timestamp": [
+    46.52,
+    46.96
+   ]
+  },
+  {
+   "text": " Gural",
+   "timestamp": [
+    47.06,
+    47.62
+   ]
+  },
+  {
+   "text": " gural",
+   "timestamp": [
+    47.62,
+    48
+   ]
+  },
+  {
+   "text": " gural",
+   "timestamp": [
+    48.22,
+    48.84
+   ]
+  },
+  {
+   "text": " Dal",
+   "timestamp": [
+    49.06,
+    49.64
+   ]
+  },
+  {
+   "text": " da",
+   "timestamp": [
+    49.64,
+    49.86
+   ]
+  },
+  {
+   "text": " daha",
+   "timestamp": [
+    49.86,
+    50
+   ]
+  },
+  {
+   "text": " kiraz",
+   "timestamp": [
+    50.12,
+    50.62
+   ]
+  },
+  {
+   "text": " var",
+   "timestamp": [
+    50.62,
+    54.1
+   ]
+  },
+  {
+   "text": " Öndek",
+   "timestamp": [
+    61.16,
+    62
+   ]
+  },
+  {
+   "text": " mısır",
+   "timestamp": [
+    62.12,
+    62.8
+   ]
+  },
+  {
+   "text": " yer",
+   "timestamp": [
+    62.8,
+    63.24
+   ]
+  },
+  {
+   "text": " Mısır",
+   "timestamp": [
+    63.26,
+    64
+   ]
+  },
+  {
+   "text": " yer",
+   "timestamp": [
+    64.14,
+    64.48
+   ]
+  },
+  {
+   "text": " de",
+   "timestamp": [
+    64.48,
+    64.74
+   ]
+  },
+  {
+   "text": " ne",
+   "timestamp": [
+    64.74,
+    65.06
+   ]
+  },
+  {
+   "text": " der",
+   "timestamp": [
+    65.06,
+    65.46
+   ]
+  },
+  {
+   "text": " Bir",
+   "timestamp": [
+    65.74,
+    66.02
+   ]
+  },
+  {
+   "text": " mısır",
+   "timestamp": [
+    66.02,
+    66.72
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    66.72,
+    67.54
+   ]
+  },
+  {
+   "text": " Bir",
+   "timestamp": [
+    68.04,
+    68.34
+   ]
+  },
+  {
+   "text": " mısısır",
+   "timestamp": [
+    68.34,
+    69.08
+   ]
+  },
+  {
+   "text": " bana,",
+   "timestamp": [
+    69.08,
+    69.84
+   ]
+  },
+  {
+   "text": " Vak,",
+   "timestamp": [
+    70.26,
+    70.72
+   ]
+  },
+  {
+   "text": " vak,",
+   "timestamp": [
+    70.86,
+    71.24
+   ]
+  },
+  {
+   "text": " vak,",
+   "timestamp": [
+    71.74,
+    71.84
+   ]
+  },
+  {
+   "text": " vak,",
+   "timestamp": [
+    72.02,
+    72.5
+   ]
+  },
+  {
+   "text": " Mısır",
+   "timestamp": [
+    72.52,
+    73.14
+   ]
+  },
+  {
+   "text": " bitti,",
+   "timestamp": [
+    73.14,
+    73.66
+   ]
+  },
+  {
+   "text": " bak,",
+   "timestamp": [
+    73.82,
+    74.44
+   ]
+  },
+  {
+   "text": " bak,",
+   "timestamp": [
+    74.44,
+    74.78
+   ]
+  },
+  {
+   "text": " gurul",
+   "timestamp": [
+    74.98,
+    75.56
+   ]
+  },
+  {
+   "text": " gurul",
+   "timestamp": [
+    75.56,
+    76.12
+   ]
+  },
+  {
+   "text": " gurul",
+   "timestamp": [
+    76.12,
+    76.8
+   ]
+  },
+  {
+   "text": " dar,",
+   "timestamp": [
+    76.8,
+    77.12
+   ]
+  },
+  {
+   "text": " gelin",
+   "timestamp": [
+    77.26,
+    77.72
+   ]
+  },
+  {
+   "text": " sofrada",
+   "timestamp": [
+    77.72,
+    78.24
+   ]
+  },
+  {
+   "text": " yer",
+   "timestamp": [
+    78.24,
+    78.48
+   ]
+  },
+  {
+   "text": " var.",
+   "timestamp": [
+    78.48,
+    79
+   ]
+  },
+  {
+   "text": " Fırsız",
+   "timestamp": [
+    88.74,
+    89.18
+   ]
+  },
+  {
+   "text": " fil",
+   "timestamp": [
+    89.5,
+    89.98
+   ]
+  },
+  {
+   "text": " fıstık",
+   "timestamp": [
+    89.98,
+    90.66
+   ]
+  },
+  {
+   "text": " yer",
+   "timestamp": [
+    90.66,
+    91.12
+   ]
+  },
+  {
+   "text": " fıstık",
+   "timestamp": [
+    91.12,
+    92.04
+   ]
+  },
+  {
+   "text": " yer",
+   "timestamp": [
+    92.04,
+    92.34
+   ]
+  },
+  {
+   "text": " de",
+   "timestamp": [
+    92.34,
+    92.58
+   ]
+  },
+  {
+   "text": " ne",
+   "timestamp": [
+    92.58,
+    93
+   ]
+  },
+  {
+   "text": " der",
+   "timestamp": [
+    93,
+    93.2
+   ]
+  },
+  {
+   "text": " Bir",
+   "timestamp": [
+    93.52,
+    93.76
+   ]
+  },
+  {
+   "text": " fıstık",
+   "timestamp": [
+    93.76,
+    94.6
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    94.6,
+    95.8
+   ]
+  },
+  {
+   "text": " bir",
+   "timestamp": [
+    95.8,
+    96.08
+   ]
+  },
+  {
+   "text": " fıstık",
+   "timestamp": [
+    96.08,
+    96.9
+   ]
+  },
+  {
+   "text": " bana",
+   "timestamp": [
+    96.9,
+    97.36
+   ]
+  },
+  {
+   "text": " Kıtır",
+   "timestamp": [
+    98.08,
+    98.7
+   ]
+  },
+  {
+   "text": " kıtır",
+   "timestamp": [
+    98.7,
+    99.28
+   ]
+  },
+  {
+   "text": " kıtırdık",
+   "timestamp": [
+    99.28,
+    100.66
+   ]
+  },
+  {
+   "text": " bütün",
+   "timestamp": [
+    100.66,
+    100.98
+   ]
+  },
+  {
+   "text": " fısta",
+   "timestamp": [
+    100.98,
+    101.62
+   ]
+  },
+  {
+   "text": " bitirdik",
+   "timestamp": [
+    101.62,
+    102.4
+   ]
+  },
+  {
+   "text": " Gural",
+   "timestamp": [
+    102.74,
+    103.32
+   ]
+  },
+  {
+   "text": " gural",
+   "timestamp": [
+    103.32,
+    103.88
+   ]
+  },
+  {
+   "text": " gural",
+   "timestamp": [
+    103.88,
+    104.88
+   ]
+  },
+  {
+   "text": " dar",
+   "timestamp": [
+    104.88,
+    106
+   ]
+  },
+  {
+   "text": " Gelin",
+   "timestamp": [
+    107.4,
+    107.86
+   ]
+  },
+  {
+   "text": " sofra",
+   "timestamp": [
+    107.86,
+    108.24
+   ]
+  },
+  {
+   "text": " daya",
+   "timestamp": [
+    108.24,
+    108.58
+   ]
+  },
+  {
+   "text": " var",
+   "timestamp": [
+    108.58,
+    109.2
+   ]
+  },
+  {
+   "text": " hey",
+   "timestamp": [
+    109.2,
+    109.98
+   ]
+  },
+  {
+   "text": " Gelin",
+   "timestamp": [
+    107.4,
+    107.88
+   ]
+  },
+  {
+   "text": " sofra",
+   "timestamp": [
+    107.88,
+    108.26
+   ]
+  },
+  {
+   "text": " daya",
+   "timestamp": [
+    108.26,
+    108.58
+   ]
+  },
+  {
+   "text": " var",
+   "timestamp": [
+    108.58,
+    108.96
+   ]
+  },
+  {
+   "text": " Hey!",
+   "timestamp": [
+    109.22,
+    109.78
+   ]
+  },
+  {
+   "text": " Her",
+   "timestamp": [
+    119.22,
+    119.38
+   ]
+  },
+  {
+   "text": " yalan,",
+   "timestamp": [
+    119.38,
+    120.04
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    120.14,
+    120.34
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    120.34,
+    120.62
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    120.62,
+    121
+   ]
+  },
+  {
+   "text": " La",
+   "timestamp": [
+    121.32,
+    121.72
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    121.72,
+    122.04
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    122.04,
+    122.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    122.36,
+    122.62
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    122.62,
+    122.8
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    122.8,
+    123
+   ]
+  },
+  {
+   "text": " La",
+   "timestamp": [
+    123.72,
+    124.02
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    124.02,
+    124.38
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    124.38,
+    124.62
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    124.62,
+    125.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    125.24,
+    125.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    126.38,
+    126.42
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    126.42,
+    126.66
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    126.66,
+    126.8
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    126.8,
+    126.8
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    126.8,
+    126.82
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    126.82,
+    126.82
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    126.82,
+    126.82
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    126.82,
+    127.02
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.02,
+    127.02
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.02,
+    127.06
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.06,
+    127.06
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.06,
+    127.08
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.08,
+    127.08
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.08,
+    127.08
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.08,
+    127.08
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.08,
+    127.08
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.08,
+    127.1
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.1,
+    127.1
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.1,
+    127.1
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.1,
+    127.1
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.1,
+    127.1
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.1,
+    127.28
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.28,
+    127.28
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.28,
+    127.28
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.28,
+    127.28
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.28,
+    127.28
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.28,
+    127.28
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.28,
+    127.34
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.34,
+    127.34
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.34,
+    127.34
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.34,
+    127.34
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.34,
+    127.34
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.34,
+    127.34
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.34,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    127.36
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    127.36,
+    128.12
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.12,
+    128.14
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.14,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.24,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    128.26
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    128.26,
+    129.96
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    129.96,
+    129.96
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    129.96,
+    129.96
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    129.96,
+    129.96
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    129.96,
+    129.96
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    129.96,
+    129.96
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    129.96,
+    129.96
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    129.96,
+    130.04
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    130.04,
+    130.04
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    130.04,
+    130.04
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    130.04,
+    130.04
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    130.04,
+    130.04
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    130.04,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.24
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.24,
+    131.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.7,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.88
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.88,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    131.9
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    131.9,
+    132.42
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.42,
+    132.44
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.44,
+    132.44
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.44,
+    132.44
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.44,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.5
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.5,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.54
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.54,
+    132.64
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.64,
+    132.68
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.68,
+    132.68
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.68,
+    132.68
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    132.68,
+    133
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133,
+    133
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133,
+    133
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133,
+    133
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133,
+    133.32
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.32,
+    133.32
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.32,
+    133.32
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.32,
+    133.32
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.32,
+    133.32
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.32,
+    133.32
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.32,
+    133.32
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.32,
+    133.64
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.64,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    133.7
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    133.7,
+    140.64
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    140.64,
+    140.64
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    140.64,
+    140.64
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    140.64,
+    149.98
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    149.98,
+    149.98
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    149.98,
+    149.98
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    149.98,
+    149.98
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    149.98,
+    149.98
+   ]
+  },
+  {
+   "text": " la",
+   "timestamp": [
+    149.98,
+    120
+   ]
+  }
+ ]
+}
