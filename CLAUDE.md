@@ -429,7 +429,8 @@ await pg.route("**/gsap.min.js", lambda r: r.fulfill(path=GSAP, content_type="ap
 ## 15. Açık işler
 
 - [ ] Kullanıcının Mac işlemcisi ve RAM bilgisi → ACE-Step kurulum rehberi.
-- [ ] Bölüm 2 "Küçük Kurbağa": hikâye, söz ve Gemini promptu.
+- [x] Bölüm 2 "Küçük Kurbağa": hikâye, söz ve Gemini promptu (`kaynak/04-kucuk-kurbaga/gemini-prompt.txt`). Sahne: Video 2'nin dere dekoru + `chars.js` kurbağa/balık/ördek/nilüfer yeniden kullanılacak.
+- [ ] Küçük Kurbağa: kullanıcının Gemini'den şarkıyı üretip yüklemesi bekleniyor.
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
