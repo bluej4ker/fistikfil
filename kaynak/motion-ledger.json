@@ -1,0 +1,131 @@
+{
+  "films": [
+    {
+      "name": "04-kucuk-kurbaga-v1",
+      "date": "2026-10-06",
+      "themes": [],
+      "transitions": [
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push",
+        "camera-push"
+      ],
+      "new_components": [
+        "question-card"
+      ],
+      "entrances": [
+        "letter-drop",
+        "walk-in",
+        "pop-up",
+        "lyric-pill",
+        "card-pop",
+        "lyric-pill",
+        "card-pop",
+        "lyric-pill",
+        "card-pop",
+        "card-pop",
+        "qmark-pop",
+        "card-pop",
+        "trumpet",
+        "message-pop",
+        "letter-drop"
+      ],
+      "eases": [
+        "bounce.out",
+        "power2.inOut",
+        "back.out",
+        "power2.inOut",
+        "back.out",
+        "power2.inOut",
+        "back.out",
+        "power2.inOut",
+        "back.out",
+        "back.out",
+        "power2.inOut",
+        "back.out",
+        "power2.inOut",
+        "power2.inOut",
+        "bounce.out"
+      ]
+    },
+    {
+      "name": "04-kucuk-kurbaga-v2",
+      "date": "2026-10-06",
+      "themes": [],
+      "transitions": [
+        "object-carry-lilypad",
+        "whip-pan",
+        "dolly-out-reveal",
+        "focal-iris-frog",
+        "beat-cut-hold",
+        "match-cut-shape",
+        "flip-reveal",
+        "freeze-rewind",
+        "splash-wipe",
+        "push-through-dive",
+        "object-carry-bubble",
+        "rack-focus",
+        "curtain-open",
+        "speed-ramp",
+        "graphic-match-color",
+        "type-carry",
+        "dolly-out-wide"
+      ],
+      "new_components": [
+        "sticker-chart",
+        "underwater-world",
+        "stage-show"
+      ],
+      "entrances": [
+        "float-in-on-current",
+        "walk-in-follow",
+        "burst-from-water",
+        "wave-hello",
+        "motif:chalk-draw-card",
+        "hop-across-pads",
+        "slam-word",
+        "motif:flip-card-3d",
+        "belly-flop-tries",
+        "motif:slam-word-duet",
+        "bubble-rise",
+        "leaf-fall-card",
+        "spotlight-on",
+        "marquee-bulbs",
+        "trumpet-blast",
+        "parade-hop",
+        "sticker-flip-hearts",
+        "sign-swing"
+      ],
+      "eases": [
+        "sine.inOut",
+        "power1.out",
+        "expo.out",
+        "power2.inOut",
+        "power3.out",
+        "steps(6)",
+        "expo.out",
+        "back.out(1.7)",
+        "back.in(2)",
+        "expo.in",
+        "sine.inOut",
+        "power1.inOut",
+        "power2.in",
+        "power4.out",
+        "expo.out",
+        "back.out(1.4)",
+        "power2.out",
+        "sine.inOut"
+      ]
+    }
+  ]
+}

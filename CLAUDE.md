@@ -142,6 +142,13 @@ Kaynak: https://github.com/tugrawork-creator/saas-motion-kit (`creative/`, `play
 - **Ses:** sıcak efektler (tahta blok, marimba, yaylı "boing", su), saf sinüs bip yok. Video 4: `sfx.py` → şarkının altına `volume=0.32` ile karıştırılır.
 - **Teslim:** 4K render (`--resolution landscape-4k --quality delivery`), gerekirse Lanczos ile küçült.
 - v1 Küçük Kurbağa denetimden 19 uyarıyla kaldı (14 kez aynı "kamera yaklaşması", sürpriz yok); v2 temiz.
+- **Kit v1.4 (Ekim 2026):** sevilen gerçek videolar referans olabilir. `tools/breakdown.py video.mp4 --id 01 --creator … --url …` ile ritmi ölçülür. Çıktı git'e girmeyen `.references/` klasörüne yazılır. Storyboard'un yanındaki `REFERENCES.md`'ye yaratıcı + link yazılır, defter notlarına ref numarası konur. Sadece dil (ritim, yapı, geçiş türü, kamera fikri) ödünç alınır; görüntü, müzik ve karakter asla.
+- **Film geçmişi:** `kaynak/motion-ledger.json`. Her storyboard `variety_audit.py STORYBOARD.md --history kaynak/motion-ledger.json` ile denetlenir. Teslimden sonra `--append "<bölüm-adı>"` ile kaydedilir. v3 taslağında geçmiş, v2'den 13 tekrar yakaladı.
+- **Defter ≠ ekran (v2 dersi):** v2'nin defteri temizdi ama render'da 35,8 sn'lik değişmeyen planlar vardı (sert kesme 1,1 / 10 sn). Bu yüzden **ekran kapıları** zorunlu (`04-kucuk-kurbaga/storyboard/STORYBOARD-v3.md`):
+  - E1: hiçbir kadraj 8 sn'den uzun kalmaz.
+  - E2: söyleyen karakter ekran yüksekliğinin ≥ %35'i olur; karakterler kenarda kesilmez.
+  - E3: vücut parçası, renk gibi kavramlar yazıyla değil şekille anlatılır.
+  - E4: render sonrası kendi filmimize `breakdown.py` çalıştırılır; hedef tutmazsa teslim edilmez.
 
 ---
 
@@ -489,6 +496,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 | Bir svg 1920 px'e şişip kayboldu | `#under > svg` kuralı sonradan eklenen svg'lere de uydu | `:first-child` gibi dar seçici kullan |
 | Bekleme döngüsü hiç bitmedi | `pgrep -f "<desen>"` döngünün kendi komut satırını da buluyor | Bitiş için dosya işareti (`touch DONE`) kullan |
 | Gemini dizeleri atlıyor | Model davranışı | Ekrandaki sözleri gerçekten söylenene göre düzelt |
+| Denetim temiz ama video "slayt gibi" | Defter fikirleri ekrana yansımadı; aynı geniş plan 30+ sn kaldı | Ekran kapıları E1–E4; render'a `breakdown.py` ile kontak sayfası + ritim ölçümü |
 
 ---
 
@@ -507,6 +515,8 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [x] Açılış / kapanış / abone bandı paketi (`kaynak/intro/`, §6.6).
 - [ ] YouTube son ekranı için kapanışın 20 sn'lik bir varyantı (son ekran öğeleri en az 5 sn ister) düşünülebilir.
 - [x] Küçük Kurbağa: şarkı geldi, video + kapak + YouTube metni hazırlandı (`04 - Küçük Kurbağa/`). Yükleme kullanıcıda.
+- [ ] Küçük Kurbağa v3: plan hazır (`storyboard/STORYBOARD-v3.md`, 45 plan, geçmişe karşı denetim temiz). Sırada kullanıcı onayı, ardından eskiz sayfası ve referans videolar.
+- [ ] Kullanıcının kişisel YouTube kanalı: konu/niş bekleniyor (saas-motion-kit ile yapım günlüğü, ürün tanıtımı ve veri görselleştirme fikirleri önerildi).
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
