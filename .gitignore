@@ -1,6 +1,10 @@
-# Büyük medya dosyaları (GitHub 100 MB sınırı) — videolar repoya girmez
+# Büyük medya dosyaları varsayılan olarak dışarıda tutulur (GitHub 100 MB sınırı)
 *.mp4
 *.mov
+# Kayıp Yıldız: kullanıcı tarafından repoya eklenmesi istenen üç Reels
+!/Reels/04 - Kayıp Yıldız/reels-01-yildiza-yardim.mp4
+!/Reels/04 - Kayıp Yıldız/reels-02-gece-dostlari.mp4
+!/Reels/04 - Kayıp Yıldız/reels-03-yildiz-parliyor.mp4
 *.wav
 *.part_*
 # 4K kapak PNG'leri büyük olabilir; YouTube jpg'leri repoda kalır
