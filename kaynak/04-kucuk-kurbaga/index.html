@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Küçük Kurbağa · Fıstık Fil</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      /* Baloo 2 · SIL OFL 1.1 (assets/fonts/OFL-Baloo2.txt) */
+      @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #9BD8FF; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Baloo 2", sans-serif; font-weight: 800; color: #2B2D42;
+              background: linear-gradient(#7CCBFF 0%, #B5E3FF 50%, #E6F6FF 100%); }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      #shake { position: absolute; inset: 0; }
+      .layer { position: absolute; left: 0; top: 0; width: 3840px; height: 1300px; }
+      .layer svg { position: absolute; top: 0; width: 1920px; height: 1300px; overflow: visible; }
+      .full { position: absolute; left: 0; top: 0; width: 1920px; height: 1300px; overflow: visible; }
+      #sun { left: 1600px; top: 50px; width: 230px; height: 230px; transform-origin: 115px 115px; }
+      #charWrap { left: 460px; top: 265px; width: 600px; height: 640px; transform-origin: 300px 620px; }
+      #char { position: absolute; inset: 0; overflow: visible; transform-origin: 300px 620px; }
+      #char svg { width: 600px; height: 640px; overflow: visible; }
+      .snd { left: 0; top: 0; font-size: 96px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 14px #fff; paint-order: stroke fill; text-shadow: 0 8px 0 rgba(0,0,0,.14); transform-origin: 50% 60%; }
+      .bub { width: 22px; height: 22px; border-radius: 50%; border: 4px solid rgba(255,255,255,.95); background: rgba(160,225,255,.35); }
+      .drop { width: 18px; height: 24px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #7FD3F5; border: 3px solid #fff; }
+      .note { font-size: 66px; -webkit-text-stroke: 6px #fff; paint-order: stroke fill; }
+      .conf { width: 20px; height: 28px; border-radius: 5px; }
+      .card { left: 0; top: 0; height: 160px; white-space: nowrap; border-radius: 34px; background: #fff; border: 7px solid #FFC23D; box-shadow: 0 12px 0 rgba(0,0,0,.14);
+              display: flex; align-items: center; gap: 6px; padding: 0 40px 0 14px; transform-origin: 50% 100%; }
+      .card svg.ic { width: 120px; height: 120px; flex: none; }
+      .card .w { font-size: 60px; line-height: 1; padding-top: 10px; white-space: nowrap; }
+      .card .bd { position: absolute; right: -26px; top: -30px; width: 86px; height: 86px; border-radius: 50%; border: 7px solid #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 rgba(0,0,0,.15); }
+      .card .bd svg { width: 50px; height: 50px; }
+      .q { left: 0; top: 0; width: 100px; height: 100px; transform-origin: 50% 100%; }
+      #title { left: 0; right: 0; top: 70px; text-align: center; }
+      .big { display: inline-block; font-size: 150px; line-height: 1; }
+      .big span { display: inline-block; -webkit-text-stroke: 12px #fff; paint-order: stroke fill; text-shadow: 0 9px 0 rgba(0,0,0,.13); }
+      .sub { margin-top: 10px; font-size: 54px; font-weight: 700; line-height: 1.3; color: #fff; display: inline-block; padding: 6px 38px 0; background: #3FA34D; border-radius: 40px; box-shadow: 0 7px 0 rgba(0,0,0,.12); }
+      #bug { left: 40px; top: 36px; padding: 6px 26px 0; border-radius: 30px; background: rgba(255,255,255,.92); font-size: 36px; color: #3D7DD8; }
+      #bug b { color: #F59E1B; }
+      #lyric { left: 0; right: 0; top: 34px; height: 90px; display: flex; justify-content: center; }
+      .line { opacity: 0; position: absolute; top: 0; padding: 4px 40px 0; border-radius: 42px; background: rgba(255,255,255,.95); font-size: 56px; line-height: 78px; white-space: nowrap; color: #8A93A6; box-shadow: 0 6px 0 rgba(0,0,0,.08); }
+      .line span { display: inline-block; margin: 0 11px; }
+      #msg { left: 0; right: 0; top: 175px; text-align: center; opacity: 0; }
+      #msg .big { font-size: 118px; }
+      #end { left: 1000px; right: 20px; top: 240px; text-align: center; opacity: 0; }
+      .bye { margin-top: 10px; font-size: 64px; font-weight: 700; line-height: 1.3; color: #fff; display: inline-block; padding: 8px 40px 0; border-radius: 50px; background: #3D9BFF; }
+      #glow { inset: 0; background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%); opacity: 0; mix-blend-mode: soft-light; }
+      #vignette { inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 62%, rgba(0,30,60,.16) 100%); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="179.23" data-width="1920" data-height="1080">
+      <audio id="song" src="assets/song.mp3" data-start="0" data-duration="179.23" data-volume="1"></audio>
+      <section id="world" class="clip" data-start="0" data-duration="179.23" data-track-index="0" data-layout-allow-overflow>
+        <svg id="sun" class="abs" viewBox="0 0 230 230">
+          <g id="rays" fill="#FFD84D" opacity=".9"></g>
+          <circle cx="115" cy="115" r="66" fill="#FFD84D" stroke="#F5B921" stroke-width="5"/>
+          <ellipse cx="96" cy="108" rx="6" ry="8" fill="#9A5B1E"/><ellipse cx="134" cy="108" rx="6" ry="8" fill="#9A5B1E"/>
+          <ellipse cx="82" cy="126" rx="11" ry="7" fill="#FF9F7A" opacity=".7"/><ellipse cx="148" cy="126" rx="11" ry="7" fill="#FF9F7A" opacity=".7"/>
+          <path d="M98 128 Q115 144 132 128" stroke="#9A5B1E" stroke-width="5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div id="cam" data-layout-allow-overflow>
+          <div id="shake" data-layout-allow-overflow>
+            <svg id="rainbow" class="full" viewBox="0 0 1920 1300"></svg>
+            <div id="Lclouds" class="layer"></div>
+            <div id="Lfar" class="layer"></div>
+            <div id="Lmid" class="layer"></div>
+            <div id="Lground" class="layer"></div>
+            <div id="streamBack" class="full"><svg class="full" viewBox="0 0 1920 1300" id="bedSvg"></svg></div>
+            <div id="charWrap" class="abs"><div id="char"></div></div>
+            <div id="streamFront" class="full"><svg class="full" viewBox="0 0 1920 1300" id="waterSvg"></svg></div>
+            <div id="drops"></div>
+            <div id="bubs"></div>
+            <div id="notes"></div>
+            <div id="cards"></div>
+            <div id="sndBox"></div>
+            <div id="confBox"></div>
+          </div>
+        </div>
+        <div id="glow" class="abs"></div>
+        <div id="vignette" class="abs"></div>
+        <div id="title" class="abs"><div class="big" id="titleBig"></div><br/><div class="sub" id="titleSub">Fıstık Fil ile Hayvanlar</div></div>
+        <div id="bug" class="abs">Fıstık <b>Fil</b></div>
+        <div id="lyric" class="abs"></div>
+        <div id="msg" class="abs"><div class="big" id="msgBig"></div></div>
+        <div id="end" class="abs"><div class="big" id="endBig"></div><br/><div class="bye" id="bye">Hoşça kal!</div></div>
+      </section>
+    </div>
+
+    <script>
+// Fıstık Fil · Küçük Kurbağa — supporting cast (Dere kadrosu + vücut parçası ikonları) (pure SVG strings, outlined, toddler-friendly)
+window.CAST = (function () {
+  const INK = "#2B2D42";
+  // Fish: local origin = body centre, faces right. Groups: .tail, .mHappy, .mO, .mSad, .tear
+  const fish = (c1, c2) => `
+    <g class="tail"><path d="M-58 0 L-98 -34 Q-90 0 -98 34 Z" fill="${c2}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/></g>
+    <path d="M-20 -40 Q0 -70 26 -42 Z" fill="${c2}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+    <ellipse cx="0" cy="0" rx="66" ry="44" fill="${c1}" stroke="${INK}" stroke-width="4.5"/>
+    <path d="M-6 -36 Q-18 0 -6 36" stroke="${c2}" stroke-width="7" fill="none" stroke-linecap="round" opacity=".7"/>
+    <path d="M-30 10 Q-18 22 -6 10" stroke="${c2}" stroke-width="7" fill="none" stroke-linecap="round" opacity=".7"/>
+    <ellipse cx="26" cy="-8" rx="15" ry="17" fill="#fff" stroke="${INK}" stroke-width="3"/>
+    <circle class="pupil" cx="30" cy="-6" r="8.5" fill="${INK}"/><circle cx="33" cy="-10" r="3" fill="#fff"/>
+    <ellipse cx="14" cy="16" rx="9" ry="5" fill="#FF8FAB" opacity=".7"/>
+    <path class="mHappy" d="M46 12 Q54 20 62 10" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <ellipse class="mO" cx="58" cy="12" rx="7" ry="8" fill="#8C2F45" stroke="${INK}" stroke-width="3" opacity="0"/>
+    <path class="mSad" d="M46 18 Q54 9 62 18" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round" opacity="0"/>
+    <path class="tear" d="M24 12 q-6 10 0 14 q6 -4 0 -14z" fill="#6EC6FF" stroke="#2F8FD8" stroke-width="2" opacity="0"/>`;
+  // Frog: origin = bottom centre (sits). Groups: .mHappy .mOpen .mSad .tear .legs
+  const frog = () => `
+    <g class="legs"><ellipse cx="-58" cy="-14" rx="36" ry="18" fill="#58B848" stroke="${INK}" stroke-width="4.5"/><ellipse cx="58" cy="-14" rx="36" ry="18" fill="#58B848" stroke="${INK}" stroke-width="4.5"/></g>
+    <ellipse cx="0" cy="-58" rx="78" ry="60" fill="#6CCB5A" stroke="${INK}" stroke-width="4.5"/>
+    <ellipse cx="0" cy="-40" rx="50" ry="32" fill="#C8F0A8"/>
+    <circle cx="-38" cy="-112" r="30" fill="#6CCB5A" stroke="${INK}" stroke-width="4.5"/><circle cx="38" cy="-112" r="30" fill="#6CCB5A" stroke="${INK}" stroke-width="4.5"/>
+    <circle cx="-38" cy="-114" r="20" fill="#fff" stroke="${INK}" stroke-width="3"/><circle cx="38" cy="-114" r="20" fill="#fff" stroke="${INK}" stroke-width="3"/>
+    <circle cx="-35" cy="-112" r="10" fill="${INK}"/><circle cx="41" cy="-112" r="10" fill="${INK}"/><circle cx="-32" cy="-116" r="3.5" fill="#fff"/><circle cx="44" cy="-116" r="3.5" fill="#fff"/>
+    <ellipse cx="-50" cy="-74" rx="12" ry="7" fill="#FF8FAB" opacity=".7"/><ellipse cx="50" cy="-74" rx="12" ry="7" fill="#FF8FAB" opacity=".7"/>
+    <path class="mHappy" d="M-42 -78 Q0 -48 42 -78" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path class="mOpen" d="M-42 -80 Q0 -84 42 -80 Q0 -30 -42 -80Z" fill="#8C2F45" stroke="${INK}" stroke-width="4.5" stroke-linejoin="round" opacity="0"/>
+    <path class="mSad" d="M-34 -62 Q0 -84 34 -62" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round" opacity="0"/>
+    <path class="tear" d="M-50 -92 q-8 14 0 19 q8 -5 0 -19z" fill="#6EC6FF" stroke="#2F8FD8" stroke-width="2" opacity="0"/>`;
+  // Duck: origin = waterline centre, faces left. Groups: .beakTop .beakBot .mSad .tear .wing
+  const duck = (body, s = 1) => `<g transform="scale(${s})">
+    <path d="M-70 -10 Q-80 -60 -20 -58 L60 -60 Q96 -64 92 -30 Q90 6 40 8 L-50 8 Q-70 6 -70 -10Z" fill="${body}" stroke="${INK}" stroke-width="4.5" stroke-linejoin="round"/>
+    <path d="M78 -52 L100 -78 L94 -42Z" fill="${body}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+    <g class="wing"><path d="M0 -40 Q40 -52 62 -30 Q40 -10 4 -18Z" fill="#fff" stroke="${INK}" stroke-width="3.5" opacity=".9"/></g>
+    <circle cx="-44" cy="-96" r="40" fill="${body}" stroke="${INK}" stroke-width="4.5"/>
+    <circle cx="-56" cy="-104" r="9" fill="${INK}"/><circle cx="-53" cy="-107" r="3" fill="#fff"/>
+    <ellipse cx="-66" cy="-84" rx="9" ry="5" fill="#FF8FAB" opacity=".7"/>
+    <path class="beakTop" d="M-80 -92 Q-112 -94 -114 -84 Q-100 -80 -78 -84Z" fill="#FF9F1C" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>
+    <path class="beakBot" d="M-80 -84 Q-108 -82 -110 -78 Q-96 -70 -78 -78Z" fill="#F07F0C" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>
+    <path class="mSad" d="M-62 -122 L-44 -116" stroke="${INK}" stroke-width="4" stroke-linecap="round" opacity="0"/>
+    <path class="tear" d="M-58 -94 q-6 10 0 14 q6 -4 0 -14z" fill="#6EC6FF" stroke="#2F8FD8" stroke-width="2" opacity="0"/></g>`;
+  const lily = () => `<ellipse cx="0" cy="0" rx="90" ry="26" fill="#4FAE48" stroke="#2E7D32" stroke-width="4"/><path d="M0 0 L60 -20 L66 4Z" fill="#7FD3F5"/>
+    <g transform="translate(-50 -10)"><circle r="12" fill="#FF8FB1"/><circle r="5" fill="#FFD84D"/></g>`;
+  const rock = (w, h, c = "#A8A29E") => `<ellipse cx="0" cy="0" rx="${w}" ry="${h}" fill="${c}" stroke="#6B6560" stroke-width="4"/><ellipse cx="${-w * 0.3}" cy="${-h * 0.35}" rx="${w * 0.3}" ry="${h * 0.2}" fill="#fff" opacity=".25"/>`;
+  const bulb = () => `<g><circle cx="0" cy="0" r="36" fill="#FFE45C" stroke="${INK}" stroke-width="4"/><rect x="-16" y="30" width="32" height="22" rx="5" fill="#B0B7C3" stroke="${INK}" stroke-width="4"/>
+    <path d="M-10 4 Q0 -14 10 4" stroke="#F59E1B" stroke-width="4" fill="none"/>${[0, 45, 90, 135, 180, 225, 315].map((a) => `<rect x="-3" y="-66" width="6" height="18" rx="3" fill="#FFD84D" transform="rotate(${a})"/>`).join("")}</g>`;
+
+  // Body-part icons for the "…nerede?" cards (viewBox -60 -60 120 120)
+  const icon = {
+    kulak: () => `<path d="M6 -48 C40 -50 52 -12 38 12 C30 26 18 28 14 42 C10 54 -10 52 -8 38 C-6 26 6 22 6 10 C6 0 -14 -4 -14 -20 C-14 -38 -8 -46 6 -48Z" fill="#FFC9A8" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M8 -28 C24 -28 28 -10 20 2" stroke="#E89A78" stroke-width="6" fill="none" stroke-linecap="round"/>`,
+    kuyruk: () => `<path d="M-46 30 C-20 34 6 22 10 0 C14 -22 -6 -34 -18 -22 C-28 -12 -18 2 -6 -4" stroke="${INK}" stroke-width="16" fill="none" stroke-linecap="round"/>
+      <path d="M-46 30 C-20 34 6 22 10 0 C14 -22 -6 -34 -18 -22 C-28 -12 -18 2 -6 -4" stroke="#F2A65A" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M22 -30 q24 -14 30 6 q-18 -2 -30 -6z" fill="#F2A65A" stroke="${INK}" stroke-width="4"/>`,
+    ayak: () => `<ellipse cx="0" cy="14" rx="26" ry="34" fill="#FFC9A8" stroke="${INK}" stroke-width="5"/>
+      ${[[-24, -30, 9], [-8, -40, 9], [8, -40, 9], [22, -32, 8], [32, -18, 7]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFC9A8" stroke="${INK}" stroke-width="4"/>`).join("")}`,
+    dis: () => `<path d="M-34 -36 C-34 -50 -14 -48 0 -42 C14 -48 34 -50 34 -36 C34 -14 26 -4 22 20 C18 44 8 46 4 24 C2 14 -2 14 -4 24 C-8 46 -18 44 -22 20 C-26 -4 -34 -14 -34 -36Z" fill="#fff" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M-20 -30 Q-12 -36 -4 -32" stroke="#B9D9F2" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+    filkulak: () => `<path d="M30 -46 C-40 -70 -64 8 -40 38 C-20 62 16 48 30 26 Z" fill="#A6CBF2" stroke="#4C76B5" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M24 -30 C-24 -46 -40 6 -26 26 C-12 42 12 34 24 18 Z" fill="#F7B3C8"/>`,
+  };
+  // little "?" and big sound bubble helpers
+  const qmark = () => `<circle r="44" fill="#fff" stroke="${INK}" stroke-width="5"/><text y="24" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="70" fill="#A66BFF">?</text>`;
+  return { fish, frog, duck, lily, rock, bulb, icon, qmark };
+})();
+
+(function () {
+  window.__timelines = window.__timelines || {};
+  const $ = (s) => document.querySelector(s);
+  const NS = "http://www.w3.org/2000/svg";
+  const D = 179.23, TAU = Math.PI * 2;
+  const TC = ["#3D9BFF", "#FF5A5F", "#FFC23D", "#3FBF6F", "#A66BFF", "#FF7A3D"];
+  const OL = "#4C76B5";
+  const INK = "#2B2D42";
+  const C = window.CAST;
+  const LINES = [{"tag": "intro.1", "who": "fistik", "words": [["Merhaba", 16.76], ["çocuklar!", 17.847], ["Ben", 18.935], ["Fıstık", 19.297], ["Fil!", 20.022]], "end": 20.7}, {"tag": "intro.2", "who": "fistik", "words": [["Bugün", 21.8], ["derede", 22.079], ["yeni", 22.498], ["bir", 22.777], ["arkadaşla", 22.917], ["tanışacağız.", 23.475]], "end": 24.38}, {"tag": "intro.3", "who": "fistik", "words": [["Bakın,", 25.08], ["nilüferin", 25.655], ["üstünde", 26.806], ["kim", 27.669], ["var?", 27.957]], "end": 28.52}, {"tag": "v1.1", "who": "fistik", "words": [["Küçük", 28.88], ["kurbağa,", 29.472], ["küçük", 30.361], ["kurbağa,", 30.954]], "end": 32.1}, {"tag": "v1.2", "who": "fistik", "words": [["Kulağın", 32.8], ["nerede?", 34.364]], "end": 36.2}, {"tag": "v1.3", "who": "frog", "words": [["Kulağım", 36.78], ["yok,", 38.05], ["kulağım", 38.473], ["yok,", 39.742]], "end": 40.46}, {"tag": "v1.4", "who": "frog", "words": [["Yüzerim", 40.72], ["derede!", 41.585]], "end": 42.6}, {"tag": "c1.1", "who": "frog", "words": [["Vırak", 52.74], ["vırak", 53.338], ["vırak,", 53.936], ["vırak", 54.534], ["vırak", 55.132], ["vırak,", 55.73]], "end": 56.64}, {"tag": "c1.2", "who": "frog", "words": [["Zıp", 56.68], ["zıp", 57.019], ["zıplar,", 57.359], ["suya", 58.038], ["dalar,", 58.716], ["şıp!", 59.395]], "end": 60}, {"tag": "v2.1", "who": "fistik", "words": [["Küçük", 60.78], ["kurbağa,", 61.516], ["küçük", 62.62], ["kurbağa,", 63.356]], "end": 64.78}, {"tag": "v2.2", "who": "fistik", "words": [["Kuyruğun", 64.82], ["nerede?", 66.283]], "end": 68}, {"tag": "v2.3", "who": "frog", "words": [["Kuyruğum", 68.86], ["yok,", 70.095], ["kuyruğum", 70.507], ["yok,", 71.742]], "end": 72.44}, {"tag": "v2.4", "who": "frog", "words": [["Yüzerim", 72.76], ["derede!", 73.781]], "end": 74.98}, {"tag": "c2.1", "who": "frog", "words": [["Vırak", 92.58], ["vırak", 93.104], ["vırak,", 93.629], ["vırak", 94.153], ["vırak", 94.678], ["vırak,", 95.202]], "end": 96}, {"tag": "c2.2", "who": "frog", "words": [["Zıp", 96.7], ["zıp", 97.037], ["zıplar,", 97.375], ["suya", 98.049], ["dalar,", 98.724], ["şıp!", 99.399]], "end": 100}, {"tag": "v3.1", "who": "fistik", "words": [["Ufacık", 100.92], ["balık,", 101.958], ["ufacık", 102.65], ["balık,", 103.687]], "end": 104.68}, {"tag": "v3.2", "who": "fistik", "words": [["Ayağın", 105.64], ["nerede?", 106.726]], "end": 108}, {"tag": "v3.3", "who": "fish", "words": [["Ayağım", 109.04], ["yok,", 110.227], ["ayağım", 110.622], ["yok,", 111.809]], "end": 112.48}, {"tag": "v3.4", "who": "fish", "words": [["Yüzerim", 112.68], ["derede!", 114.207]], "end": 116}, {"tag": "v3.5", "who": "fish", "words": [["Blup", 116.6], ["blup", 116.891], ["blup,", 117.183], ["blup", 117.474], ["blup", 117.765], ["blup!", 118.057]], "end": 118.5}, {"tag": "v4.1", "who": "fistik", "words": [["Minicik", 118.7], ["ördek,", 119.224], ["minicik", 119.574], ["ördek,", 120.098]], "end": 120.6}, {"tag": "v4.2", "who": "fistik", "words": [["Dişlerin", 120.68], ["nerede?", 121.287]], "end": 122}, {"tag": "v4.3", "who": "duck", "words": [["Dişlerim", 122.66], ["yok,", 123.322], ["dişlerim", 123.543], ["yok,", 124.206]], "end": 124.58}, {"tag": "v4.4", "who": "duck", "words": [["Vaklarım", 124.74], ["derede!", 125.78]], "end": 127}, {"tag": "v4.5", "who": "duck", "words": [["Vak", 128.76], ["vak", 129.011], ["vak,", 129.263], ["vak", 129.514], ["vak", 129.766], ["vak!", 130.017]], "end": 130.4}, {"tag": "b.1", "who": "frog", "words": [["Peki", 130.6], ["ya", 130.86], ["sen,", 130.99], ["Fıstık?", 131.12], ["Senin", 131.381], ["kulağın", 131.641], ["nerede?", 132.031]], "end": 132.58}, {"tag": "b.2", "who": "fistik", "words": [["Hı", 132.84], ["hı!", 133.091], ["Bakın", 133.343], ["bakın!", 133.846]], "end": 134.48}, {"tag": "v5.1", "who": "frog", "words": [["Minik", 134.58], ["Fıstık", 134.941], ["Fil,", 135.301], ["minik", 135.482], ["Fıstık", 135.842], ["Fil,", 136.203]], "end": 136.54}, {"tag": "v5.2", "who": "frog", "words": [["Kulağın", 136.7], ["nerede?", 137.298]], "end": 138}, {"tag": "v5.3", "who": "fistik", "words": [["Kulağım", 138.66], ["var,", 139.302], ["kocaman", 139.516], ["var,", 140.157]], "end": 140.52}, {"tag": "v5.4", "who": "fistik", "words": [["Sallarım", 140.68], ["derede!", 141.287]], "end": 142}, {"tag": "p.1", "who": "fistik", "words": [["Hortumum", 142.88], ["var,", 144.184], ["hortumum", 144.619], ["var,", 145.923]], "end": 146.66}, {"tag": "p.2", "who": "fistik", "words": [["Pırt", 146.78], ["pırt", 147.336], ["yaparım!", 147.891]], "end": 149.8}, {"tag": "p.3", "who": "fistik", "words": [["Pırt", 150.6], ["pırt", 151.029], ["pırt!", 151.459], ["Pırt", 151.888], ["pırt", 152.317], ["pırt!", 152.747]], "end": 153.4}, {"tag": "f.1", "who": "all", "words": [["Vırak", 154.7], ["vırak,", 155.173], ["vak", 155.646], ["vak", 155.883], ["vak,", 156.119]], "end": 156.5}, {"tag": "f.2", "who": "all", "words": [["Blup", 156.6], ["blup,", 156.931], ["pırt", 157.262], ["pırt", 157.594], ["pırt!", 157.925]], "end": 158.4}, {"tag": "f.3", "who": "all", "words": [["Kimi", 158.6], ["yüzer,", 159.037], ["kimi", 159.474], ["zıplar,", 159.911]], "end": 160.5}, {"tag": "f.4", "who": "all", "words": [["Herkes", 160.8], ["farklı,", 161.145], ["herkes", 161.49], ["güzel!", 161.835]], "end": 162.3}, {"tag": "f.5", "who": "all", "words": [["Vırak", 162.7], ["vırak,", 163.173], ["vak", 163.646], ["vak", 163.883], ["vak,", 164.119]], "end": 164.5}, {"tag": "f.6", "who": "all", "words": [["Blup", 164.7], ["blup,", 164.994], ["pırt", 165.289], ["pırt", 165.583], ["pırt!", 165.878]], "end": 166.3}, {"tag": "f.7", "who": "all", "words": [["Hep", 166.5], ["birlikte,", 166.719], ["hep", 167.374], ["birlikte,", 167.593]], "end": 168.4}, {"tag": "f.8", "who": "all", "words": [["Şarkı", 168.6], ["söyleriz", 169.037], ["derede!", 169.692]], "end": 170.5}, {"tag": "o.1", "who": "fistik", "words": [["Hoşça", 172.84], ["kalın", 173.145], ["çocuklar!", 173.45]], "end": 174}, {"tag": "o.2", "who": "frog", "words": [["Vıraaak!", 175.7]], "end": 176.62}];
+  const BEATS = [0.116, 0.627, 1.138, 1.649, 2.136, 2.647, 3.135, 3.622, 4.133, 4.644, 5.132, 5.642, 6.13, 6.618, 7.152, 7.709, 8.266, 8.824, 9.381, 9.892, 10.379, 10.89, 11.378, 11.889, 12.376, 12.887, 13.375, 13.886, 14.373, 14.884, 15.395, 15.882, 16.393, 16.881, 17.392, 17.879, 18.39, 18.878, 19.389, 19.876, 20.387, 20.875, 21.386, 21.873, 22.384, 22.872, 23.382, 23.893, 24.381, 24.892, 25.379, 25.89, 26.378, 26.889, 27.376, 27.887, 28.398, 28.886, 29.396, 29.884, 30.395, 30.883, 31.393, 31.881, 32.369, 32.879, 33.367, 33.878, 34.366, 34.876, 35.364, 35.875, 36.386, 36.873, 37.384, 37.895, 38.406, 38.94, 39.474, 40.008, 40.542, 41.123, 41.633, 42.144, 42.632, 43.212, 43.77, 44.327, 44.884, 45.372, 45.883, 46.37, 46.881, 47.369, 47.88, 48.367, 48.878, 49.366, 49.876, 50.387, 50.875, 51.386, 51.897, 52.384, 52.872, 53.383, 53.87, 54.381, 54.892, 55.38, 55.867, 56.378, 56.889, 57.377, 57.887, 58.375, 58.886, 59.373, 59.884, 60.372, 60.883, 61.37, 61.881, 62.369, 62.88, 63.367, 63.878, 64.389, 64.877, 65.387, 65.875, 66.386, 66.873, 67.384, 67.895, 68.383, 68.87, 69.381, 69.869, 70.38, 70.891, 71.378, 71.889, 72.377, 72.887, 73.375, 73.886, 74.397, 74.908, 75.395, 75.883, 76.394, 76.881, 77.392, 77.88, 78.391, 78.878, 79.366, 79.877, 80.387, 80.875, 81.386, 81.874, 82.384, 82.872, 83.383, 83.894, 84.381, 84.892, 85.38, 85.891, 86.378, 86.889, 87.377, 87.888, 88.375, 88.886, 89.374, 89.884, 90.465, 91.045, 91.626, 92.137, 92.624, 93.135, 93.623, 94.134, 94.645, 95.132, 95.62, 96.131, 96.618, 97.129, 97.617, 98.128, 98.615, 99.126, 99.637, 100.241, 100.867, 101.378, 101.866, 102.377, 102.888, 103.375, 103.886, 104.374, 104.885, 105.372, 105.883, 106.371, 106.881, 107.369, 107.88, 108.391, 108.878, 109.389, 109.877, 110.388, 110.875, 111.386, 111.874, 112.385, 112.895, 113.383, 113.894, 114.381, 114.892, 115.38, 115.891, 116.402, 116.889, 117.377, 117.888, 118.399, 118.886, 119.374, 119.861, 120.372, 120.883, 121.394, 121.882, 122.369, 122.88, 123.391, 123.902, 124.413, 124.923, 125.411, 125.899, 126.386, 126.874, 127.385, 127.896, 128.383, 128.871, 129.382, 129.892, 130.38, 130.891, 131.379, 131.889, 132.377, 132.888, 133.375, 133.886, 134.374, 134.885, 135.372, 135.883, 136.394, 136.882, 137.369, 137.88, 138.391, 138.879, 139.389, 139.877, 140.388, 140.875, 141.386, 141.874, 142.385, 142.896, 143.383, 143.871, 144.382, 144.893, 145.38, 145.891, 146.379, 146.889, 147.4, 147.888, 148.399, 148.886, 149.397, 149.908, 150.396, 150.883, 151.394, 151.882, 152.393, 152.88, 153.368, 153.879, 154.389, 154.9, 155.388, 155.899, 156.386, 156.897, 157.385, 157.872, 158.383, 158.894, 159.382, 159.893, 160.38, 160.891, 161.379, 161.89, 162.377, 162.888, 163.376, 163.886, 164.374, 164.885, 165.373, 165.883, 166.394, 166.882, 167.369, 167.88, 168.368, 168.879, 169.366, 169.877];
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const smooth = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
+
+  function leg(c) { return `<path d="M-38 -30 L38 -30 L38 74 Q38 104 0 104 Q-38 104 -38 74 Z" fill="${c}"/><path d="M-38 -6 L-38 74 Q-38 104 0 104 Q38 104 38 74 L38 -6" fill="none" stroke="${OL}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+      <g fill="#EEF5FD" stroke="${OL}" stroke-width="2"><ellipse cx="-20" cy="96" rx="9" ry="6"/><ellipse cx="0" cy="99" rx="9" ry="6"/><ellipse cx="20" cy="96" rx="9" ry="6"/></g>`; }
+  function ear() { return `<path d="M222 168 C128 92 26 160 44 278 C60 374 160 386 222 322 Z" fill="url(#gEar)" stroke="${OL}" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M205 196 C140 146 76 192 88 272 C100 336 164 344 205 302 Z" fill="#F7B3C8"/>`; }
+
+  // ───────────────────────── Fıstık rig (SVG) ─────────────────────────
+  $("#char").innerHTML = `
+  <svg viewBox="0 0 600 640">
+    <defs>
+      <radialGradient id="gHead" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#C4E1FD"/><stop offset=".6" stop-color="#A3CAF2"/><stop offset="1" stop-color="#85B1E6"/></radialGradient>
+      <radialGradient id="gBody" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#B5D6F8"/><stop offset="1" stop-color="#7FA9DE"/></radialGradient>
+      <radialGradient id="gEar" cx="60%" cy="40%" r="80%"><stop offset="0" stop-color="#A6CBF2"/><stop offset="1" stop-color="#7DA6DC"/></radialGradient>
+      <linearGradient id="gTrunk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A2C8F1"/><stop offset="1" stop-color="#7AA6DD"/></linearGradient>
+      <linearGradient id="gHat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD966"/><stop offset="1" stop-color="#FFB627"/></linearGradient>
+      <clipPath id="cEyeL"><ellipse cx="248" cy="246" rx="34" ry="41"/></clipPath>
+      <clipPath id="cEyeR"><ellipse cx="352" cy="246" rx="34" ry="41"/></clipPath>
+      <clipPath id="cHat"><path d="M156 196 C160 60 440 60 444 196 Z"/></clipPath>
+    </defs>
+    <g id="rig">
+      <g id="tail"><path d="M432 470 Q482 452 494 492" stroke="${OL}" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M432 470 Q482 452 494 492" stroke="#8DB6E8" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M486 488 q8 22 -2 30 q16 -4 18 -24 z" fill="#5E86C2" stroke="${OL}" stroke-width="3"/></g>
+      <g id="legBL">${leg("#86AEE2")}</g><g id="legBR">${leg("#86AEE2")}</g>
+      <g id="earL">${ear()}</g><g id="earR">${ear()}</g>
+      <ellipse cx="300" cy="462" rx="146" ry="116" fill="url(#gBody)" stroke="${OL}" stroke-width="5"/>
+      <g id="legFL">${leg("#8DB4E6")}</g><g id="legFR">${leg("#8DB4E6")}</g>
+      <ellipse cx="300" cy="482" rx="92" ry="66" fill="#D3E7FA"/>
+      <g id="head">
+        <ellipse cx="300" cy="236" rx="152" ry="141" fill="url(#gHead)" stroke="${OL}" stroke-width="5"/>
+        <g id="hat">
+          <path d="M156 196 C160 60 440 60 444 196 Q300 170 156 196Z" fill="url(#gHat)" stroke="#D9861A" stroke-width="5"/>
+          <g clip-path="url(#cHat)" opacity=".9"><path d="M150 120 Q300 92 450 120" stroke="#FF8A3D" stroke-width="16" fill="none"/><path d="M150 152 Q300 126 450 152" stroke="#FF8A3D" stroke-width="16" fill="none"/></g>
+          <path d="M150 194 Q300 160 450 194 L452 218 Q300 186 148 218Z" fill="#FF9F1C" stroke="#D9861A" stroke-width="5" stroke-linejoin="round"/>
+          <g id="pom"><circle cx="300" cy="74" r="30" fill="#FF6B4A" stroke="#C94A2E" stroke-width="5"/><circle cx="290" cy="64" r="9" fill="#FF9F86"/></g>
+        </g>
+        <ellipse cx="203" cy="304" rx="27" ry="16" fill="#FF8FAB" opacity=".7"/><ellipse cx="397" cy="304" rx="27" ry="16" fill="#FF8FAB" opacity=".7"/>
+        <g id="eyes">
+          <ellipse cx="248" cy="246" rx="34" ry="41" fill="#fff" stroke="#2B2D42" stroke-width="3.5"/>
+          <ellipse cx="352" cy="246" rx="34" ry="41" fill="#fff" stroke="#2B2D42" stroke-width="3.5"/>
+          <g id="pupils">
+            <circle cx="254" cy="254" r="24" fill="#2B2D42"/><circle cx="358" cy="254" r="24" fill="#2B2D42"/>
+            <circle cx="263" cy="243" r="8.5" fill="#fff"/><circle cx="367" cy="243" r="8.5" fill="#fff"/>
+            <circle cx="248" cy="265" r="3.8" fill="#fff"/><circle cx="352" cy="265" r="3.8" fill="#fff"/>
+          </g>
+          <g clip-path="url(#cEyeL)"><rect id="lidL" x="210" y="200" width="80" height="0" fill="#9EC6F0"/></g>
+          <g clip-path="url(#cEyeR)"><rect id="lidR" x="314" y="200" width="80" height="0" fill="#9EC6F0"/></g>
+        </g>
+        <clipPath id="cMouth"><path id="mouthClip" d=""/></clipPath><path id="mouth" d="" fill="#8C2F45" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+        <g clip-path="url(#cMouth)"><ellipse id="tongue" cx="252" cy="350" rx="16" ry="0" fill="#FF8FA3"/></g>
+        <g id="trunk"><path id="trunkShadow" fill="rgba(40,70,130,.22)" transform="translate(7 9)"/><path id="trunkFill" fill="url(#gTrunk)"/><path id="trunkLine" fill="none" stroke="${OL}" stroke-width="5" stroke-linejoin="round"/>
+          <path id="trunkWr" fill="none" stroke="#6F9AD3" stroke-width="4" stroke-linecap="round"/><ellipse id="nostril" rx="12" ry="7" fill="#6F9AD3"/></g>
+      </g>
+    </g>
+  </svg>`;
+  const E = (id) => document.getElementById(id);
+  const el = { rig: E("rig"), tail: E("tail"), earL: E("earL"), earR: E("earR"), head: E("head"), pom: E("pom"), pupils: E("pupils"),
+    lidL: E("lidL"), lidR: E("lidR"), mouth: E("mouth"), mclip: E("mouthClip"), tongue: E("tongue"), tf: E("trunkFill"), ts: E("trunkShadow"), tl: E("trunkLine"), tw: E("trunkWr"), nos: E("nostril"),
+    legs: [E("legFL"), E("legFR"), E("legBL"), E("legBR")] };
+  const LEGP = [[250, 518, 0], [350, 518, Math.PI], [218, 500, Math.PI], [382, 500, 0]];  // pivot x,y, phase
+
+  // trunk geometry: base at TB, TN segments, direction A + C·f²
+  const TB = [300, 298], TN = 9, TL = 22;
+  function trunkGeom(A, C, TLx = TL) {
+    const P = [[TB[0], TB[1]]], ANG = [];
+    for (let i = 0; i < TN; i++) { const f = i / (TN - 1), a = (A + C * f * f) * Math.PI / 180; ANG.push(a);
+      const p = P[P.length - 1]; P.push([p[0] + TLx * Math.cos(a), p[1] + TLx * Math.sin(a)]); }
+    ANG.push(ANG[ANG.length - 1]);
+    return { P, ANG };
+  }
+  function drawTrunk(A, C, Lx) {
+    const { P, ANG } = trunkGeom(A, C, Lx), Lp = [], Rp = [];
+    P.forEach((p, i) => { const w = (60 - 26 * i / TN) / 2, a = ANG[i], nx = -Math.sin(a), ny = Math.cos(a);
+      Lp.push([p[0] + nx * w, p[1] + ny * w]); Rp.push([p[0] - nx * w, p[1] - ny * w]); });
+    const f = (q) => q[0].toFixed(1) + " " + q[1].toFixed(1), wt = (60 - 26) / 2;
+    const side = "M" + Lp.map(f).join(" L") + ` A${wt} ${wt} 0 0 0 ` + f(Rp[TN]) + " L" + Rp.slice(0, TN).reverse().map(f).join(" L");
+    el.tf.setAttribute("d", side + " Z"); el.tl.setAttribute("d", side); el.ts.setAttribute("d", side + " Z");
+    let wr = ""; [3, 4, 5].forEach((i) => { const a = Lp[i], b = Rp[i], m = P[i];
+      const ax = m[0] + (a[0] - m[0]) * 0.55, ay = m[1] + (a[1] - m[1]) * 0.55, bx = m[0] + (b[0] - m[0]) * 0.55, by = m[1] + (b[1] - m[1]) * 0.55;
+      wr += `M${ax.toFixed(1)} ${ay.toFixed(1)} Q${(m[0] + Math.cos(ANG[i]) * 5).toFixed(1)} ${(m[1] + Math.sin(ANG[i]) * 5).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)} `; });
+    el.tw.setAttribute("d", wr);
+    const tp = P[TN], ta = ANG[TN], nx = tp[0] + Math.cos(ta) * 4, ny = tp[1] + Math.sin(ta) * 4;
+    el.nos.setAttribute("cx", nx.toFixed(1)); el.nos.setAttribute("cy", ny.toFixed(1));
+    el.nos.setAttribute("transform", `rotate(${(ta * 180 / Math.PI + 90).toFixed(1)} ${nx.toFixed(1)} ${ny.toFixed(1)})`);
+  }
+  const tipLocal = (A, C, Lx) => trunkGeom(A, C, Lx).P[TN];
+
+
+  // ───────────────────────── tempo: real beat grid (Gemini's tempo drifts) ─────────────────────────
+  function beatPos(t) {
+    const n = BEATS.length;
+    if (t <= BEATS[0]) return (t - BEATS[0]) / (BEATS[1] - BEATS[0]);
+    if (t >= BEATS[n - 1]) return n - 1 + (t - BEATS[n - 1]) / (BEATS[n - 1] - BEATS[n - 2]);
+    let lo = 0, hi = n - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (BEATS[m] <= t) lo = m; else hi = m; }
+    return lo + (t - BEATS[lo]) / (BEATS[hi] - BEATS[lo]);
+  }
+  const BEAT = (BEATS[BEATS.length - 1] - BEATS[0]) / (BEATS.length - 1);
+
+  // ───────────────────────── lyric helpers ─────────────────────────
+  const LT = {}; LINES.forEach((L, i) => (LT[L.tag] = i));
+  const ts = (tag) => LINES[LT[tag]].words[0][1];
+  const te = (tag) => LINES[LT[tag]].end;
+  const norm = (w) => w.replace("İ", "i").replace("I", "ı").toLowerCase().replace(/[^a-zçğıöşü]/g, "");
+  const SOUND = { "vırak": "frog", "vıraaak": "frog", "zıp": "frog", "şıp": "splash", "blup": "fish", "vak": "duck", "pırt": "fistik" };
+  const SCOL = { frog: "#3FA34D", splash: "#2E9BD6", fish: "#FF7A3D", duck: "#F59E1B", fistik: "#FF5A5F" };
+  // chorus windows → beat pulse (camera punch + glow)
+  const CH = [["c1.1", "c1.2"], ["c2.1", "c2.2"], ["p.1", "p.3"], ["f.1", "f.8"]].map(([a, b]) => [ts(a) - 0.3, te(b) + 0.4]);
+  const pulse = (t) => { if (!CH.some(([a, b]) => t >= a && t <= b)) return 0; const f = beatPos(t) % 1; return Math.exp(-7 * (f < 0 ? f + 1 : f)); };
+
+  // ───────────────────────── geometry ─────────────────────────
+  const SC = 0.85, WRAP = { x: 460, y: 265 };
+  const toScene = (p) => [WRAP.x + 300 + (p[0] - 300) * SC, WRAP.y + 620 + (p[1] - 620) * SC];
+  const bedY = (x) => x < 900 ? 905 : x < 1160 ? 905 + 140 * smooth(900, 1160, x) : 1045 + 6 * Math.sin(x / 70);
+  const S = 788;                                                     // water surface (full stream)
+  const LILY = 1640, FISHX = [1160, 1420, 1700], DUCKX = [1120, 1360];
+
+  // ───────────────────────── scenery (Dere) ─────────────────────────
+  const mk = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+  for (let i = 0; i < 12; i++) mk("rect", { x: 109, y: 2, width: 12, height: 40, rx: 6, transform: `rotate(${i * 30} 115 115)` }, E("rays"));
+  const tree = (x, y, s, c1, c2) => `<g transform="translate(${x} ${y}) scale(${s})"><rect x="-12" y="-10" width="24" height="90" rx="10" fill="#A0703F" stroke="#6E4A27" stroke-width="4"/>
+      <circle cx="0" cy="-60" r="70" fill="${c1}" stroke="${c2}" stroke-width="5"/><circle cx="-45" cy="-25" r="45" fill="${c1}" stroke="${c2}" stroke-width="5"/>
+      <circle cx="45" cy="-25" r="45" fill="${c1}" stroke="${c2}" stroke-width="5"/><circle cx="-20" cy="-85" r="16" fill="#fff" opacity=".25"/></g>`;
+  const flower = (x, y, c, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 V40" stroke="#3E9B47" stroke-width="5"/>
+      ${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-14" rx="9" ry="14" fill="${c}" transform="rotate(${a})"/>`).join("")}<circle r="8" fill="#FFD84D"/></g>`;
+  const tuft = (x, y) => `<path d="M${x - 16} ${y} q6 -26 10 0 q4 -34 10 0 q6 -24 12 0z" fill="#4FAE48"/>`;
+  const reed = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 Q-4 -70 6 -130" stroke="#3E9B47" stroke-width="7" fill="none"/><rect x="-1" y="-170" width="16" height="48" rx="8" fill="#8B5A2B"/><path d="M-10 0 Q-30 -50 -40 -90" stroke="#4FAE48" stroke-width="6" fill="none"/></g>`;
+  const cloud = (x, y, s, c = "#fff") => `<g transform="translate(${x} ${y}) scale(${s})" fill="${c}"><circle cx="80" cy="80" r="50"/><circle cx="150" cy="58" r="62"/><circle cx="222" cy="82" r="46"/><rect x="60" y="80" width="190" height="50" rx="25"/></g>`;
+  const tileSet = (id, inner) => { E(id).innerHTML = [0, 1].map((k) => `<svg viewBox="0 0 1920 1300" style="left:${k * 1920}px">${inner}</svg>`).join(""); };
+  tileSet("Lclouds", cloud(80, 150, 1) + cloud(1050, 110, 0.8) + cloud(1500, 230, 0.6));
+  tileSet("Lfar", `<path d="M0 690 Q240 590 480 670 T960 660 T1440 650 T1920 690 V1300 H0Z" fill="#B9E5A0"/>` +
+    [150, 520, 860, 1260, 1700].map((x, i) => tree(x, 670 - (i % 2) * 20, 0.45, "#8CCB6E", "#6FAF55")).join(""));
+  tileSet("Lmid", `<path d="M0 760 Q320 700 640 750 T1280 745 T1920 760 V1300 H0Z" fill="#94D474"/>` +
+    [300, 1000, 1550].map((x, i) => tree(x, 760, 0.8 + (i % 2) * 0.15, "#5DBB55", "#3F9442")).join("") +
+    `<g fill="#78C760" stroke="#4F9F45" stroke-width="4"><circle cx="640" cy="760" r="40"/><circle cx="690" cy="755" r="32"/><circle cx="1320" cy="765" r="38"/></g>`);
+  tileSet("Lground", `<path d="M0 800 Q480 770 960 795 T1920 792 V1300 H0Z" fill="#6CC75A"/><path d="M0 980 Q480 950 960 975 T1920 970 V1300 H0Z" fill="#62BB51"/>` +
+    [80, 260, 430, 610, 900, 1120, 1340, 1500, 1690, 1850].map((x, i) => tuft(x, 860 + (i * 37) % 120)).join("") +
+    [[140, 900, "#FF8FB1"], [380, 960, "#fff"], [700, 920, "#B58CFF"], [1060, 990, "#FFD84D"], [1270, 910, "#FF8FB1"], [1580, 970, "#fff"], [1780, 920, "#B58CFF"]].map(([x, y, c]) => flower(x, y, c)).join(""));
+  E("rainbow").innerHTML = `<g id="rbG" opacity="0" fill="none" stroke-linecap="round">${["#FF5A5F", "#FF9F1C", "#FFD84D", "#3FBF6F", "#3D9BFF", "#A66BFF"].map((c, i) =>
+    `<path class="rbArc" d="M${380 + i * 26} 760 A${580 - i * 26} ${520 - i * 26} 0 0 1 ${1540 - i * 26} 760" stroke="${c}" stroke-width="28" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>`).join("")}</g>`;
+  const bedPts = []; for (let x = 560; x <= 2000; x += 20) bedPts.push(`${x} ${bedY(x).toFixed(1)}`);
+  E("bedSvg").innerHTML = `<defs><linearGradient id="gMud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C79B6B"/><stop offset="1" stop-color="#9C6E45"/></linearGradient></defs>
+    <path d="M560 1300 L560 812 Q600 776 700 774 Q1300 768 2000 772 L2000 1300Z" fill="url(#gMud)"/>
+    <path d="M560 1300 L${bedPts.join(" L")} L2000 1300Z" fill="#B48558"/>
+    ${[[760, 912, 26, 12], [1010, 1000, 30, 14], [1340, 1060, 40, 16], [1620, 1066, 32, 13], [1880, 1058, 36, 15]].map(([x, y, w, h]) => `<g transform="translate(${x} ${y})">${C.rock(w, h)}</g>`).join("")}
+    <path d="M560 812 Q600 776 700 774 Q1300 768 2000 772" stroke="#4FAE48" stroke-width="16" fill="none" stroke-linecap="round"/>
+    ${[640, 820, 1040, 1320, 1580, 1840].map((x) => tuft(x, 780)).join("")}${reed(1880, 790, 1.1)}${reed(1830, 795, 0.85)}
+    <g id="fish0" class="fish">${C.fish("#FF9F43", "#FF6B3D")}</g><g id="fish1" class="fish">${C.fish("#FFD84D", "#F5B921")}</g><g id="fish2" class="fish">${C.fish("#FF8FB1", "#F2668B")}</g>`;
+  E("waterSvg").innerHTML = `<defs><linearGradient id="gWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6FD0F7" stop-opacity=".5"/><stop offset=".55" stop-color="#3FA6E0" stop-opacity=".62"/><stop offset="1" stop-color="#2E8FD0" stop-opacity=".85"/></linearGradient>
+      <clipPath id="cChan2"><path d="M560 1300 L560 812 Q600 776 700 774 Q1300 768 2000 772 L2000 1300Z"/></clipPath></defs>
+    <g clip-path="url(#cChan2)"><path id="water" fill="url(#gWater)"/><path id="waterHi" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+      <g id="ripples" fill="none" stroke="#fff" stroke-width="4" opacity=".6"></g></g>
+    <g id="lilyG">${C.lily()}<g id="frogPos"><g id="frog">${C.frog()}</g></g></g>
+    <g id="duck0" class="duck">${C.duck("#FFFFFF", 0.95)}</g><g id="duck1" class="duck">${C.duck("#FFD84D", 0.62)}</g>`;
+  for (let i = 0; i < 6; i++) mk("ellipse", { id: "rp" + i, rx: 0, ry: 0 }, E("ripples"));
+
+  // pools
+  const pool = (host, n, cls, id, extra) => { for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "abs " + cls; d.id = id + i; d.style.opacity = 0; d.style.left = "0px"; d.style.top = "0px"; if (extra) extra(d, i); E(host).appendChild(d); } };
+  pool("drops", 48, "drop", "dr"); pool("bubs", 40, "bub", "bb");
+  pool("notes", 24, "note", "n", (d, i) => { d.textContent = i % 2 ? "♫" : "♪"; d.style.color = TC[i % 6]; });
+  pool("confBox", 90, "conf", "cf", (d, i) => { d.style.background = TC[i % 6]; });
+  const letters = (txt, host) => [...txt].forEach((ch, i) => { const s = document.createElement("span"); s.textContent = ch === " " ? "\u00A0" : ch; s.style.color = TC[i % 6]; host.appendChild(s); });
+  letters("Küçük Kurbağa", $("#titleBig")); letters("Fıstık Fil", $("#endBig")); letters("Herkes farklı, herkes güzel!", $("#msgBig"));
+
+  // body-part cards: [id, icon, word, ok?, scene x, scene y]
+  const CARDS = [["kKulak", "kulak", "KULAK", false, LILY - 400, 430], ["kKuyruk", "kuyruk", "KUYRUK", false, LILY - 440, 430],
+    ["kAyak", "ayak", "AYAK", false, FISHX[1] - 250, 500], ["kDis", "dis", "DİŞ", false, DUCKX[1] - 230, 470], ["kFil", "filkulak", "KULAK", true, 960, 250]];
+  const X_SVG = `<svg viewBox="0 0 50 50"><path d="M12 12 L38 38 M38 12 L12 38" stroke="#fff" stroke-width="10" stroke-linecap="round"/></svg>`;
+  const OK_SVG = `<svg viewBox="0 0 50 50"><path d="M9 26 L21 38 L42 12" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  E("cards").innerHTML = CARDS.map(([id, ic, w, ok, x, y]) => `<div class="abs card" id="${id}" style="opacity:0;left:${x}px;top:${y}px;border-color:${ok ? "#3FBF6F" : "#FFC23D"}">
+      <svg class="ic" viewBox="-60 -60 120 120">${C.icon[ic]()}</svg><div class="w" style="color:${ok ? "#3FA34D" : "#2B2D42"}">${w}</div>
+      <div class="bd" id="${id}B" style="background:${ok ? "#3FBF6F" : "#E5484D"};opacity:0">${ok ? OK_SVG : X_SVG}</div></div>`).join("") +
+    ["qFrog", "qFish", "qDuck", "qFistik"].map((id) => `<svg class="abs q" id="${id}" viewBox="-50 -50 100 100" style="opacity:0">${C.qmark()}</svg>`).join("");
+
+  // ───────────────────────── lyrics + sound words ─────────────────────────
+  LINES.forEach((L, li) => { const d = document.createElement("div"); d.className = "line"; d.id = "ln" + li;
+    L.words.forEach((w, wi) => { const s = document.createElement("span"); s.id = `w${li}_${wi}`; s.textContent = w[0]; d.appendChild(s); }); E("lyric").appendChild(d); });
+  const SND = []; let k = 0;
+  LINES.forEach((L) => L.words.forEach(([w, t]) => { const n = norm(w); if (!(n in SOUND)) return; const who = SOUND[n], j = k++ % 3;
+    let x, y;
+    if (who === "frog") { x = LILY + [-420, -160, -300][j]; y = [470, 420, 350][j]; }
+    else if (who === "splash") { x = LILY - 120; y = 660; }
+    else if (who === "fish") { x = FISHX[1] + [-230, 40, -100][j]; y = [600, 560, 500][j]; }
+    else if (who === "duck") { x = DUCKX[1] + [-300, -60, -180][j]; y = [560, 520, 450][j]; }
+    else { x = [880, 1040, 960][j]; y = [250, 300, 180][j]; }
+    SND.push({ txt: n === "vıraaak" ? "VIRAAAK!" : w.replace(/[^\p{L}]/gu, "").toLocaleUpperCase("tr") + "!", t, x, y, r: [-9, 7, -3][j], c: SCOL[who] }); }));
+  E("sndBox").innerHTML = SND.map((s, i) => `<div class="abs snd" id="sd${i}" style="opacity:0;color:${s.c}">${s.txt}</div>`).join("");
+
+  // ───────────────────────── animated state ─────────────────────────
+  const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5], wave: [40, -130, 26] };
+  const TRUMP = toScene(tipLocal(...POSE.trumpet));
+  const R = { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, flap: 0, walk: 0, sway: 0, tilt: 0, bob: 1, dance: 0 };
+  const W = { x: 0, sx: 0, fx: 0 };                                   // world scroll, stream slide, Fıstık x offset
+  const CAM = { x: 960, y: 560, s: 1.0, r: 0 };
+  const ENV = { rainbow: 0, glow: 0 };
+  const AN = { fishUp: 0, frogIn: 0, frogOpen: 0, frogNo: 0, frogTurn: 1, fishO: 0, fishNo: 0, duckOpen: 0, duckNo: 0, duckIn: 0, party: 0, swim: 0, frogBlink: 0 };
+  const JUMP = { f0: 0, f1: 0, f2: 0, frog: 0 };
+  const EV = { notes: [], drops: [], bubs: [], conf: [] };
+
+  function render(t) {
+    const bp = beatPos(t), beatPh = TAU * bp, pl = pulse(t);
+    // ── Fıstık rig ──
+    const bob = R.bob * (9 + 10 * R.dance) * (1 - Math.cos(beatPh)) / 2;
+    el.rig.setAttribute("transform", `translate(0 ${(-bob).toFixed(2)})`);
+    const ea = R.earAmp * 6 * Math.sin(beatPh) + R.flap * 24 * Math.sin(t * 19);
+    el.earL.setAttribute("transform", `rotate(${(-ea).toFixed(2)} 222 230)`);
+    el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-ea).toFixed(2)} 222 230)`);
+    el.tail.setAttribute("transform", `rotate(${(14 * Math.sin(beatPh / 2)).toFixed(2)} 432 470)`);
+    el.pom.setAttribute("transform", `rotate(${(10 * Math.sin(beatPh - 0.8)).toFixed(2)} 300 100)`);
+    const tilt = R.tilt + (R.sway + R.dance) * 7 * Math.sin(beatPh / 2) + 2 * Math.sin(TAU * t / (BEAT * 8));
+    el.head.setAttribute("transform", `rotate(${tilt.toFixed(2)} 300 360)`);
+    el.legs.forEach((g, i) => { const [px, py, ph] = LEGP[i], a = R.walk * 20 * Math.sin(beatPh / 2 + ph), lift = R.walk * 8 * Math.max(0, Math.sin(beatPh / 2 + ph));
+      g.setAttribute("transform", `translate(${px} ${(py - lift).toFixed(2)}) rotate(${a.toFixed(2)})`); });
+    el.pupils.setAttribute("transform", `translate(${R.lookX.toFixed(1)} ${R.lookY.toFixed(1)})`);
+    const lid = clamp(R.blink, 0, 1) * 92; el.lidL.setAttribute("height", lid.toFixed(1)); el.lidR.setAttribute("height", lid.toFixed(1));
+    const m = Math.max(0, R.mouth), my = 334, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * m).toFixed(1)} 224 ${my} Z`;
+    el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", m > 0.04 ? "#8C2F45" : "none");
+    el.tongue.setAttribute("ry", (m > 0.15 ? 12 * m : 0).toFixed(1)); el.tongue.setAttribute("cy", (my + 6 + 24 * m).toFixed(1));
+    drawTrunk(R.A + 3 * Math.sin(t * 2.3), R.C, R.L);
+    E("charWrap").style.transform = `translate(${W.fx.toFixed(1)}px, 0px) scale(${SC})`;
+
+    // ── sky + world ──
+    const lay = (id, fx) => { const x = -((((W.x * fx) % 1920) + 1920) % 1920); E(id).style.transform = `translate(${x.toFixed(1)}px, 0px)`; };
+    lay("Lfar", 0.3); lay("Lmid", 0.6); lay("Lground", 1.0);
+    const cxo = -((((W.x * 0.12 + t * 14) % 1920) + 1920) % 1920); E("Lclouds").style.transform = `translate(${cxo.toFixed(1)}px, 0px)`;
+    E("streamBack").style.transform = E("streamFront").style.transform = `translate(${W.sx.toFixed(1)}px, 0px)`;
+    E("rays").setAttribute("transform", `rotate(${(t * 12).toFixed(1)} 115 115)`);
+    E("sun").style.transform = `scale(${(1 + 0.06 * pl).toFixed(3)})`;
+    E("rbG").setAttribute("opacity", ENV.rainbow > 0.01 ? 1 : 0);
+    document.querySelectorAll(".rbArc").forEach((a, i) => a.setAttribute("stroke-dashoffset", (1 - clamp(ENV.rainbow * 1.3 - i * 0.05, 0, 1)).toFixed(3)));
+    E("glow").style.opacity = (ENV.glow * pl * 0.9).toFixed(3);
+
+    // ── water ──
+    const amp = 6 + 5 * AN.party + 4 * pl, pts = [];
+    for (let x = 540; x <= 2020; x += 30) pts.push([x, S + amp * Math.sin(x / 85 + t * 2.4) + 3 * Math.sin(x / 31 - t * 3.1)]);
+    E("water").setAttribute("d", `M${pts.map((p) => `${p[0]} ${p[1].toFixed(1)}`).join(" L")} L2020 1300 L540 1300Z`);
+    E("waterHi").setAttribute("d", "M" + pts.map((p) => `${p[0]} ${(p[1] + 5).toFixed(1)}`).join(" L"));
+    for (let i = 0; i < 6; i++) { const ph = ((t * 0.7 + i / 6) % 1), rx = 20 + ph * 90, rp = E("rp" + i);
+      rp.setAttribute("cx", 900 + i * 180); rp.setAttribute("cy", S + 4); rp.setAttribute("rx", rx.toFixed(1)); rp.setAttribute("ry", (rx * 0.18).toFixed(1));
+      rp.setAttribute("opacity", ((1 - ph) * (0.4 + 0.6 * AN.party)).toFixed(2)); }
+
+    // ── fish ──
+    FISHX.forEach((bx, i) => { const g = E("fish" + i), ph = i * 2.1;
+      const x = bx + 60 * Math.sin(t * 0.5 + ph);
+      let y = Math.min(S + 70 + 18 * Math.sin(t * 1.3 + ph), bedY(x) - 46);
+      const j = JUMP["f" + i], jj = j > 0 && j < 1, arc = jj ? Math.sin(Math.PI * j) : 0;
+      y -= arc * 250 + AN.party * 10 * Math.abs(Math.sin(beatPh / 2 + i)) + (i === 1 ? AN.fishUp * 92 : 0);
+      const dir = Math.cos(t * 0.5 + ph) >= 0 ? 1 : -1;
+      const no = i === 1 ? AN.fishNo * 14 * Math.sin(t * 15) : 0;
+      const rot = (jj ? -60 * Math.cos(Math.PI * j) : 4 * Math.sin(t * 2 + ph)) + no;
+      g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${dir} 1) rotate(${rot.toFixed(1)})`);
+      g.querySelector(".tail").setAttribute("transform", `rotate(${(14 * Math.sin(t * 6 + ph)).toFixed(1)} -58 0)`);
+      const o = i === 1 ? AN.fishO : AN.fishO * AN.party;
+      g.querySelector(".mHappy").setAttribute("opacity", (1 - o).toFixed(2)); g.querySelector(".mO").setAttribute("opacity", o.toFixed(2)); });
+
+    // ── lily + frog ──
+    const ly = S - 2 + 3 * Math.sin(t * 1.7);
+    E("lilyG").setAttribute("transform", `translate(${LILY} ${ly.toFixed(1)})`);
+    const fj = JUMP.frog > 0 && JUMP.frog < 1 ? Math.sin(Math.PI * JUMP.frog) : 0;
+    const fin = AN.frogIn, pop = (1 - fin) * 160;                                          // frog hides under the lily, then pops up
+    const fbob = (AN.party + 0.6 * pl) * 14 * Math.abs(Math.sin(beatPh / 2));
+    E("frogPos").setAttribute("transform", `translate(0 ${(pop - 10 - fj * 200 - fbob).toFixed(1)})`);
+    E("frogPos").setAttribute("opacity", fin > 0.02 ? 1 : 0);
+    const fno = AN.frogNo * 12 * Math.sin(t * 15);
+    E("frog").setAttribute("transform", `rotate(${fno.toFixed(2)} 0 -60) scale(${(AN.frogTurn * (1 + fj * 0.06)).toFixed(3)} ${(1 - fj * 0.04).toFixed(3)})`);
+    const fr = E("frog");
+    fr.querySelector(".mHappy").setAttribute("opacity", (1 - AN.frogOpen).toFixed(2));
+    fr.querySelector(".mOpen").setAttribute("opacity", AN.frogOpen.toFixed(2));
+    fr.querySelector(".legs").setAttribute("transform", `translate(0 ${(fj * 30).toFixed(1)})`);
+
+    // ── ducks (swim in for their verse) ──
+    DUCKX.forEach((bx, i) => { const g = E("duck" + i), ph = i * 1.6;
+      const x = bx + (1 - AN.duckIn) * (1150 + i * 220) + AN.swim * 70 * Math.sin(t * 0.45 + ph);
+      const y = S + 8 + 4 * Math.sin(t * 2 + ph) - (AN.party + 0.5 * pl * AN.duckIn) * 10 * Math.abs(Math.sin(beatPh / 2 + i));
+      const no = i === 1 ? AN.duckNo * 12 * Math.sin(t * 15) : 0;
+      g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(3 * Math.sin(t * 1.5 + ph) + no).toFixed(2)})`);
+      const o = i === 1 ? AN.duckOpen : AN.duckOpen * AN.party;
+      g.querySelector(".beakTop").setAttribute("transform", `rotate(${(-14 * o).toFixed(1)} -80 -88)`);
+      g.querySelector(".beakBot").setAttribute("transform", `rotate(${(16 * o).toFixed(1)} -80 -80)`);
+      g.querySelector(".wing").setAttribute("transform", `rotate(${(AN.party * 18 * Math.sin(beatPh + i)).toFixed(1)} 4 -30)`); });
+
+    drawParticles(t);
+
+    // ── camera (+ beat punch in choruses) ──
+    const s = Math.max(1, CAM.s * (1 + 0.035 * pl)), hx = 960 / s, hy = 540 / s;
+    const cx = Math.min(1920 - hx, Math.max(hx, CAM.x)), cy = Math.min(1080 - hy + 30, Math.max(hy - 30, CAM.y));
+    E("cam").style.transform = `translate(960px, 540px) rotate(${CAM.r.toFixed(2)}deg) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)}px, ${(-cy).toFixed(1)}px)`;
+  }
+
+  // ───────────────────────── particles: pure functions of t ─────────────────────────
+  const notes = (t, dx = 0) => EV.notes.push([t, dx]);
+  const splash = (t, x, y, n = 8, spread = 1) => EV.drops.push([t, x, y, n, spread]);
+  const bubbles = (t, x, y, n = 3) => EV.bubs.push([t, x, y, n]);
+  const confetti = (t, x, y) => EV.conf.push([t, x, y]);
+  function drawParticles(t) {
+    let di = 0, bi = 0, ni = 0, ci = 0;
+    EV.drops.forEach(([t0, x, y, n, sp]) => { const u = t - t0; if (u < 0 || u > 0.7) return;
+      for (let q = 0; q < n && di < 48; q++, di++) { const a = -Math.PI * (0.15 + 0.7 * q / Math.max(1, n - 1)), r = (120 + (q % 3) * 50) * sp, d = E("dr" + di);
+        const k1 = Math.min(1, u / 0.3), e1 = 1 - (1 - k1) * (1 - k1), k2 = Math.max(0, (u - 0.3) / 0.4), e2 = k2 * k2;
+        const dx = Math.cos(a) * r * (0.6 * e1 + 0.4 * e2), dy = Math.sin(a) * r * (1 - e2) + (Math.sin(a) * r * 0.3 + 120) * e2 * (u > 0.3 ? 1 : 0);
+        d.style.transform = `translate(${(x + dx).toFixed(1)}px, ${(y + dy).toFixed(1)}px)`; d.style.opacity = (u < 0.3 ? 1 : 1 - k2).toFixed(2); } });
+    for (; di < 48; di++) E("dr" + di).style.opacity = 0;
+    EV.bubs.forEach(([t0, x, y, n]) => { for (let q = 0; q < n && bi < 40; q++) { const u = t - t0 - q * 0.07; if (u < 0 || u > 1) continue; const d = E("bb" + bi++), e = 1 - (1 - u) * (1 - u);
+        d.style.transform = `translate(${(x + q * 18 - 18 + 14 * Math.sin(q * 2) * e).toFixed(1)}px, ${(y - (150 + q * 40) * e).toFixed(1)}px) scale(${(0.6 + q * 0.25 + 0.4 * e).toFixed(2)})`; d.style.opacity = (0.95 * (1 - u)).toFixed(2); } });
+    for (; bi < 40; bi++) E("bb" + bi).style.opacity = 0;
+    EV.notes.forEach(([t0, dx]) => { const u = t - t0; if (u < 0 || u > 0.95) return;
+      for (let q = 0; q < 3 && ni < 24; q++, ni++) { const ang = -1.5 + q * 0.55, r = 200 + q * 50, e = 1 - Math.pow(1 - Math.min(1, u / 0.8), 2), d = E("n" + ni);
+        d.style.transform = `translate(${(TRUMP[0] - 20 + dx + Math.cos(ang) * r * e).toFixed(1)}px, ${(TRUMP[1] - 40 + Math.sin(ang) * r * e).toFixed(1)}px) scale(${(0.4 + 0.8 * e).toFixed(2)}) rotate(${((q % 2 ? 18 : -18) * e).toFixed(1)}deg)`;
+        d.style.opacity = (u < 0.7 ? Math.min(1, u * 6) : 1 - (u - 0.7) / 0.25).toFixed(2); } });
+    for (; ni < 24; ni++) E("n" + ni).style.opacity = 0;
+    EV.conf.forEach(([t0, ox, oy]) => { const u = t - t0; if (u < 0 || u > 1.8) return;
+      for (let q = 0; q < 45 && ci < 90; q++, ci++) { const a = -Math.PI / 2 + (q / 45 - 0.5) * 2.8, v = 700 + (q % 7) * 90, cc = E("cf" + ci);
+        cc.style.transform = `translate(${(ox + Math.cos(a) * v * u).toFixed(1)}px, ${(oy + Math.sin(a) * v * u + 760 * u * u).toFixed(1)}px) rotate(${(u * 600 + q * 37).toFixed(0)}deg) scaleX(${Math.cos(u * 12 + q).toFixed(3)})`;
+        cc.style.opacity = (u < 1.3 ? 1 : 1 - (u - 1.3) / 0.5).toFixed(3); } });
+    for (; ci < 90; ci++) E("cf" + ci).style.opacity = 0;
+    // sound words
+    SND.forEach((s, i) => { const u = t - s.t, d = E("sd" + i);
+      if (u < 0 || u > 0.62) { d.style.opacity = 0; return; }
+      const e1 = Math.min(1, u / 0.14), sc = 0.25 + 0.75 * (1 - Math.pow(1 - e1, 3)) * (1 + 0.15 * Math.sin(Math.PI * e1)) + (u > 0.42 ? (u - 0.42) * 1.5 : 0);
+      d.style.transform = `translate(${s.x}px, ${(s.y - 30 * u).toFixed(1)}px) rotate(${(s.r + (1 - e1) * -20).toFixed(1)}deg) scale(${sc.toFixed(3)})`;
+      d.style.opacity = (u > 0.42 ? 1 - (u - 0.42) / 0.2 : 1).toFixed(2); });
+  }
+
+  // ───────────────────────── timeline ─────────────────────────
+  gsap.defaults({ lazy: false });
+  const tl = gsap.timeline({ paused: true });
+  gsap.set("#charWrap", { scale: SC, transformOrigin: "300px 620px" });
+  const pose = (name, t, d = 0.3, ease = "back.out(1.8)") => tl.to(R, { A: POSE[name][0], C: POSE[name][1], L: POSE[name][2], duration: d, ease }, t);
+  const kick = (t) => { tl.to(R, { A: POSE.kick[0], C: POSE.kick[1], L: POSE.kick[2], duration: 0.06 }, t - 0.04); tl.to(R, { A: POSE.trumpet[0], C: POSE.trumpet[1], L: POSE.trumpet[2], duration: 0.2 }, t + 0.05); notes(t); };
+  const squash = (t, k = 1) => tl.to("#char", { scaleY: 1 - 0.08 * k, scaleX: 1 + 0.05 * k, duration: 0.08, yoyo: true, repeat: 1, ease: "power1.out" }, t);
+  const shake = (t, a = 10) => tl.fromTo("#shake", { y: 0, x: 0 }, { keyframes: [{ y: a, x: -a * 0.4, duration: 0.04 }, { y: -a * 0.6, x: a * 0.3, duration: 0.05 }, { y: a * 0.3, x: 0, duration: 0.05 }, { y: 0, x: 0, duration: 0.06 }], immediateRender: false }, t);
+  const blink = (t) => { tl.to(R, { blink: 1, duration: 0.07, ease: "none" }, t); tl.to(R, { blink: 0, duration: 0.09, ease: "none" }, t + 0.1); };
+  const cam = (t, c, d = 1.2, ease = "power2.inOut") => tl.to(CAM, { ...c, duration: d, ease }, t);
+  const jump = (key, t, d = 0.55) => tl.fromTo(JUMP, { [key]: 0 }, { [key]: 1, duration: d, ease: "none", immediateRender: false }, t - 0.12);
+  const popIn = (sel, t) => tl.fromTo(sel, { opacity: 0, scale: 0.2, rotation: -12 }, { opacity: 1, scale: 1, rotation: -3, duration: 0.35, ease: "back.out(2.6)", immediateRender: false }, t);
+  const popOut = (sel, t) => tl.to(sel, { opacity: 0, scale: 0.4, duration: 0.25, ease: "back.in(2)" }, t);
+  const stamp = (sel, t) => tl.fromTo(sel, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)", immediateRender: false }, t);
+  const qmark = (id, x, y, t0, t1) => { gsap.set("#" + id, { x, y }); popIn("#" + id, t0); tl.to("#" + id, { y: y - 14, duration: 0.3, yoyo: true, repeat: Math.max(1, Math.floor((t1 - t0) / 0.3) - 1), ease: "sine.inOut" }, t0 + 0.35); popOut("#" + id, t1); };
+
+  // lyric pills (chorus pills hop on the beat via the camera pulse already)
+  LINES.forEach((L, li) => { const st = L.words[0][1] - 0.35, nx = LINES[li + 1], en = nx ? Math.min(nx.words[0][1] - 0.35, L.end + 1.6) : L.end + 1.6;
+    tl.fromTo("#ln" + li, { opacity: 0, y: -24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.22, ease: "back.out(2)", immediateRender: false }, st);
+    L.words.forEach((w, wi) => { const snd = norm(w[0]) in SOUND;
+      tl.to(`#w${li}_${wi}`, { color: snd ? "#E5484D" : "#2B2D42", scale: snd ? 1.28 : 1.14, duration: 0.08, ease: "power2.out" }, w[1]); tl.to(`#w${li}_${wi}`, { scale: 1, duration: 0.18 }, w[1] + 0.1); });
+    tl.to("#ln" + li, { opacity: 0, y: -16, duration: 0.18, ease: "power1.in" }, en - 0.18); });
+  // lip-sync by singer
+  const MOUTH = { fistik: [R, "mouth", 0.9], frog: [AN, "frogOpen", 1], fish: [AN, "fishO", 1], duck: [AN, "duckOpen", 1] };
+  LINES.forEach((L) => L.words.forEach((w, wi) => { const nxt = (L.words[wi + 1] || [0, w[1] + 0.6])[1], hold = clamp(nxt - w[1] - 0.12, 0.08, 0.26), n = norm(w[0]);
+    let who = L.who === "all" ? (SOUND[n] && SOUND[n] !== "splash" ? [SOUND[n]] : ["fistik", "frog"]) : [L.who];
+    who.forEach((h) => { const [o, p, v] = MOUTH[h]; tl.to(o, { [p]: v, duration: 0.06 }, w[1]); tl.to(o, { [p]: h === "fistik" ? 0.06 : 0, duration: 0.1 }, w[1] + hold); }); }));
+  for (let t = 3.2; t < D - 2; t += 4.1) { blink(t); }
+
+  // ── intro (instrumental; "Abone ol" bandı sol altta ~0.1–7.1 sn) ──
+  const T0 = ts("intro.1");
+  tl.set(W, { fx: -820, sx: 0 }, 0);
+  cam(0, { s: 1.35, x: 1350, y: 720 }, 0.01); cam(0.2, { s: 1.0, x: 960, y: 560 }, 5.5, "power2.inOut");
+  tl.from("#titleBig span", { y: -260, opacity: 0, rotation: (i) => (i % 2 ? 12 : -12), duration: 0.55, ease: "bounce.out", stagger: 0.06 }, 0.5);
+  tl.from("#titleSub", { scale: 0, duration: 0.45, ease: "back.out(2)" }, 1.6);
+  [1.4, 3.0, 4.6].forEach((t, i) => { jump("f" + i, t, 0.75); bubbles(t + 0.5, FISHX[i], S - 10, 3); splash(t + 0.6, FISHX[i], S, 5, 0.7); });
+  tl.to("#title", { y: -460, duration: 0.45, ease: "back.in(1.4)" }, Math.min(6.6, T0 - 1));
+  tl.from("#bug", { x: -360, duration: 0.5, ease: "back.out(1.6)" }, 7.4);
+  // Fıstık walks in after the subscribe band has gone
+  const WALK0 = Math.min(7.3, T0 - 6);
+  tl.to(R, { walk: 1, duration: 0.3 }, WALK0); tl.to(W, { fx: 0, duration: 4.2, ease: "power1.out" }, WALK0); tl.to(W, { x: 500, duration: 4.2, ease: "power1.out" }, WALK0);
+  tl.to(R, { walk: 0, lookX: 14, duration: 0.3 }, WALK0 + 4.2);
+  cam(WALK0 + 1, { s: 1.1, x: 1100, y: 600 }, 3);
+  // frog pops up on the lily
+  const POP = Math.max(WALK0 + 4.6, T0 - 2.6);
+  tl.to(AN, { frogIn: 1, duration: 0.45, ease: "back.out(2.2)" }, POP); splash(POP + 0.1, LILY, S - 20, 9, 1.1); shake(POP + 0.1, 6);
+  tl.to(R, { earAmp: 3, lookY: -4, mouth: 0.6, duration: 0.2 }, POP + 0.2); tl.to(R, { earAmp: 1, mouth: 0.06, duration: 0.4 }, POP + 1.2);
+
+  // ── giriş konuşması: Fıstık introduces the frog ──
+  cam(T0 - 0.4, { s: 1.15, x: 1180, y: 620 }, 1.4);
+  tl.to(R, { lookX: 16, lookY: 2, duration: 0.3 }, ts("intro.3"));
+  pose("wave", ts("intro.3"), 0.4); pose("rest", te("intro.3"), 0.4, "sine.inOut");
+
+  // ── verse helper: question to an animal, card + "?" + head shake ──
+  const verse = (v, { who, q, card, camQ, camA, cx, cy, onQ }) => {
+    cam(ts(v + ".1") - 0.4, camQ, 1.1);
+    qmark(q, cx, cy, ts(v + ".2") - 0.1, ts(v + ".3"));
+    gsap.set("#" + card, { transformOrigin: "50% 100%" }); popIn("#" + card, ts(v + ".2"));
+    stamp("#" + card + "B", ts(v + ".3")); if (who) { tl.to(AN, { [who]: 1, duration: 0.15 }, ts(v + ".3")); tl.to(AN, { [who]: 0, duration: 0.2 }, te(v + ".3")); }
+    if (camA) cam(ts(v + ".3") - 0.2, camA, 0.8);
+    popOut("#" + card, te(v + ".4") + 0.2);
+    if (onQ) onQ();
+  };
+  const FROG_CAM = { s: 1.45, x: 1500, y: 640 }, FROG_CAM2 = { s: 1.6, x: 1560, y: 660 };
+  verse("v1", { who: "frogNo", q: "qFrog", card: "kKulak", camQ: FROG_CAM, camA: FROG_CAM2, cx: LILY + 70, cy: 520 });
+  verse("v2", { who: "frogNo", q: "qFrog", card: "kKuyruk", camQ: FROG_CAM, camA: FROG_CAM2, cx: LILY + 70, cy: 520,
+    onQ: () => { const t = ts("v2.3"); tl.to(AN, { frogTurn: -1, duration: 0.2 }, t); tl.to(AN, { frogTurn: 1, duration: 0.2 }, t + 0.7); tl.to(AN, { frogTurn: -1, duration: 0.2 }, t + 1.4); tl.to(AN, { frogTurn: 1, duration: 0.2 }, t + 2.1); } });
+  [ts("v1.1"), ts("v2.1")].forEach((t) => { tl.to(R, { lookX: 16, tilt: 6, duration: 0.3 }, t); tl.to(R, { tilt: 0, duration: 0.4 }, t + 2); });
+
+  // ── choruses: frog jumps on every "zıp"/second "vırak", splash on "şıp", glow + beat punch ──
+  const chorus = (c) => { const a = ts(c + ".1") - 0.3, b = te(c + ".2");
+    cam(a, { s: 1.22, x: 1320, y: 600 }, 0.7, "power3.out"); tl.to(ENV, { glow: 1, duration: 0.2 }, a); tl.to(ENV, { glow: 0, duration: 0.3 }, b + 0.3);
+    tl.to(R, { dance: 1, earAmp: 2.2, duration: 0.25 }, a); tl.to(R, { dance: 0, earAmp: 1, duration: 0.4 }, b + 0.3);
+    LINES[LT[c + ".1"]].words.forEach(([w, t], i) => { if (i % 2 === 1) jump("frog", t, 0.42); squash(t, 0.4); });
+    LINES[LT[c + ".2"]].words.forEach(([w, t]) => { const n = norm(w);
+      if (n === "zıp" || n === "zıplar") { jump("frog", t, 0.42); shake(t, 6); }
+      if (n === "şıp" || n === "dalar") { splash(t + 0.08, LILY, S - 10, 12, 1.3); shake(t, 10); bubbles(t + 0.2, LILY - 40, S + 30, 3); } });
+    tl.to(AN, { party: 0.6, duration: 0.3 }, a); tl.to(AN, { party: 0, duration: 0.4 }, b + 0.3);
+  };
+  chorus("c1"); chorus("c2");
+
+  // ── fish verse ──
+  verse("v3", { who: "fishNo", q: "qFish", card: "kAyak", camQ: { s: 1.45, x: 1300, y: 760 }, camA: { s: 1.6, x: 1380, y: 780 }, cx: FISHX[1] + 120, cy: 600 });
+  LINES[LT["v3.1"]].words.forEach(([w, t]) => { if (norm(w) === "balık") { jump("f1", t, 0.7); splash(t + 0.5, FISHX[1], S, 6, 0.8); } });
+  LINES[LT["v3.5"]].words.forEach(([w, t], i) => { bubbles(t, FISHX[1] + 60, S + 60, 3); tl.to(AN, { fishO: 1, duration: 0.05 }, t); tl.to(AN, { fishO: 0, duration: 0.1 }, t + 0.18); });
+  jump("f0", te("v3.5") - 0.4, 0.75); jump("f2", te("v3.5") - 0.1, 0.75);
+  tl.to(AN, { fishUp: 1, duration: 0.5, ease: "back.out(2)" }, ts("v3.2") - 0.3); tl.to(AN, { fishUp: 0, duration: 0.5 }, te("v3.4"));
+
+  // ── duck verse: ducks swim in ──
+  tl.to(AN, { duckIn: 1, duration: 2.2, ease: "power2.out" }, ts("v4.1") - 1.6);
+  verse("v4", { who: "duckNo", q: "qDuck", card: "kDis", camQ: { s: 1.4, x: 1250, y: 680 }, camA: { s: 1.55, x: 1320, y: 700 }, cx: DUCKX[1] + 110, cy: 600 });
+  LINES[LT["v4.5"]].words.forEach(([w, t]) => { squash(t, 0.3); });
+
+  // ── bridge: the frog asks Fıstık ──
+  cam(ts("b.1") - 0.3, { s: 1.08, x: 1150, y: 600 }, 1.0);
+  tl.to(R, { lookX: 18, tilt: 8, duration: 0.3 }, ts("b.1")); qmark("qFistik", 900, 260, ts("b.1") + 0.3, ts("v5.3"));
+  tl.to(R, { lookX: 0, lookY: 4, tilt: 0, duration: 0.3 }, ts("b.2")); pose("wave", ts("b.2"), 0.3); pose("rest", te("b.2"), 0.3);
+
+  // ── Fıstık's verse: big ears ✓ ──
+  cam(ts("v5.1") - 0.3, { s: 1.4, x: 820, y: 480 }, 1.0);
+  gsap.set("#kFil", { transformOrigin: "50% 100%" }); popIn("#kFil", ts("v5.2")); stamp("#kFilB", ts("v5.3"));
+  tl.to(R, { flap: 1, earAmp: 2, mouth: 0.4, duration: 0.2 }, ts("v5.3")); tl.to(R, { flap: 0, earAmp: 1, duration: 0.3 }, te("v5.4"));
+  shake(ts("v5.4"), 6); squash(ts("v5.4"), 0.8);
+  popOut("#kFil", te("v5.4") + 0.3);
+
+  // ── pırt pırt ──
+  cam(ts("p.1") - 0.3, { s: 1.18, x: 900, y: 520 }, 0.9);
+  pose("trumpet", ts("p.1"), 0.35);
+  ["p.2", "p.3"].forEach((tag) => LINES[LT[tag]].words.forEach(([w, t]) => { if (norm(w) !== "pırt") return; kick(t); squash(t, 0.6); shake(t, 8); }));
+  tl.to(R, { dance: 1, duration: 0.3 }, ts("p.1"));
+  pose("rest", te("p.3") + 0.3, 0.4, "sine.inOut");
+
+  // ── final chorus: party, rainbow, message, confetti ──
+  const F0 = ts("f.1") - 0.3, F1 = te("f.8");
+  tl.to(ENV, { rainbow: 1, duration: 3.0, ease: "power1.inOut" }, F0); tl.to(ENV, { glow: 1, duration: 0.3 }, F0); tl.to(ENV, { glow: 0, duration: 0.6 }, F1);
+  tl.to(AN, { party: 1, swim: 1, duration: 0.8 }, F0); tl.to(R, { dance: 1, earAmp: 1.8, duration: 0.5 }, F0);
+  cam(F0, { s: 1.0, x: 960, y: 560 }, 1.0);
+  const fdur = F1 - F0;
+  [[0.18, { s: 1.3, x: 1450, y: 680 }], [0.36, { s: 1.0, x: 960, y: 540 }], [0.55, { s: 1.3, x: 820, y: 500 }], [0.74, { s: 1.25, x: 1350, y: 700 }], [0.9, { s: 1.0, x: 960, y: 540 }]]
+    .forEach(([f, c]) => cam(F0 + fdur * f, c, 1.3));
+  for (let t = F0 + 0.6, i = 0; t < F1; t += BEAT * 4, i++) { jump("f" + (i % 3), t, 0.75); if (i % 2 === 0) jump("frog", t + BEAT * 2, 0.45); }
+  ["f.2", "f.6"].forEach((tag) => LINES[LT[tag]].words.forEach(([w, t]) => { if (norm(w) === "pırt") { kick(t); } }));
+  tl.to(R, { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], duration: 0.4 }, te("f.2") + 0.2); tl.to(R, { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], duration: 0.4 }, te("f.6") + 0.2);
+  tl.to("#msg", { opacity: 1, duration: 0.01 }, ts("f.3") - 0.2);
+  tl.from("#msgBig span", { y: -200, opacity: 0, scale: 0.3, duration: 0.45, ease: "back.out(2.5)", stagger: 0.03, immediateRender: false }, ts("f.3") - 0.2);
+  tl.to("#msg", { opacity: 0, y: -30, duration: 0.3 }, te("f.4") + 0.6);
+  confetti(ts("f.4"), 960, 300); confetti(ts("f.4") + 0.5, 600, 260); confetti(ts("f.8"), 960, 300); confetti(ts("f.8") + 0.4, 1350, 280);
+  [ts("f.4"), ts("f.8")].forEach((t) => shake(t, 8));
+
+  // ── goodbye ──
+  const O1 = ts("o.1");
+  tl.to(AN, { party: 0.4, duration: 1.0 }, O1 - 0.6); tl.to(R, { dance: 0, duration: 0.5 }, O1 - 0.6);
+  tl.to("#bug", { x: -360, duration: 0.4, ease: "back.in(1.6)" }, O1 - 0.6);
+  cam(O1 - 0.6, { s: 1.12, x: 1160, y: 580 }, 1.4);
+  [O1, O1 + 0.7].forEach((t) => { tl.to(R, { A: 10, C: -110, L: 27, duration: 0.3, ease: "sine.inOut" }, t); tl.to(R, { A: 40, C: -130, L: 26, duration: 0.3, ease: "sine.inOut" }, t + 0.35); });
+  tl.set("#end", { opacity: 1 }, O1);
+  tl.from("#endBig span", { y: -300, opacity: 0, rotation: (i) => (i % 2 ? 12 : -12), duration: 0.55, ease: "bounce.out", stagger: 0.05, immediateRender: false }, O1);
+  tl.from("#bye", { scale: 0, duration: 0.45, ease: "back.out(2)", immediateRender: false }, O1 + 0.6);
+  jump("frog", ts("o.2"), 0.6); splash(ts("o.2") + 0.5, LILY, S - 10, 10, 1.2); pose("rest", ts("o.2") + 0.4, 0.4, "sine.inOut");
+
+  window.__fistik = { R, render, POSE, CAM, AN, JUMP };
+  const master = gsap.timeline({ paused: true });
+  const clock = { _t: 0 };
+  Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+  tl.paused(false); master.add(tl, 0);
+  master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+  window.addEventListener("hf-seek", (e) => render(e && e.detail ? e.detail.time : master.time()));
+  render(0);
+  window.__timelines["main"] = master;
+})();
+    </script>
+  </body>
+</html>

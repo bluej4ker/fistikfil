@@ -16,3 +16,6 @@ _to_delete/
 kaynak/intro/*/assets/fonts/
 kaynak/intro/*/assets/gsap.min.js
 *.log
+# bölüm projelerine build.py'nin kopyaladığı ortak dosyalar
+kaynak/04-kucuk-kurbaga/assets/fonts/
+kaynak/04-kucuk-kurbaga/assets/gsap.min.js

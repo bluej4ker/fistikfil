@@ -32,6 +32,7 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 1 | Fıstık Fil Yürüyor Güm Güm Güm · Eğlenceli Bebek ve Çocuk Şarkısı · Fıstık Fil | `wACdAOh7x_Y` | 1:31 | Yayında, 4K render |
 | 2 | Fıstık Fil ve Şırıl Şırıl Dere · Lık Lık Lık · Paylaşmayı Öğreten Çocuk Şarkısı · Fıstık Fil | `-Q7FF1rCyvY` | 3:01 | Yayında, 1080p |
 | 3 | Ali Baba'nın Çiftliği · Hayvan Sesleri · Fıstık Fil ile Çocuk Şarkıları | `QvaNHIh9SuA` | 3:01 | Yayında, 1080p, "Fıstık Fil ile Hayvanlar" listesinin 1. bölümü |
+| 4 | Küçük Kurbağa Kulağın Nerede? · Vücudumuzu Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:12 (açılış+kapanış dahil) | Hazır, yüklenmedi; "Fıstık Fil ile Hayvanlar" 2. bölüm |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 
@@ -55,6 +56,7 @@ FistikFil/
     ├── 01-gum-gum/               ← index.html (v3 kompozisyon), archive/v1-v2, build_v2.py, make_music.py, assets/gemini.mp3
     ├── 02-siril-siril-dere/      ← build.py + src/(template.html, rig_part.js, chars.js, lines.json) → index.html, thumb.html, assets/song.mp3
     ├── 03-ali-baba/              ← build.py, fw.py, lines_build.py, align.py, run.sh, src/(template.html, rig_part.js, cast2.js), index.html, brand/thumb.html, assets/song.m4a
+    ├── 04-kucuk-kurbaga/         ← gemini-prompt.txt, lines_build.py, beats.py, build.py, kapak.py, src/(template.html, rig_part.js, cast.js), lines.json, assets/(song.mp3, beats.json, whisper_words.json)
     ├── intro/                    ← açılış/kapanış/abone bandı: src/(intro.html, abone.html), build.py, make_jingle.py, render.sh, intro_ekle.py (§6.6)
     ├── reels/                    ← make_reel.py, make_cover.py, r1.json, r2.json, reel_lines_v1.json
     └── marka/                    ← extract.py, make.py (profil+banner), thumb.py, poses.json, _thumb.html
@@ -170,6 +172,10 @@ Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama:
 ### 6.1 Ses analizi ve söz zamanlama
 
 1. **Vokal ayırma:** `python3 -m demucs --two-stems=vocals -n htdemucs song.wav -o sep` → `sep/htdemucs/song/vocals.wav`.
+   - **Bulut oturumunda HuggingFace, dl.fbaipublicfiles (demucs) ve openaipublic (whisper) 403 veriyor.** Erişilebilenler: PyPI, npm, GitHub sürümleri. Çalışan yol (Video 4):
+     - Vokal: `pip install "audio-separator[cpu]" audioread` → `audio-separator song.mp3 -m UVR-MDX-NET-Voc_FT.onnx --model_file_dir models --output_format WAV` (model GitHub'dan iner, 3 dk şarkı ≈ 2,5 dk).
+     - ASR: npm paketi `sts-whisper-small` içinde Xenova/whisper-small (çok dilli, q8 ONNX) var. `npm pack sts-whisper-small` + `npm install --ignore-scripts @huggingface/transformers`, `env.localModelPath` ile yerel model; `return_timestamps:'word'`, `language:'turkish'`. Sesi 16 kHz mono f32le ham dosya olarak ver.
+     - whisper-small müzikli/karışık seste ve uzun tekrarlarda ("pırt pırt…", "vırak…") döngüye giriyor. Temiz vokal üzerinde çalıştır; döngüye giren bölümü ayrı kısa parça olarak yeniden çözümle ve elle `R` aralığı ver.
 2. **Transkripsiyon:**
    - `hyperframes transcribe` (whisper) Gemini'nin Türkçe şarkılı vokalinde çoğu zaman çöküyor ve "Altyazı M.K." gibi halüsinasyonlar üretiyor.
    - **Çalışan yöntem:** `faster-whisper` medium, `language="tr"`, `initial_prompt` içine sözlerin tamamı, `word_timestamps=True` (`kaynak/03-ali-baba/fw.py`).
@@ -180,6 +186,7 @@ Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama:
    - Video 3: `[{tag, words:[[kelime,t],...], end}]`; tag = `intro`, `v1.1`…`v8.5`, `bridge`, `final`, `outro`.
    - Video 1–2: `[[[kelime,t],...], ...]`.
 6. **Tempo:** `librosa.beat` ile. Ali Baba için `BEAT=0.4999` s, `B0=0.116` s (ilk vuruş).
+   - Gemini temposu şarkı içinde kayabiliyor (Video 4: 117,5 BPM, ±0,12 s sapma). Video 4'ten itibaren sabit BEAT yerine `beats.py` ile enstrümantal kanaldan çıkarılan vuruş listesi (`assets/beats.json`) kullanılır; `beatPos(t)` iki vuruş arasında doğrusal enterpolasyon yapar.
 
 ### 6.2 HyperFrames kompozisyonu
 
@@ -327,6 +334,19 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   - Pivotlar `data-o`.
 - Altyazı dosyası `subs.srt` de üretildi.
 
+### 7.4 Video 4 — "Küçük Kurbağa" (179,23 s + açılış/kapanış = 191,8 s) · Hayvanlar listesi 2. bölüm
+
+- **Şarkı:** Gemini, `kaynak/04-kucuk-kurbaga/gemini-prompt.txt` (8 sn vokalsiz giriş + coşkulu nakarat talimatlı). Gemini girişi 16,5 sn yaptı; 42,8–52,5 ve 78–92 sn arası enstrümantal aralar var. Bütün dizeler sırasıyla söylendi.
+- **Sahne:** Video 2'nin dere dekoru (su seviyesi sabit dolu), kurbağa nilüferde (LILY 1640), 3 balık, 2 ördek (kendi kıtalarında sağdan yüzerek gelir). Gökkuşağı finalde.
+- **Yeni öğeler:**
+  - Vücut parçası kartları (KULAK, KUYRUK, AYAK, DİŞ ve Fıstık için yeşil ✓ KULAK). İkonlar `cast.js` → `icon.*`.
+  - "…nerede?" satırında mor "?" balonu; "…yok" satırında hayvan kafa sallar (`AN.frogNo/fishNo/duckNo`), kartta kırmızı ✗ damgası.
+  - Kurbağa nilüferin altından fırlar (`AN.frogIn`); kuyruk kıtasında arkasını döner (`frogTurn`). Balık soruda yüzeye çıkar (`fishUp`).
+  - Nakarat/pırt/final pencerelerinde her vuruşta kamera nabzı (+%3,5) ve parlama (`pulse(t)`); kurbağa "zıp"larda zıplar, "şıp"ta su sıçrar.
+  - Final: "Herkes farklı, herkes güzel!" dev mesajı + konfeti.
+- Konuşan: soru satırları Fıstık, cevaplar hayvan; `lines.json` içinde `who` alanı (fistik/frog/fish/duck/all).
+- Açılış + abone bandı (0,1 ve ~44 sn) + kapanış `intro_ekle.py --lines lines.json` ile eklendi.
+
 ---
 
 ## 8. Teslimat (kullanıcının bilgisayarı)
@@ -466,7 +486,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [x] Bölüm 2 "Küçük Kurbağa": hikâye, söz ve Gemini promptu (`kaynak/04-kucuk-kurbaga/gemini-prompt.txt`). Sahne: Video 2'nin dere dekoru + `chars.js` kurbağa/balık/ördek/nilüfer yeniden kullanılacak.
 - [x] Açılış / kapanış / abone bandı paketi (`kaynak/intro/`, §6.6).
 - [ ] YouTube son ekranı için kapanışın 20 sn'lik bir varyantı (son ekran öğeleri en az 5 sn ister) düşünülebilir.
-- [ ] Küçük Kurbağa: kullanıcının Gemini'den şarkıyı üretip yüklemesi bekleniyor.
+- [x] Küçük Kurbağa: şarkı geldi, video + kapak + YouTube metni hazırlandı (`04 - Küçük Kurbağa/`). Yükleme kullanıcıda.
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
