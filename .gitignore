@@ -1,10 +1,14 @@
-# Büyük medya dosyaları (GitHub 100 MB sınırı) — videolar repoya girmez
-*.mp4
+# Büyük medya: teslim videoları (*.mp4) ve 4K kapaklar repoda. GitHub'ın 100 MB sınırını aşan videolar
+# `split -n 2 -d -a 1 x.mp4 x.mp4.parca` ile bölünür; tam dosya dışarıda kalır, parçalar + birlestir.sh repoya girer.
+# (Git LFS bulut ortamında lfs.github.com 403 verdiği için kullanılamıyor.)
+04 - Küçük Kurbağa/kucuk-kurbaga-4k.mp4
 *.mov
+# Ara çıktılar (renders/, kaynak/** altındaki videolar) repoya girmez.
 *.wav
 *.part_*
-# 4K kapak PNG'leri büyük olabilir; YouTube jpg'leri repoda kalır
-*-4k.png
+kaynak/**/*.mp4
+kaynak/**/*.mov
+kaynak/**/*-4k.png
 # Sistem / geçici
 .DS_Store
 __pycache__/

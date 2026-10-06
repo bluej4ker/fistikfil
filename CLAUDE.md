@@ -373,6 +373,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   4. Parçaları sil.
 - Köprü MP4 başlığına C2PA uuid kutusu ekleyebiliyor; birleştirilen dosya sorunsuz oynuyor.
 - Sohbete gönderilecek önizleme ≤ 30 MB olmalı; 720p'ye sıkıştır.
+- **Repoya medya:** Teslim videoları (`*.mp4`) ve kapaklar repoya girer. Git LFS kullanılamıyor (bulutta `lfs.github.com` 403). 100 MB'ı aşan video `split -n 2 -d -a 1 x.mp4 x.mp4.parca` ile bölünür; tam dosya `.gitignore`'a yazılır, parçalar + `x.mp4.sha256` + `birlestir.sh` commit'lenir. Kullanıcı `sh birlestir.sh` ile birleştirir.
 - Her video klasöründe: `<ad>-1080p.mp4` (veya 4k), `kapak-<ad>-youtube.jpg` (1280×720, < 2 MB), `kapak-<ad>-4k.png`, `youtube-metin.txt`.
 
 ---
@@ -478,6 +479,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 | SVG dönme merkezi kayıyor | `transform-origin` SVG'de güvenilmez | `rotate(a x y)` + `data-o` pivot |
 | Lint: birden fazla kök kompozisyon | Şablon HTML'ler de `data-composition-id` taşıyor | Şablonları `src/` altına taşı |
 | Reels altyazısı turuncu hap gibi | `.sub` sınıfı çakışması | `.rsub` |
+| Git LFS push "verify: Forbidden" | Bulut proxy'si lfs.github.com'u engelliyor | LFS yok; 100 MB üstü videoyu 2 parçaya böl + birlestir.sh |
 | Whisper "Altyazı M.K." | Şarkılı Türkçe vokalde halüsinasyon | demucs + faster-whisper + söz promptu + elle satır aralığı |
 | faster-whisper `av.open` hatası | Metadata okuma | librosa ile numpy ses ver |
 | `pkill` kendi kabuğunu öldürdü | Desen komut satırına da uyuyor | `ps … | awk | xargs kill` |
