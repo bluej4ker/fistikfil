@@ -23,3 +23,5 @@ kaynak/intro/*/assets/gsap.min.js
 # bölüm projelerine build.py'nin kopyaladığı ortak dosyalar
 kaynak/04-kucuk-kurbaga/assets/fonts/
 kaynak/04-kucuk-kurbaga/assets/gsap.min.js
+kaynak/05-fistik-fistik-yer-mi/assets/fonts/
+kaynak/05-fistik-fistik-yer-mi/assets/gsap.min.js
