@@ -52,26 +52,36 @@ def line_at(t):
 async def main():
     async with async_playwright() as p:
         b = await p.chromium.launch(executable_path=CHROME if os.path.exists(CHROME) else None)
-        pg = await b.new_page(viewport={"width": 1920, "height": 1080}, device_scale_factor=2)
-        if GSAP: await pg.route("**/gsap.min.js", lambda r: r.fulfill(path=GSAP, content_type="application/javascript", headers={"Access-Control-Allow-Origin": "*"}))
-        await pg.goto("file://" + cfg["comp"])
-        await pg.wait_for_function("!!(window.__timelines && window.__timelines.main)")
-        await pg.add_style_tag(content=OVERLAY_CSS)
-        await pg.evaluate("""(h) => { const o = document.createElement('div'); o.id = 'reelOv';
-            o.innerHTML = `<div class="logo"><span><b style="color:#3D9BFF">Fıstık</b> <b style="color:#FF7A3D">Fil</b></span></div><div class="hook">${h}</div><div class="rsub"></div>
-              <div class="end"><div class="t">${'Şarkının tamamı<br/>kanalda!'}</div><div class="c">▶ Fıstık Fil</div></div>`;
-            document.getElementById('root').appendChild(o); }""", cfg["hook"])
-        await pg.wait_for_timeout(800)                          # fonts (document.fonts.ready can hang in headless)
-        print("ready", flush=True)
-        # pass 1: where is Fıstık's head?
+        st = {}
+
+        async def setup():                                     # (re)open the page: a stalled renderer is replaced, not waited on
+            if st.get("pg"): await st["pg"].close()
+            pg = await b.new_page(viewport={"width": 1920, "height": 1080}, device_scale_factor=2)
+            if GSAP: await pg.route("**/gsap.min.js", lambda r: r.fulfill(path=GSAP, content_type="application/javascript", headers={"Access-Control-Allow-Origin": "*"}))
+            await pg.goto("file://" + cfg["comp"])
+            await pg.wait_for_function("!!(window.__timelines && window.__timelines.main)")
+            await pg.add_style_tag(content=OVERLAY_CSS)
+            await pg.evaluate("""(h) => { const o = document.createElement('div'); o.id = 'reelOv';
+                o.innerHTML = `<div class="logo"><span><b style="color:#3D9BFF">Fıstık</b> <b style="color:#FF7A3D">Fil</b></span></div><div class="hook">${h}</div><div class="rsub"></div>
+                  <div class="end"><div class="t">${'Şarkının tamamı<br/>kanalda!'}</div><div class="c">▶ Fıstık Fil</div></div>`;
+                document.getElementById('root').appendChild(o); }""", cfg["hook"])
+            await pg.wait_for_timeout(800)                       # fonts (document.fonts.ready can hang in headless)
+            st["pg"] = pg
+
+        async def safe(fn, tries=4):
+            for k in range(tries):
+                try: return await asyncio.wait_for(fn(st["pg"]), 20)
+                except Exception as e:
+                    print("retry", k, type(e).__name__, flush=True); await setup()
+            raise RuntimeError("page keeps stalling")
+
+        await setup(); print("ready", flush=True)
+        # pass 1: where is the tracked subject?
         xs = []
         for f in range(N):
-            t = T0 + f / FPS
-            tg = track_at(t)
-            if isinstance(tg, (int, float)):
-                await pg.evaluate(f"() => window.__timelines.main.seek({t:.4f})"); x = float(tg)
-            else:
-                x = await pg.evaluate(f"""() => {{ window.__timelines.main.seek({t:.4f}); const r = document.getElementById('{tg}').getBoundingClientRect(); return r.left + r.width / 2; }}""")
+            t = T0 + f / FPS; tg = track_at(t)
+            if isinstance(tg, (int, float)): x = float(tg)
+            else: x = await safe(lambda pg: pg.evaluate(f"""() => {{ window.__timelines.main.seek({t:.4f}); const r = document.getElementById('{tg}').getBoundingClientRect(); return r.left + r.width / 2; }}"""))
             xs.append(x)
             if f % 150 == 0: print("track", f, "/", N, flush=True)
         bias = cfg.get("bias", [])                            # [[t, dx], ...] extra pan toward the action
@@ -81,23 +91,25 @@ async def main():
             for (a, va), (b2, vb) in zip(bias, bias[1:]):
                 if t <= b2: k = (t - a) / (b2 - a); k = k * k * (3 - 2 * k); return va + (vb - va) * k
             return bias[-1][1]
-        # heavy smoothing (exponential both ways) so the crop glides
-        sm = xs[:]; a = 0.06
+        sm = xs[:]; a = 0.06                                     # heavy smoothing both ways so the crop glides
         for i in range(1, N): sm[i] = sm[i - 1] + a * (sm[i] - sm[i - 1])
         for i in range(N - 2, -1, -1): sm[i] = sm[i + 1] + a * (sm[i] - sm[i + 1])
         centers = [min(1920 - CW / 2, max(CW / 2, sm[i] + bias_at(T0 + i / FPS))) for i in range(N)]
-        # pass 2: render
+        # pass 2: render (frames already on disk are kept, so a restart resumes)
         for f in range(N):
+            path = f"{FR}/f{f:05d}.png"
+            if os.path.exists(path): continue
             t = T0 + f / FPS; L = line_at(t); left = centers[f] - CW / 2
-            html = ""
-            if L: html = " ".join((f"<b>{w}</b>" if wt <= t + 0.02 else f"<i>{w}</i>") for w, wt in L)
+            html = " ".join((f"<b>{w}</b>" if wt <= t + 0.02 else f"<i>{w}</i>") for w, wt in L) if L else ""
             endo = max(0.0, min(1.0, (t - (T1 - 2.2)) / 0.35))
             hooko = 1.0 if t - T0 < cfg.get("hookSecs", 4.0) else max(0.0, 1 - (t - T0 - cfg.get("hookSecs", 4.0)) / 0.4)
-            await pg.evaluate("""([t, left, html, endo, hooko]) => { window.__timelines.main.seek(t);
-                const o = document.getElementById('reelOv'); o.style.left = left + 'px';
-                o.querySelector(".rsub").innerHTML = html; o.querySelector(".rsub").style.opacity = endo > 0.5 ? 0 : 1;
-                o.querySelector('.end').style.opacity = endo; o.querySelector('.hook').style.opacity = hooko; }""", [t, left, html, endo, hooko])
-            await pg.screenshot(path=f"{FR}/f{f:05d}.png", clip={"x": left, "y": 0, "width": CW, "height": 1080})
+            async def shot(pg):
+                await pg.evaluate("""([t, left, html, endo, hooko]) => { window.__timelines.main.seek(t);
+                    const o = document.getElementById('reelOv'); o.style.left = left + 'px';
+                    o.querySelector(".rsub").innerHTML = html; o.querySelector(".rsub").style.opacity = endo > 0.5 ? 0 : 1;
+                    o.querySelector('.end').style.opacity = endo; o.querySelector('.hook').style.opacity = hooko; }""", [t, left, html, endo, hooko])
+                await pg.screenshot(path=path, clip={"x": left, "y": 0, "width": CW, "height": 1080})
+            await safe(shot)
             if f % 150 == 0: print("frame", f, "/", N, flush=True)
         await b.close()
 
