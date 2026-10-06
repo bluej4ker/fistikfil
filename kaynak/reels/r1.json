@@ -1,0 +1,3 @@
+{"comp": "/home/claude/fistik-fil/index.html", "start": 21.0, "end": 51.8, "audio": "/home/claude/fistik-fil/assets/gemini.mp3",
+ "lines": "/home/claude/reel_lines_v1.json", "hook": "Fıstık Fil yürüyor<br/>GÜM GÜM GÜM!", "hookSecs": 4.0,
+ "bias": [[33.5, 0], [34.5, 90], [43.6, 90], [44.4, 0]], "out": "/home/claude/reels/reel1"}

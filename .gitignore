@@ -1,0 +1,14 @@
+# Büyük medya dosyaları (GitHub 100 MB sınırı) — videolar repoya girmez
+*.mp4
+*.mov
+*.wav
+*.part_*
+# 4K kapak PNG'leri büyük olabilir; YouTube jpg'leri repoda kalır
+*-4k.png
+# Sistem / geçici
+.DS_Store
+__pycache__/
+node_modules/
+renders/
+Claude outputs/
+_to_delete/

@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Ali Baba'nın Çiftliği · Fıstık Fil</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2" crossorigin="anonymous"></script>
+    <style>
+      /* Baloo 2 · SIL OFL 1.1 (assets/fonts/OFL-Baloo2.txt) */
+      @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #8FD3FF; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Baloo 2", sans-serif; font-weight: 800; color: #2B2D42; background: #8FD3FF; }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      #shake { position: absolute; inset: 0; }
+      .full { position: absolute; left: -200px; top: -200px; width: 2320px; height: 1480px; overflow: visible; }
+      #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 300px 620px; }
+      #char { position: absolute; inset: 0; overflow: visible; }
+      #char svg { width: 600px; height: 640px; overflow: visible; }
+      .snd { font-size: 88px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 13px #fff; paint-order: stroke fill; text-shadow: 0 7px 0 rgba(0,0,0,.14); }
+      .card { padding: 6px 34px 0; border-radius: 30px; background: #fff; border: 6px solid #FFC23D; font-size: 64px; line-height: 1.25; white-space: nowrap; box-shadow: 0 10px 0 rgba(0,0,0,.12); }
+      .note { font-size: 62px; -webkit-text-stroke: 6px #fff; paint-order: stroke fill; }
+      .conf { width: 20px; height: 26px; border-radius: 5px; }
+      #title { left: 0; right: 0; top: 64px; text-align: center; }
+      .big { display: inline-block; font-size: 132px; line-height: 1; }
+      .big span { display: inline-block; -webkit-text-stroke: 11px #fff; paint-order: stroke fill; text-shadow: 0 9px 0 rgba(0,0,0,.15); }
+      .sub { margin-top: 12px; font-size: 50px; font-weight: 700; line-height: 1.3; color: #fff; display: inline-block; padding: 6px 36px 0; background: #E5484D; border-radius: 40px; box-shadow: 0 7px 0 rgba(0,0,0,.12); }
+      #bug { left: 40px; top: 36px; padding: 6px 26px 0; border-radius: 30px; background: rgba(255,255,255,.92); font-size: 36px; color: #3D7DD8; }
+      #bug b { color: #F59E1B; }
+      #lyric { left: 0; right: 0; top: 964px; height: 90px; display: flex; justify-content: center; }
+      .line { opacity: 0; position: absolute; top: 0; padding: 4px 40px 0; border-radius: 42px; background: rgba(255,255,255,.95); font-size: 52px; line-height: 76px; white-space: nowrap; color: #8A93A6; box-shadow: 0 6px 0 rgba(0,0,0,.1); }
+      .line span { display: inline-block; margin: 0 10px; }
+      #end { left: 980px; right: 20px; top: 210px; text-align: center; }
+      .bye { margin-top: 10px; font-size: 62px; font-weight: 700; line-height: 1.3; color: #fff; display: inline-block; padding: 8px 40px 0; border-radius: 50px; background: #3D9BFF; }
+      #grade { inset: 0; background: radial-gradient(ellipse at 50% 40%, rgba(255,240,200,0) 55%, rgba(60,40,10,.20) 100%); }
+      #grain { inset: 0; opacity: .07; mix-blend-mode: overlay; background-size: 256px 256px; }
+      #spot { inset: 0; background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0, rgba(0,0,0,0) 220px, rgba(10,15,40,.62) 380px); opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="180" data-width="1920" data-height="1080">
+      <audio id="song" src="assets/song.m4a" data-start="0" data-duration="180" data-volume="1"></audio>
+      <section id="world" class="clip" data-start="0" data-duration="180" data-track-index="0" data-layout-allow-overflow>
+        <div id="cam" data-layout-allow-overflow>
+          <div id="shake" data-layout-allow-overflow>
+            <svg id="bg" class="full" viewBox="-200 -200 2320 1480"></svg>
+            <div id="actors" class="abs" style="inset:0"></div>
+            <svg id="fg" class="full" viewBox="-200 -200 2320 1480"></svg>
+            <div id="fx" class="abs" style="inset:0;z-index:20"></div>
+          </div>
+        </div>
+        <div id="spot" class="abs"></div>
+        <div id="grade" class="abs"></div>
+        <div id="grain" class="abs"></div>
+        <div id="title" class="abs"><div class="big" id="titleBig"></div><br/><div class="sub" id="titleSub">Fıstık Fil ile Hayvan Sesleri</div></div>
+        <div id="bug" class="abs">Fıstık <b>Fil</b></div>
+        <div id="lyric" class="abs"></div>
+        <div id="end" class="abs"><div class="big" id="endBig"></div><br/><div class="bye" id="bye">Hoşça kal!</div></div>
+      </section>
+    </div>
+
+    <script>
+/*CAST*/
+(function () {
+  window.__timelines = window.__timelines || {};
+  const $ = (s) => document.querySelector(s);
+  const NS = "http://www.w3.org/2000/svg";
+  const D = 180, BEAT = /*BEAT*/, B0 = /*B0*/, TAU = Math.PI * 2;
+  const TC = ["#3D9BFF", "#FF5A5F", "#FFC23D", "#3FBF6F", "#A66BFF", "#FF7A3D"];
+  const OL = "#4C76B5", INK = "#2B2D42";
+  const LINES = /*LINES*/;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const smooth = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
+  const F = window.FARM;
+
+  // Fıstık lives in his own wrapper inside the actor layer
+  $("#actors").innerHTML = `<div id="charWrap" class="abs"><div id="char"></div></div>`;
+/*RIG*/
+
+  // ───────────────────────── background: the farm ─────────────────────────
+  const cloud = (x, y, s, o = 1) => `<g transform="translate(${x} ${y}) scale(${s})" opacity="${o}"><g fill="url(#gCloud)"><circle cx="80" cy="80" r="52"/><circle cx="150" cy="56" r="66"/><circle cx="226" cy="84" r="48"/><rect x="58" y="84" width="196" height="50" rx="25"/></g>
+      <ellipse cx="160" cy="128" rx="96" ry="10" fill="#C9E7FB" opacity=".7"/></g>`;
+  const tree = (x, y, s, c1, c2) => `<g transform="translate(${x} ${y}) scale(${s})"><rect x="-13" y="-10" width="26" height="96" rx="11" fill="#9A6A3B" stroke="#6E4A27" stroke-width="4"/>
+      <circle cx="0" cy="-64" r="72" fill="${c1}" stroke="${c2}" stroke-width="5"/><circle cx="-48" cy="-26" r="46" fill="${c1}" stroke="${c2}" stroke-width="5"/><circle cx="48" cy="-26" r="46" fill="${c1}" stroke="${c2}" stroke-width="5"/>
+      <circle cx="-24" cy="-92" r="22" fill="#fff" opacity=".22"/><circle cx="30" cy="-40" r="9" fill="#E5484D"/><circle cx="-40" cy="-30" r="9" fill="#E5484D"/><circle cx="6" cy="-100" r="9" fill="#E5484D"/></g>`;
+  const flower = (x, y, c, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 V42" stroke="#3E9B47" stroke-width="5"/><ellipse cx="10" cy="24" rx="10" ry="5" fill="#4FAE48" transform="rotate(-30 10 24)"/>
+      ${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-14" rx="9" ry="14" fill="${c}" transform="rotate(${a})"/>`).join("")}<circle r="8" fill="#FFD84D"/></g>`;
+  const sunflower = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 V150" stroke="#3E9B47" stroke-width="10"/><ellipse cx="22" cy="80" rx="26" ry="11" fill="#4FAE48" transform="rotate(-25 22 80)"/><ellipse cx="-22" cy="110" rx="26" ry="11" fill="#4FAE48" transform="rotate(25 -22 110)"/>
+      ${Array.from({ length: 14 }, (_, i) => `<ellipse cx="0" cy="-34" rx="11" ry="24" fill="#FFC21A" stroke="#E39A00" stroke-width="2" transform="rotate(${i * 360 / 14})"/>`).join("")}<circle r="24" fill="#7A4A1E"/><circle r="15" fill="#5C3512"/></g>`;
+  const hay = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><rect x="-90" y="-80" width="180" height="80" rx="22" fill="url(#gHay)" stroke="#B88A2A" stroke-width="5"/>
+      <path d="M-70 -60 h140 M-74 -40 h148 M-70 -20 h140" stroke="#D9A93A" stroke-width="4" stroke-linecap="round"/><path d="M-40 -80 v80 M40 -80 v80" stroke="#C0392B" stroke-width="7"/></g>`;
+  const post = (x, y, h) => `<rect x="${x - 11}" y="${y - h}" width="22" height="${h}" rx="4" fill="url(#gWood)" stroke="#7A5230" stroke-width="3.5"/><path d="M${x - 11} ${y - h + 2} l11 -10 l11 10" fill="#E9D3B1" stroke="#7A5230" stroke-width="3"/>`;
+  const fence = (x0, x1, y, h = 86) => { let s = ""; for (let x = x0; x <= x1; x += 110) s += post(x, y, h);
+    return `<rect x="${x0}" y="${y - h + 18}" width="${x1 - x0}" height="16" rx="6" fill="url(#gWood)" stroke="#7A5230" stroke-width="3"/><rect x="${x0}" y="${y - h + 52}" width="${x1 - x0}" height="16" rx="6" fill="url(#gWood)" stroke="#7A5230" stroke-width="3"/>` + s; };
+  const tuft = (x, y, s = 1) => `<path transform="translate(${x} ${y}) scale(${s})" d="M-16 0 q6 -28 10 0 q4 -36 10 0 q6 -26 12 0z" fill="#4FAE48"/>`;
+  E("bg").innerHTML = `<defs>
+      <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5DB8F5"/><stop offset=".55" stop-color="#A9DCFB"/><stop offset="1" stop-color="#F3F9E8"/></linearGradient>
+      <radialGradient id="gSun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF6C8"/><stop offset=".35" stop-color="#FFE48A" stop-opacity=".9"/><stop offset="1" stop-color="#FFE48A" stop-opacity="0"/></radialGradient>
+      <linearGradient id="gCloud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E7F3FC"/></linearGradient>
+      <linearGradient id="gHill1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFE59A"/><stop offset="1" stop-color="#9ACF78"/></linearGradient>
+      <linearGradient id="gHill2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9BD872"/><stop offset="1" stop-color="#78BF57"/></linearGradient>
+      <linearGradient id="gGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FD064"/><stop offset=".5" stop-color="#63BC4F"/><stop offset="1" stop-color="#4FA543"/></linearGradient>
+      <linearGradient id="gPath" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8C892"/><stop offset="1" stop-color="#D4A86A"/></linearGradient>
+      <linearGradient id="gBarn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#D93A3A"/><stop offset=".6" stop-color="#C62F33"/><stop offset="1" stop-color="#A9262B"/></linearGradient>
+      <linearGradient id="gRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6B3A3A"/><stop offset="1" stop-color="#4E2A2C"/></linearGradient>
+      <linearGradient id="gDark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A1A1A"/><stop offset="1" stop-color="#4A2E22"/></linearGradient>
+      <linearGradient id="gWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E2B886"/><stop offset="1" stop-color="#C08A55"/></linearGradient>
+      <linearGradient id="gHay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBDB7A"/><stop offset="1" stop-color="#E9B647"/></linearGradient>
+      <linearGradient id="gSilo" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E7ECF2"/><stop offset=".5" stop-color="#C9D2DD"/><stop offset="1" stop-color="#9FAABA"/></linearGradient>
+      <pattern id="pCrop" width="40" height="18" patternUnits="userSpaceOnUse"><rect width="40" height="18" fill="#B7DB7F"/><rect width="40" height="7" fill="#9CC965"/></pattern>
+      <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+    </defs>
+    <rect x="-200" y="-200" width="2320" height="1480" fill="url(#gSky)"/>
+    <circle cx="1640" cy="150" r="260" fill="url(#gSun)"/><circle cx="1640" cy="150" r="70" fill="#FFF3B0"/>
+    <g id="clouds">${cloud(60, 90, 1.1) + cloud(700, 40, 0.8, 0.95) + cloud(1180, 150, 0.65, 0.9) + cloud(2050, 70, 1.0) + cloud(2600, 120, 0.75)}</g>
+    <path d="M-200 640 Q150 520 520 600 T1240 580 T1980 600 T2300 620 V1300 H-200Z" fill="url(#gHill1)"/>
+    <path d="M820 610 Q1100 560 1400 600 L1400 640 Q1100 620 820 650Z" fill="url(#pCrop)" opacity=".9"/>
+    ${[140, 420, 980, 1880].map((x, i) => tree(x, 610 - (i % 2) * 14, 0.42, "#8CCB6E", "#6FAF55")).join("")}
+    <g transform="translate(250 600)">
+      <path d="M-34 0 L-18 -230 L18 -230 L34 0Z" fill="#F4EBDD" stroke="#9C7A55" stroke-width="5"/><path d="M-26 -230 L0 -262 L26 -230Z" fill="#B44A3A" stroke="#7E2E25" stroke-width="5"/>
+      <rect x="-10" y="-70" width="20" height="40" rx="8" fill="#6E4A2E"/>
+      <g id="blades" transform="translate(0 -226)">${[0, 90, 180, 270].map((a) => `<g transform="rotate(${a})"><rect x="-7" y="-150" width="14" height="150" fill="#8C6A48"/><rect x="7" y="-146" width="40" height="120" rx="4" fill="#FFF8EC" stroke="#9C7A55" stroke-width="4"/></g>`).join("")}<circle r="14" fill="#7E2E25" stroke="#4E1C16" stroke-width="4"/></g>
+    </g>
+    <path d="M-200 720 Q260 660 700 700 T1500 690 T2300 700 V1300 H-200Z" fill="url(#gHill2)"/>
+    <!-- barn -->
+    <g transform="translate(1440 800)">
+      <ellipse cx="0" cy="8" rx="330" ry="26" fill="rgba(40,70,20,.25)" filter="url(#soft)"/>
+      <path d="M-270 0 L-270 -300 L0 -460 L270 -300 L270 0Z" fill="url(#gBarn)" stroke="#7E1F22" stroke-width="7" stroke-linejoin="round"/>
+      ${Array.from({ length: 12 }, (_, i) => `<path d="M${-246 + i * 44} -2 V${i < 6 ? -300 - i * 26 : -300 - (11 - i) * 26}" stroke="#A8282C" stroke-width="3" opacity=".6"/>`).join("")}
+      <path d="M-300 -292 L0 -478 L300 -292 L282 -270 L0 -446 L-282 -270Z" fill="url(#gRoof)" stroke="#3A1E20" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M-270 -300 L0 -460 L270 -300" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linejoin="round"/>
+      <g transform="translate(0 -350)"><rect x="-64" y="-56" width="128" height="104" rx="6" fill="#4A2E22" stroke="#FFF" stroke-width="10"/><path d="M-54 40 q30 -40 50 -10 q20 -30 58 6" fill="#F6CF5E"/><path d="M-60 -50 L60 44 M60 -50 L-60 44" stroke="#FFF" stroke-width="8"/></g>
+      <rect x="-150" y="-236" width="300" height="236" fill="url(#gDark)"/>
+      <g id="inside" opacity=".9"><path d="M-130 -10 q40 -60 90 -20 q30 -40 70 0 q30 -30 70 -10 v30 h-230z" fill="#E9BE55"/></g>
+      <rect x="-160" y="-246" width="320" height="246" fill="none" stroke="#FFF" stroke-width="14" stroke-linejoin="round"/>
+      <g id="doorL"><rect x="-150" y="-236" width="150" height="236" fill="url(#gBarn)" stroke="#7E1F22" stroke-width="4"/><rect x="-140" y="-226" width="130" height="216" fill="none" stroke="#FFF" stroke-width="10"/><path d="M-140 -226 L-10 -10 M-10 -226 L-140 -10" stroke="#FFF" stroke-width="10"/><circle cx="-22" cy="-118" r="8" fill="#3A1E20"/></g>
+      <g id="doorR"><rect x="0" y="-236" width="150" height="236" fill="url(#gBarn)" stroke="#7E1F22" stroke-width="4"/><rect x="10" y="-226" width="130" height="216" fill="none" stroke="#FFF" stroke-width="10"/><path d="M10 -226 L140 -10 M140 -226 L10 -10" stroke="#FFF" stroke-width="10"/><circle cx="22" cy="-118" r="8" fill="#3A1E20"/></g>
+      <rect x="-270" y="-300" width="40" height="300" fill="#FFF" opacity=".12"/>
+    </g>
+    <g transform="translate(1810 800)"><rect x="-70" y="-420" width="140" height="420" rx="10" fill="url(#gSilo)" stroke="#6B7686" stroke-width="5"/>
+      ${[1, 2, 3, 4, 5].map((i) => `<path d="M-70 ${-i * 70} h140" stroke="#8A95A6" stroke-width="3"/>`).join("")}<path d="M-76 -420 Q0 -520 76 -420Z" fill="#9AA3B0" stroke="#5B6575" stroke-width="5"/></g>
+    <!-- yard -->
+    <path d="M-200 790 Q480 760 960 784 T2300 780 V1300 H-200Z" fill="url(#gGrass)"/>
+    <path d="M1300 800 Q1250 880 1120 940 Q980 1000 880 1300 L1500 1300 Q1440 1060 1460 960 Q1500 860 1580 800Z" fill="url(#gPath)" opacity=".92"/>
+    ${[[1240, 905], [1360, 1010], [1180, 1100], [1450, 1150]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="18" ry="8" fill="#C59A5E"/>`).join("")}
+    ${fence(-200, 1120, 812)}
+    ${hay(110, 830, 0.9)}${hay(1010, 820, 0.55)}
+    ${sunflower(-30, 640, 0.8)}${sunflower(60, 690, 0.65)}
+    ${[60, 300, 620, 900, 1650, 1900, 2100].map((x, i) => tuft(x, 860 + (i * 41) % 140, 1.2)).join("")}
+    ${[[380, 900, "#FF8FB1"], [760, 1010, "#fff"], [980, 930, "#B58CFF"], [1700, 980, "#FFD84D"], [1960, 900, "#FF8FB1"], [520, 1040, "#FFD84D"]].map(([x, y, c]) => flower(x, y, c)).join("")}`;
+  E("fg").innerHTML = `<g fill="#3F9C3E">${[-120, 60, 280, 1560, 1760, 1980].map((x) => `<path d="M${x} 1090 q14 -80 24 0 q8 -100 22 0 q12 -70 26 0z"/>`).join("")}</g>
+    ${[[-60, 1080, "#FF6F91", 1.6], [1880, 1090, "#FFC23D", 1.5]].map(([x, y, c, s]) => flower(x, y, c, s)).join("")}`;
+
+  // ───────────────────────── actors ─────────────────────────
+  const ACT = ["aliBaba", "cow", "sheep", "hen", "duck", "dog", "cat", "donkey"];
+  const LIDC = { aliBaba: "#F2B48C", cow: "#ECE9EE", sheep: "#5B5466", hen: "#F7EDE2", duck: "#FFDF5C", dog: "#E3A46A", cat: "#F7A04A", donkey: "#9F98AB" };
+  ACT.forEach((n) => { const d = document.createElement("div"); d.className = "abs"; d.id = "A_" + n; d.style.left = "0px"; d.style.top = "0px";
+    d.innerHTML = `<svg viewBox="-260 -520 520 540" width="520" height="540" style="position:absolute;left:-260px;top:-520px;overflow:visible;--lid:${LIDC[n]}"><g class="root">${F[n]()}</g></svg>`;
+    E("actors").appendChild(d); });
+  // stacking: Ali Baba and Fıstık in front of the line-up, stage animal in front of all
+  E("A_aliBaba").style.zIndex = 5; E("charWrap").style.zIndex = 6;
+
+  // fx pools
+  for (let i = 0; i < 60; i++) { const s = document.createElement("div"); s.className = "abs snd"; s.id = "sw" + i; s.style.left = "0px"; s.style.top = "0px"; s.style.opacity = 0; E("fx").appendChild(s); }
+  for (let i = 0; i < 18; i++) { const n = document.createElement("div"); n.className = "abs note"; n.id = "n" + i; n.textContent = i % 2 ? "♫" : "♪"; n.style.color = TC[i % 6]; n.style.left = "0px"; n.style.top = "0px"; n.style.opacity = 0; E("fx").appendChild(n); }
+  for (let i = 0; i < 70; i++) { const c = document.createElement("div"); c.className = "abs conf"; c.id = "cf" + i; c.style.background = TC[i % 6]; c.style.left = "0px"; c.style.top = "0px"; c.style.opacity = 0; if (i % 3 === 0) c.style.borderRadius = "50%"; E("fx").appendChild(c); }
+  const NAMES = ["İNEK", "KOYUN", "TAVUK", "ÖRDEK", "KÖPEK", "KEDİ", "EŞEK", "FIL"];
+  NAMES.forEach((n, i) => { const c = document.createElement("div"); c.className = "abs card"; c.id = "card" + i; c.textContent = n === "FIL" ? "FİL" : n; c.style.color = TC[(i + 1) % 6]; c.style.opacity = 0; c.style.left = "0px"; c.style.top = "0px"; E("fx").appendChild(c); });
+  const letters = (txt, host) => [...txt].forEach((ch, i) => { const s = document.createElement("span"); s.textContent = ch === " " ? " " : ch; s.style.color = TC[i % 6]; host.appendChild(s); });
+  letters("Ali Baba'nın Çiftliği", $("#titleBig")); letters("Fıstık Fil", $("#endBig"));
+  // film grain (static noise texture)
+  { const cv = document.createElement("canvas"); cv.width = cv.height = 256; const cx = cv.getContext("2d"), im = cx.createImageData(256, 256); let s = 7;
+    for (let i = 0; i < im.data.length; i += 4) { s = (s * 16807) % 2147483647; const v = s % 256; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+    cx.putImageData(im, 0, 0); E("grain").style.backgroundImage = `url(${cv.toDataURL()})`; }
+
+  // ───────────────────────── staging ─────────────────────────
+  const FISTIK = { x: 230, feet: 975, s: 0.6 };
+  const STAGE = { x: 1180, feet: 1000 };
+  const DOOR = { x: 1440, feet: 800 };
+  const SLOTS = [[640, 836], [750, 836], [860, 836], [970, 836], [1080, 836], [1800, 846], [1910, 850]];
+  const ANIMALS = ["cow", "sheep", "hen", "duck", "dog", "cat", "donkey"];
+  const ASCALE = { cow: 0.95, sheep: 1.0, hen: 1.15, duck: 1.15, dog: 1.0, cat: 1.05, donkey: 0.9 };
+  const VERSES = [1, 2, 3, 4, 5, 6, 7].map((v) => LINES.filter((L) => L.tag.startsWith(`v${v}.`)));
+  const V8 = LINES.filter((L) => L.tag.startsWith("v8."));
+  const lineStart = (L) => L.words[0][1];
+  // per-animal state (pure functions of t built from keyframes)
+  const KF = {};                                   // name → [[t, x, y, s, hop]]
+  const kf = (n, t, x, y, s, hop = 0) => (KF[n] = KF[n] || []).push([t, x, y, s, hop]);
+  const at = (n, t) => { const k = KF[n]; if (!k) return null; if (t <= k[0][0]) return k[0]; for (let i = 1; i < k.length; i++) if (t <= k[i][0]) {
+      const a = k[i - 1], b = k[i], u = smooth(0, 1, (t - a[0]) / Math.max(1e-6, b[0] - a[0])); return [t, a[1] + (b[1] - a[1]) * u, a[2] + (b[2] - a[2]) * u, a[3] + (b[3] - a[3]) * u, b[4], (t - a[0]) / Math.max(1e-6, b[0] - a[0])]; }
+    return k[k.length - 1]; };
+  const HIDE = [-500, 1100, 0.01];
+  ANIMALS.forEach((n, i) => {
+    const V = VERSES[i], t1 = lineStart(V[0]), t5 = lineStart(V[4]), tEnd = V[4].end;
+    const s = ASCALE[n];
+    kf(n, 0, DOOR.x, DOOR.feet, 0.0001);
+    kf(n, t1 - 2.4, DOOR.x, DOOR.feet - 10, 0.0001);
+    kf(n, t1 - 2.3, DOOR.x, DOOR.feet - 10, 0.42 * s);                       // appears in the doorway
+    kf(n, t1 - 0.25, STAGE.x, STAGE.feet, s, 1);                            // hops to the stage
+    const L3 = V[2].words, L4 = V[3].words;
+    // "burada" → left, "şurada" → right
+    const bur = L3.find((w) => w[0].toLowerCase().startsWith("burada"))[1], sur = L3.find((w) => w[0].toLowerCase().startsWith("şurada"))[1];
+    kf(n, bur - 0.3, STAGE.x, STAGE.feet, s); kf(n, bur + 0.15, STAGE.x - 190, STAGE.feet, s, 1);
+    kf(n, sur - 0.3, STAGE.x - 190, STAGE.feet, s); kf(n, sur + 0.15, STAGE.x + 190, STAGE.feet, s, 1);
+    const b2 = L4[0][1], s2 = L4.find((w) => w[0].toLowerCase().startsWith("şurada"))[1];
+    kf(n, b2 - 0.1, STAGE.x - 120, STAGE.feet, s, 1); kf(n, s2 + 0.1, STAGE.x + 120, STAGE.feet, s, 1);
+    kf(n, L4[L4.length - 1][1], STAGE.x, STAGE.feet, s, 1);
+    // walk to the line-up during the last line
+    kf(n, t5 + 1.2, STAGE.x, STAGE.feet, s);
+    const [sx, sy] = SLOTS[i];
+    kf(n, Math.min(tEnd + 0.6, t5 + 3.6), sx, sy, 0.45 * s, 1);
+    // final party: step forward a little
+    kf(n, 164.4, sx, sy, 0.45 * s); kf(n, 165.2, sx, sy + 28, 0.52 * s, 1);
+    kf(n, 175.5, sx, sy + 28, 0.52 * s);
+  });
+  // Ali Baba + Fıstık
+  kf("aliBaba", 0, 520, 990, 0.8); kf("aliBaba", D, 520, 990, 0.8);
+
+  // sound words (from lyric words) → bubble positions
+  const SOUND = { "möö": 0, "mee": 1, "gıt": 2, "gıdak": 2, "vak": 3, "hav": 4, "miyav": 5, "aii": 6, "pırt": 7, "pırrt": 7 };
+  const norm = (w) => w.toLowerCase().replace(/[!,.?…]/g, "");
+  const SW = [];
+  LINES.forEach((L) => L.words.forEach(([w, t], wi) => { const n = norm(w); if (!(n in SOUND)) return; if (n === "gıdak" && wi > 0 && norm(L.words[wi - 1][0]) === "gıt") return;
+    SW.push({ t, txt: (n === "gıt" ? "GIT GIDAK" : n === "pırrt" ? "PIRRT" : w.replace(/[!,.?]/g, "").toLocaleUpperCase("tr")) + "!", who: SOUND[n], tag: L.tag }); }));
+
+  // ───────────────────────── state ─────────────────────────
+  const R = { A: 88, C: -140, L: 22, mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, walk: 0, sway: 0, tilt: 0, bob: 1 };
+  const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5] };
+  const CAM = { x: 960, y: 560, s: 1.0, r: 0 };
+  const ST = { doors: 0, spot: 0, party: 0, fx: FISTIK.x, fs: FISTIK.s, ffeet: FISTIK.feet, aliArm: 0, aliPoint: 0, blades: 0 };
+  const MO = {};                                   // mouth open per actor
+  ACT.forEach((n) => (MO[n] = 0));
+  const BL = {};  ACT.forEach((n) => (BL[n] = 0));
+  const EV = { notes: [], conf: [] };
+
+  function drawActor(n, t, beatPh) {
+    const a = at(n, t); if (!a) return; const el = E("A_" + n), [, x, y, s, hop, u] = a;
+    const hopY = hop && u !== undefined && u < 1 ? -Math.abs(Math.sin(Math.PI * u * 3)) * 60 * s : 0;
+    const party = ST.party * Math.abs(Math.sin(beatPh / 2 + ACT.indexOf(n))) * 26 * s;
+    const bob = (1 - Math.cos(beatPh)) * 3 * s;
+    el.style.transform = `translate(${x.toFixed(1)}px, ${(y + hopY - party - bob).toFixed(1)}px) scale(${s.toFixed(3)})`;
+    el.style.opacity = s < 0.01 ? 0 : 1;
+    el.style.zIndex = n === "aliBaba" ? 5 : (s > 0.7 ? 8 : 2);
+    const g = el.querySelector(".root");
+    const m = MO[n];
+    g.querySelectorAll(".mO").forEach((e) => e.setAttribute("opacity", m > 0.3 ? 1 : 0));
+    g.querySelectorAll(".mC").forEach((e) => e.setAttribute("opacity", m > 0.3 ? 0 : 1));
+    const rot = (e, a) => e.setAttribute("transform", `rotate(${a.toFixed(2)} ${e.dataset.o})`);
+    const head = g.querySelector(".head"); if (head) rot(head, 3 * Math.sin(beatPh / 2 + n.length) + m * 4);
+    g.querySelectorAll(".lid").forEach((e) => { const y0 = e.dataset.y; e.setAttribute("transform", `translate(0 ${y0}) scale(1 ${Math.max(0.001, BL[n]).toFixed(3)}) translate(0 ${-y0})`); });
+    const ea = 8 * Math.sin(beatPh + n.length);
+    g.querySelectorAll(".earL").forEach((e) => rot(e, -ea)); g.querySelectorAll(".earR").forEach((e) => rot(e, ea));
+    g.querySelectorAll(".tail").forEach((e) => rot(e, 12 * Math.sin(beatPh * (n === "dog" ? 2 : 1))));
+    const walking = hop && u !== undefined && u < 1;
+    g.querySelectorAll(".legL").forEach((e) => rot(e, walking ? 16 * Math.sin(t * 18) : 0));
+    g.querySelectorAll(".legR").forEach((e) => rot(e, walking ? -16 * Math.sin(t * 18) : 0));
+    if (n === "aliBaba") { rot(g.querySelector(".armR"), -ST.aliPoint * 78); rot(g.querySelector(".armL"), ST.aliArm * (105 + 18 * Math.sin(t * 9))); }
+  }
+
+  function render(t) {
+    const beatPh = TAU * (t - B0) / BEAT;
+    // ── Fıstık ──
+    el.rig.setAttribute("transform", `translate(0 ${(-R.bob * 9 * (1 - Math.cos(beatPh)) / 2).toFixed(2)})`);
+    const ea = R.earAmp * 6 * Math.sin(beatPh);
+    el.earL.setAttribute("transform", `rotate(${(-ea).toFixed(2)} 222 230)`);
+    el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-ea).toFixed(2)} 222 230)`);
+    el.tail.setAttribute("transform", `rotate(${(14 * Math.sin(beatPh / 2)).toFixed(2)} 432 470)`);
+    el.pom.setAttribute("transform", `rotate(${(10 * Math.sin(beatPh - 0.8)).toFixed(2)} 300 100)`);
+    el.head.setAttribute("transform", `rotate(${(R.tilt + R.sway * 7 * Math.sin(beatPh / 2) + 2 * Math.sin(TAU * t / (BEAT * 8))).toFixed(2)} 300 360)`);
+    el.legs.forEach((g, i) => { const [px, py, ph] = LEGP[i], a = R.walk * 20 * Math.sin(beatPh / 2 + ph), lift = R.walk * 8 * Math.max(0, Math.sin(beatPh / 2 + ph));
+      g.setAttribute("transform", `translate(${px} ${(py - lift).toFixed(2)}) rotate(${a.toFixed(2)})`); });
+    el.pupils.setAttribute("transform", `translate(${R.lookX.toFixed(1)} ${R.lookY.toFixed(1)})`);
+    const lid = clamp(R.blink, 0, 1) * 92; el.lidL.setAttribute("height", lid.toFixed(1)); el.lidR.setAttribute("height", lid.toFixed(1));
+    const m = Math.max(0, R.mouth), my = 334, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * m).toFixed(1)} 224 ${my} Z`;
+    el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", m > 0.04 ? "#8C2F45" : "none");
+    el.tongue.setAttribute("ry", (m > 0.15 ? 12 * m : 0).toFixed(1)); el.tongue.setAttribute("cy", (my + 6 + 24 * m).toFixed(1));
+    drawTrunk(R.A + 3 * Math.sin(t * 2.3), R.C, R.L);
+    E("charWrap").style.transform = `translate(${(ST.fx - 300).toFixed(1)}px, ${(ST.ffeet - 620).toFixed(1)}px) scale(${ST.fs.toFixed(3)})`;
+    // ── farm life ──
+    E("blades").setAttribute("transform", `translate(0 -226) rotate(${(t * 24).toFixed(1)})`);
+    E("clouds").setAttribute("transform", `translate(${(-((t * 9) % 2600)).toFixed(1)} 0)`);
+    const d = clamp(ST.doors, 0, 1);
+    const dsx = (1 - 0.92 * d).toFixed(3);
+    E("doorL").setAttribute("transform", `translate(-150 0) scale(${dsx} 1) translate(150 0)`); E("doorR").setAttribute("transform", `translate(150 0) scale(${dsx} 1) translate(-150 0)`);
+    ACT.forEach((n) => drawActor(n, t, beatPh));
+    // ── sound bubbles ──
+    let si = 0;
+    SW.forEach((w, k) => { const u = t - w.t; if (u < 0 || u > 0.62 || si >= 60) return; const e = E("sw" + si++);
+      let x, y; const j = k % 3;
+      if (w.who === 7) { x = ST.fx + [-80, 120, 20][j]; y = ST.ffeet - 420 * ST.fs / 0.6 + [-20, 30, -80][j]; }
+      else { const a = at(ANIMALS[w.who], w.t); x = a[1] + [-210, 60, -70][j]; y = a[2] - 330 * a[3] - [0, 40, 90][j]; }
+      if (w.tag === "final") { y -= 40; }
+      const e1 = Math.min(1, u / 0.14), sc = 0.3 + 0.7 * (1 - Math.pow(1 - e1, 3)) + (u > 0.42 ? (u - 0.42) * 1.4 : 0);
+      e.textContent = w.txt; e.style.color = TC[(w.who + 1) % 6];
+      e.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) rotate(${[-8, 6, -3][j]}deg) scale(${sc.toFixed(3)})`; e.style.opacity = (u > 0.42 ? 1 - (u - 0.42) / 0.2 : 1).toFixed(2); });
+    for (; si < 60; si++) E("sw" + si).style.opacity = 0;
+    // ── name cards ──
+    NAMES.forEach((nm, i) => { const c = E("card" + i); let t0, t1, x, y;
+      if (i < 7) { const L2 = VERSES[i][1]; t0 = lineStart(L2); t1 = L2.end + 0.4; const a = at(ANIMALS[i], t); x = (a ? a[1] : STAGE.x) - 110; y = (a ? a[2] - 330 * a[3] : 600) - 150; }
+      else { t0 = lineStart(V8[1]); t1 = V8[1].end + 0.4; x = ST.fx - 70; y = ST.ffeet - 640 * ST.fs - 120; }
+      const u = t - t0; const vis = u >= 0 && t <= t1; const sc = vis ? Math.min(1, u / 0.18) * (1 + 0.08 * Math.max(0, 1 - u / 0.3)) : 0;
+      c.style.opacity = vis ? 1 : 0; c.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) rotate(-3deg) scale(${sc.toFixed(3)})`; });
+    // ── notes + confetti ──
+    let ni = 0; EV.notes.forEach(([t0]) => { const u = t - t0; if (u < 0 || u > 0.95) return; const tip = toSceneF(tipLocal(...POSE.trumpet));
+      for (let q = 0; q < 3 && ni < 18; q++, ni++) { const ang = -1.5 + q * 0.55, r = 170 + q * 45, e = 1 - Math.pow(1 - Math.min(1, u / 0.8), 2), dd = E("n" + ni);
+        dd.style.transform = `translate(${(tip[0] - 20 + Math.cos(ang) * r * e).toFixed(1)}px, ${(tip[1] - 40 + Math.sin(ang) * r * e).toFixed(1)}px) scale(${(0.4 + 0.8 * e).toFixed(2)})`;
+        dd.style.opacity = (u < 0.7 ? Math.min(1, u * 6) : 1 - (u - 0.7) / 0.25).toFixed(2); } });
+    for (; ni < 18; ni++) E("n" + ni).style.opacity = 0;
+    let ci = 0; EV.conf.forEach(([t0, ox, oy]) => { const u = t - t0; if (u < 0 || u > 1.6) return;
+      for (let q = 0; q < 35 && ci < 70; q++, ci++) { const a = (q / 35) * TAU, r = 200 + (q % 5) * 60, e = 1 - Math.pow(1 - Math.min(1, u / 1.0), 2), cc = E("cf" + ci);
+        cc.style.transform = `translate(${(ox + Math.cos(a) * r * e).toFixed(1)}px, ${(oy + Math.sin(a) * r * 0.7 * e + 260 * u * u).toFixed(1)}px) rotate(${(u * 500 + q * 40).toFixed(0)}deg)`; cc.style.opacity = (1 - u / 1.6).toFixed(2); } });
+    for (; ci < 70; ci++) E("cf" + ci).style.opacity = 0;
+    // ── camera ──
+    const s = Math.max(1, CAM.s), hx = 960 / s, hy = 540 / s;
+    const cx = Math.min(1920 - hx + 120, Math.max(hx - 120, CAM.x)), cy = Math.min(1080 - hy + 60, Math.max(hy - 120, CAM.y));
+    E("cam").style.transform = `translate(960px, 540px) rotate(${CAM.r.toFixed(2)}deg) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)}px, ${(-cy).toFixed(1)}px)`;
+    const fsx = 960 + (ST.fx - cx) * s, fsy = 540 + (ST.ffeet - 230 - cy) * s;
+    E("spot").style.background = `radial-gradient(circle at ${fsx.toFixed(0)}px ${fsy.toFixed(0)}px, rgba(0,0,0,0) 0, rgba(0,0,0,0) ${(230 * s).toFixed(0)}px, rgba(10,15,40,.62) ${(380 * s).toFixed(0)}px)`;
+    E("spot").style.opacity = ST.spot.toFixed(2);
+  }
+  const toSceneF = (p) => [ST.fx + (p[0] - 300) * ST.fs, ST.ffeet + (p[1] - 620) * ST.fs];
+
+  // ───────────────────────── timeline ─────────────────────────
+  gsap.defaults({ lazy: false });
+  const tl = gsap.timeline({ paused: true });
+  gsap.set(".line, #end", { opacity: 0 });
+  const pose = (name, t, d = 0.3, ease = "back.out(1.8)") => tl.to(R, { A: POSE[name][0], C: POSE[name][1], L: POSE[name][2], duration: d, ease }, t);
+  const kick = (t) => { tl.to(R, { A: POSE.kick[0], C: POSE.kick[1], L: POSE.kick[2], duration: 0.06 }, t - 0.04); tl.to(R, { A: POSE.trumpet[0], C: POSE.trumpet[1], L: POSE.trumpet[2], duration: 0.2 }, t + 0.05); EV.notes.push([t]); };
+  const shake = (t, a = 8) => tl.fromTo("#shake", { y: 0, x: 0 }, { keyframes: [{ y: a, x: -a * 0.4, duration: 0.04 }, { y: -a * 0.6, x: a * 0.3, duration: 0.05 }, { y: 0, x: 0, duration: 0.08 }], immediateRender: false }, t);
+  const cam = (t, c, d = 1.2, ease = "power2.inOut") => tl.to(CAM, { ...c, duration: d, ease }, t);
+  const mouth = (who, t, hold = 0.22) => { if (who === "fistik") { tl.to(R, { mouth: 0.9, duration: 0.05 }, t); tl.to(R, { mouth: 0.05, duration: 0.08 }, t + hold); }
+    else { tl.set(MO, { [who]: 1 }, t); tl.set(MO, { [who]: 0 }, t + hold); } };
+  const blinkAll = (t) => { tl.to(R, { blink: 1, duration: 0.07 }, t); tl.to(R, { blink: 0, duration: 0.09 }, t + 0.1); ACT.forEach((n, i) => { tl.to(BL, { [n]: 1, duration: 0.07 }, t + 0.13 * i); tl.to(BL, { [n]: 0, duration: 0.09 }, t + 0.13 * i + 0.1); }); };
+  for (let t = 3; t < D - 2; t += 4.3) blinkAll(t);
+
+  // lyric pills + who sings what
+  LINES.forEach((L, li) => { const st = L.words[0][1] - 0.35, nx = LINES[li + 1], en = nx ? Math.min(nx.words[0][1] - 0.35, L.end + 1.6) : L.end + 1.6;
+    const d = document.createElement("div"); d.className = "line"; d.id = "ln" + li;
+    L.words.forEach((w, wi) => { const s = document.createElement("span"); s.id = `w${li}_${wi}`; s.textContent = w[0]; d.appendChild(s); }); E("lyric").appendChild(d);
+    tl.fromTo("#ln" + li, { opacity: 0, y: 30, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.2, ease: "back.out(2)", immediateRender: false }, st);
+    L.words.forEach((w, wi) => { const snd = norm(w[0]) in SOUND; tl.to(`#w${li}_${wi}`, { color: snd ? "#E5484D" : "#2B2D42", scale: 1.14, duration: 0.1 }, w[1]); tl.to(`#w${li}_${wi}`, { scale: 1, duration: 0.18 }, w[1] + 0.1); });
+    tl.to("#ln" + li, { opacity: 0, y: 20, duration: 0.18 }, en - 0.18);
+    // singer
+    const v = L.tag.match(/^v(\d)\.(\d)/), vi = v ? +v[1] : 0;
+    L.words.forEach((w, wi) => { const nxt = (L.words[wi + 1] || [0, w[1] + 0.5])[1], hold = clamp(nxt - w[1] - 0.08, 0.08, 0.24), n = norm(w[0]);
+      if (n in SOUND) { const who = SOUND[n]; mouth(who === 7 ? "fistik" : ANIMALS[who], w[1], hold); return; }
+      if (vi === 8 || L.tag === "final") mouth("fistik", w[1], hold); else mouth("aliBaba", w[1], hold); }); });
+
+  // ── 0–16.5 intro ──
+  cam(0, { s: 1.6, x: 1640, y: 260 }, 0.01); cam(0.3, { s: 1.0, x: 960, y: 560 }, 4.2, "power2.inOut");
+  tl.from("#titleBig span", { y: -260, opacity: 0, rotation: (i) => (i % 2 ? 12 : -12), duration: 0.5, ease: "bounce.out", stagger: 0.045 }, 0.8);
+  tl.from("#titleSub", { scale: 0, duration: 0.45, ease: "back.out(2)" }, 1.8);
+  tl.to("#title", { y: -440, duration: 0.45, ease: "back.in(1.4)" }, 3.4);
+  tl.from("#bug", { x: -360, duration: 0.5, ease: "back.out(1.6)" }, 4.0);
+  tl.to(ST, { aliArm: 1, duration: 0.3 }, 3.7); tl.to(ST, { aliArm: 0, duration: 0.3 }, 6.6);
+  cam(3.8, { s: 1.35, x: 600, y: 620 }, 1.4);
+  // Fıstık walks in
+  tl.set(ST, { fx: -360 }, 0); tl.to(R, { walk: 1, duration: 0.3 }, 7.0);
+  tl.to(ST, { fx: FISTIK.x, duration: 3.0, ease: "power1.out" }, 7.2); tl.to(R, { walk: 0, duration: 0.3 }, 10.1);
+  cam(7.2, { s: 1.15, x: 520, y: 620 }, 2.0);
+  tl.to(ST, { aliPoint: 1, duration: 0.3 }, 9.6); tl.to(ST, { aliPoint: 0, duration: 0.4 }, 12.0);
+  pose("trumpet", 12.4, 0.2); kick(12.7); kick(13.3); shake(12.7, 5); pose("rest", 14.2, 0.4, "sine.inOut");
+  cam(13.8, { s: 1.0, x: 980, y: 560 }, 1.6);
+
+  // ── verses 1–7 ──
+  ANIMALS.forEach((n, i) => {
+    const V = VERSES[i], t1 = lineStart(V[0]), t3 = lineStart(V[2]), t4 = lineStart(V[3]), t5 = lineStart(V[4]);
+    tl.to(ST, { doors: 1, duration: 0.5, ease: "back.out(1.4)" }, t1 - 2.9); tl.to(ST, { doors: 0, duration: 0.5, ease: "power2.in" }, t1 - 0.3);
+    cam(t1 - 2.9, { s: 1.25, x: 1380, y: 640 }, 1.0);                                    // look at the barn
+    cam(t1 - 0.6, { s: 1.12, x: 900, y: 620 }, 1.3);                                     // two-shot Ali Baba + animal
+    tl.to(ST, { aliPoint: 1, duration: 0.25 }, lineStart(V[1])); tl.to(ST, { aliPoint: 0, duration: 0.3 }, V[1].end);
+    cam(t3 - 0.2, { s: 1.38, x: STAGE.x, y: 700 }, 0.9);                                 // close on the animal for its sounds
+    cam(t4 + 0.2, { s: 1.08, x: 1040, y: 600 }, 1.2);
+    // Fıstık tries the sound… out comes "pırt"
+    const g = t5 - 0.05; tl.to(R, { lookX: 16, duration: 0.2 }, t4); pose("trumpet", g - 0.2, 0.18); kick(g); tl.to(R, { lookX: 0, duration: 0.3 }, g + 0.6); pose("rest", g + 0.9, 0.4, "sine.inOut");
+    if (i % 2 === 0) cam(g - 0.25, { s: 1.45, x: 360, y: 600 }, 0.5, "power3.out"), cam(g + 0.9, { s: 1.0, x: 960, y: 560 }, 1.0);
+    tl.to(ST, { aliArm: 1, duration: 0.25 }, t5 + 0.6); tl.to(ST, { aliArm: 0, duration: 0.3 }, t5 + 2.6);
+  });
+
+  // ── bridge: "Bir dakika! … FİL var!" ──
+  const BR = LINES.find((L) => L.tag === "bridge");
+  cam(BR.words[0][1] - 0.3, { s: 1.5, x: 520, y: 600 }, 0.6, "power3.out");
+  tl.to(ST, { aliPoint: 1, duration: 0.2 }, BR.words[0][1]);
+  cam(BR.end - 1.2, { s: 1.55, x: 300, y: 650 }, 0.5, "power3.out");
+  tl.to(ST, { spot: 1, duration: 0.3 }, BR.end - 0.9); tl.to(R, { earAmp: 3, lookY: -6, duration: 0.3 }, BR.end - 1.0);
+  tl.to(ST, { spot: 0, aliPoint: 0, duration: 0.6 }, BR.end + 0.6);
+
+  // ── verse 8: Fıstık takes the stage ──
+  const v81 = lineStart(V8[0]);
+  tl.to(R, { walk: 1, earAmp: 1, lookY: 0, duration: 0.3 }, BR.end + 0.3);
+  tl.to(ST, { fx: STAGE.x - 40, ffeet: 1010, fs: 0.82, duration: 1.8, ease: "power1.inOut" }, BR.end + 0.4);
+  tl.to(R, { walk: 0, duration: 0.3 }, v81 - 0.2);
+  cam(BR.end + 0.4, { s: 1.0, x: 960, y: 560 }, 1.6);
+  tl.to(R, { sway: 1, duration: 0.4 }, v81);
+  V8[2].words.concat(V8[3].words).filter((w) => norm(w[0]) === "pırt").forEach((w) => { kick(w[1]); shake(w[1], 4); });
+  pose("trumpet", lineStart(V8[2]) - 0.3, 0.2); pose("rest", V8[3].end + 0.2, 0.4, "sine.inOut");
+  cam(lineStart(V8[2]) - 0.2, { s: 1.3, x: STAGE.x - 40, y: 640 }, 0.9); cam(V8[3].end, { s: 1.0, x: 960, y: 560 }, 1.2);
+
+  // ── final party + goodbye ──
+  const FIN = LINES.filter((L) => L.tag === "final");
+  tl.to(ST, { party: 1, duration: 0.5 }, lineStart(FIN[0]) - 0.4);
+  EV.conf.push([lineStart(FIN[0]), 960, 420], [lineStart(FIN[1]) + 1.6, 700, 380], [FIN[1].end - 0.4, 1260, 380]);
+  [lineStart(FIN[1]) + 1.6, FIN[1].end - 0.4].forEach((t) => shake(t, 6));
+  tl.to(ST, { party: 0.3, duration: 0.6 }, FIN[1].end + 0.2);
+  const OUT = LINES.filter((L) => L.tag === "outro");
+  tl.to(ST, { aliArm: 1, duration: 0.3 }, lineStart(OUT[0])); tl.to(ST, { aliArm: 0, duration: 0.3 }, OUT[0].end + 1.0);
+  tl.to("#bug", { x: -360, duration: 0.4, ease: "back.in(1.6)" }, lineStart(OUT[0]) - 0.6);
+  cam(lineStart(OUT[0]) - 0.5, { s: 1.1, x: 760, y: 560 }, 1.4);
+  tl.set("#end", { opacity: 1 }, lineStart(OUT[0]) - 0.2);
+  tl.from("#endBig span", { y: -300, opacity: 0, rotation: (i) => (i % 2 ? 12 : -12), duration: 0.55, ease: "bounce.out", stagger: 0.05 }, lineStart(OUT[0]) - 0.2);
+  tl.from("#bye", { scale: 0, duration: 0.45, ease: "back.out(2)" }, lineStart(OUT[0]) + 0.4);
+  pose("trumpet", lineStart(OUT[1]) - 0.25, 0.15); kick(lineStart(OUT[1])); pose("rest", lineStart(OUT[1]) + 1.2, 0.5, "sine.inOut");
+
+  const master = gsap.timeline({ paused: true });
+  const clock = { _t: 0 };
+  Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+  tl.paused(false); master.add(tl, 0);
+  master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+  window.__fistik = { R, render, ST, CAM };
+  window.addEventListener("hf-seek", (e) => render(e && e.detail ? e.detail.time : master.time()));
+  render(0);
+  window.__timelines["main"] = master;
+})();
+    </script>
+  </body>
+</html>

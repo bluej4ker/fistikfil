@@ -1,0 +1,16 @@
+<html><head><meta charset="utf-8"><script src="chars.js"></script></head><body style="margin:0;background:#BFE6FF">
+<svg width="1600" height="500" viewBox="0 0 1600 500">
+<g id="a" transform="translate(150 150)"></g><g id="a2" transform="translate(150 360) rotate(90)"></g>
+<g id="b" transform="translate(450 300)"></g><g id="b2" transform="translate(700 300)"></g>
+<g id="c" transform="translate(1000 300)"></g><g id="c2" transform="translate(1300 300)"></g>
+<g id="d" transform="translate(1000 420)"></g><g id="e" transform="translate(1450 120)"></g>
+</svg>
+<script>
+const C=window.CAST, q=(id,h)=>document.getElementById(id).innerHTML=h;
+q('a',C.fish('#FF9F43','#FF6B3D')); q('a2',C.fish('#FFD84D','#F5B921'));
+q('b',C.lily()+'<g transform="translate(0 -10)">'+C.frog()+'</g>'); q('b2',C.frog());
+q('c',C.duck('#FFFFFF')); q('c2',C.duck('#FFD84D',0.7)); q('d',C.rock(80,40)); q('e',C.bulb());
+// sad variants
+for (const id of ['a2','b2','c2']) { const g=document.getElementById(id); g.querySelectorAll('.mHappy,.beakTop').forEach(e=>id!=='c2'&&(e.style.opacity=0)); g.querySelectorAll('.mSad,.tear').forEach(e=>e.style.opacity=1); }
+document.querySelectorAll('#b2 .mHappy').forEach(e=>e.style.opacity=0);
+</script></body></html>

@@ -1,0 +1,8 @@
+<html><head><meta charset="utf-8"><script src="cast2.js"></script><style>body{margin:0;background:#CFEFC0} svg g{ --lid:#ccc }</style></head><body>
+<svg width="2000" height="560" viewBox="0 0 2000 560" id="s"></svg>
+<script>
+const F=window.FARM, s=document.getElementById('s');
+const list=[['aliBaba',150,'#F2B48C'],['cow',420,'#E4E1E6'],['sheep',660,'#4A4454'],['hen',860,'#F2E6D8'],['duck',1050,'#FFD23F'],['dog',1260,'#D8955A'],['cat',1490,'#F08C2E'],['donkey',1740,'#8E879B']];
+for (const [n,x,lid] of list){ const g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.setAttribute('transform',`translate(${x} 520) scale(${n==='aliBaba'?1:1})`); g.style.setProperty('--lid',lid); g.innerHTML=F[n](); s.appendChild(g);
+ if(n==='cow'||n==='dog'){ g.querySelectorAll('.mO').forEach(e=>e.setAttribute('opacity',1)); g.querySelectorAll('.mC').forEach(e=>e.setAttribute('opacity',0)); } }
+</script></body></html>

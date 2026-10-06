@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Fıstık Fil · Balonları Sayalım</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2" crossorigin="anonymous"></script>
+    <style>
+      /* Fredoka · SIL OFL 1.1 (assets/fonts/OFL.txt) */
+      @font-face { font-family: "Fredoka"; font-weight: 500; font-display: block; src: url("assets/fonts/fredoka-latin-500-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2190-21FF; }
+      @font-face { font-family: "Fredoka"; font-weight: 500; font-display: block; src: url("assets/fonts/fredoka-latin-ext-500-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02FF, U+1E00-1EFF; }
+      @font-face { font-family: "Fredoka"; font-weight: 700; font-display: block; src: url("assets/fonts/fredoka-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2190-21FF; }
+      @font-face { font-family: "Fredoka"; font-weight: 700; font-display: block; src: url("assets/fonts/fredoka-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02FF, U+1E00-1EFF; }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #BFE6FF; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Fredoka", sans-serif; font-weight: 700; color: #2B2D42;
+              background: linear-gradient(#8FD3FF 0%, #BFE6FF 55%, #E8F7FF 100%); }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+
+      #sun { left: 1580px; top: 60px; width: 220px; height: 220px; }
+      .cloud { width: 300px; height: 130px; }
+      #hills { left: 0; top: 0; width: 1920px; height: 1080px; }
+      #shadow { left: 700px; top: 895px; width: 320px; height: 50px; border-radius: 50%; background: rgba(40,90,40,.28); }
+
+      #flyer { position: absolute; inset: 0; }
+      #fistik { left: 560px; top: 330px; width: 600px; height: 600px; }
+      .balloon { left: 910px; top: 408px; width: 160px; height: 330px; transform-origin: 80px 180px; }
+      .balloon svg { width: 160px; height: 330px; overflow: visible; }
+      .note { font-size: 64px; color: #FF7A3D; left: 975px; top: 520px; }
+
+      #title { left: 0; right: 0; top: 70px; text-align: center; }
+      #title .big { display: inline-block; font-size: 150px; line-height: 1; letter-spacing: -.01em; }
+      #title .big span { display: inline-block; text-shadow: 0 8px 0 rgba(0,0,0,.12); -webkit-text-stroke: 10px #fff; paint-order: stroke fill; }
+      #title .sub { margin-top: 14px; font-size: 52px; font-weight: 500; color: #fff; display: inline-block; padding: 8px 34px; background: #FF7A3D; border-radius: 40px; }
+
+      #bug { left: 40px; top: 36px; padding: 10px 26px; border-radius: 30px; background: rgba(255,255,255,.85); font-size: 34px; color: #3D7DD8; }
+      #bug b { color: #F59E1B; }
+
+      .card { left: 1260px; top: 430px; width: 420px; height: 340px; border-radius: 48px; background: #fff; box-shadow: 0 16px 0 rgba(0,0,0,.08); text-align: center; }
+      .card .dig { font-size: 210px; line-height: 1; margin-top: 18px; -webkit-text-stroke: 8px rgba(0,0,0,.08); }
+      .card .word { font-size: 64px; line-height: 1; margin-top: 4px; }
+
+      #lyric { left: 0; right: 0; top: 968px; height: 84px; display: flex; justify-content: center; }
+      .line { position: absolute; top: 0; padding: 8px 40px; border-radius: 42px; background: rgba(255,255,255,.92); font-size: 54px; line-height: 68px; white-space: nowrap; color: #8A93A6; }
+      .line span { display: inline-block; margin: 0 6px; }
+
+      .conf { width: 22px; height: 22px; border-radius: 6px; left: 950px; top: 360px; }
+      #end { left: 1080px; right: 20px; top: 330px; text-align: center; }
+      #end .big { font-size: 170px; line-height: 1; display: inline-block; }
+      #end .big span { display: inline-block; -webkit-text-stroke: 10px #fff; paint-order: stroke fill; text-shadow: 0 8px 0 rgba(0,0,0,.12); }
+      #end .bye { margin-top: 18px; font-size: 64px; color: #fff; display: inline-block; padding: 10px 40px; border-radius: 50px; background: #3D9BFF; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1920" data-height="1080">
+      <audio id="song" src="assets/song.wav" data-start="0" data-duration="60" data-volume="1"></audio>
+
+      <section id="world" class="clip" data-start="0" data-duration="60" data-track-index="0">
+        <!-- sky -->
+        <svg id="sun" class="abs" viewBox="0 0 220 220">
+          <g id="rays" fill="#FFD84D">
+            <rect x="104" y="0" width="12" height="40" rx="6"/><rect x="104" y="180" width="12" height="40" rx="6"/>
+            <rect x="0" y="104" width="40" height="12" rx="6"/><rect x="180" y="104" width="40" height="12" rx="6"/>
+            <rect x="104" y="0" width="12" height="40" rx="6" transform="rotate(45 110 110)"/><rect x="104" y="180" width="12" height="40" rx="6" transform="rotate(45 110 110)"/>
+            <rect x="0" y="104" width="40" height="12" rx="6" transform="rotate(45 110 110)"/><rect x="180" y="104" width="40" height="12" rx="6" transform="rotate(45 110 110)"/>
+          </g>
+          <circle cx="110" cy="110" r="62" fill="#FFD84D"/>
+          <circle cx="92" cy="104" r="6" fill="#B5651D"/><circle cx="128" cy="104" r="6" fill="#B5651D"/>
+          <path d="M92 124 Q110 140 128 124" stroke="#B5651D" stroke-width="5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div id="skyLayer" class="abs" style="inset:0">
+          <svg class="abs cloud" id="cl1" style="left:120px;top:170px" viewBox="0 0 300 130"><g fill="#fff"><circle cx="80" cy="80" r="50"/><circle cx="150" cy="60" r="60"/><circle cx="220" cy="82" r="46"/><rect x="60" y="80" width="190" height="50" rx="25"/></g></svg>
+          <svg class="abs cloud" id="cl2" style="left:1120px;top:120px;transform:scale(.75)" viewBox="0 0 300 130"><g fill="#fff"><circle cx="80" cy="80" r="50"/><circle cx="150" cy="60" r="60"/><circle cx="220" cy="82" r="46"/><rect x="60" y="80" width="190" height="50" rx="25"/></g></svg>
+          <svg class="abs cloud" id="cl3" style="left:600px;top:-260px" viewBox="0 0 300 130"><g fill="#fff"><circle cx="80" cy="80" r="50"/><circle cx="150" cy="60" r="60"/><circle cx="220" cy="82" r="46"/><rect x="60" y="80" width="190" height="50" rx="25"/></g></svg>
+          <svg class="abs cloud" id="cl4" style="left:1400px;top:-420px;transform:scale(1.2)" viewBox="0 0 300 130"><g fill="#fff"><circle cx="80" cy="80" r="50"/><circle cx="150" cy="60" r="60"/><circle cx="220" cy="82" r="46"/><rect x="60" y="80" width="190" height="50" rx="25"/></g></svg>
+        </div>
+        <div id="groundLayer" class="abs" style="inset:0">
+          <svg id="hills" class="abs" viewBox="0 0 1920 1080">
+            <path d="M0 760 Q300 640 620 740 T1260 720 T1920 700 V1080 H0Z" fill="#9BDB7A"/>
+            <path d="M0 860 Q480 790 960 850 T1920 830 V1080 H0Z" fill="#6CC75A"/>
+            <g id="flowers">
+              <g transform="translate(180 930)"><circle r="14" fill="#FF8FB1"/><circle r="6" fill="#FFD84D"/></g>
+              <g transform="translate(330 985)"><circle r="12" fill="#fff"/><circle r="5" fill="#FFD84D"/></g>
+              <g transform="translate(1290 950)"><circle r="14" fill="#B58CFF"/><circle r="6" fill="#FFD84D"/></g>
+              <g transform="translate(1560 1000)"><circle r="12" fill="#FF8FB1"/><circle r="5" fill="#FFD84D"/></g>
+              <g transform="translate(1790 930)"><circle r="14" fill="#fff"/><circle r="6" fill="#FFD84D"/></g>
+              <g transform="translate(520 1030)"><circle r="12" fill="#FFD84D"/><circle r="5" fill="#FF8A3D"/></g>
+            </g>
+          </svg>
+          <div id="shadow" class="abs"></div>
+        </div>
+
+        <!-- Fıstık + balloons travel together -->
+        <div id="flyer">
+          <div id="balloonsBack"></div>
+          <svg id="fistik" class="abs" viewBox="0 0 600 600">
+            <g id="filBody">
+              <path d="M440 470 Q485 455 492 495" stroke="#7FA9D6" stroke-width="12" fill="none" stroke-linecap="round"/>
+              <circle cx="493" cy="502" r="10" fill="#6A93C2"/>
+              <g id="earL"><ellipse cx="160" cy="250" rx="122" ry="132" fill="#7FA9D6"/><ellipse cx="172" cy="256" rx="80" ry="92" fill="#F6B8CB"/></g>
+              <g id="earR"><ellipse cx="440" cy="250" rx="122" ry="132" fill="#7FA9D6"/><ellipse cx="428" cy="256" rx="80" ry="92" fill="#F6B8CB"/></g>
+              <ellipse cx="300" cy="468" rx="150" ry="112" fill="#92BCE6"/>
+              <ellipse cx="300" cy="492" rx="90" ry="66" fill="#C4DDF5"/>
+              <rect x="200" y="505" width="82" height="88" rx="36" fill="#92BCE6"/>
+              <rect x="318" y="505" width="82" height="88" rx="36" fill="#92BCE6"/>
+              <g fill="#EAF3FC"><ellipse cx="222" cy="586" rx="9" ry="6"/><ellipse cx="241" cy="589" rx="9" ry="6"/><ellipse cx="260" cy="586" rx="9" ry="6"/>
+                 <ellipse cx="340" cy="586" rx="9" ry="6"/><ellipse cx="359" cy="589" rx="9" ry="6"/><ellipse cx="378" cy="586" rx="9" ry="6"/></g>
+              <circle cx="300" cy="248" r="150" fill="#A6CBF0"/>
+              <!-- yellow beanie: Fıstık's signature -->
+              <path d="M166 196 Q300 30 434 196 Q300 160 166 196Z" fill="#FFC83D"/>
+              <path d="M170 194 Q300 160 430 194" stroke="#F59E1B" stroke-width="20" fill="none" stroke-linecap="round"/>
+              <circle cx="300" cy="104" r="26" fill="#FF8A3D"/>
+              <g id="eyes">
+                <ellipse cx="245" cy="250" rx="33" ry="39" fill="#fff"/><ellipse cx="355" cy="250" rx="33" ry="39" fill="#fff"/>
+                <circle class="pupil" cx="253" cy="257" r="22" fill="#2B2D42"/><circle class="pupil" cx="363" cy="257" r="22" fill="#2B2D42"/>
+                <circle cx="261" cy="247" r="7.5" fill="#fff"/><circle cx="371" cy="247" r="7.5" fill="#fff"/>
+              </g>
+              <ellipse cx="198" cy="310" rx="26" ry="16" fill="#FF9BB3" opacity=".75"/><ellipse cx="402" cy="310" rx="26" ry="16" fill="#FF9BB3" opacity=".75"/>
+              <path d="M228 328 Q248 348 268 328" stroke="#2B2D42" stroke-width="6" fill="none" stroke-linecap="round"/>
+              <g id="trunk">
+                <path d="M300 290 C300 350 298 395 322 425 C345 452 382 442 384 408" stroke="#A6CBF0" stroke-width="54" fill="none" stroke-linecap="round"/>
+                <path d="M283 356 Q300 364 317 356 M284 388 Q300 397 318 390" stroke="#86AEDA" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <ellipse cx="384" cy="404" rx="15" ry="9" fill="#86AEDA"/>
+              </g>
+            </g>
+          </svg>
+          <div id="balloons"></div>
+          <div id="notes"></div>
+        </div>
+
+        <div id="cards"></div>
+        <div id="confetti"></div>
+
+        <div id="title" class="abs">
+          <div class="big" id="titleBig"></div><br/>
+          <div class="sub" id="titleSub">Balonları Sayalım</div>
+        </div>
+        <div id="bug" class="abs">Fıstık <b>Fil</b></div>
+        <div id="lyric" class="abs"></div>
+        <div id="end" class="abs">
+          <div class="big" id="endBig"></div><br/>
+          <div class="bye" id="bye">Hoşça kal!</div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const $ = (s) => document.querySelector(s);
+        const COLORS = ["#FF5A5F", "#FFC23D", "#3FBF6F", "#3D9BFF", "#A66BFF"];
+        const NUM = ["Bir", "İki", "Üç", "Dört", "Beş"];
+        const CNAME = ["Kırmızı", "Sarı", "Yeşil", "Mavi", "Mor"];
+        const TEXTC = ["#E8414A", "#D99A00", "#24A456", "#2683E8", "#8F4FF0"];
+        const TITLE_COLORS = ["#3D9BFF", "#FF5A5F", "#FFC23D", "#3FBF6F", "#A66BFF", "#FF7A3D"];
+
+        // ── build static DOM (deterministic) ──
+        const letters = (txt, host) => [...txt].forEach((ch, i) => {
+          const s = document.createElement("span");
+          s.textContent = ch === " " ? " " : ch;
+          s.style.color = TITLE_COLORS[i % TITLE_COLORS.length];
+          host.appendChild(s);
+        });
+        letters("Fıstık Fil", $("#titleBig"));
+        letters("Fıstık Fil", $("#endBig"));
+
+        const balloonSVG = (c) => `<svg viewBox="0 0 160 330"><g class="bb">
+          <path class="str" d="M80 182 q-16 40 0 74 q16 38 0 72" stroke="#7B8496" stroke-width="3" fill="none"/>
+          <ellipse cx="80" cy="92" rx="72" ry="86" fill="${c}"/>
+          <ellipse cx="54" cy="58" rx="13" ry="24" fill="#fff" opacity=".45" transform="rotate(-25 54 58)"/>
+          <path d="M70 186 L90 186 L80 172Z" fill="${c}"/></g></svg>`;
+        COLORS.forEach((c, i) => {
+          const b = document.createElement("div");
+          b.className = "abs balloon"; b.id = "b" + i; b.innerHTML = balloonSVG(c);
+          $("#balloons").appendChild(b);
+          const card = document.createElement("div");
+          card.className = "abs card"; card.id = "card" + i;
+          card.innerHTML = `<div class="dig" style="color:${c}">${i + 1}</div><div class="word">${NUM[i]} · <span style="color:${TEXTC[i]}">${CNAME[i]}</span></div>`;
+          $("#cards").appendChild(card);
+        });
+        for (let i = 0; i < 6; i++) {
+          const n = document.createElement("div");
+          n.className = "abs note"; n.id = "n" + i; n.textContent = i % 2 ? "♫" : "♪";
+          n.style.color = TITLE_COLORS[i]; $("#notes").appendChild(n);
+        }
+        const CONF = 22;
+        for (let i = 0; i < CONF; i++) {
+          const c = document.createElement("div");
+          c.className = "abs conf"; c.id = "cf" + i; c.style.background = TITLE_COLORS[i % 6];
+          if (i % 3 === 0) c.style.borderRadius = "50%";
+          $("#confetti").appendChild(c);
+        }
+
+        // lyric lines: [start, end, [[word, t], ...]]
+        const LINES = [
+          [3.8, 8, [["Fıstık", 4.0], ["Fil,", 4.5], ["Fıstık", 5.0], ["Fil,", 5.5], ["hortumunu", 6.0], ["salla!", 7.0]]],
+          [8, 12, [["Balonları", 8.0], ["sayalım,", 9.0], ["haydi", 10.0], ["hep", 10.5], ["beraber!", 11.0]]],
+        ];
+        for (let k = 0; k < 5; k++) {
+          const t0 = 12 + k * 6;
+          LINES.push([t0 + 2.6, t0 + 5.9, [[NUM[k] + "!", t0 + 3.0], [CNAME[k], t0 + 4.0], ["balon!", t0 + 4.5]], k]);
+        }
+        LINES.push([41.8, 46, [["Bir,", 42.0], ["iki,", 42.5], ["üç,", 43.0], ["dört,", 43.5], ["beş!", 44.0]]]);
+        LINES.push([46, 50, [["Uç", 46.0], ["uç", 46.5], ["Fıstık,", 47.0], ["gökyüzüne", 48.0], ["uç!", 49.0]]]);
+        LINES.push([51.8, 55, [["Aferin", 52.0], ["sana!", 53.0]]]);
+        LINES.forEach((L, li) => {
+          const d = document.createElement("div");
+          d.className = "line"; d.id = "ln" + li;
+          L[2].forEach((w, wi) => { const s = document.createElement("span"); s.id = `w${li}_${wi}`; s.textContent = w[0]; d.appendChild(s); });
+          $("#lyric").appendChild(d);
+        });
+
+        // ── timeline ──
+        const tl = gsap.timeline({ paused: true });
+        gsap.set(".line, .card, #end, .note, .conf", { opacity: 0 });
+        gsap.set(".balloon", { scale: 0, transformOrigin: "80px 180px" });
+        gsap.set(".str", { opacity: 0 });
+
+        // ambient (whole numbers of cycles over 60 s)
+        tl.fromTo("#fistik", { y: 0 }, { y: -14, duration: 0.25, ease: "sine.inOut", repeat: 239, yoyo: true, immediateRender: false }, 0);
+        tl.fromTo("#earL", { rotation: 0 }, { rotation: -7, svgOrigin: "250 230", duration: 0.5, ease: "sine.inOut", repeat: 119, yoyo: true }, 0);
+        tl.fromTo("#earR", { rotation: 0 }, { rotation: 7, svgOrigin: "350 230", duration: 0.5, ease: "sine.inOut", repeat: 119, yoyo: true }, 0);
+        tl.fromTo("#rays", { rotation: 0 }, { rotation: 90, svgOrigin: "110 110", duration: 60, ease: "none" }, 0);
+        tl.fromTo("#cl1", { x: 0 }, { x: 220, duration: 60, ease: "none" }, 0);
+        tl.fromTo("#cl2", { x: 0 }, { x: -260, duration: 60, ease: "none" }, 0);
+        [3.2, 9.7, 15.1, 21.6, 27.3, 33.9, 39.4, 48.6, 53.2, 58.1].forEach((t) =>
+          tl.to("#eyes", { scaleY: 0.08, svgOrigin: "300 252", duration: 0.07, yoyo: true, repeat: 1, ease: "none" }, t));
+
+        // 0–4 · intro: Fıstık pops up, trumpets, title drops in
+        tl.fromTo("#flyer", { y: 700 }, { y: 0, duration: 0.8, ease: "back.out(1.6)" }, 0.05);
+        tl.fromTo("#shadow", { scale: 0.2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.6)" }, 0.05);
+        tl.to("#trunk", { rotation: -80, svgOrigin: "300 300", duration: 0.25, ease: "back.out(2)" }, 0.75);
+        tl.to("#trunk", { rotation: 0, svgOrigin: "300 300", duration: 0.4, ease: "sine.inOut" }, 2.2);
+        tl.fromTo("#fistik", { scaleY: 1 }, { scaleY: 1.06, transformOrigin: "50% 98%", duration: 0.12, yoyo: true, repeat: 3, ease: "sine.inOut" }, 1.0);
+        for (let i = 0; i < 6; i++) {
+          const t = 1.0 + i * 0.18, ang = -1.0 + i * 0.22, r = 260 + i * 30;
+          tl.fromTo("#n" + i, { x: 0, y: 0, opacity: 0, scale: 0.4, rotation: 0 },
+            { x: Math.cos(ang) * r, y: Math.sin(ang) * r, opacity: 1, scale: 1.2, rotation: (i % 2 ? 20 : -20), duration: 1.0, ease: "power2.out" }, t);
+          tl.to("#n" + i, { opacity: 0, duration: 0.3 }, t + 0.9);
+        }
+        tl.from("#titleBig span", { y: -260, opacity: 0, rotation: (i) => (i % 2 ? 12 : -12), duration: 0.6, ease: "bounce.out", stagger: 0.07 }, 0.3);
+        tl.from("#titleSub", { scale: 0, duration: 0.5, ease: "back.out(2)" }, 1.6);
+        tl.to("#title", { y: -420, duration: 0.5, ease: "back.in(1.4)" }, 3.6);
+        tl.from("#bug", { x: -360, duration: 0.5, ease: "back.out(1.6)" }, 3.9);
+
+        // lyric lines: pill pops in, words light up on the beat
+        LINES.forEach((L, li) => {
+          const [s, e, words, colorIdx] = L;
+          tl.fromTo("#ln" + li, { opacity: 0, y: 30, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(2)" }, s);
+          words.forEach((w, wi) => {
+            const c = colorIdx !== undefined && wi === 1 ? TEXTC[colorIdx] : "#2B2D42";
+            tl.to(`#w${li}_${wi}`, { color: c, scale: 1.15, duration: 0.12, ease: "power2.out" }, w[1]);
+            tl.to(`#w${li}_${wi}`, { scale: 1, duration: 0.2, ease: "sine.out" }, w[1] + 0.12);
+          });
+          tl.to("#ln" + li, { opacity: 0, y: 20, duration: 0.2, ease: "power1.in" }, e - 0.2);
+        });
+
+        // 12–42 · five balloons
+        const SPAWN = { x: 990, y: 588 };                       // trunk tip when raised (scene px)
+        const PARK = [[1170, 300], [1320, 270], [1470, 300], [1620, 270], [1770, 300]];
+        const CLUSTER = [[790, 330], [850, 295], [912, 285], [972, 318], [880, 245]];
+        for (let k = 0; k < 5; k++) {
+          const t0 = 12 + k * 6, b = "#b" + k;
+          tl.to("#trunk", { rotation: -70, svgOrigin: "300 300", duration: 0.6, ease: "back.out(1.8)" }, t0 + 0.6);
+          tl.to("#filBody", { scaleY: 1.04, scaleX: 0.97, svgOrigin: "300 590", duration: 0.7, ease: "sine.inOut" }, t0 + 0.7); // inhale
+          tl.to("#filBody", { scaleY: 1, scaleX: 1, svgOrigin: "300 590", duration: 0.3, ease: "sine.inOut" }, t0 + 1.4);
+          tl.fromTo(b, { scale: 0, x: 0, y: 0 }, { scale: 1, duration: 1.6, ease: "power1.in" }, t0 + 1.4);   // inflate
+          tl.to(b, { scale: 1.12, duration: 0.12, yoyo: true, repeat: 1, ease: "sine.out" }, t0 + 3.0);
+          tl.to(b + " .str", { opacity: 1, duration: 0.1 }, t0 + 3.0);
+          tl.to("#trunk", { rotation: 0, svgOrigin: "300 300", duration: 0.5, ease: "sine.inOut" }, t0 + 3.2);
+          const [px, py] = PARK[k];
+          tl.to(b, { x: px - SPAWN.x, y: py - SPAWN.y, scale: 0.7, rotation: k % 2 ? 4 : -4, duration: 1.5, ease: "sine.inOut" }, t0 + 3.6);
+          // number card
+          tl.fromTo("#card" + k, { opacity: 0, scale: 0.3, rotation: -8 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.2)" }, t0 + 2.95);
+          tl.to("#card" + k, { opacity: 0, scale: 0.6, duration: 0.25, ease: "back.in(2)" }, t0 + 5.6);
+          // count every balloon so far, one ding each
+          for (let j = 0; j <= k; j++) tl.to(`#b${j} .bb`, { scale: 1.15, svgOrigin: "80 92", duration: 0.1, yoyo: true, repeat: 1 }, t0 + 3.0 + j * 0.25);
+        }
+        // gentle sway of parked balloons
+        for (let k = 0; k < 5; k++) tl.fromTo(`#b${k} svg`, { rotation: -3 }, { rotation: 3, transformOrigin: "50% 54%", duration: 1, ease: "sine.inOut", repeat: 59, yoyo: true, immediateRender: false }, 0);
+
+        // 42–50 · surprise: balloons lift Fıstık into the sky
+        for (let k = 0; k < 5; k++) {
+          const [cx, cy] = CLUSTER[k];
+          tl.to("#b" + k, { x: cx - SPAWN.x, y: cy - SPAWN.y, rotation: (k - 2) * 7, duration: 1.3, ease: "back.out(1.2)" }, 41.9 + k * 0.12);
+        }
+        tl.to("#flyer", { y: -190, x: 260, duration: 3.6, ease: "sine.inOut" }, 43.6);
+        tl.to("#flyer", { rotation: 4, transformOrigin: "860px 600px", duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 5 }, 43.6);
+        tl.to("#shadow", { scale: 0.35, opacity: 0.3, x: 260, duration: 3.6, ease: "sine.inOut" }, 43.6);
+        tl.to("#groundLayer", { y: 320, duration: 3.6, ease: "sine.inOut" }, 43.6);
+        tl.to("#skyLayer", { y: 500, duration: 3.6, ease: "sine.inOut" }, 43.6);
+        tl.to("#fistik", { scaleX: 1.04, transformOrigin: "50% 98%", duration: 0.3, yoyo: true, repeat: 1 }, 44.0);
+        for (let i = 0; i < CONF; i++) {
+          const a = (i / CONF) * Math.PI * 2, r = 260 + (i % 4) * 70;
+          tl.fromTo("#cf" + i, { x: 0, y: 0, opacity: 1, rotation: 0, scale: 1 },
+            { x: Math.cos(a) * r, y: Math.sin(a) * r * 0.8 + 140, rotation: 360 + i * 30, opacity: 0, duration: 1.8, ease: "power2.out", immediateRender: false }, 44.0);
+        }
+        // float back down and land
+        tl.to("#flyer", { y: 0, x: 0, duration: 2.8, ease: "sine.inOut" }, 47.6);
+        tl.to("#shadow", { scale: 1, opacity: 1, x: 0, duration: 2.8, ease: "sine.inOut" }, 47.6);
+        tl.to("#groundLayer", { y: 0, duration: 2.8, ease: "sine.inOut" }, 47.6);
+        tl.to("#skyLayer", { y: 0, duration: 2.8, ease: "sine.inOut" }, 47.6);
+        tl.fromTo("#fistik", { scaleY: 1 }, { scaleY: 0.92, transformOrigin: "50% 98%", duration: 0.12, yoyo: true, repeat: 1, ease: "power1.out", immediateRender: false }, 50.4);
+
+        // 50–60 · wave goodbye, end card
+        [51.0, 51.8, 52.6, 55.6, 56.4].forEach((t, i) => {
+          tl.to("#trunk", { rotation: -80, svgOrigin: "300 300", duration: 0.4, ease: "sine.inOut" }, t);
+          tl.to("#trunk", { rotation: -40, svgOrigin: "300 300", duration: 0.4, ease: "sine.inOut" }, t + 0.4);
+        });
+        tl.to("#trunk", { rotation: -85, svgOrigin: "300 300", duration: 0.3, ease: "back.out(2)" }, 57.0);
+        tl.to("#trunk", { rotation: 0, svgOrigin: "300 300", duration: 0.5, ease: "sine.inOut" }, 58.3);
+        tl.to("#bug", { x: -360, duration: 0.4, ease: "back.in(1.6)" }, 54.8);
+        tl.set("#end", { opacity: 1 }, 55.0);
+        tl.from("#endBig span", { y: -300, opacity: 0, rotation: (i) => (i % 2 ? 12 : -12), duration: 0.6, ease: "bounce.out", stagger: 0.06 }, 55.0);
+        tl.from("#bye", { scale: 0, duration: 0.5, ease: "back.out(2)" }, 56.0);
+        tl.to("#root", { opacity: 1, duration: 0.01 }, 59.99); // pin duration to 60 s
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
