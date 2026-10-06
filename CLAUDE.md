@@ -34,6 +34,7 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 2 | Fıstık Fil ve Şırıl Şırıl Dere · Lık Lık Lık · Paylaşmayı Öğreten Çocuk Şarkısı · Fıstık Fil | `-Q7FF1rCyvY` | 3:01 | Yayında, 1080p |
 | 3 | Ali Baba'nın Çiftliği · Hayvan Sesleri · Fıstık Fil ile Çocuk Şarkıları | `QvaNHIh9SuA` | 3:01 | Yayında, 1080p, "Fıstık Fil ile Hayvanlar" listesinin 1. bölümü |
 | 4 | Küçük Kurbağa Kulağın Nerede? · Vücudumuzu Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:12 (açılış+kapanış dahil) | Hazır, yüklenmedi; "Fıstık Fil ile Hayvanlar" 2. bölüm |
+| 5 | Fıstık Fil Fıstık Yer · Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır, yüklenmedi; tekerleme tarzı ilk bölüm |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 
@@ -363,6 +364,15 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - Açılış + abone bandı (0,1 ve ~77 sn) + kapanış `intro_ekle.py --lines lines.json` ile eklendi.
 - **v2 (kit kurallarıyla, kullanıcı "tam beğenemedim" dedi):** `storyboard/STORYBOARD.md` (18 satır, denetim temiz). Dekor değişimleri: dere → su altı (101–118 sn) → sahne (134–155 sn) → gün batımı + gökkuşağı (155 sn+). Geçişler: nilüfer taşıma, kamçı pan, dolly-out, odak irisi, vuruşta donma (polaroid), şekil eşleşmesi (halka → ?), dondur-geri sar (◀◀), su duvarı silmesi (ŞAP!), dalış, baloncuk taşıma, odak kayması, perde, hız rampası, gökkuşağı renk patlaması. Gag'ler: büyüteç, kuyruk kovalama, göbeklama, dev balık sürüsü, gaga, kulak rüzgârı. Yeni bileşen: çıkartma tablosu (✗/✓ → kalp). 4K teslim.
 
+### 7.5 Video 5 — "Fıstık Fil Fıstık Yer" (134,4 s + açılış/kapanış) · özgün tekerleme
+
+- **Şarkı:** Gemini, `kaynak/05-fistik-fistik-yer-mi/gemini-prompt.txt`. 3 kıta (Fıstık/fıstık, Kurbağa/kiraz, Ördek/mısır) + 1. kıtanın koro finali. 165 BPM istendi, Gemini 103 BPM verdi; 8 sn giriş istendi, 4,7 sn verdi → abone bandı ilk müzik arasına (~25 sn) ve 3. araya (~80 sn) kondu (`--lines` otomatik buldu). Şarkı −15 LUFS geldi; final karışımda `loudnorm=I=-11` ile intro jingle seviyesine çekildi.
+- **Dekorlar (renk olayları):** mutfak → kirazlı dere → mısır tarlası → gün batımı pikniği → gece (ip ışıkları). Her dekor ayrı `<svg id="set…">`, `scene(t)` saf fonksiyonuyla görünür.
+- **Yeni bileşen:** paylaşma tabağı (porselen / nilüfer yaprağı / hasır sepet / piknik örtüsü). "Bir … sana" dizesinde yiyecek ekran uzayında kameraya uçar ("TIK!" cam vuruşu), sonra tabağın SEN yarısına düşer; "bana" dizesinde karakterin yarısına. SEN yarısındaki yiyecek hiç yenmez.
+- **Geçişler:** fıstık harfler kavanoza dökülür, kavanoz çığı silmesi, kamçı pan (blur + çizgiler), dev kiraz maskesi → sepete küçülür, kareli örtü serilir → piknik örtüsüne dönüşür (clip-path polygon), gece kararması.
+- **Gag'ler:** kurbağanın dil kementi + 1-2-3-4 sayma, daktilo mısır (taneler satır satır, satır sonunda "ding!"), korkuluğun şapkası uçar, herkesin karnı guruldar (titreşim + mor dalga çizgileri), "Gelin, sofrada yer var" → boş mindere "SEN" kartı, gece "la la la"da zıplayan fıstık karaoke topu.
+- Kaynak: `src/template.html`, `src/cast.js` (fıstık, kiraz, mısır koçanı, kavanoz, dolap, korkuluk, tabaklar), `sfx.py`, `kapak.py`. `storyboard/STORYBOARD.md` + `eskiz.jpg`.
+
 ---
 
 ## 8. Teslimat (kullanıcının bilgisayarı)
@@ -509,7 +519,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [x] Açılış / kapanış / abone bandı paketi (`kaynak/intro/`, §6.6).
 - [ ] YouTube son ekranı için kapanışın 20 sn'lik bir varyantı (son ekran öğeleri en az 5 sn ister) düşünülebilir.
 - [x] Küçük Kurbağa: şarkı geldi, video + kapak + YouTube metni hazırlandı (`04 - Küçük Kurbağa/`). Yükleme kullanıcıda.
-- [ ] Bölüm 5 "Fıstık Fıstık Yer mi?" (tekerleme, paylaşma): prompt `kaynak/05-fistik-fistik-yer-mi/gemini-prompt.txt`; kullanıcının Gemini'den şarkıyı üretmesi bekleniyor.
+- [x] Bölüm 5 "Fıstık Fil Fıstık Yer" (tekerleme, paylaşma): video + kapak + YouTube metni `05 - Fıstık Fil Fıstık Yer/`. Yükleme kullanıcıda.
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
