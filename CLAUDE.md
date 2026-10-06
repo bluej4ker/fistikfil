@@ -13,7 +13,7 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 5. **Tek kök kompozisyon:** Proje klasöründe `data-composition-id` taşıyan tek bir HTML olmalı; şablonlar `src/` içinde durur.
 6. **Uzun render'ları ayrık başlat:** `(setsid nohup npx ... > log 2>&1 < /dev/null &)`. Düz `nohup` kabuk kapanınca ölüyor.
 7. **Kanal üzerinde yayına giden değişiklikleri** (başlık, açıklama, liste, ayar) kullanıcıdan madde madde açık onay almadan yapma.
-8. **Her yeni bölüm** açılış (5,6 sn) + söz olmayan girişte "Abone ol" bandı + kapanış (7 sn) ile teslim edilir (§6.6). Bu yüzden şarkı promptunda ilk 8 sn vokalsiz giriş şart (§5).
+8. **Her video (Reels/Shorts hariç)** MUTLAKA açılış (5,6 sn) + söz olmayan girişte "Abone ol" bandı + kapanış (7 sn) ile teslim edilir (§6.6). Bu yüzden şarkı promptunda ilk 8 sn vokalsiz giriş şart (§5).
 9. **Telif:** Bilinen şarkılarda sözlerin anonim olduğunu MESAM/MSG'den teyit ettir; yüklemelerde "Çocuklara özel" ve "Değiştirilmiş/sentetik içerik: Evet" işaretli olsun.
 
 ---
@@ -145,6 +145,8 @@ Süre: yaklaşık 2:30–3:00.
 ÇOK ÖNEMLİ — GİRİŞ: Şarkı en az 8 saniyelik (4 ölçü) tamamen enstrümantal bir girişle başlasın. İlk 8 saniyede hiçbir vokal, konuşma, koro ya da "hey/la la" sesi olmasın; sadece neşeli melodi çalsın. Giriş konuşması bu enstrümantal girişten SONRA başlasın.
 Her kıta arasında 2 ölçü enstrümantal ara olsun.
 Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama:
+[Enstrümantal giriş — 8 saniye, vokal YOK]
+(sadece müzik)
 [Giriş konuşması] ...
 [Kıta 1] ...
 [Nakarat] ...
