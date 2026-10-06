@@ -62,5 +62,28 @@ window.CAST = (function () {
   };
   // little "?" and big sound bubble helpers
   const qmark = () => `<circle r="44" fill="#fff" stroke="${INK}" stroke-width="5"/><text y="24" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="70" fill="#A66BFF">?</text>`;
-  return { fish, frog, duck, lily, rock, bulb, icon, qmark };
+
+  // v2 · sticker-chart faces (viewBox -50 -50 100 100), stickers, props
+  const face = {
+    frog: () => `<ellipse cx="0" cy="10" rx="40" ry="30" fill="#6CCB5A" stroke="${INK}" stroke-width="4"/><circle cx="-20" cy="-18" r="15" fill="#6CCB5A" stroke="${INK}" stroke-width="4"/><circle cx="20" cy="-18" r="15" fill="#6CCB5A" stroke="${INK}" stroke-width="4"/>
+      <circle cx="-20" cy="-18" r="8" fill="#fff"/><circle cx="20" cy="-18" r="8" fill="#fff"/><circle cx="-18" cy="-17" r="4.5" fill="${INK}"/><circle cx="22" cy="-17" r="4.5" fill="${INK}"/><path d="M-20 12 Q0 28 20 12" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    fish: () => `<path d="M-30 0 L-46 -16 L-46 16Z" fill="#F5B921" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/><ellipse cx="4" cy="0" rx="34" ry="24" fill="#FFD84D" stroke="${INK}" stroke-width="4"/><circle cx="18" cy="-5" r="7" fill="#fff" stroke="${INK}" stroke-width="2.5"/><circle cx="20" cy="-4" r="3.5" fill="${INK}"/><path d="M28 8 Q32 12 36 7" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    duck: () => `<circle cx="0" cy="-2" r="32" fill="#FFD84D" stroke="${INK}" stroke-width="4"/><circle cx="-10" cy="-10" r="5" fill="${INK}"/><path d="M-34 4 Q-52 4 -52 12 Q-40 18 -28 12Z" fill="#FF9F1C" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/><ellipse cx="-16" cy="10" rx="6" ry="4" fill="#FF8FAB" opacity=".7"/>`,
+    fistik: () => `<circle cx="0" cy="6" r="34" fill="#A3CAF2" stroke="#4C76B5" stroke-width="4"/><path d="M-32 -6 C-30 -40 30 -40 32 -6 Q0 -14 -32 -6Z" fill="#FFD966" stroke="#D9861A" stroke-width="3.5"/><circle cx="0" cy="-34" r="7" fill="#FF6B4A"/>
+      <circle cx="-12" cy="4" r="6" fill="#fff" stroke="${INK}" stroke-width="2"/><circle cx="12" cy="4" r="6" fill="#fff" stroke="${INK}" stroke-width="2"/><circle cx="-11" cy="5" r="3" fill="${INK}"/><circle cx="13" cy="5" r="3" fill="${INK}"/><path d="M0 14 Q-4 30 6 36" stroke="#4C76B5" stroke-width="9" fill="none" stroke-linecap="round"/>`,
+  };
+  const sticker = (kind) => kind === "heart"
+    ? `<circle r="40" fill="#FF7A9C" stroke="#fff" stroke-width="7"/><path d="M0 22 C-26 4 -30 -8 -22 -18 C-14 -26 -4 -22 0 -12 C4 -22 14 -26 22 -18 C30 -8 26 4 0 22Z" fill="#fff"/>`
+    : kind === "ok"
+      ? `<circle r="40" fill="#3FBF6F" stroke="#fff" stroke-width="7"/><path d="M-18 2 L-5 16 L20 -14" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+      : `<circle r="40" fill="#E5484D" stroke="#fff" stroke-width="7"/><path d="M-14 -14 L14 14 M14 -14 L-14 14" stroke="#fff" stroke-width="10" stroke-linecap="round"/>`;
+  const magnifier = () => `<circle cx="0" cy="0" r="46" fill="rgba(200,240,255,.35)" stroke="#8B5A2B" stroke-width="10"/><ellipse cx="-14" cy="-16" rx="12" ry="7" fill="#fff" opacity=".6" transform="rotate(-35 -14 -16)"/>
+    <rect x="34" y="30" width="18" height="60" rx="8" fill="#8B5A2B" transform="rotate(-45 43 60)"/>`;
+  const seaweed = (h, c) => `<path class="sw" d="M0 0 Q-18 ${-h * 0.25} 0 ${-h * 0.5} Q18 ${-h * 0.75} 0 ${-h}" stroke="${c}" stroke-width="16" fill="none" stroke-linecap="round"/>`;
+  const starfish = (c) => `<path d="M0 -30 L9 -9 L31 -8 L13 6 L19 28 L0 15 L-19 28 L-13 6 L-31 -8 L-9 -9Z" fill="${c}" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/><circle cx="-5" cy="-3" r="2.5" fill="${INK}"/><circle cx="5" cy="-3" r="2.5" fill="${INK}"/>`;
+  const shell = () => `<path d="M-24 10 Q0 -34 24 10Z" fill="#FFB4C6" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M0 10 L0 -16 M-10 10 L-6 -12 M10 10 L6 -12" stroke="${INK}" stroke-width="2.5"/>`;
+  const miniFish = (c) => `<path d="M-14 0 L-24 -8 L-24 8Z" fill="${c}"/><ellipse cx="0" cy="0" rx="16" ry="10" fill="${c}"/><circle cx="7" cy="-2" r="2.6" fill="${INK}"/>`;
+  const bowl = () => `<ellipse cx="0" cy="-70" rx="78" ry="74" fill="rgba(170,225,255,.55)" stroke="#fff" stroke-width="6"/><rect x="-60" y="-150" width="120" height="16" rx="8" fill="#BDE6FF" stroke="#fff" stroke-width="4"/>
+    <g transform="translate(0 -60) scale(.85)">${fish("#FFD84D", "#F5B921")}</g><ellipse cx="-36" cy="-104" rx="14" ry="22" fill="#fff" opacity=".45" transform="rotate(-30 -36 -104)"/>`;
+  return { fish, frog, duck, lily, rock, bulb, icon, qmark, face, sticker, magnifier, seaweed, starfish, shell, miniFish, bowl };
 })();

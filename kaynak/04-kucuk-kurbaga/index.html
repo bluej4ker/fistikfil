@@ -10,10 +10,11 @@
       @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1920px; height: 1080px; overflow: hidden; background: #9BD8FF; }
-      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Baloo 2", sans-serif; font-weight: 800; color: #2B2D42;
-              background: linear-gradient(#7CCBFF 0%, #B5E3FF 50%, #E6F6FF 100%); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Baloo 2", sans-serif; font-weight: 800; color: #2B2D42; }
       .clip { position: absolute; inset: 0; }
       .abs { position: absolute; }
+      #sky { inset: 0; background: linear-gradient(#7CCBFF 0%, #B5E3FF 50%, #E6F6FF 100%); }
+      #skyGold { inset: 0; background: linear-gradient(#FF9E6B 0%, #FFC48A 45%, #FFE6C2 100%); opacity: 0; }
       #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
       #shake { position: absolute; inset: 0; }
       .layer { position: absolute; left: 0; top: 0; width: 3840px; height: 1300px; }
@@ -23,42 +24,72 @@
       #charWrap { left: 460px; top: 265px; width: 600px; height: 640px; transform-origin: 300px 620px; }
       #char { position: absolute; inset: 0; overflow: visible; transform-origin: 300px 620px; }
       #char svg { width: 600px; height: 640px; overflow: visible; }
+      .tl { left: 0; top: 0; font-size: 124px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 12px #fff; paint-order: stroke fill; text-shadow: 0 8px 0 rgba(0,0,0,.14); transform-origin: 50% 100%; }
       .snd { left: 0; top: 0; font-size: 96px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 14px #fff; paint-order: stroke fill; text-shadow: 0 8px 0 rgba(0,0,0,.14); transform-origin: 50% 60%; }
       .bub { width: 22px; height: 22px; border-radius: 50%; border: 4px solid rgba(255,255,255,.95); background: rgba(160,225,255,.35); }
       .drop { width: 18px; height: 24px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #7FD3F5; border: 3px solid #fff; }
       .note { font-size: 66px; -webkit-text-stroke: 6px #fff; paint-order: stroke fill; }
       .conf { width: 20px; height: 28px; border-radius: 5px; }
       .card { left: 0; top: 0; height: 160px; white-space: nowrap; border-radius: 34px; background: #fff; border: 7px solid #FFC23D; box-shadow: 0 12px 0 rgba(0,0,0,.14);
-              display: flex; align-items: center; gap: 6px; padding: 0 40px 0 14px; transform-origin: 50% 100%; }
+              display: flex; align-items: center; gap: 6px; padding: 0 40px 0 14px; transform-origin: 50% 100%; backface-visibility: hidden; }
       .card svg.ic { width: 120px; height: 120px; flex: none; }
       .card .w { font-size: 60px; line-height: 1; padding-top: 10px; white-space: nowrap; }
       .card .bd { position: absolute; right: -26px; top: -30px; width: 86px; height: 86px; border-radius: 50%; border: 7px solid #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 rgba(0,0,0,.15); }
       .card .bd svg { width: 50px; height: 50px; }
+      .card.chalk { background: #2F5D50; border-color: #8B5A2B; border-width: 12px; box-shadow: 0 12px 0 rgba(0,0,0,.18); }
+      .card.chalk .w { color: #F4F1E6; }
+      .card.bubble { border-radius: 50%; width: 300px; height: 300px; flex-direction: column; justify-content: center; padding: 0; gap: 0; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.85), rgba(190,235,255,.55) 45%, rgba(120,200,240,.35) 100%); border: 6px solid rgba(255,255,255,.95); box-shadow: none; }
+      .card.leaf { background: #EAF7D9; border-color: #5DBB55; border-radius: 80px 14px 80px 14px; }
+      .card.marquee { background: #3A1E5C; border-color: #FFC23D; border-width: 10px; padding: 0 56px 0 30px; }
+      .card.marquee .w { color: #FFE27A; text-shadow: 0 0 18px rgba(255,210,80,.8); }
+      .bulb { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #FFE27A; box-shadow: 0 0 10px #FFD23D; }
       .q { left: 0; top: 0; width: 100px; height: 100px; transform-origin: 50% 100%; }
-      #title { left: 0; right: 0; top: 70px; text-align: center; }
+      #chart { left: 0; top: 0; width: 600px; padding: 22px 28px 26px; border-radius: 36px; background: #FFF8E6; border: 12px solid #B5763A; box-shadow: 0 14px 0 rgba(60,30,0,.25); transform-origin: 0 50%; opacity: 0; }
+      #chart .hd { position: relative; height: 92px; border-bottom: 5px dashed #E2C89B; margin-bottom: 12px; }
+      #chart .hd > div { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 16px; white-space: nowrap; }
+      #chart .row { height: 96px; display: flex; align-items: center; gap: 18px; }
+      #chart .row svg { flex: none; }
+      #chart .row .slot { position: relative; width: 84px; height: 84px; border-radius: 50%; border: 5px dashed #E2C89B; margin-left: auto; }
+      #chart .row .slot svg { position: absolute; left: -5px; top: -5px; width: 84px; height: 84px; overflow: visible; }
       .big { display: inline-block; font-size: 150px; line-height: 1; }
       .big span { display: inline-block; -webkit-text-stroke: 12px #fff; paint-order: stroke fill; text-shadow: 0 9px 0 rgba(0,0,0,.13); }
-      .sub { margin-top: 10px; font-size: 54px; font-weight: 700; line-height: 1.3; color: #fff; display: inline-block; padding: 6px 38px 0; background: #3FA34D; border-radius: 40px; box-shadow: 0 7px 0 rgba(0,0,0,.12); }
-      #bug { left: 40px; top: 36px; padding: 6px 26px 0; border-radius: 30px; background: rgba(255,255,255,.92); font-size: 36px; color: #3D7DD8; }
+      #bug { left: 40px; top: 36px; padding: 6px 26px 0; border-radius: 30px; background: rgba(255,255,255,.92); font-size: 36px; color: #3D7DD8; z-index: 60; }
       #bug b { color: #F59E1B; }
-      #lyric { left: 0; right: 0; top: 34px; height: 90px; display: flex; justify-content: center; }
+      #lyric { left: 0; right: 0; top: 34px; height: 90px; display: flex; justify-content: center; z-index: 60; }
       .line { opacity: 0; position: absolute; top: 0; padding: 4px 40px 0; border-radius: 42px; background: rgba(255,255,255,.95); font-size: 56px; line-height: 78px; white-space: nowrap; color: #8A93A6; box-shadow: 0 6px 0 rgba(0,0,0,.08); }
       .line span { display: inline-block; margin: 0 11px; }
-      #msg { left: 0; right: 0; top: 175px; text-align: center; opacity: 0; }
-      #msg .big { font-size: 118px; }
-      #end { left: 1000px; right: 20px; top: 240px; text-align: center; opacity: 0; }
-      .bye { margin-top: 10px; font-size: 64px; font-weight: 700; line-height: 1.3; color: #fff; display: inline-block; padding: 8px 40px 0; border-radius: 50px; background: #3D9BFF; }
-      #glow { inset: 0; background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%); opacity: 0; mix-blend-mode: soft-light; }
-      #vignette { inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 62%, rgba(0,30,60,.16) 100%); }
+      #msg { left: 0; right: 0; top: 160px; text-align: center; opacity: 0; z-index: 55; }
+      #msg .big { font-size: 112px; }
+      #end { left: 1080px; top: 0; width: 760px; height: 600px; transform-origin: 380px 0; opacity: 0; z-index: 55; }
+      #end .rope { position: absolute; top: 0; width: 8px; height: 130px; background: #8B5A2B; border-radius: 4px; }
+      #end .sign { position: absolute; left: 0; right: 0; top: 120px; padding: 30px 0 34px; text-align: center; background: #FFF4DC; border: 12px solid #B5763A; border-radius: 40px; box-shadow: 0 14px 0 rgba(60,30,0,.25); }
+      .bye { margin-top: 8px; font-size: 62px; font-weight: 700; line-height: 1.3; color: #fff; display: inline-block; padding: 8px 40px 0; border-radius: 50px; background: #3D9BFF; }
+      #under { inset: 0; opacity: 0; overflow: hidden; z-index: 30; }
+      #under > svg:first-child { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+      #iris, #night, #flash, #polaroid, #flood, #splashWall, #rew { inset: 0; pointer-events: none; }
+      #iris { z-index: 40; } #night { z-index: 35; opacity: 0; } #flash { z-index: 45; background: #fff; opacity: 0; }
+      #polaroid { z-index: 44; opacity: 0; box-shadow: inset 0 0 0 34px #FFFDF7, inset 0 0 0 38px rgba(0,0,0,.12); }
+      #flood { z-index: 42; opacity: 0; } #flood svg, #splashWall svg { width: 1920px; height: 1080px; }
+      #splashWall { z-index: 43; }
+      #rew { z-index: 46; opacity: 0; }
+      #rew div { position: absolute; right: 70px; top: 150px; font-size: 120px; color: #fff; -webkit-text-stroke: 10px #E5484D; paint-order: stroke fill; }
+      .curt { top: 0; width: 980px; height: 1080px; z-index: 41; background: repeating-linear-gradient(90deg, #B3122E 0 60px, #D7263D 60px 110px, #9E0F27 110px 140px); box-shadow: inset 0 -40px 0 #FFC23D; }
+      #curtL { left: 0; transform: translateX(-1000px); } #curtR { right: 0; transform: translateX(1000px); }
+      #glow { inset: 0; background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 60%); opacity: 0; mix-blend-mode: soft-light; z-index: 20; }
+      #warm { inset: 0; background: linear-gradient(rgba(255,160,90,.18), rgba(255,120,80,.12)); mix-blend-mode: multiply; opacity: 0; z-index: 21; }
+      #vignette { inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 62%, rgba(0,30,60,.16) 100%); z-index: 22; }
+      #hud { inset: 0; z-index: 50; }
     </style>
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="179.23" data-width="1920" data-height="1080">
       <audio id="song" src="assets/song.mp3" data-start="0" data-duration="179.23" data-volume="1"></audio>
       <section id="world" class="clip" data-start="0" data-duration="179.23" data-track-index="0" data-layout-allow-overflow>
+        <div id="sky" class="abs"></div>
+        <div id="skyGold" class="abs"></div>
         <svg id="sun" class="abs" viewBox="0 0 230 230">
           <g id="rays" fill="#FFD84D" opacity=".9"></g>
-          <circle cx="115" cy="115" r="66" fill="#FFD84D" stroke="#F5B921" stroke-width="5"/>
+          <circle id="sunDisk" cx="115" cy="115" r="66" fill="#FFD84D" stroke="#F5B921" stroke-width="5"/>
           <ellipse cx="96" cy="108" rx="6" ry="8" fill="#9A5B1E"/><ellipse cx="134" cy="108" rx="6" ry="8" fill="#9A5B1E"/>
           <ellipse cx="82" cy="126" rx="11" ry="7" fill="#FF9F7A" opacity=".7"/><ellipse cx="148" cy="126" rx="11" ry="7" fill="#FF9F7A" opacity=".7"/>
           <path d="M98 128 Q115 144 132 128" stroke="#9A5B1E" stroke-width="5" fill="none" stroke-linecap="round"/>
@@ -71,8 +102,12 @@
             <div id="Lmid" class="layer"></div>
             <div id="Lground" class="layer"></div>
             <div id="streamBack" class="full"><svg class="full" viewBox="0 0 1920 1300" id="bedSvg"></svg></div>
+            <svg id="stageBg" class="full" viewBox="0 0 1920 1300" style="opacity:0"></svg>
             <div id="charWrap" class="abs"><div id="char"></div></div>
             <div id="streamFront" class="full"><svg class="full" viewBox="0 0 1920 1300" id="waterSvg"></svg></div>
+            <svg id="stageFront" class="full" viewBox="0 0 1920 1300" style="opacity:0"></svg>
+            <div id="titleBox"></div>
+            <svg id="fxSvg" class="full" viewBox="0 0 1920 1300"></svg>
             <div id="drops"></div>
             <div id="bubs"></div>
             <div id="notes"></div>
@@ -82,12 +117,23 @@
           </div>
         </div>
         <div id="glow" class="abs"></div>
+        <div id="warm" class="abs"></div>
         <div id="vignette" class="abs"></div>
-        <div id="title" class="abs"><div class="big" id="titleBig"></div><br/><div class="sub" id="titleSub">Fıstık Fil ile Hayvanlar</div></div>
+        <div id="under" class="abs"></div>
+        <div id="night" class="abs"></div>
+        <svg id="iris" class="abs" viewBox="0 0 1920 1080"><path id="irisP" fill="#1B2340" fill-rule="evenodd" d=""/></svg>
+        <div id="curtL" class="abs curt"></div><div id="curtR" class="abs curt"></div>
+        <div id="flood" class="abs"></div>
+        <div id="splashWall" class="abs"></div>
+        <div id="polaroid" class="abs"></div>
+        <div id="rew" class="abs"><div>◀◀</div></div>
+        <div id="flash" class="abs"></div>
+        <div id="hud" class="abs"><div id="chart" class="abs"></div></div>
         <div id="bug" class="abs">Fıstık <b>Fil</b></div>
         <div id="lyric" class="abs"></div>
         <div id="msg" class="abs"><div class="big" id="msgBig"></div></div>
-        <div id="end" class="abs"><div class="big" id="endBig"></div><br/><div class="bye" id="bye">Hoşça kal!</div></div>
+        <div id="end" class="abs"><div class="rope" style="left:120px"></div><div class="rope" style="right:120px"></div>
+          <div class="sign"><div class="big" id="endBig"></div><br/><div class="bye">Hoşça kal!</div></div></div>
       </section>
     </div>
 
@@ -156,7 +202,30 @@ window.CAST = (function () {
   };
   // little "?" and big sound bubble helpers
   const qmark = () => `<circle r="44" fill="#fff" stroke="${INK}" stroke-width="5"/><text y="24" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="70" fill="#A66BFF">?</text>`;
-  return { fish, frog, duck, lily, rock, bulb, icon, qmark };
+
+  // v2 · sticker-chart faces (viewBox -50 -50 100 100), stickers, props
+  const face = {
+    frog: () => `<ellipse cx="0" cy="10" rx="40" ry="30" fill="#6CCB5A" stroke="${INK}" stroke-width="4"/><circle cx="-20" cy="-18" r="15" fill="#6CCB5A" stroke="${INK}" stroke-width="4"/><circle cx="20" cy="-18" r="15" fill="#6CCB5A" stroke="${INK}" stroke-width="4"/>
+      <circle cx="-20" cy="-18" r="8" fill="#fff"/><circle cx="20" cy="-18" r="8" fill="#fff"/><circle cx="-18" cy="-17" r="4.5" fill="${INK}"/><circle cx="22" cy="-17" r="4.5" fill="${INK}"/><path d="M-20 12 Q0 28 20 12" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    fish: () => `<path d="M-30 0 L-46 -16 L-46 16Z" fill="#F5B921" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/><ellipse cx="4" cy="0" rx="34" ry="24" fill="#FFD84D" stroke="${INK}" stroke-width="4"/><circle cx="18" cy="-5" r="7" fill="#fff" stroke="${INK}" stroke-width="2.5"/><circle cx="20" cy="-4" r="3.5" fill="${INK}"/><path d="M28 8 Q32 12 36 7" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    duck: () => `<circle cx="0" cy="-2" r="32" fill="#FFD84D" stroke="${INK}" stroke-width="4"/><circle cx="-10" cy="-10" r="5" fill="${INK}"/><path d="M-34 4 Q-52 4 -52 12 Q-40 18 -28 12Z" fill="#FF9F1C" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/><ellipse cx="-16" cy="10" rx="6" ry="4" fill="#FF8FAB" opacity=".7"/>`,
+    fistik: () => `<circle cx="0" cy="6" r="34" fill="#A3CAF2" stroke="#4C76B5" stroke-width="4"/><path d="M-32 -6 C-30 -40 30 -40 32 -6 Q0 -14 -32 -6Z" fill="#FFD966" stroke="#D9861A" stroke-width="3.5"/><circle cx="0" cy="-34" r="7" fill="#FF6B4A"/>
+      <circle cx="-12" cy="4" r="6" fill="#fff" stroke="${INK}" stroke-width="2"/><circle cx="12" cy="4" r="6" fill="#fff" stroke="${INK}" stroke-width="2"/><circle cx="-11" cy="5" r="3" fill="${INK}"/><circle cx="13" cy="5" r="3" fill="${INK}"/><path d="M0 14 Q-4 30 6 36" stroke="#4C76B5" stroke-width="9" fill="none" stroke-linecap="round"/>`,
+  };
+  const sticker = (kind) => kind === "heart"
+    ? `<circle r="40" fill="#FF7A9C" stroke="#fff" stroke-width="7"/><path d="M0 22 C-26 4 -30 -8 -22 -18 C-14 -26 -4 -22 0 -12 C4 -22 14 -26 22 -18 C30 -8 26 4 0 22Z" fill="#fff"/>`
+    : kind === "ok"
+      ? `<circle r="40" fill="#3FBF6F" stroke="#fff" stroke-width="7"/><path d="M-18 2 L-5 16 L20 -14" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+      : `<circle r="40" fill="#E5484D" stroke="#fff" stroke-width="7"/><path d="M-14 -14 L14 14 M14 -14 L-14 14" stroke="#fff" stroke-width="10" stroke-linecap="round"/>`;
+  const magnifier = () => `<circle cx="0" cy="0" r="46" fill="rgba(200,240,255,.35)" stroke="#8B5A2B" stroke-width="10"/><ellipse cx="-14" cy="-16" rx="12" ry="7" fill="#fff" opacity=".6" transform="rotate(-35 -14 -16)"/>
+    <rect x="34" y="30" width="18" height="60" rx="8" fill="#8B5A2B" transform="rotate(-45 43 60)"/>`;
+  const seaweed = (h, c) => `<path class="sw" d="M0 0 Q-18 ${-h * 0.25} 0 ${-h * 0.5} Q18 ${-h * 0.75} 0 ${-h}" stroke="${c}" stroke-width="16" fill="none" stroke-linecap="round"/>`;
+  const starfish = (c) => `<path d="M0 -30 L9 -9 L31 -8 L13 6 L19 28 L0 15 L-19 28 L-13 6 L-31 -8 L-9 -9Z" fill="${c}" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/><circle cx="-5" cy="-3" r="2.5" fill="${INK}"/><circle cx="5" cy="-3" r="2.5" fill="${INK}"/>`;
+  const shell = () => `<path d="M-24 10 Q0 -34 24 10Z" fill="#FFB4C6" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M0 10 L0 -16 M-10 10 L-6 -12 M10 10 L6 -12" stroke="${INK}" stroke-width="2.5"/>`;
+  const miniFish = (c) => `<path d="M-14 0 L-24 -8 L-24 8Z" fill="${c}"/><ellipse cx="0" cy="0" rx="16" ry="10" fill="${c}"/><circle cx="7" cy="-2" r="2.6" fill="${INK}"/>`;
+  const bowl = () => `<ellipse cx="0" cy="-70" rx="78" ry="74" fill="rgba(170,225,255,.55)" stroke="#fff" stroke-width="6"/><rect x="-60" y="-150" width="120" height="16" rx="8" fill="#BDE6FF" stroke="#fff" stroke-width="4"/>
+    <g transform="translate(0 -60) scale(.85)">${fish("#FFD84D", "#F5B921")}</g><ellipse cx="-36" cy="-104" rx="14" ry="22" fill="#fff" opacity=".45" transform="rotate(-30 -36 -104)"/>`;
+  return { fish, frog, duck, lily, rock, bulb, icon, qmark, face, sticker, magnifier, seaweed, starfish, shell, miniFish, bowl };
 })();
 
 (function () {
@@ -172,6 +241,8 @@ window.CAST = (function () {
   const BEATS = [0.116, 0.627, 1.138, 1.649, 2.136, 2.647, 3.135, 3.622, 4.133, 4.644, 5.132, 5.642, 6.13, 6.618, 7.152, 7.709, 8.266, 8.824, 9.381, 9.892, 10.379, 10.89, 11.378, 11.889, 12.376, 12.887, 13.375, 13.886, 14.373, 14.884, 15.395, 15.882, 16.393, 16.881, 17.392, 17.879, 18.39, 18.878, 19.389, 19.876, 20.387, 20.875, 21.386, 21.873, 22.384, 22.872, 23.382, 23.893, 24.381, 24.892, 25.379, 25.89, 26.378, 26.889, 27.376, 27.887, 28.398, 28.886, 29.396, 29.884, 30.395, 30.883, 31.393, 31.881, 32.369, 32.879, 33.367, 33.878, 34.366, 34.876, 35.364, 35.875, 36.386, 36.873, 37.384, 37.895, 38.406, 38.94, 39.474, 40.008, 40.542, 41.123, 41.633, 42.144, 42.632, 43.212, 43.77, 44.327, 44.884, 45.372, 45.883, 46.37, 46.881, 47.369, 47.88, 48.367, 48.878, 49.366, 49.876, 50.387, 50.875, 51.386, 51.897, 52.384, 52.872, 53.383, 53.87, 54.381, 54.892, 55.38, 55.867, 56.378, 56.889, 57.377, 57.887, 58.375, 58.886, 59.373, 59.884, 60.372, 60.883, 61.37, 61.881, 62.369, 62.88, 63.367, 63.878, 64.389, 64.877, 65.387, 65.875, 66.386, 66.873, 67.384, 67.895, 68.383, 68.87, 69.381, 69.869, 70.38, 70.891, 71.378, 71.889, 72.377, 72.887, 73.375, 73.886, 74.397, 74.908, 75.395, 75.883, 76.394, 76.881, 77.392, 77.88, 78.391, 78.878, 79.366, 79.877, 80.387, 80.875, 81.386, 81.874, 82.384, 82.872, 83.383, 83.894, 84.381, 84.892, 85.38, 85.891, 86.378, 86.889, 87.377, 87.888, 88.375, 88.886, 89.374, 89.884, 90.465, 91.045, 91.626, 92.137, 92.624, 93.135, 93.623, 94.134, 94.645, 95.132, 95.62, 96.131, 96.618, 97.129, 97.617, 98.128, 98.615, 99.126, 99.637, 100.241, 100.867, 101.378, 101.866, 102.377, 102.888, 103.375, 103.886, 104.374, 104.885, 105.372, 105.883, 106.371, 106.881, 107.369, 107.88, 108.391, 108.878, 109.389, 109.877, 110.388, 110.875, 111.386, 111.874, 112.385, 112.895, 113.383, 113.894, 114.381, 114.892, 115.38, 115.891, 116.402, 116.889, 117.377, 117.888, 118.399, 118.886, 119.374, 119.861, 120.372, 120.883, 121.394, 121.882, 122.369, 122.88, 123.391, 123.902, 124.413, 124.923, 125.411, 125.899, 126.386, 126.874, 127.385, 127.896, 128.383, 128.871, 129.382, 129.892, 130.38, 130.891, 131.379, 131.889, 132.377, 132.888, 133.375, 133.886, 134.374, 134.885, 135.372, 135.883, 136.394, 136.882, 137.369, 137.88, 138.391, 138.879, 139.389, 139.877, 140.388, 140.875, 141.386, 141.874, 142.385, 142.896, 143.383, 143.871, 144.382, 144.893, 145.38, 145.891, 146.379, 146.889, 147.4, 147.888, 148.399, 148.886, 149.397, 149.908, 150.396, 150.883, 151.394, 151.882, 152.393, 152.88, 153.368, 153.879, 154.389, 154.9, 155.388, 155.899, 156.386, 156.897, 157.385, 157.872, 158.383, 158.894, 159.382, 159.893, 160.38, 160.891, 161.379, 161.89, 162.377, 162.888, 163.376, 163.886, 164.374, 164.885, 165.373, 165.883, 166.394, 166.882, 167.369, 167.88, 168.368, 168.879, 169.366, 169.877];
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const smooth = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
+  const easeOut = (x) => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
+  const outBack = (x, s = 1.7) => { x = clamp(x, 0, 1); return 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
 
   function leg(c) { return `<path d="M-38 -30 L38 -30 L38 74 Q38 104 0 104 Q-38 104 -38 74 Z" fill="${c}"/><path d="M-38 -6 L-38 74 Q-38 104 0 104 Q38 104 38 74 L38 -6" fill="none" stroke="${OL}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
       <g fill="#EEF5FD" stroke="${OL}" stroke-width="2"><ellipse cx="-20" cy="96" rx="9" ry="6"/><ellipse cx="0" cy="99" rx="9" ry="6"/><ellipse cx="20" cy="96" rx="9" ry="6"/></g>`; }
@@ -260,7 +331,7 @@ window.CAST = (function () {
   const tipLocal = (A, C, Lx) => trunkGeom(A, C, Lx).P[TN];
 
 
-  // ───────────────────────── tempo: real beat grid (Gemini's tempo drifts) ─────────────────────────
+  // ───────────────────────── tempo + lyric helpers ─────────────────────────
   function beatPos(t) {
     const n = BEATS.length;
     if (t <= BEATS[0]) return (t - BEATS[0]) / (BEATS[1] - BEATS[0]);
@@ -269,15 +340,25 @@ window.CAST = (function () {
     return lo + (t - BEATS[lo]) / (BEATS[hi] - BEATS[lo]);
   }
   const BEAT = (BEATS[BEATS.length - 1] - BEATS[0]) / (BEATS.length - 1);
-
-  // ───────────────────────── lyric helpers ─────────────────────────
+  const beatsIn = (a, b) => BEATS.filter((x) => x >= a && x <= b);
   const LT = {}; LINES.forEach((L, i) => (LT[L.tag] = i));
   const ts = (tag) => LINES[LT[tag]].words[0][1];
   const te = (tag) => LINES[LT[tag]].end;
+  const words = (tag) => LINES[LT[tag]].words;
   const norm = (w) => w.replace("İ", "i").replace("I", "ı").toLowerCase().replace(/[^a-zçğıöşü]/g, "");
   const SOUND = { "vırak": "frog", "vıraaak": "frog", "zıp": "frog", "şıp": "splash", "blup": "fish", "vak": "duck", "pırt": "fistik" };
   const SCOL = { frog: "#3FA34D", splash: "#2E9BD6", fish: "#FF7A3D", duck: "#F59E1B", fistik: "#FF5A5F" };
-  // chorus windows → beat pulse (camera punch + glow)
+
+  // ───────────────────────── key times (from the lyrics) ─────────────────────────
+  const T = {
+    walk: 7.3, pop: 14.6, iris: ts("v1.1") - 0.55, brk1: te("v1.4") + 0.2, freeze: 52.0, ring: te("c1.2"),
+    spin0: ts("v2.3"), spin1: te("v2.3"), rew: te("v2.4") - 0.4, brk2: te("v2.4") + 0.3, flop: 90.4, c2: ts("c2.1"), dive: te("c2.2") + 0.05,
+    school0: ts("v3.4"), carry: te("v3.5") - 0.9, rack: te("v4.5") - 0.7, br: ts("b.1"), curtain: ts("v5.1") - 0.7,
+    flood: te("p.3") + 0.25, fin: ts("f.1"), msg: ts("f.3"), chart: te("f.4") - 0.9, out: ts("o.1"),
+  };
+  const HOLD = [T.freeze, T.freeze + 0.6];                                     // scene time freezes here (hold-frame)
+  const sceneT = (t) => t < HOLD[0] ? t : t < HOLD[1] ? HOLD[0] : t - (HOLD[1] - HOLD[0]);
+  const realT = (st) => st < HOLD[0] ? st : st + (HOLD[1] - HOLD[0]);
   const CH = [["c1.1", "c1.2"], ["c2.1", "c2.2"], ["p.1", "p.3"], ["f.1", "f.8"]].map(([a, b]) => [ts(a) - 0.3, te(b) + 0.4]);
   const pulse = (t) => { if (!CH.some(([a, b]) => t >= a && t <= b)) return 0; const f = beatPos(t) % 1; return Math.exp(-7 * (f < 0 ? f + 1 : f)); };
 
@@ -285,10 +366,23 @@ window.CAST = (function () {
   const SC = 0.85, WRAP = { x: 460, y: 265 };
   const toScene = (p) => [WRAP.x + 300 + (p[0] - 300) * SC, WRAP.y + 620 + (p[1] - 620) * SC];
   const bedY = (x) => x < 900 ? 905 : x < 1160 ? 905 + 140 * smooth(900, 1160, x) : 1045 + 6 * Math.sin(x / 70);
-  const S = 788;                                                     // water surface (full stream)
-  const LILY = 1640, FISHX = [1160, 1420, 1700], DUCKX = [1120, 1360];
+  const S = 788, LILY = 1640, PADS = [1640, 1430, 1180], FISHX = [1160, 1420, 1700], DUCKX = [1100, 1340];
 
-  // ───────────────────────── scenery (Dere) ─────────────────────────
+  // frog hop path (pure function of scene time): [t0 (scene), dur, x0, x1, height]
+  const HOPS = [];
+  { const bb = beatsIn(T.brk1 + 0.4, 50.9).filter((_, i) => i % 2 === 0), path = [1430, 1180, 1430, 1180, 1430, 1180];
+    let x = LILY; bb.slice(0, path.length).forEach((b, i) => { HOPS.push([b, 0.62, x, path[i], 150]); x = path[i]; });
+    HOPS.push([51.6, 0.8, x, LILY, 260]);                                       // the frozen hop (peak at 52.0)
+    const b2 = beatsIn(T.brk2 + 1.2, T.brk2 + 4.5).filter((_, i) => i % 2 === 0);
+    HOPS.push([sceneT(b2[0]), 0.6, LILY, 1430, 150], [sceneT(b2[1]), 0.6, 1430, 1180, 150]);     // comes to teach Fıstık
+    HOPS.push([sceneT(T.c2 - 0.9), 0.5, 1180, LILY, 0]);                                         // back home (hidden by the splash wall)
+  }
+  function frogBase(st) { let x = LILY, y = 0, air = 0;
+    for (const [t0, d, x0, x1, h] of HOPS) { if (st < t0) break; const u = (st - t0) / d; if (u >= 1) { x = x1; continue; }
+      x = x0 + (x1 - x0) * u; y = -h * Math.sin(Math.PI * u); air = 1; break; }
+    return [x, y, air]; }
+
+  // ───────────────────────── scenery: stream (Dere) ─────────────────────────
   const mk = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
   for (let i = 0; i < 12; i++) mk("rect", { x: 109, y: 2, width: 12, height: 40, rx: 6, transform: `rotate(${i * 30} 115 115)` }, E("rays"));
   const tree = (x, y, s, c1, c2) => `<g transform="translate(${x} ${y}) scale(${s})"><rect x="-12" y="-10" width="24" height="90" rx="10" fill="#A0703F" stroke="#6E4A27" stroke-width="4"/>
@@ -323,59 +417,143 @@ window.CAST = (function () {
       <clipPath id="cChan2"><path d="M560 1300 L560 812 Q600 776 700 774 Q1300 768 2000 772 L2000 1300Z"/></clipPath></defs>
     <g clip-path="url(#cChan2)"><path id="water" fill="url(#gWater)"/><path id="waterHi" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".8"/>
       <g id="ripples" fill="none" stroke="#fff" stroke-width="4" opacity=".6"></g></g>
-    <g id="lilyG">${C.lily()}<g id="frogPos"><g id="frog">${C.frog()}</g></g></g>
+    <g id="pad1" transform="scale(.7)">${C.lily()}</g>
+    <g id="lilyG">${C.lily()}</g>
+    <g id="frogPos"><g id="frog">${C.frog()}</g><g id="dizzy" opacity="0">${[0, 1, 2].map(() => `<path class="dz" d="M0 -14 L4 -4 L14 -3 L6 4 L9 14 L0 8 L-9 14 L-6 4 L-14 -3 L-4 -4Z" fill="#FFD84D" stroke="${INK}" stroke-width="2.5"/>`).join("")}</g></g>
+    <g id="mag" opacity="0">${C.magnifier()}</g>
     <g id="duck0" class="duck">${C.duck("#FFFFFF", 0.95)}</g><g id="duck1" class="duck">${C.duck("#FFD84D", 0.62)}</g>`;
   for (let i = 0; i < 6; i++) mk("ellipse", { id: "rp" + i, rx: 0, ry: 0 }, E("ripples"));
+  E("fxSvg").innerHTML = `<circle id="ring" r="0" fill="none" stroke="#fff" stroke-width="10" opacity="0"/>${[0, 1, 2, 3].map((i) => `<circle id="sw${i}" r="0" fill="none" stroke="#FFD84D" stroke-width="14" opacity="0"/>`).join("")}
+    <g id="wind" opacity="0" stroke="#fff" stroke-width="7" stroke-linecap="round">${Array.from({ length: 14 }, (_, i) => `<path id="wl${i}" d="M0 0 h120"/>`).join("")}</g>
+    <g id="feathers">${Array.from({ length: 10 }, (_, i) => `<path id="fe${i}" d="M0 -16 Q12 0 0 16 Q-12 0 0 -16Z" fill="#fff" stroke="#C9CED8" stroke-width="2" opacity="0"/>`).join("")}</g>`;
+
+  // ───────────────────────── scenery: stage (sahne) ─────────────────────────
+  const bunting = (y) => { let s = `<path d="M0 ${y} Q960 ${y + 70} 1920 ${y}" stroke="#8B5A2B" stroke-width="5" fill="none"/>`;
+    for (let i = 0; i < 18; i++) { const x = 60 + i * 106, yy = y + 70 * (1 - Math.pow((x - 960) / 960, 2)) - 8; s += `<path d="M${x - 30} ${yy} L${x + 30} ${yy} L${x} ${yy + 56}Z" fill="${TC[i % 6]}"/>`; } return s; };
+  E("stageBg").innerHTML = `<defs><radialGradient id="gStage" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#7A3FB0"/><stop offset=".6" stop-color="#4A2380"/><stop offset="1" stop-color="#26114A"/></radialGradient>
+      <linearGradient id="gFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C98A4E"/><stop offset="1" stop-color="#8E5A2E"/></linearGradient>
+      <linearGradient id="gCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF6D0" stop-opacity=".55"/><stop offset="1" stop-color="#FFF6D0" stop-opacity=".05"/></linearGradient></defs>
+    <rect x="-200" y="-200" width="2320" height="1700" fill="url(#gStage)"/>
+    ${Array.from({ length: 40 }, (_, i) => `<circle class="st" cx="${(i * 197) % 1900 + 10}" cy="${(i * 113) % 640 + 30}" r="${3 + (i % 3) * 2}" fill="#FFE27A"/>`).join("")}
+    <path d="M220 900 L220 260 Q960 40 1700 260 L1700 900" fill="none" stroke="#FFC23D" stroke-width="22"/>
+    ${bunting(120)}
+    <rect x="-200" y="860" width="2320" height="460" fill="url(#gFloor)"/>
+    ${Array.from({ length: 12 }, (_, i) => `<path d="M${-200 + i * 200} 860 L${-600 + i * 280} 1300" stroke="#7A4A22" stroke-width="5" opacity=".5"/>`).join("")}
+    <rect x="-200" y="852" width="2320" height="16" fill="#FFC23D"/>
+    <path d="M640 -100 L880 -100 L1060 900 L460 900Z" fill="url(#gCone)"/>
+    <path d="M-200 -200 L200 -200 Q260 300 160 1000 L-200 1000Z" fill="#B3122E"/><path d="M2120 -200 L1720 -200 Q1660 300 1760 1000 L2120 1000Z" fill="#B3122E"/>`;
+  const AUD = [[330, 1150, 1.3], [1600, 1150, 1.4], [1330, 1170, 1.0], [1060, 1150, 0.9]];
+  E("stageFront").innerHTML = `<g id="lamps">${Array.from({ length: 16 }, (_, i) => `<circle class="lamp" cx="${120 + i * 112}" cy="1010" r="16" fill="#FFE27A"/>`).join("")}</g>
+    <g id="aud0">${C.frog()}</g><g id="aud1">${C.duck("#FFFFFF", 1)}</g><g id="aud2">${C.bowl()}</g><g id="aud3">${C.duck("#FFD84D", 0.8)}</g>`;
+
+  // ───────────────────────── scenery: under water (screen space) ─────────────────────────
+  const urays = Array.from({ length: 6 }, (_, i) => `<path d="M${200 + i * 300} -40 L${300 + i * 300} -40 L${420 + i * 300} 1100 L${120 + i * 300} 1100Z" fill="#fff" opacity=".08"/>`).join("");
+  const weeds = [[120, 300, "#2E9E5B"], [210, 220, "#3FBF6F"], [1680, 340, "#2E9E5B"], [1780, 240, "#3FBF6F"], [1500, 200, "#58C26A"], [380, 180, "#58C26A"]];
+  E("under").innerHTML = `<svg viewBox="0 0 1920 1080"><defs><linearGradient id="gU" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#55D0EE"/><stop offset=".5" stop-color="#1E8CC4"/><stop offset="1" stop-color="#0B4C82"/></linearGradient></defs>
+      <rect width="1920" height="1080" fill="url(#gU)"/><path id="uSurf" fill="#BDF1FF" opacity=".55"/>
+      <g id="uRays">${urays}</g>
+      <path d="M0 960 Q480 920 960 950 T1920 940 V1080 H0Z" fill="#E9D3A0"/><path d="M0 1000 Q480 975 960 995 T1920 990 V1080 H0Z" fill="#D9BC82"/>
+      ${weeds.map(([x, h, c]) => `<g class="weed" transform="translate(${x} 990)"><g>${C.seaweed(h, c)}</g></g>`).join("")}
+      <g transform="translate(560 985)">${C.starfish("#FF8A5B")}</g><g transform="translate(1320 1000) scale(.9)">${C.starfish("#FFC23D")}</g><g transform="translate(900 1010)">${C.shell()}</g><g transform="translate(1600 985) scale(.8)">${C.shell()}</g>
+      <g transform="translate(260 980)">${C.rock(70, 34)}</g><g transform="translate(1100 990)">${C.rock(54, 26)}</g>
+      <g id="school">${Array.from({ length: 28 }, (_, i) => `<g id="sf${i}">${C.miniFish(TC[i % 6])}</g>`).join("")}</g>
+      <g id="uFish">${C.fish("#FFD84D", "#F5B921")}</g>
+      <g id="uBubs">${Array.from({ length: 30 }, (_, i) => `<circle id="ub${i}" r="10" fill="rgba(200,240,255,.35)" stroke="#fff" stroke-width="3" opacity="0"/>`).join("")}</g>
+      <circle id="bigBub" r="70" fill="rgba(200,240,255,.35)" stroke="#fff" stroke-width="6" opacity="0"/></svg>
+    <div class="abs card bubble" id="kAyak" style="opacity:0"><svg class="ic" viewBox="-60 -60 120 120">${C.icon.ayak()}</svg><div class="w">AYAK</div>
+      <div class="bd" id="kAyakB" style="background:#E5484D;opacity:0;right:10px;top:10px"><svg viewBox="0 0 50 50"><path d="M12 12 L38 38 M38 12 L12 38" stroke="#fff" stroke-width="10" stroke-linecap="round"/></svg></div></div>
+    <svg class="abs q" id="qFish" viewBox="-50 -50 100 100" style="opacity:0">${C.qmark()}</svg>
+    <div id="uSnd"></div>`;
+
+  // ───────────────────────── title on lily pads (scene space) ─────────────────────────
+  const TITLE = [..."Küçük Kurbağa"], CARRY = TITLE.length - 1;
+  E("titleBox").innerHTML = TITLE.map((ch, i) => ch === " " ? "" : `<div class="abs tl" id="tl${i}" style="opacity:0;color:${TC[i % 6]}">${ch}</div>`).join("") +
+    `<svg class="full" viewBox="0 0 1920 1300" style="pointer-events:none">${TITLE.map((ch, i) => ch === " " ? "" : `<g id="tp${i}" opacity="0">${C.lily()}</g>`).join("")}</svg>`;
+  const TX = (i) => 600 + i * 93;
 
   // pools
   const pool = (host, n, cls, id, extra) => { for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "abs " + cls; d.id = id + i; d.style.opacity = 0; d.style.left = "0px"; d.style.top = "0px"; if (extra) extra(d, i); E(host).appendChild(d); } };
-  pool("drops", 48, "drop", "dr"); pool("bubs", 40, "bub", "bb");
+  pool("drops", 60, "drop", "dr"); pool("bubs", 40, "bub", "bb");
   pool("notes", 24, "note", "n", (d, i) => { d.textContent = i % 2 ? "♫" : "♪"; d.style.color = TC[i % 6]; });
-  pool("confBox", 90, "conf", "cf", (d, i) => { d.style.background = TC[i % 6]; });
-  const letters = (txt, host) => [...txt].forEach((ch, i) => { const s = document.createElement("span"); s.textContent = ch === " " ? "\u00A0" : ch; s.style.color = TC[i % 6]; host.appendChild(s); });
-  letters("Küçük Kurbağa", $("#titleBig")); letters("Fıstık Fil", $("#endBig")); letters("Herkes farklı, herkes güzel!", $("#msgBig"));
+  pool("confBox", 120, "conf", "cf", (d, i) => { d.style.background = TC[i % 6]; });
+  const letters = (txt, host) => [...txt].forEach((ch, i) => { const s = document.createElement("span"); s.textContent = ch === " " ? " " : ch; s.style.color = TC[i % 6]; host.appendChild(s); });
+  letters("Fıstık Fil", $("#endBig")); letters("Herkes farklı, herkes güzel!", $("#msgBig"));
+  const MSG = [...document.querySelectorAll("#msgBig span")];
 
-  // body-part cards: [id, icon, word, ok?, scene x, scene y]
-  const CARDS = [["kKulak", "kulak", "KULAK", false, LILY - 400, 430], ["kKuyruk", "kuyruk", "KUYRUK", false, LILY - 440, 430],
-    ["kAyak", "ayak", "AYAK", false, FISHX[1] - 250, 500], ["kDis", "dis", "DİŞ", false, DUCKX[1] - 230, 470], ["kFil", "filkulak", "KULAK", true, 960, 250]];
+  // ───────────────────────── question cards (motif: one material per verse) ─────────────────────────
   const X_SVG = `<svg viewBox="0 0 50 50"><path d="M12 12 L38 38 M38 12 L12 38" stroke="#fff" stroke-width="10" stroke-linecap="round"/></svg>`;
   const OK_SVG = `<svg viewBox="0 0 50 50"><path d="M9 26 L21 38 L42 12" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  E("cards").innerHTML = CARDS.map(([id, ic, w, ok, x, y]) => `<div class="abs card" id="${id}" style="opacity:0;left:${x}px;top:${y}px;border-color:${ok ? "#3FBF6F" : "#FFC23D"}">
-      <svg class="ic" viewBox="-60 -60 120 120">${C.icon[ic]()}</svg><div class="w" style="color:${ok ? "#3FA34D" : "#2B2D42"}">${w}</div>
-      <div class="bd" id="${id}B" style="background:${ok ? "#3FBF6F" : "#E5484D"};opacity:0">${ok ? OK_SVG : X_SVG}</div></div>`).join("") +
-    ["qFrog", "qFish", "qDuck", "qFistik"].map((id) => `<svg class="abs q" id="${id}" viewBox="-50 -50 100 100" style="opacity:0">${C.qmark()}</svg>`).join("");
+  const card = (id, cls, ic, w, ok, x, y, extra = "") => `<div class="abs card ${cls}" id="${id}" style="opacity:0;left:${x}px;top:${y}px">${extra}
+      <svg class="ic" viewBox="-60 -60 120 120">${C.icon[ic]()}</svg><div class="w">${w}</div>
+      <div class="bd" id="${id}B" style="background:${ok ? "#3FBF6F" : "#E5484D"};opacity:0">${ok ? OK_SVG : X_SVG}</div></div>`;
+  const chalkBorder = `<svg class="abs" style="left:-12px;top:-12px;overflow:visible" width="10" height="10"><rect id="chalkR" x="6" y="6" width="400" height="160" rx="30" fill="none" stroke="#F4F1E6" stroke-width="5" stroke-dasharray="1 1" pathLength="1" stroke-dashoffset="1"/></svg>`;
+  const bulbs = Array.from({ length: 22 }, (_, i) => `<div class="bulb" id="bl${i}"></div>`).join("");
+  E("cards").innerHTML = card("kKulak", "chalk", "kulak", "KULAK", false, LILY - 470, 420, chalkBorder) + card("kKuyruk", "", "kuyruk", "KUYRUK", false, LILY - 480, 420) +
+    card("kDis", "leaf", "dis", "DİŞ", false, DUCKX[1] - 230, 540) + card("kFil", "marquee", "filkulak", "KULAK", true, 1060, 230, bulbs) +
+    ["qFrog", "qDuck", "qFistik"].map((id) => `<svg class="abs q" id="${id}" viewBox="-50 -50 100 100" style="opacity:0">${C.qmark()}</svg>`).join("");
+
+  // ───────────────────────── sticker chart (new component) ─────────────────────────
+  const ROWS = [["frog", "kulak", "x"], ["frog", "kuyruk", "x"], ["fish", "ayak", "x"], ["duck", "dis", "x"], ["fistik", "filkulak", "ok"]];
+  E("chart").innerHTML = `<div class="hd"><div id="hdA"><svg width="70" height="70" viewBox="-60 -60 120 120"><g transform="scale(.9) rotate(-20)">${C.magnifier()}</g></svg><span style="font-size:64px;color:#A66BFF">?</span></div>
+      <div id="hdB" style="opacity:0;font-size:36px;color:#E5484D">Herkes farklı, herkes güzel!</div></div>` +
+    ROWS.map(([f, ic, k], i) => `<div class="row"><svg width="84" height="84" viewBox="-50 -50 100 100">${C.face[f]()}</svg><svg width="84" height="84" viewBox="-60 -60 120 120">${C.icon[ic]()}</svg>
+      <div class="slot"><svg viewBox="-50 -50 100 100" id="stk${i}" style="opacity:0;transform-origin:50% 50%">${C.sticker(k)}</svg><svg viewBox="-50 -50 100 100" id="hrt${i}" style="opacity:0;transform-origin:50% 50%">${C.sticker("heart")}</svg></div></div>`).join("");
 
   // ───────────────────────── lyrics + sound words ─────────────────────────
   LINES.forEach((L, li) => { const d = document.createElement("div"); d.className = "line"; d.id = "ln" + li;
     L.words.forEach((w, wi) => { const s = document.createElement("span"); s.id = `w${li}_${wi}`; s.textContent = w[0]; d.appendChild(s); }); E("lyric").appendChild(d); });
   const SND = []; let k = 0;
   LINES.forEach((L) => L.words.forEach(([w, t]) => { const n = norm(w); if (!(n in SOUND)) return; const who = SOUND[n], j = k++ % 3;
-    let x, y;
-    if (who === "frog") { x = LILY + [-420, -160, -300][j]; y = [470, 420, 350][j]; }
-    else if (who === "splash") { x = LILY - 120; y = 660; }
+    const under = L.tag === "v3.5", stage = L.tag.startsWith("p.");
+    let x, y; const [fx] = frogBase(sceneT(t));
+    if (under) { x = [560, 860, 700][j]; y = [380, 300, 220][j]; }
+    else if (who === "frog") { x = fx + [-430, -170, -310][j]; y = [470, 420, 350][j]; }
+    else if (who === "splash") { x = fx - 130; y = 660; }
     else if (who === "fish") { x = FISHX[1] + [-230, 40, -100][j]; y = [600, 560, 500][j]; }
     else if (who === "duck") { x = DUCKX[1] + [-300, -60, -180][j]; y = [560, 520, 450][j]; }
-    else { x = [880, 1040, 960][j]; y = [250, 300, 180][j]; }
-    SND.push({ txt: n === "vıraaak" ? "VIRAAAK!" : w.replace(/[^\p{L}]/gu, "").toLocaleUpperCase("tr") + "!", t, x, y, r: [-9, 7, -3][j], c: SCOL[who] }); }));
-  E("sndBox").innerHTML = SND.map((s, i) => `<div class="abs snd" id="sd${i}" style="opacity:0;color:${s.c}">${s.txt}</div>`).join("");
+    else { x = [900, 1080, 980][j]; y = stage ? [260, 320, 190][j] : [250, 300, 170][j]; }
+    SND.push({ txt: n === "vıraaak" ? "VIRAAAK!" : w.replace(/[^\p{L}]/gu, "").toLocaleUpperCase("tr") + "!", t, x, y, r: [-9, 7, -3][j], c: SCOL[who], under }); }));
+  E("sndBox").innerHTML = SND.map((s, i) => s.under ? "" : `<div class="abs snd" id="sd${i}" style="opacity:0;color:${s.c}">${s.txt}</div>`).join("");
+  E("uSnd").innerHTML = SND.map((s, i) => s.under ? `<div class="abs snd" id="sd${i}" style="opacity:0;color:${s.c}">${s.txt}</div>` : "").join("");
 
   // ───────────────────────── animated state ─────────────────────────
   const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5], wave: [40, -130, 26] };
   const TRUMP = toScene(tipLocal(...POSE.trumpet));
-  const R = { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, flap: 0, walk: 0, sway: 0, tilt: 0, bob: 1, dance: 0 };
-  const W = { x: 0, sx: 0, fx: 0 };                                   // world scroll, stream slide, Fıstık x offset
+  const R = { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, flap: 0, walk: 0, sway: 0, tilt: 0, bob: 1, dance: 0, jy: 0, rot: 0 };
+  const W = { x: 0, fx: -1150 };
   const CAM = { x: 960, y: 560, s: 1.0, r: 0 };
-  const ENV = { rainbow: 0, glow: 0 };
-  const AN = { fishUp: 0, frogIn: 0, frogOpen: 0, frogNo: 0, frogTurn: 1, fishO: 0, fishNo: 0, duckOpen: 0, duckNo: 0, duckIn: 0, party: 0, swim: 0, frogBlink: 0 };
-  const JUMP = { f0: 0, f1: 0, f2: 0, frog: 0 };
-  const EV = { notes: [], drops: [], bubs: [], conf: [] };
+  const ENV = { rainbow: 0, glow: 0, gold: 0, stage: 0, under: 0, uLift: 0, night: 0, flood: 0, wall: 0, iris: 0, irisX: 960, irisY: 540, rack: 0, wind: 0, flash: 0, pola: 0, rew: 0, dive: 1 };
+  const AN = { frogIn: 0, frogOpen: 0, frogNo: 0, spin: 0, dizzy: 0, mag: 0, fishO: 0, fishNo: 0, duckOpen: 0, duckWide: 0, duckNo: 0, duckIn: 0, party: 0, swim: 0, school: 0, pad: 0, look: 0 };
+  const JUMP = { f0: 0, f1: 0, f2: 0, frog: 0, pop: 0 };
+  const EV = { notes: [], drops: [], bubs: [], conf: [], ububs: [] };
+  const KICKS = [];
+  const QM = [];                                   // "?" balloons: [id, x, y, t0, t1, xFrom]
+  const CHS = [];                                  // chart visits: [row, t0, t1]
+  const SLAP = [];                                 // sticker slap time per row
+  const pIn = (t, t0, d) => clamp((t - t0) / d, 0, 1);
+  let VIEW = { s: 1, cx: 960, cy: 540 };
+  const W2S = (x, y) => [960 + (x - VIEW.cx) * VIEW.s, 540 + (y - VIEW.cy) * VIEW.s];
+
+  // flood + wall svgs
+  E("flood").innerHTML = `<svg viewBox="0 0 1920 1080"><g id="floodG">${Array.from({ length: 24 }, (_, i) => { const a1 = i * TAU / 24, a2 = a1 + TAU / 24, r = 2400;
+    return `<path d="M0 0 L${(r * Math.cos(a1)).toFixed(0)} ${(r * Math.sin(a1)).toFixed(0)} L${(r * Math.cos(a2)).toFixed(0)} ${(r * Math.sin(a2)).toFixed(0)}Z" fill="${TC[i % 6]}"/>`; }).join("")}<circle r="120" fill="#fff"/></g></svg>`;
+  E("splashWall").innerHTML = `<svg viewBox="0 0 1920 1080"><defs><linearGradient id="gWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FE0FF"/><stop offset=".45" stop-color="#3FA6E0"/><stop offset="1" stop-color="#1F6FB8"/></linearGradient></defs>
+    <path id="wallP" fill="url(#gWall)"/><path id="wallF" fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round"/>
+    <g id="wallB">${Array.from({ length: 26 }, (_, i) => `<circle cx="${(i * 173) % 1900 + 10}" cy="${(i * 97) % 900 + 120}" r="${10 + (i % 5) * 9}" fill="rgba(255,255,255,.25)" stroke="#fff" stroke-width="4"/>`).join("")}</g>
+    <text id="wallT" x="960" y="600" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="260" fill="#fff" stroke="#1F6FB8" stroke-width="14" paint-order="stroke">ŞAP!</text></svg>`;
 
   function render(t) {
-    const bp = beatPos(t), beatPh = TAU * bp, pl = pulse(t);
+    const st = sceneT(t), bp = beatPos(t), beatPh = TAU * bp, pl = pulse(t);
+    // ── camera first (overlays use it) ──
+    const s = Math.max(1, CAM.s * (1 + 0.035 * pl)), hx = 960 / s, hy = 540 / s;
+    const cx = Math.min(1920 - hx, Math.max(hx, CAM.x)), cy = Math.min(1080 - hy + 30, Math.max(hy - 30, CAM.y));
+    VIEW = { s, cx, cy };
+    E("cam").style.transform = `translate(960px, 540px) rotate(${CAM.r.toFixed(2)}deg) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)}px, ${(-cy).toFixed(1)}px)`;
+
     // ── Fıstık rig ──
     const bob = R.bob * (9 + 10 * R.dance) * (1 - Math.cos(beatPh)) / 2;
     el.rig.setAttribute("transform", `translate(0 ${(-bob).toFixed(2)})`);
-    const ea = R.earAmp * 6 * Math.sin(beatPh) + R.flap * 24 * Math.sin(t * 19);
+    const ea = R.earAmp * 6 * Math.sin(beatPh) + R.flap * 26 * Math.sin(t * 19);
     el.earL.setAttribute("transform", `rotate(${(-ea).toFixed(2)} 222 230)`);
     el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-ea).toFixed(2)} 222 230)`);
     el.tail.setAttribute("transform", `rotate(${(14 * Math.sin(beatPh / 2)).toFixed(2)} 432 470)`);
@@ -390,89 +568,212 @@ window.CAST = (function () {
     el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", m > 0.04 ? "#8C2F45" : "none");
     el.tongue.setAttribute("ry", (m > 0.15 ? 12 * m : 0).toFixed(1)); el.tongue.setAttribute("cy", (my + 6 + 24 * m).toFixed(1));
     drawTrunk(R.A + 3 * Math.sin(t * 2.3), R.C, R.L);
-    E("charWrap").style.transform = `translate(${W.fx.toFixed(1)}px, 0px) scale(${SC})`;
+    E("charWrap").style.transform = `translate(${W.fx.toFixed(1)}px, ${R.jy.toFixed(1)}px) scale(${SC}) rotate(${R.rot.toFixed(2)}deg)`;
 
-    // ── sky + world ──
+    // ── world layers ──
     const lay = (id, fx) => { const x = -((((W.x * fx) % 1920) + 1920) % 1920); E(id).style.transform = `translate(${x.toFixed(1)}px, 0px)`; };
     lay("Lfar", 0.3); lay("Lmid", 0.6); lay("Lground", 1.0);
-    const cxo = -((((W.x * 0.12 + t * 14) % 1920) + 1920) % 1920); E("Lclouds").style.transform = `translate(${cxo.toFixed(1)}px, 0px)`;
-    E("streamBack").style.transform = E("streamFront").style.transform = `translate(${W.sx.toFixed(1)}px, 0px)`;
-    E("rays").setAttribute("transform", `rotate(${(t * 12).toFixed(1)} 115 115)`);
-    E("sun").style.transform = `scale(${(1 + 0.06 * pl).toFixed(3)})`;
+    const cxo = -((((W.x * 0.12 + st * 14) % 1920) + 1920) % 1920); E("Lclouds").style.transform = `translate(${cxo.toFixed(1)}px, 0px)`;
+    E("rays").setAttribute("transform", `rotate(${(st * 12).toFixed(1)} 115 115)`);
+    E("skyGold").style.opacity = ENV.gold.toFixed(3); E("warm").style.opacity = ENV.gold.toFixed(3);
+    E("sun").style.transform = `translate(${(-60 * ENV.gold).toFixed(1)}px, ${(260 * ENV.gold).toFixed(1)}px) scale(${(1 + 0.06 * pl + 0.25 * ENV.gold).toFixed(3)})`;
+    E("sunDisk").setAttribute("fill", ENV.gold > 0.5 ? "#FFB23D" : "#FFD84D");
     E("rbG").setAttribute("opacity", ENV.rainbow > 0.01 ? 1 : 0);
     document.querySelectorAll(".rbArc").forEach((a, i) => a.setAttribute("stroke-dashoffset", (1 - clamp(ENV.rainbow * 1.3 - i * 0.05, 0, 1)).toFixed(3)));
     E("glow").style.opacity = (ENV.glow * pl * 0.9).toFixed(3);
+    // stage swap
+    const stg = ENV.stage > 0.5;
+    E("stageBg").style.opacity = stg ? 1 : 0; E("stageFront").style.opacity = stg ? 1 : 0;
+    ["streamFront", "streamBack", "titleBox"].forEach((id) => (E(id).style.visibility = stg ? "hidden" : "visible"));
+    if (stg) { document.querySelectorAll(".lamp").forEach((l, i) => l.setAttribute("fill", (Math.floor(bp) + i) % 2 ? "#FFE27A" : "#FFB23D"));
+      document.querySelectorAll(".st").forEach((s2, i) => s2.setAttribute("opacity", (0.3 + 0.7 * Math.abs(Math.sin(t * 2 + i))).toFixed(2)));
+      AUD.forEach(([ax, ay, as], i) => { const hop = (6 + 22 * R.dance) * Math.abs(Math.sin(beatPh / 2 + i)), lean = -14 * ENV.wind * (0.6 + 0.4 * Math.sin(t * 9 + i));
+        E("aud" + i).setAttribute("transform", `translate(${ax} ${(ay - hop).toFixed(1)}) rotate(${lean.toFixed(1)}) scale(${as})`); }); }
+    // rack focus: everything but Fıstık blurs
+    const rb = ENV.rack * 7; ["streamFront", "Lground", "Lmid", "Lfar", "streamBack"].forEach((id) => (E(id).style.filter = rb > 0.1 ? `blur(${rb.toFixed(1)}px)` : "none"));
 
     // ── water ──
     const amp = 6 + 5 * AN.party + 4 * pl, pts = [];
-    for (let x = 540; x <= 2020; x += 30) pts.push([x, S + amp * Math.sin(x / 85 + t * 2.4) + 3 * Math.sin(x / 31 - t * 3.1)]);
+    for (let x = 540; x <= 2020; x += 30) pts.push([x, S + amp * Math.sin(x / 85 + st * 2.4) + 3 * Math.sin(x / 31 - st * 3.1)]);
     E("water").setAttribute("d", `M${pts.map((p) => `${p[0]} ${p[1].toFixed(1)}`).join(" L")} L2020 1300 L540 1300Z`);
     E("waterHi").setAttribute("d", "M" + pts.map((p) => `${p[0]} ${(p[1] + 5).toFixed(1)}`).join(" L"));
-    for (let i = 0; i < 6; i++) { const ph = ((t * 0.7 + i / 6) % 1), rx = 20 + ph * 90, rp = E("rp" + i);
+    for (let i = 0; i < 6; i++) { const ph = ((st * 0.7 + i / 6) % 1), rx = 20 + ph * 90, rp = E("rp" + i);
       rp.setAttribute("cx", 900 + i * 180); rp.setAttribute("cy", S + 4); rp.setAttribute("rx", rx.toFixed(1)); rp.setAttribute("ry", (rx * 0.18).toFixed(1));
       rp.setAttribute("opacity", ((1 - ph) * (0.4 + 0.6 * AN.party)).toFixed(2)); }
+    const wob = (x, ph) => S - 2 + 3 * Math.sin(st * 1.7 + ph);
 
-    // ── fish ──
+    // ── title floats in on lily pads; the last pad is carried to Fıstık ──
+    TITLE.forEach((ch, i) => { if (ch === " ") return; const u = clamp((st - 0.2 - i * 0.09) / 2.4, 0, 1), e = easeOut(u);
+      const x = TX(i) + (1 - e) * 1300, y = wob(x, i) - 14, out = clamp((st - 6.0 - (12 - i) * 0.05) / 0.5, 0, 1);
+      const pad = E("tp" + i), letter = E("tl" + i), isCarry = i === CARRY;
+      const px = isCarry ? x - AN.pad * (TX(CARRY) - PADS[2]) : x, py = isCarry ? wob(px, i) : y + out * 40;
+      pad.setAttribute("transform", `translate(${px.toFixed(1)} ${py.toFixed(1)}) scale(.55)`); pad.setAttribute("opacity", isCarry ? (st > 0.2 ? 1 : 0) : (u > 0 ? 1 - out : 0).toFixed(2));
+      letter.style.transform = `translate(${(x - 40).toFixed(1)}px, ${(y - 150 + 6 * Math.sin(st * 3 + i) - out * 120).toFixed(1)}px) rotate(${(4 * Math.sin(st * 2 + i)).toFixed(1)}deg) scale(${(1 + out * 0.4).toFixed(3)})`;
+      letter.style.opacity = (u > 0 ? 1 - out : 0).toFixed(2); });
+    E("pad1").setAttribute("transform", `translate(${PADS[1]} ${wob(PADS[1], 1).toFixed(1)}) scale(.7)`); E("pad1").setAttribute("opacity", st > T.brk1 - 2 ? 1 : 0);
+
+    // ── fish (surface scene) ──
     FISHX.forEach((bx, i) => { const g = E("fish" + i), ph = i * 2.1;
-      const x = bx + 60 * Math.sin(t * 0.5 + ph);
-      let y = Math.min(S + 70 + 18 * Math.sin(t * 1.3 + ph), bedY(x) - 46);
+      const x = bx + 60 * Math.sin(st * 0.5 + ph);
+      let y = Math.min(S + 70 + 18 * Math.sin(st * 1.3 + ph), bedY(x) - 46);
       const j = JUMP["f" + i], jj = j > 0 && j < 1, arc = jj ? Math.sin(Math.PI * j) : 0;
-      y -= arc * 250 + AN.party * 10 * Math.abs(Math.sin(beatPh / 2 + i)) + (i === 1 ? AN.fishUp * 92 : 0);
-      const dir = Math.cos(t * 0.5 + ph) >= 0 ? 1 : -1;
-      const no = i === 1 ? AN.fishNo * 14 * Math.sin(t * 15) : 0;
-      const rot = (jj ? -60 * Math.cos(Math.PI * j) : 4 * Math.sin(t * 2 + ph)) + no;
-      g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${dir} 1) rotate(${rot.toFixed(1)})`);
-      g.querySelector(".tail").setAttribute("transform", `rotate(${(14 * Math.sin(t * 6 + ph)).toFixed(1)} -58 0)`);
-      const o = i === 1 ? AN.fishO : AN.fishO * AN.party;
-      g.querySelector(".mHappy").setAttribute("opacity", (1 - o).toFixed(2)); g.querySelector(".mO").setAttribute("opacity", o.toFixed(2)); });
+      y -= arc * 250 + AN.party * 10 * Math.abs(Math.sin(beatPh / 2 + i));
+      const dir = Math.cos(st * 0.5 + ph) >= 0 ? 1 : -1;
+      g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${dir} 1) rotate(${(jj ? -60 * Math.cos(Math.PI * j) : 4 * Math.sin(st * 2 + ph)).toFixed(1)})`);
+      g.querySelector(".tail").setAttribute("transform", `rotate(${(14 * Math.sin(st * 6 + ph)).toFixed(1)} -58 0)`);
+      const o = AN.fishO * AN.party; g.querySelector(".mHappy").setAttribute("opacity", (1 - o).toFixed(2)); g.querySelector(".mO").setAttribute("opacity", o.toFixed(2)); });
 
     // ── lily + frog ──
-    const ly = S - 2 + 3 * Math.sin(t * 1.7);
-    E("lilyG").setAttribute("transform", `translate(${LILY} ${ly.toFixed(1)})`);
+    E("lilyG").setAttribute("transform", `translate(${LILY} ${wob(LILY, 0).toFixed(1)})`);
+    const [fx, fyHop, air] = frogBase(st);
     const fj = JUMP.frog > 0 && JUMP.frog < 1 ? Math.sin(Math.PI * JUMP.frog) : 0;
-    const fin = AN.frogIn, pop = (1 - fin) * 160;                                          // frog hides under the lily, then pops up
+    const popY = JUMP.pop > 0 && JUMP.pop < 1 ? -Math.sin(Math.PI * JUMP.pop) * 240 : 0;
     const fbob = (AN.party + 0.6 * pl) * 14 * Math.abs(Math.sin(beatPh / 2));
-    E("frogPos").setAttribute("transform", `translate(0 ${(pop - 10 - fj * 200 - fbob).toFixed(1)})`);
-    E("frogPos").setAttribute("opacity", fin > 0.02 ? 1 : 0);
-    const fno = AN.frogNo * 12 * Math.sin(t * 15);
-    E("frog").setAttribute("transform", `rotate(${fno.toFixed(2)} 0 -60) scale(${(AN.frogTurn * (1 + fj * 0.06)).toFixed(3)} ${(1 - fj * 0.04).toFixed(3)})`);
-    const fr = E("frog");
-    fr.querySelector(".mHappy").setAttribute("opacity", (1 - AN.frogOpen).toFixed(2));
-    fr.querySelector(".mOpen").setAttribute("opacity", AN.frogOpen.toFixed(2));
-    fr.querySelector(".legs").setAttribute("transform", `translate(0 ${(fj * 30).toFixed(1)})`);
+    const fy = wob(fx, 0) - 10 + (1 - AN.frogIn) * 170 + fyHop - fj * 200 + popY - fbob;
+    E("frogPos").setAttribute("transform", `translate(${fx.toFixed(1)} ${fy.toFixed(1)})`);
+    E("frogPos").setAttribute("opacity", AN.frogIn > 0.02 ? 1 : 0);
+    const sx = Math.cos(AN.spin * TAU) * (AN.look ? -1 : 1), fno = AN.frogNo * 12 * Math.sin(t * 15);
+    E("frog").setAttribute("transform", `rotate(${(fno + (air ? -10 : 0)).toFixed(2)} 0 -60) scale(${((Math.abs(sx) < 0.04 ? 0.04 * Math.sign(sx || 1) : sx) * (1 + fj * 0.06)).toFixed(3)} ${(1 - fj * 0.04).toFixed(3)})`);
+    const fr = E("frog"); fr.querySelector(".mHappy").setAttribute("opacity", (1 - AN.frogOpen).toFixed(2)); fr.querySelector(".mOpen").setAttribute("opacity", AN.frogOpen.toFixed(2));
+    fr.querySelector(".legs").setAttribute("transform", `translate(0 ${((fj + (air ? 0.8 : 0)) * 30).toFixed(1)})`);
+    E("dizzy").setAttribute("opacity", AN.dizzy.toFixed(2));
+    document.querySelectorAll(".dz").forEach((d, i) => { const a = st * 5 + i * TAU / 3; d.setAttribute("transform", `translate(${(60 * Math.cos(a)).toFixed(1)} ${(-170 + 14 * Math.sin(a)).toFixed(1)})`); });
+    const ma = st * 2.2; E("mag").setAttribute("opacity", AN.mag.toFixed(2));
+    E("mag").setAttribute("transform", `translate(${(fx + 95 * Math.cos(ma)).toFixed(1)} ${(fy - 120 + 30 * Math.sin(ma * 1.3)).toFixed(1)}) rotate(${(20 * Math.sin(ma)).toFixed(1)}) scale(${(0.9 * AN.mag).toFixed(3)})`);
 
-    // ── ducks (swim in for their verse) ──
-    DUCKX.forEach((bx, i) => { const g = E("duck" + i), ph = i * 1.6;
-      const x = bx + (1 - AN.duckIn) * (1150 + i * 220) + AN.swim * 70 * Math.sin(t * 0.45 + ph);
-      const y = S + 8 + 4 * Math.sin(t * 2 + ph) - (AN.party + 0.5 * pl * AN.duckIn) * 10 * Math.abs(Math.sin(beatPh / 2 + i));
+    // ── ducks (pop up where the bubble bursts) ──
+    DUCKX.forEach((bx, i) => { const g = E("duck" + i), ph = i * 1.6, din = clamp(AN.duckIn * 1.4 - (1 - i) * 0.4, 0, 1);
+      const x = bx + AN.swim * 70 * Math.sin(st * 0.45 + ph);
+      const y = S + 8 + 4 * Math.sin(st * 2 + ph) + (1 - outBack(din, 2)) * 150 - (AN.party + 0.5 * pl * din) * 10 * Math.abs(Math.sin(beatPh / 2 + i));
       const no = i === 1 ? AN.duckNo * 12 * Math.sin(t * 15) : 0;
-      g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(3 * Math.sin(t * 1.5 + ph) + no).toFixed(2)})`);
-      const o = i === 1 ? AN.duckOpen : AN.duckOpen * AN.party;
+      g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(3 * Math.sin(st * 1.5 + ph) + no).toFixed(2)}) scale(${(1 + (i === 1 ? AN.duckWide * 0.25 : 0)).toFixed(3)})`);
+      g.setAttribute("opacity", din > 0.01 ? 1 : 0);
+      const o = Math.max(i === 1 ? AN.duckOpen : AN.duckOpen * AN.party, i === 1 ? AN.duckWide * 2.6 : 0);
       g.querySelector(".beakTop").setAttribute("transform", `rotate(${(-14 * o).toFixed(1)} -80 -88)`);
       g.querySelector(".beakBot").setAttribute("transform", `rotate(${(16 * o).toFixed(1)} -80 -80)`);
       g.querySelector(".wing").setAttribute("transform", `rotate(${(AN.party * 18 * Math.sin(beatPh + i)).toFixed(1)} 4 -30)`); });
 
-    drawParticles(t);
+    // ── splash ring → "?" (match cut) ──
+    const ru = (t - (T.ring - 0.5)) / 0.75, ring = E("ring");
+    if (ru > 0 && ru < 1) { ring.setAttribute("cx", fx); ring.setAttribute("cy", S); ring.setAttribute("r", (40 + 260 * easeOut(ru)).toFixed(1)); ring.setAttribute("opacity", (1 - ru * 0.3).toFixed(2)); ring.setAttribute("stroke-width", (12 - 6 * ru).toFixed(1)); }
+    else ring.setAttribute("opacity", 0);
+    // shock waves from the trunk (pırt)
+    const tip = toScene(tipLocal(...POSE.trumpet));
+    let si = 0; KICKS.forEach((k0) => { const u = (t - k0) / 0.6; if (u < 0 || u > 1 || si > 3) return; const c = E("sw" + si++);
+      c.setAttribute("cx", tip[0]); c.setAttribute("cy", tip[1]); c.setAttribute("r", (30 + 330 * easeOut(u)).toFixed(1)); c.setAttribute("opacity", (0.9 * (1 - u)).toFixed(2)); c.setAttribute("stroke", TC[(si * 2) % 6]); });
+    for (; si < 4; si++) E("sw" + si).setAttribute("opacity", 0);
+    // ear wind
+    E("wind").setAttribute("opacity", ENV.wind.toFixed(2));
+    for (let i = 0; i < 14; i++) { const sp = 900 + 900 * ENV.wind, x = ((t * sp + i * 271) % 2300) - 200, y = 260 + (i * 61) % 600; E("wl" + i).setAttribute("transform", `translate(${x.toFixed(1)} ${y}) scale(${(0.6 + ENV.wind).toFixed(2)} 1)`); }
+    for (let i = 0; i < 10; i++) { const u = ((t * 0.9 + i * 0.37) % 1), f = E("fe" + i); f.setAttribute("opacity", (ENV.wind * (1 - u)).toFixed(2));
+      f.setAttribute("transform", `translate(${(1300 + u * 700 + 40 * Math.sin(i)).toFixed(1)} ${(1050 - u * 500 + 60 * Math.sin(u * 8 + i)).toFixed(1)}) rotate(${(u * 720 + i * 50).toFixed(0)})`); }
 
-    // ── camera (+ beat punch in choruses) ──
-    const s = Math.max(1, CAM.s * (1 + 0.035 * pl)), hx = 960 / s, hy = 540 / s;
-    const cx = Math.min(1920 - hx, Math.max(hx, CAM.x)), cy = Math.min(1080 - hy + 30, Math.max(hy - 30, CAM.y));
-    E("cam").style.transform = `translate(960px, 540px) rotate(${CAM.r.toFixed(2)}deg) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)}px, ${(-cy).toFixed(1)}px)`;
+    drawParticles(t, st);
+
+    // ── under water (screen space) ──
+    const uo = ENV.under;
+    E("under").style.opacity = uo.toFixed(3);
+    E("under").style.transformOrigin = "960px 200px";
+    E("under").style.transform = `translateY(${(ENV.uLift * 1080).toFixed(1)}px) scale(${(1 + (1 - ENV.dive) * 1.6).toFixed(3)})`;
+    if (uo > 0.001) {
+      E("uSurf").setAttribute("d", `M0 0 L1920 0 L1920 ${(40 + 10 * Math.sin(t)).toFixed(1)} ` + Array.from({ length: 33 }, (_, i) => `L${1920 - i * 60} ${(40 + 12 * Math.sin(i * 0.7 + t * 2)).toFixed(1)}`).join(" ") + " Z");
+      E("uRays").setAttribute("transform", `translate(${(30 * Math.sin(t * 0.4)).toFixed(1)} 0)`);
+      document.querySelectorAll(".weed").forEach((w, i) => w.firstElementChild.setAttribute("transform", `skewX(${(10 * Math.sin(t * 1.4 + i)).toFixed(2)})`));
+      const hx2 = 1180 + 40 * Math.sin(t * 0.6), hy2 = 560 + 24 * Math.sin(t * 1.1), no = AN.fishNo * 10 * Math.sin(t * 15);
+      E("uFish").setAttribute("transform", `translate(${hx2.toFixed(1)} ${hy2.toFixed(1)}) scale(-2.3 2.3) rotate(${(3 * Math.sin(t * 2) + no).toFixed(2)})`);
+      E("uFish").querySelector(".tail").setAttribute("transform", `rotate(${(16 * Math.sin(t * 7)).toFixed(1)} -58 0)`);
+      E("uFish").querySelector(".mHappy").setAttribute("opacity", (1 - AN.fishO).toFixed(2)); E("uFish").querySelector(".mO").setAttribute("opacity", AN.fishO.toFixed(2));
+      for (let i = 0; i < 28; i++) { const a = t * 0.8 + i * TAU / 28, rr = 230 + 60 * Math.sin(i * 1.7 + t);
+        const sx0 = 520 + rr * Math.cos(a) * 1.3, sy0 = 560 + rr * Math.sin(a) * 0.55;
+        let gx, gy; if (i < 22) { const b = i / 22 * TAU; gx = 560 + 230 * Math.cos(b); gy = 560 + 120 * Math.sin(b); } else { const k2 = i - 22; gx = 300 - (k2 % 3) * 40; gy = 560 + (k2 < 3 ? -1 : 1) * (40 + (k2 % 3) * 40); }
+        const e = smooth(0, 1, AN.school), x2 = sx0 + (gx - sx0) * e, y2 = sy0 + (gy - sy0) * e, dir = e > 0.5 ? -1 : (Math.sin(a) > 0 ? -1 : 1);
+        E("sf" + i).setAttribute("transform", `translate(${x2.toFixed(1)} ${y2.toFixed(1)}) scale(${(dir * 1.3).toFixed(2)} 1.3)`); }
+      let ub = 0; EV.ububs.forEach(([t0, x, y, n]) => { for (let q = 0; q < n && ub < 30; q++) { const u = t - t0 - q * 0.08; if (u < 0 || u > 1.4) continue; const b = E("ub" + ub++);
+        b.setAttribute("cx", (x + 20 * Math.sin(u * 6 + q)).toFixed(1)); b.setAttribute("cy", (y - u * 420).toFixed(1)); b.setAttribute("r", (8 + q * 5).toFixed(1)); b.setAttribute("opacity", (1 - u / 1.4).toFixed(2)); } });
+      for (; ub < 30; ub++) E("ub" + ub).setAttribute("opacity", 0);
+      const bu = (t - T.carry) / 1.2, bb = E("bigBub");
+      if (bu > 0 && bu < 1) { bb.setAttribute("cx", (1060 + 30 * Math.sin(bu * 8)).toFixed(1)); bb.setAttribute("cy", (520 - bu * 620).toFixed(1)); bb.setAttribute("r", (40 + 50 * bu).toFixed(1)); bb.setAttribute("opacity", 1); }
+      else bb.setAttribute("opacity", 0);
+      const ku = t - ts("v3.2");
+      E("kAyak").style.transform = `translate(${(560 + 18 * Math.sin(t * 1.6)).toFixed(1)}px, ${(ku < 0 ? 1200 : 150 + Math.max(0, 600 * (1 - easeOut(ku / 1.6))) + 12 * Math.sin(t * 2.2)).toFixed(1)}px) rotate(${(4 * Math.sin(t * 1.3)).toFixed(1)}deg)`;
+    }
+
+    // ── "?" balloons (pure) ──
+    ["qFrog", "qDuck", "qFistik", "qFish"].forEach((id) => { let op = 0, sc = 1, x = 0, y = 0;
+      for (const [qid, qx, qy, t0, t1, xf] of QM) { if (qid !== id || t < t0 || t > t1 + 0.25) continue;
+        const u = (t - t0) / 0.35, out = t > t1 ? 1 - (t - t1) / 0.25 : 1;
+        op = Math.min(1, u * 3) * out; sc = (0.2 + 0.8 * outBack(u, 2.6)) * (t > t1 ? 0.4 + 0.6 * out : 1);
+        x = xf === undefined ? qx : xf + (qx - xf) * smooth(0, 1, (t - t0) / 0.6); y = qy - 14 * Math.abs(Math.sin((t - t0) * Math.PI / 0.6)); }
+      const q = E(id); q.style.opacity = op.toFixed(3); q.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${sc.toFixed(3)})`; });
+    // ── question cards: each verse its own material (pure) ──
+    const badge = (id, t0) => { const u = (t - t0) / 0.25, b = E(id); b.style.opacity = u > 0 ? 1 : 0; b.style.transform = `scale(${(u > 0 ? 1 + 1.4 * (1 - outBack(u, 2)) : 1).toFixed(3)})`; };
+    { const tIn = ts("v1.2") - 0.1, tOut = te("v1.4") + 0.2, o = pIn(t, tOut, 0.3), c = E("kKulak");
+      c.style.opacity = (pIn(t, tIn, 0.2) * (1 - o)).toFixed(3); c.style.transform = `translate(0px, ${(40 * o * o).toFixed(1)}px)`;
+      E("chalkR").setAttribute("stroke-dashoffset", (1 - easeOut(pIn(t, tIn, 0.9))).toFixed(3)); badge("kKulakB", ts("v1.3")); }
+    { const tIn = ts("v2.2") - 0.2, tOut = T.rew + 0.1, u = pIn(t, tIn, 0.7), o = pIn(t, tOut, 0.3), c = E("kKuyruk");
+      c.style.opacity = (t > tIn ? 1 - o : 0).toFixed(3); c.style.transform = `perspective(900px) rotateY(${(-180 * (1 - outBack(u, 1.7)) + 90 * o).toFixed(1)}deg)`; badge("kKuyrukB", ts("v2.3")); }
+    { const tIn = ts("v4.2") - 0.5, tOut = te("v4.4") + 0.1, u = pIn(t, tIn, 1.4), o = pIn(t, tOut, 0.3), c = E("kDis"), e = smooth(0, 1, u);
+      c.style.opacity = (t > tIn ? 1 - o : 0).toFixed(3);
+      c.style.transform = `translate(${(40 * Math.sin((t - tIn) * 4.5) * (1 - e * 0.7)).toFixed(1)}px, ${(-620 * (1 - e) + 60 * o).toFixed(1)}px) rotate(${(18 - 21 * e).toFixed(1)}deg)`; badge("kDisB", ts("v4.3")); }
+    { const tIn = ts("v5.2") - 0.1, tOut = te("v5.4") + 0.2, u = pIn(t, tIn, 0.5), o = pIn(t, tOut, 0.3), c = E("kFil");
+      c.style.opacity = (t > tIn ? 1 - o : 0).toFixed(3); c.style.transform = `scale(${((0.3 + 0.7 * (1 - Math.pow(1 - u, 4))) * (1 - 0.4 * o)).toFixed(3)})`; badge("kFilB", ts("v5.3")); }
+    { const tIn = ts("v3.2") - 0.1, o = pIn(t, te("v3.4") - 0.2, 0.3); E("kAyak").style.opacity = (pIn(t, tIn, 0.3) * (1 - o)).toFixed(3); badge("kAyakB", ts("v3.3")); }
+    // ── sticker chart (pure) ──
+    { let x = -720, y = 210, sc = 0.78, op = 0;
+      for (const [row, t0, t1] of CHS) { if (t < t0 || t > t1 + 0.4) continue; op = 1; const o = t > t1 ? Math.pow(pIn(t, t1, 0.4), 2) : 0; x = -720 + 760 * easeOut(pIn(t, t0, 0.45)) - 760 * o; }
+      const tF = T.chart - 0.5, tO = te("f.7") - 0.4;
+      if (t >= tF) { op = 1; sc = 1; x = 660; y = 1100 - 950 * outBack(pIn(t, tF, 0.6), 1.4) + 1000 * Math.pow(pIn(t, tO, 0.6), 2); }
+      const ch = E("chart"); ch.style.opacity = op; ch.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${sc})`;
+      E("hdA").style.opacity = t > tF + 0.95 ? 0 : 1; E("hdB").style.opacity = t > tF + 1.0 ? 1 : 0;
+      ROWS.forEach((_, i) => { const u = (t - SLAP[i]) / 0.3, stk = E("stk" + i), tf = tF + 1.3 + i * 0.35, fu = pIn(t, tf, 0.15), hu = (t - tf - 0.15) / 0.2;
+        stk.style.opacity = u > 0 || t >= tF ? 1 : 0;
+        stk.style.transform = `rotateY(${(90 * fu).toFixed(1)}deg) rotate(${(u > 0 ? -8 - 32 * (1 - Math.min(1, u)) : -8).toFixed(1)}deg) scale(${(u > 0 && u < 1 ? 1 + 1.6 * (1 - outBack(u, 2.2)) : 1).toFixed(3)})`;
+        const h = E("hrt" + i); h.style.opacity = hu > 0 ? 1 : 0; h.style.transform = `rotateY(${(-90 + 90 * outBack(hu, 2)).toFixed(1)}deg)`; }); }
+    // ── message "Herkes farklı, herkes güzel!" → carried into the chart header (pure) ──
+    { const t0 = T.msg - 0.2, tc = T.chart + 0.1, m2 = E("msg"), cu = pIn(t, tc, 0.5);
+      m2.style.opacity = t >= t0 && t < tc + 0.7 ? (1 - pIn(t, tc + 0.45, 0.15)).toFixed(3) : 0;
+      m2.style.transform = `translate(0px, ${(6 * cu).toFixed(1)}px) scale(${(1 - 0.6 * smooth(0, 1, cu)).toFixed(3)})`;
+      MSG.forEach((sp, i) => { const u = pIn(t, t0 + i * 0.03, 0.45), e = outBack(u, 2.5); sp.style.opacity = u > 0 ? 1 : 0; sp.style.transform = `translateY(${(-200 * (1 - e)).toFixed(1)}px) scale(${(0.3 + 0.7 * e).toFixed(3)})`; }); }
+    // ── curtains (pure) ──
+    { const c = t < T.curtain - 0.45 ? 0 : t < T.curtain ? Math.pow(pIn(t, T.curtain - 0.45, 0.45), 3) : t < T.curtain + 0.1 ? 1 : 1 - easeOut(pIn(t, T.curtain + 0.1, 0.8));
+      E("curtL").style.transform = `translateX(${(-1000 * (1 - c)).toFixed(1)}px)`; E("curtR").style.transform = `translateX(${(1000 * (1 - c)).toFixed(1)}px)`; }
+    // ── goodbye sign swings on a branch (pure) ──
+    { const e2 = E("end"); if (t < T.out) e2.style.opacity = 0; else { const k2 = t - T.out - 0.6;
+      e2.style.opacity = 1; e2.style.transform = `translate(0px, ${(-700 * (1 - easeOut(pIn(t, T.out, 0.7)))).toFixed(1)}px) rotate(${(k2 > 0 ? 9 * Math.exp(-k2 * 1.4) * Math.cos(k2 * 6.5) : 0).toFixed(2)}deg)`; } }
+    // ── overlays ──
+    if (ENV.iris > 0.001) { const [ix, iy] = W2S(ENV.irisX, ENV.irisY), r = 1500 * (1 - ENV.iris) + 4;
+      E("irisP").setAttribute("d", `M0 0 H1920 V1080 H0Z M${(ix - r).toFixed(1)} ${iy.toFixed(1)} a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(2 * r).toFixed(1)} 0 a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(-2 * r).toFixed(1)} 0Z`); }
+    else E("irisP").setAttribute("d", "");
+    E("night").style.opacity = ENV.night.toFixed(3);
+    if (ENV.night > 0.001) { const [sx2, sy2] = W2S(760, 560);
+      E("night").style.background = `radial-gradient(circle at ${sx2.toFixed(0)}px ${sy2.toFixed(0)}px, rgba(255,240,190,.10) 0, rgba(255,240,190,.10) ${(260 * VIEW.s).toFixed(0)}px, rgba(14,18,44,.86) ${(330 * VIEW.s).toFixed(0)}px)`; }
+    E("flash").style.opacity = ENV.flash.toFixed(3); E("polaroid").style.opacity = ENV.pola.toFixed(3);
+    E("cam").style.filter = ENV.pola > 0.01 ? `saturate(${(1 - 0.6 * ENV.pola).toFixed(2)}) sepia(${(0.25 * ENV.pola).toFixed(2)})` : "none";
+    E("rew").style.opacity = (ENV.rew * (0.6 + 0.4 * Math.abs(Math.sin(t * 14)))).toFixed(2);
+    E("flood").style.opacity = ENV.flood.toFixed(3);
+    if (ENV.flood > 0.001) { const [fx2, fy2] = W2S(tip[0], tip[1]); E("floodG").setAttribute("transform", `translate(${fx2.toFixed(1)} ${fy2.toFixed(1)}) rotate(${(t * 40).toFixed(1)}) scale(${(0.2 + 1.8 * ENV.flood).toFixed(3)})`); }
+    const wv = ENV.wall; E("splashWall").style.opacity = wv > 0.001 ? 1 : 0;
+    if (wv > 0.001) { const top = 1080 - wv * 1300;
+      E("wallP").setAttribute("d", `M0 1200 L1920 1200 L1920 ${top.toFixed(1)} ` + Array.from({ length: 25 }, (_, i) => `L${1920 - i * 80} ${(top + 40 * Math.sin(i * 0.9 + t * 6)).toFixed(1)}`).join(" ") + " Z");
+      E("wallB").setAttribute("transform", `translate(0 ${(top + 40 - (t % 3) * 120).toFixed(1)})`); E("wallB").setAttribute("opacity", clamp(wv * 1.4 - 0.2, 0, 1).toFixed(2));
+      const wt = clamp((t - T.flop - 0.2) / 0.25, 0, 1); E("wallT").setAttribute("opacity", (wt * clamp(wv * 2 - 1, 0, 1)).toFixed(2)); E("wallT").setAttribute("transform", `translate(960 600) scale(${(0.5 + 0.5 * outBack(wt, 2.5)).toFixed(3)}) rotate(-6) translate(-960 -600)`);
+      E("wallF").setAttribute("d", `M0 ${(top + 60).toFixed(1)} ` + Array.from({ length: 25 }, (_, i) => `L${i * 80} ${(top + 40 * Math.sin((24 - i) * 0.9 + t * 6) + 6).toFixed(1)}`).join(" ")); }
   }
 
   // ───────────────────────── particles: pure functions of t ─────────────────────────
   const notes = (t, dx = 0) => EV.notes.push([t, dx]);
   const splash = (t, x, y, n = 8, spread = 1) => EV.drops.push([t, x, y, n, spread]);
   const bubbles = (t, x, y, n = 3) => EV.bubs.push([t, x, y, n]);
+  const ububbles = (t, x, y, n = 4) => EV.ububs.push([t, x, y, n]);
   const confetti = (t, x, y) => EV.conf.push([t, x, y]);
   function drawParticles(t) {
     let di = 0, bi = 0, ni = 0, ci = 0;
     EV.drops.forEach(([t0, x, y, n, sp]) => { const u = t - t0; if (u < 0 || u > 0.7) return;
-      for (let q = 0; q < n && di < 48; q++, di++) { const a = -Math.PI * (0.15 + 0.7 * q / Math.max(1, n - 1)), r = (120 + (q % 3) * 50) * sp, d = E("dr" + di);
+      for (let q = 0; q < n && di < 60; q++, di++) { const a = -Math.PI * (0.15 + 0.7 * q / Math.max(1, n - 1)), r = (120 + (q % 3) * 50) * sp, d = E("dr" + di);
         const k1 = Math.min(1, u / 0.3), e1 = 1 - (1 - k1) * (1 - k1), k2 = Math.max(0, (u - 0.3) / 0.4), e2 = k2 * k2;
         const dx = Math.cos(a) * r * (0.6 * e1 + 0.4 * e2), dy = Math.sin(a) * r * (1 - e2) + (Math.sin(a) * r * 0.3 + 120) * e2 * (u > 0.3 ? 1 : 0);
         d.style.transform = `translate(${(x + dx).toFixed(1)}px, ${(y + dy).toFixed(1)}px)`; d.style.opacity = (u < 0.3 ? 1 : 1 - k2).toFixed(2); } });
-    for (; di < 48; di++) E("dr" + di).style.opacity = 0;
+    for (; di < 60; di++) E("dr" + di).style.opacity = 0;
     EV.bubs.forEach(([t0, x, y, n]) => { for (let q = 0; q < n && bi < 40; q++) { const u = t - t0 - q * 0.07; if (u < 0 || u > 1) continue; const d = E("bb" + bi++), e = 1 - (1 - u) * (1 - u);
         d.style.transform = `translate(${(x + q * 18 - 18 + 14 * Math.sin(q * 2) * e).toFixed(1)}px, ${(y - (150 + q * 40) * e).toFixed(1)}px) scale(${(0.6 + q * 0.25 + 0.4 * e).toFixed(2)})`; d.style.opacity = (0.95 * (1 - u)).toFixed(2); } });
     for (; bi < 40; bi++) E("bb" + bi).style.opacity = 0;
@@ -482,159 +783,227 @@ window.CAST = (function () {
         d.style.opacity = (u < 0.7 ? Math.min(1, u * 6) : 1 - (u - 0.7) / 0.25).toFixed(2); } });
     for (; ni < 24; ni++) E("n" + ni).style.opacity = 0;
     EV.conf.forEach(([t0, ox, oy]) => { const u = t - t0; if (u < 0 || u > 1.8) return;
-      for (let q = 0; q < 45 && ci < 90; q++, ci++) { const a = -Math.PI / 2 + (q / 45 - 0.5) * 2.8, v = 700 + (q % 7) * 90, cc = E("cf" + ci);
+      for (let q = 0; q < 60 && ci < 120; q++, ci++) { const a = -Math.PI / 2 + (q / 60 - 0.5) * 2.8, v = 700 + (q % 7) * 90, cc = E("cf" + ci);
         cc.style.transform = `translate(${(ox + Math.cos(a) * v * u).toFixed(1)}px, ${(oy + Math.sin(a) * v * u + 760 * u * u).toFixed(1)}px) rotate(${(u * 600 + q * 37).toFixed(0)}deg) scaleX(${Math.cos(u * 12 + q).toFixed(3)})`;
         cc.style.opacity = (u < 1.3 ? 1 : 1 - (u - 1.3) / 0.5).toFixed(3); } });
-    for (; ci < 90; ci++) E("cf" + ci).style.opacity = 0;
-    // sound words
+    for (; ci < 120; ci++) E("cf" + ci).style.opacity = 0;
     SND.forEach((s, i) => { const u = t - s.t, d = E("sd" + i);
       if (u < 0 || u > 0.62) { d.style.opacity = 0; return; }
       const e1 = Math.min(1, u / 0.14), sc = 0.25 + 0.75 * (1 - Math.pow(1 - e1, 3)) * (1 + 0.15 * Math.sin(Math.PI * e1)) + (u > 0.42 ? (u - 0.42) * 1.5 : 0);
       d.style.transform = `translate(${s.x}px, ${(s.y - 30 * u).toFixed(1)}px) rotate(${(s.r + (1 - e1) * -20).toFixed(1)}deg) scale(${sc.toFixed(3)})`;
       d.style.opacity = (u > 0.42 ? 1 - (u - 0.42) / 0.2 : 1).toFixed(2); });
+    const kf = E("kFil"); if (parseFloat(kf.style.opacity || "0") > 0.01) { const w = kf.offsetWidth, h = kf.offsetHeight, per = 2 * (w + h);
+      for (let i = 0; i < 22; i++) { const b = E("bl" + i), d = i / 22 * per; let x, y;
+        if (d < w) { x = d; y = 0; } else if (d < w + h) { x = w; y = d - w; } else if (d < 2 * w + h) { x = w - (d - w - h); y = h; } else { x = 0; y = h - (d - 2 * w - h); }
+        b.style.left = (x - 19) + "px"; b.style.top = (y - 19) + "px"; b.style.opacity = (Math.floor(t * 8) + i) % 3 === 0 ? 0.35 : 1; } }
   }
 
   // ───────────────────────── timeline ─────────────────────────
   gsap.defaults({ lazy: false });
   const tl = gsap.timeline({ paused: true });
-  gsap.set("#charWrap", { scale: SC, transformOrigin: "300px 620px" });
   const pose = (name, t, d = 0.3, ease = "back.out(1.8)") => tl.to(R, { A: POSE[name][0], C: POSE[name][1], L: POSE[name][2], duration: d, ease }, t);
-  const kick = (t) => { tl.to(R, { A: POSE.kick[0], C: POSE.kick[1], L: POSE.kick[2], duration: 0.06 }, t - 0.04); tl.to(R, { A: POSE.trumpet[0], C: POSE.trumpet[1], L: POSE.trumpet[2], duration: 0.2 }, t + 0.05); notes(t); };
+  const kick = (t) => { tl.to(R, { A: POSE.kick[0], C: POSE.kick[1], L: POSE.kick[2], duration: 0.06 }, t - 0.04); tl.to(R, { A: POSE.trumpet[0], C: POSE.trumpet[1], L: POSE.trumpet[2], duration: 0.2 }, t + 0.05); notes(t); KICKS.push(t); };
   const squash = (t, k = 1) => tl.to("#char", { scaleY: 1 - 0.08 * k, scaleX: 1 + 0.05 * k, duration: 0.08, yoyo: true, repeat: 1, ease: "power1.out" }, t);
   const shake = (t, a = 10) => tl.fromTo("#shake", { y: 0, x: 0 }, { keyframes: [{ y: a, x: -a * 0.4, duration: 0.04 }, { y: -a * 0.6, x: a * 0.3, duration: 0.05 }, { y: a * 0.3, x: 0, duration: 0.05 }, { y: 0, x: 0, duration: 0.06 }], immediateRender: false }, t);
   const blink = (t) => { tl.to(R, { blink: 1, duration: 0.07, ease: "none" }, t); tl.to(R, { blink: 0, duration: 0.09, ease: "none" }, t + 0.1); };
   const cam = (t, c, d = 1.2, ease = "power2.inOut") => tl.to(CAM, { ...c, duration: d, ease }, t);
+  const cut = (t, c) => tl.set(CAM, c, t);
   const jump = (key, t, d = 0.55) => tl.fromTo(JUMP, { [key]: 0 }, { [key]: 1, duration: d, ease: "none", immediateRender: false }, t - 0.12);
-  const popIn = (sel, t) => tl.fromTo(sel, { opacity: 0, scale: 0.2, rotation: -12 }, { opacity: 1, scale: 1, rotation: -3, duration: 0.35, ease: "back.out(2.6)", immediateRender: false }, t);
-  const popOut = (sel, t) => tl.to(sel, { opacity: 0, scale: 0.4, duration: 0.25, ease: "back.in(2)" }, t);
-  const stamp = (sel, t) => tl.fromTo(sel, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)", immediateRender: false }, t);
-  const qmark = (id, x, y, t0, t1) => { gsap.set("#" + id, { x, y }); popIn("#" + id, t0); tl.to("#" + id, { y: y - 14, duration: 0.3, yoyo: true, repeat: Math.max(1, Math.floor((t1 - t0) / 0.3) - 1), ease: "sine.inOut" }, t0 + 0.35); popOut("#" + id, t1); };
+  const qIn = (id, x, y, t0, t1, xFrom) => QM.push([id, x, y, t0, t1, xFrom]);
 
-  // lyric pills (chorus pills hop on the beat via the camera pulse already)
+  // lyric pills
   LINES.forEach((L, li) => { const st = L.words[0][1] - 0.35, nx = LINES[li + 1], en = nx ? Math.min(nx.words[0][1] - 0.35, L.end + 1.6) : L.end + 1.6;
     tl.fromTo("#ln" + li, { opacity: 0, y: -24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.22, ease: "back.out(2)", immediateRender: false }, st);
     L.words.forEach((w, wi) => { const snd = norm(w[0]) in SOUND;
       tl.to(`#w${li}_${wi}`, { color: snd ? "#E5484D" : "#2B2D42", scale: snd ? 1.28 : 1.14, duration: 0.08, ease: "power2.out" }, w[1]); tl.to(`#w${li}_${wi}`, { scale: 1, duration: 0.18 }, w[1] + 0.1); });
     tl.to("#ln" + li, { opacity: 0, y: -16, duration: 0.18, ease: "power1.in" }, en - 0.18); });
-  // lip-sync by singer
+  // lip-sync
   const MOUTH = { fistik: [R, "mouth", 0.9], frog: [AN, "frogOpen", 1], fish: [AN, "fishO", 1], duck: [AN, "duckOpen", 1] };
   LINES.forEach((L) => L.words.forEach((w, wi) => { const nxt = (L.words[wi + 1] || [0, w[1] + 0.6])[1], hold = clamp(nxt - w[1] - 0.12, 0.08, 0.26), n = norm(w[0]);
-    let who = L.who === "all" ? (SOUND[n] && SOUND[n] !== "splash" ? [SOUND[n]] : ["fistik", "frog"]) : [L.who];
+    const who = L.who === "all" ? (SOUND[n] && SOUND[n] !== "splash" ? [SOUND[n]] : ["fistik", "frog"]) : [L.who];
     who.forEach((h) => { const [o, p, v] = MOUTH[h]; tl.to(o, { [p]: v, duration: 0.06 }, w[1]); tl.to(o, { [p]: h === "fistik" ? 0.06 : 0, duration: 0.1 }, w[1] + hold); }); }));
-  for (let t = 3.2; t < D - 2; t += 4.1) { blink(t); }
+  for (let t = 3.2; t < D - 2; t += 4.1) blink(t);
 
-  // ── intro (instrumental; "Abone ol" bandı sol altta ~0.1–7.1 sn) ──
-  const T0 = ts("intro.1");
-  tl.set(W, { fx: -820, sx: 0 }, 0);
-  cam(0, { s: 1.35, x: 1350, y: 720 }, 0.01); cam(0.2, { s: 1.0, x: 960, y: 560 }, 5.5, "power2.inOut");
-  tl.from("#titleBig span", { y: -260, opacity: 0, rotation: (i) => (i % 2 ? 12 : -12), duration: 0.55, ease: "bounce.out", stagger: 0.06 }, 0.5);
-  tl.from("#titleSub", { scale: 0, duration: 0.45, ease: "back.out(2)" }, 1.6);
-  [1.4, 3.0, 4.6].forEach((t, i) => { jump("f" + i, t, 0.75); bubbles(t + 0.5, FISHX[i], S - 10, 3); splash(t + 0.6, FISHX[i], S, 5, 0.7); });
-  tl.to("#title", { y: -460, duration: 0.45, ease: "back.in(1.4)" }, Math.min(6.6, T0 - 1));
-  tl.from("#bug", { x: -360, duration: 0.5, ease: "back.out(1.6)" }, 7.4);
-  // Fıstık walks in after the subscribe band has gone
-  const WALK0 = Math.min(7.3, T0 - 6);
-  tl.to(R, { walk: 1, duration: 0.3 }, WALK0); tl.to(W, { fx: 0, duration: 4.2, ease: "power1.out" }, WALK0); tl.to(W, { x: 500, duration: 4.2, ease: "power1.out" }, WALK0);
-  tl.to(R, { walk: 0, lookX: 14, duration: 0.3 }, WALK0 + 4.2);
-  cam(WALK0 + 1, { s: 1.1, x: 1100, y: 600 }, 3);
-  // frog pops up on the lily
-  const POP = Math.max(WALK0 + 4.6, T0 - 2.6);
-  tl.to(AN, { frogIn: 1, duration: 0.45, ease: "back.out(2.2)" }, POP); splash(POP + 0.1, LILY, S - 20, 9, 1.1); shake(POP + 0.1, 6);
-  tl.to(R, { earAmp: 3, lookY: -4, mouth: 0.6, duration: 0.2 }, POP + 0.2); tl.to(R, { earAmp: 1, mouth: 0.06, duration: 0.4 }, POP + 1.2);
+  // sticker chart: slide in, slap the sticker, slide out
+  const chartShow = (row, t0, t1) => { CHS.push([row, t0, t1]); SLAP[row] = t0 + 0.6; };
 
-  // ── giriş konuşması: Fıstık introduces the frog ──
-  cam(T0 - 0.4, { s: 1.15, x: 1180, y: 620 }, 1.4);
+  // ── R1 · 0–7.3 · title floats in on lily pads (abone bandı sol altta) ──
+  cut(0, { s: 1.25, x: 1230, y: 640 }); cam(5.6, { s: 1.0, x: 960, y: 560 }, 1.7, "sine.inOut");
+  [0.9, 2.4, 4.2].forEach((t, i) => { jump("f" + i, t, 0.75); splash(t + 0.6, FISHX[i], S, 5, 0.7); });
+  // ── R2 · 7.3–14.6 · Fıstık walks in following the carried pad ──
+  tl.to(AN, { pad: 1, duration: 6.5, ease: "sine.inOut" }, 6.6);
+  tl.to(R, { walk: 1, duration: 0.3 }, T.walk); tl.to(W, { fx: 0, duration: 5.6, ease: "power1.out" }, T.walk);
+  cam(T.walk, { s: 1.25, x: 640, y: 600 }, 1.2, "power1.out"); cam(T.walk + 1.2, { x: 880 }, 4.4, "power1.inOut");
+  tl.to(R, { walk: 0, lookX: 14, earAmp: 3, duration: 0.3 }, T.walk + 5.6);
+  cam(T.pop - 0.5, { x: 1560, y: 640, s: 1.4 }, 0.42, "expo.in");                // whip pan to the lily
+  // ── R3 · frog bursts out, hangs in the air ──
+  tl.set(AN, { frogIn: 1 }, T.pop); tl.fromTo(JUMP, { pop: 0 }, { pop: 0.5, duration: 0.35, ease: "expo.out", immediateRender: false }, T.pop);
+  tl.to(JUMP, { pop: 1, duration: 0.45, ease: "power2.in" }, T.pop + 0.65);
+  splash(T.pop, LILY, S - 20, 14, 1.4); shake(T.pop, 9); cam(T.pop, { s: 1.55, y: 600 }, 0.3, "expo.out");
+  splash(T.pop + 1.1, LILY, S - 20, 8, 0.9);
+  cam(T.pop + 1.2, { s: 1.08, x: 1180, y: 600 }, 1.3, "power2.inOut");          // dolly-out → two-shot
+  tl.to(R, { earAmp: 1, lookX: 16, mouth: 0.6, duration: 0.2 }, T.pop + 0.3); tl.to(R, { mouth: 0.06, duration: 0.3 }, T.pop + 1.2);
+  // ── R4 · intro speech: wave hello ──
+  pose("wave", ts("intro.1") + 0.2, 0.35); [0, 1, 2].forEach((i) => { tl.to(R, { A: 10, C: -110, L: 27, duration: 0.25, ease: "sine.inOut" }, ts("intro.1") + 0.6 + i * 0.6); tl.to(R, { A: 40, C: -130, L: 26, duration: 0.25, ease: "sine.inOut" }, ts("intro.1") + 0.9 + i * 0.6); });
+  pose("rest", te("intro.1") + 0.3, 0.4, "sine.inOut");
+  [ts("intro.2") + 0.5, ts("intro.2") + 1.6].forEach((t) => jump("frog", t, 0.35));
   tl.to(R, { lookX: 16, lookY: 2, duration: 0.3 }, ts("intro.3"));
-  pose("wave", ts("intro.3"), 0.4); pose("rest", te("intro.3"), 0.4, "sine.inOut");
+  // focal iris closes on the frog, cut to close-up under it, opens again
+  tl.set(ENV, { irisX: LILY, irisY: 690 }, T.iris - 0.6);
+  tl.to(ENV, { iris: 0.93, duration: 0.45, ease: "power2.in" }, T.iris - 0.45); cut(T.iris, { s: 1.55, x: 1450, y: 640 });
+  tl.to(ENV, { iris: 0, duration: 0.5, ease: "power2.out" }, T.iris + 0.1);
 
-  // ── verse helper: question to an animal, card + "?" + head shake ──
-  const verse = (v, { who, q, card, camQ, camA, cx, cy, onQ }) => {
-    cam(ts(v + ".1") - 0.4, camQ, 1.1);
-    qmark(q, cx, cy, ts(v + ".2") - 0.1, ts(v + ".3"));
-    gsap.set("#" + card, { transformOrigin: "50% 100%" }); popIn("#" + card, ts(v + ".2"));
-    stamp("#" + card + "B", ts(v + ".3")); if (who) { tl.to(AN, { [who]: 1, duration: 0.15 }, ts(v + ".3")); tl.to(AN, { [who]: 0, duration: 0.2 }, te(v + ".3")); }
-    if (camA) cam(ts(v + ".3") - 0.2, camA, 0.8);
-    popOut("#" + card, te(v + ".4") + 0.2);
-    if (onQ) onQ();
-  };
-  const FROG_CAM = { s: 1.45, x: 1500, y: 640 }, FROG_CAM2 = { s: 1.6, x: 1560, y: 660 };
-  verse("v1", { who: "frogNo", q: "qFrog", card: "kKulak", camQ: FROG_CAM, camA: FROG_CAM2, cx: LILY + 70, cy: 520 });
-  verse("v2", { who: "frogNo", q: "qFrog", card: "kKuyruk", camQ: FROG_CAM, camA: FROG_CAM2, cx: LILY + 70, cy: 520,
-    onQ: () => { const t = ts("v2.3"); tl.to(AN, { frogTurn: -1, duration: 0.2 }, t); tl.to(AN, { frogTurn: 1, duration: 0.2 }, t + 0.7); tl.to(AN, { frogTurn: -1, duration: 0.2 }, t + 1.4); tl.to(AN, { frogTurn: 1, duration: 0.2 }, t + 2.1); } });
-  [ts("v1.1"), ts("v2.1")].forEach((t) => { tl.to(R, { lookX: 16, tilt: 6, duration: 0.3 }, t); tl.to(R, { tilt: 0, duration: 0.4 }, t + 2); });
+  // ── R5 · v1 kulak: chalk card, magnifier ──
+  cam(ts("v1.1") + 0.3, { s: 1.62, x: 1480, y: 650 }, 13, "sine.inOut");
+  
+  
+  tl.to(AN, { mag: 1, duration: 0.4, ease: "back.out(2)" }, ts("v1.2")); tl.to(AN, { mag: 0, duration: 0.3 }, ts("v1.3") + 1.6);
+  qIn("qFrog", LILY + 90, 470, ts("v1.2") + 0.2, ts("v1.3")); qIn("qFrog", LILY + 90, 470, T.ring + 0.2, ts("v2.3"));
+   tl.to(AN, { frogNo: 1, duration: 0.15 }, ts("v1.3")); tl.to(AN, { frogNo: 0, duration: 0.2 }, te("v1.3"));
+  
+  chartShow(0, te("v1.4") + 0.3, te("v1.4") + 2.9);
 
-  // ── choruses: frog jumps on every "zıp"/second "vırak", splash on "şıp", glow + beat punch ──
-  const chorus = (c) => { const a = ts(c + ".1") - 0.3, b = te(c + ".2");
-    cam(a, { s: 1.22, x: 1320, y: 600 }, 0.7, "power3.out"); tl.to(ENV, { glow: 1, duration: 0.2 }, a); tl.to(ENV, { glow: 0, duration: 0.3 }, b + 0.3);
+  // ── R6 · break: frog hops across the pads; the last hop freezes like a photo ──
+  cam(T.brk1 + 0.2, { s: 1.22, x: 1360, y: 620 }, 1.4, "power2.out");
+  HOPS.filter(([t0]) => t0 > T.brk1 && t0 < 52).forEach(([t0, d, x0, x1]) => splash(realT(t0 + d), x1, S - 6, 5, 0.6));
+  tl.to(ENV, { flash: 1, duration: 0.05 }, HOLD[0]); tl.to(ENV, { flash: 0, duration: 0.3 }, HOLD[0] + 0.06);
+  tl.to(ENV, { pola: 1, duration: 0.12 }, HOLD[0]); tl.set(ENV, { pola: 0 }, HOLD[1]);
+  cam(HOLD[0], { s: 1.5, x: 1600, y: 560 }, 0.5, "power3.out");
+
+  // ── R7 · chorus 1: hard cuts between angles on every bar ──
+  const ANG1 = [{ s: 1.0, x: 1100, y: 560 }, { s: 1.75, x: 1580, y: 660 }, { s: 1.55, x: 820, y: 470 }, { s: 1.3, x: 1300, y: 740 }];
+  const ANG2 = [{ s: 1.0, x: 1100, y: 560 }, { s: 1.3, x: 1150, y: 600 }, { s: 1.6, x: 800, y: 470 }, { s: 1.75, x: 1580, y: 660 }];
+  const chorus = (c, ANG, duet) => { const a = ts(c + ".1") - 0.05, b = te(c + ".2");
+    beatsIn(a - 0.1, b - 0.6).filter((_, i) => i % 4 === 0).forEach((bt, i) => cut(bt, ANG[i % ANG.length]));
+    tl.to(ENV, { glow: 1, duration: 0.2 }, a); tl.to(ENV, { glow: 0, duration: 0.3 }, b + 0.3);
     tl.to(R, { dance: 1, earAmp: 2.2, duration: 0.25 }, a); tl.to(R, { dance: 0, earAmp: 1, duration: 0.4 }, b + 0.3);
-    LINES[LT[c + ".1"]].words.forEach(([w, t], i) => { if (i % 2 === 1) jump("frog", t, 0.42); squash(t, 0.4); });
-    LINES[LT[c + ".2"]].words.forEach(([w, t]) => { const n = norm(w);
+    words(c + ".1").forEach(([w, t], i) => { if (i % 2 === 1) jump("frog", t, 0.42); squash(t, 0.4); if (duet) { tl.to(R, { flap: 1, duration: 0.05 }, t); tl.to(R, { flap: 0, duration: 0.2 }, t + 0.25); } });
+    words(c + ".2").forEach(([w, t]) => { const n = norm(w);
       if (n === "zıp" || n === "zıplar") { jump("frog", t, 0.42); shake(t, 6); }
       if (n === "şıp" || n === "dalar") { splash(t + 0.08, LILY, S - 10, 12, 1.3); shake(t, 10); bubbles(t + 0.2, LILY - 40, S + 30, 3); } });
-    tl.to(AN, { party: 0.6, duration: 0.3 }, a); tl.to(AN, { party: 0, duration: 0.4 }, b + 0.3);
-  };
-  chorus("c1"); chorus("c2");
+    tl.to(AN, { party: 0.6, duration: 0.3 }, a); tl.to(AN, { party: 0, duration: 0.4 }, b + 0.3); };
+  chorus("c1", ANG1, false);
+  cut(T.ring - 0.5, { s: 1.3, x: 1500, y: 640 });                                // ring → "?" (match cut, shape)
 
-  // ── fish verse ──
-  verse("v3", { who: "fishNo", q: "qFish", card: "kAyak", camQ: { s: 1.45, x: 1300, y: 760 }, camA: { s: 1.6, x: 1380, y: 780 }, cx: FISHX[1] + 120, cy: 600 });
-  LINES[LT["v3.1"]].words.forEach(([w, t]) => { if (norm(w) === "balık") { jump("f1", t, 0.7); splash(t + 0.5, FISHX[1], S, 6, 0.8); } });
-  LINES[LT["v3.5"]].words.forEach(([w, t], i) => { bubbles(t, FISHX[1] + 60, S + 60, 3); tl.to(AN, { fishO: 1, duration: 0.05 }, t); tl.to(AN, { fishO: 0, duration: 0.1 }, t + 0.18); });
-  jump("f0", te("v3.5") - 0.4, 0.75); jump("f2", te("v3.5") - 0.1, 0.75);
-  tl.to(AN, { fishUp: 1, duration: 0.5, ease: "back.out(2)" }, ts("v3.2") - 0.3); tl.to(AN, { fishUp: 0, duration: 0.5 }, te("v3.4"));
+  // ── R8 · v2 kuyruk: flip card, tail chase, freeze & rewind ──
+  
+  cam(ts("v2.1"), { s: 1.45, x: 1500, y: 700, r: -2 }, 3, "power1.inOut");
+  
+  
+  
+  tl.to(AN, { spin: 2, duration: T.spin1 - T.spin0, ease: "power1.inOut" }, T.spin0);
+  tl.to(AN, { dizzy: 1, duration: 0.3 }, T.spin1); cam(T.spin0, { s: 1.7, x: 1600, y: 660, r: 2 }, 2, "sine.inOut");
+  tl.to(ENV, { rew: 1, duration: 0.1 }, T.rew); tl.to(AN, { spin: 0, dizzy: 0, duration: 0.7, ease: "power2.inOut" }, T.rew); tl.to(ENV, { rew: 0, duration: 0.15 }, T.rew + 0.75);
+  
+  chartShow(1, T.brk2 - 0.1, T.brk2 + 2.3);
 
-  // ── duck verse: ducks swim in ──
-  tl.to(AN, { duckIn: 1, duration: 2.2, ease: "power2.out" }, ts("v4.1") - 1.6);
-  verse("v4", { who: "duckNo", q: "qDuck", card: "kDis", camQ: { s: 1.4, x: 1250, y: 680 }, camA: { s: 1.55, x: 1320, y: 700 }, cx: DUCKX[1] + 110, cy: 600 });
-  LINES[LT["v4.5"]].words.forEach(([w, t]) => { squash(t, 0.3); });
+  // ── R9 · break 2: Fıstık tries to jump; belly flop wipes the frame ──
+  cam(T.brk2, { s: 1.12, x: 1020, y: 600, r: 0 }, 1.5, "power2.out");
+  tl.to(CAM, { y: 612, duration: 0.6, yoyo: true, repeat: 13, ease: "sine.inOut" }, T.brk2 + 1.5);
+  const tries = beatsIn(T.brk2 + 4.0, T.flop - 2.6).filter((_, i) => i % 8 === 0).slice(0, 2);
+  tries.forEach((t, i) => { const h = i ? -70 : -22; tl.to(R, { jy: h, duration: 0.22, ease: "power2.out" }, t); tl.to(R, { jy: 0, duration: 0.2, ease: "power2.in" }, t + 0.22);
+    squash(t + 0.42, 0.8); if (i) tl.to(R, { rot: -6, duration: 0.15, yoyo: true, repeat: 3 }, t + 0.42); jump("frog", t + 0.7, 0.35); });
+  tl.to(R, { jy: 40, duration: 0.25, ease: "power2.in" }, T.flop - 2.0); tl.to(R, { jy: -360, duration: 0.8, ease: "power2.out" }, T.flop - 1.75);
+  tl.to(R, { rot: 75, duration: 0.6, ease: "power1.in" }, T.flop - 0.95); tl.to(R, { jy: 60, duration: 0.6, ease: "power2.in" }, T.flop - 0.6);
+  cam(T.flop - 1.8, { s: 1.0, x: 960, y: 540 }, 1.2);
+  splash(T.flop, 760, S - 10, 16, 2.0); shake(T.flop, 16);
+  tl.to(ENV, { wall: 1, duration: 0.6, ease: "power2.out" }, T.flop + 0.05); tl.set(R, { jy: 0, rot: 0 }, T.flop + 0.8);
+  tl.to(ENV, { wall: 0, duration: 0.55, ease: "power2.in" }, T.c2 - 0.6);
 
-  // ── bridge: the frog asks Fıstık ──
-  cam(ts("b.1") - 0.3, { s: 1.08, x: 1150, y: 600 }, 1.0);
-  tl.to(R, { lookX: 18, tilt: 8, duration: 0.3 }, ts("b.1")); qmark("qFistik", 900, 260, ts("b.1") + 0.3, ts("v5.3"));
+  // ── R10 · chorus 2 (duet) → dive under water ──
+  chorus("c2", ANG2, true);
+  cut(T.dive - 0.9, { s: 1.0, x: 1100, y: 560 });
+  cam(T.dive - 0.85, { s: 3.2, x: 1300, y: 900 }, 0.9, "expo.in");
+  tl.set(ENV, { under: 0, dive: 0 }, 0); tl.set(ENV, { under: 1 }, T.dive); tl.to(ENV, { dive: 1, duration: 0.7, ease: "expo.out" }, T.dive);
+  ububbles(T.dive, 960, 1000, 6); ububbles(T.dive + 0.1, 760, 1060, 5); ububbles(T.dive + 0.2, 1180, 1080, 5);
+
+  // ── R11 · under water: bubble card, fish school → giant fish ──
+  qIn("qFish", 1420, 330, ts("v3.2") + 0.1, ts("v3.3"));
+  
+   tl.to(AN, { fishNo: 1, duration: 0.15 }, ts("v3.3")); tl.to(AN, { fishNo: 0, duration: 0.2 }, te("v3.3"));
+  
+  tl.to(AN, { school: 1, duration: 1.4, ease: "power2.inOut" }, T.school0); tl.to(AN, { school: 0, duration: 1.2, ease: "power2.inOut" }, te("v3.4") + 0.4);
+  words("v3.5").forEach(([w, t]) => { ububbles(t, 1000, 520, 3); tl.to(AN, { fishO: 1, duration: 0.05 }, t); tl.to(AN, { fishO: 0, duration: 0.1 }, t + 0.18); });
+  words("v3.1").forEach(([w, t]) => { if (norm(w) === "balık") ububbles(t, 1000, 520, 4); });
+  chartShow(2, te("v3.4") + 0.1, te("v3.5") - 0.3);
+  tl.to(ENV, { uLift: 1, duration: 0.9, ease: "power2.in" }, T.carry + 0.5); tl.set(ENV, { under: 0, uLift: 0 }, T.carry + 1.45);
+  cut(T.carry + 0.5, { s: 1.35, x: 1250, y: 700 });
+
+  // ── R12 · ducks pop from the bubble; leaf card; beak-wide gag ──
+  tl.to(AN, { duckIn: 1, duration: 1.0, ease: "none" }, ts("v4.1") - 0.1); splash(ts("v4.1") - 0.05, DUCKX[1], S - 10, 10, 1.0); bubbles(ts("v4.1") - 0.2, DUCKX[1], S, 4);
+  qIn("qDuck", DUCKX[1] + 80, 520, ts("v4.2"), ts("v4.3"));
+  
+  
+  
+  
+  tl.to(AN, { duckWide: 1, duration: 0.25, ease: "back.out(3)" }, ts("v4.3")); tl.to(AN, { duckWide: 0, duration: 0.3 }, te("v4.3"));
+  tl.to(AN, { duckNo: 1, duration: 0.15 }, te("v4.3") - 0.8); tl.to(AN, { duckNo: 0, duration: 0.2 }, te("v4.3"));
+  cam(ts("v4.3") - 0.1, { s: 1.75, x: 1330, y: 720 }, 0.5, "power3.out"); cam(te("v4.3") + 0.1, { s: 1.35, x: 1250, y: 700 }, 0.8);
+  
+  tl.to(AN, { swim: 0.5, duration: 0.6 }, te("v4.4"));
+  chartShow(3, te("v4.4") + 0.2, te("v4.5") - 0.2);
+  tl.to(ENV, { rack: 1, duration: 0.6, ease: "power2.inOut" }, T.rack); cam(T.rack, { s: 1.2, x: 1000, y: 560 }, 0.8);   // rack focus → Fıstık
+
+  // ── R13 · bridge: night falls, spotlight; "?" flies to Fıstık; curtains ──
+  tl.to(ENV, { night: 1, duration: 0.5, ease: "power2.in" }, T.br); tl.to(ENV, { rack: 0, duration: 0.4 }, T.br + 0.2);
+  tl.set(AN, { look: 1 }, T.br);
+  tl.to(R, { lookX: 18, tilt: 8, duration: 0.3 }, T.br);
+  qIn("qFistik", 880, 230, T.br + 0.4, T.curtain - 0.2, DUCKX[1] - 40);
+  
   tl.to(R, { lookX: 0, lookY: 4, tilt: 0, duration: 0.3 }, ts("b.2")); pose("wave", ts("b.2"), 0.3); pose("rest", te("b.2"), 0.3);
+  cam(T.br, { s: 1.3, x: 820, y: 520 }, 3.5, "sine.inOut");
+   
+  tl.set(ENV, { stage: 1, night: 0 }, T.curtain + 0.02); tl.set(AN, { look: 0 }, T.curtain + 0.02); cut(T.curtain + 0.02, { s: 1.0, x: 960, y: 560 });
+   
 
-  // ── Fıstık's verse: big ears ✓ ──
-  cam(ts("v5.1") - 0.3, { s: 1.4, x: 820, y: 480 }, 1.0);
-  gsap.set("#kFil", { transformOrigin: "50% 100%" }); popIn("#kFil", ts("v5.2")); stamp("#kFilB", ts("v5.3"));
+  // ── R14 · stage show: marquee card ✓, ear wind ──
+  cam(ts("v5.1"), { s: 1.18, x: 900, y: 560 }, 1.6, "power2.out");
+  
+  
   tl.to(R, { flap: 1, earAmp: 2, mouth: 0.4, duration: 0.2 }, ts("v5.3")); tl.to(R, { flap: 0, earAmp: 1, duration: 0.3 }, te("v5.4"));
+  tl.to(ENV, { wind: 1, duration: 0.4 }, ts("v5.3") + 0.3); tl.to(ENV, { wind: 0, duration: 0.5 }, te("v5.4") + 0.6);
+  tl.to(R, { dance: 0.6, duration: 0.3 }, ts("v5.1"));
   shake(ts("v5.4"), 6); squash(ts("v5.4"), 0.8);
-  popOut("#kFil", te("v5.4") + 0.3);
+  
+  chartShow(4, te("v5.4") - 0.1, ts("p.1") + 1.6);
+  tl.to(ENV, { wind: 1, duration: 0.3 }, ts("p.1") - 0.6); tl.to(ENV, { wind: 0, duration: 0.3 }, ts("p.1") + 0.2);       // speed ramp
+  cam(ts("p.1") - 0.5, { s: 1.45, x: 900, y: 460 }, 0.5, "expo.in"); cam(ts("p.1") + 0.1, { s: 1.15, x: 960, y: 540 }, 0.6, "expo.out");
 
-  // ── pırt pırt ──
-  cam(ts("p.1") - 0.3, { s: 1.18, x: 900, y: 520 }, 0.9);
-  pose("trumpet", ts("p.1"), 0.35);
-  ["p.2", "p.3"].forEach((tag) => LINES[LT[tag]].words.forEach(([w, t]) => { if (norm(w) !== "pırt") return; kick(t); squash(t, 0.6); shake(t, 8); }));
+  // ── R15 · pırt: crash zooms, shock waves, confetti cannon, rainbow flood ──
+  pose("trumpet", ts("p.1") + 0.2, 0.35);
+  ["p.2", "p.3"].forEach((tag) => words(tag).forEach(([w, t], i) => { if (norm(w) !== "pırt") return; kick(t); squash(t, 0.6); shake(t, 8);
+    tl.to(CAM, { s: 1.15 + 0.06 * ((i % 3) + 1), duration: 0.08, ease: "power2.out" }, t); tl.to(CAM, { s: 1.15, duration: 0.3, ease: "power2.inOut" }, t + 0.1); }));
   tl.to(R, { dance: 1, duration: 0.3 }, ts("p.1"));
-  pose("rest", te("p.3") + 0.3, 0.4, "sine.inOut");
+  confetti(te("p.3") - 0.3, 960, 300);
+  tl.to(ENV, { flood: 1, duration: 0.7, ease: "power2.in" }, T.flood - 0.7);
+  tl.set(ENV, { stage: 0, gold: 1, rainbow: 1 }, T.flood + 0.02); cut(T.flood + 0.02, { s: 1.0, x: 960, y: 560 }); pose("rest", T.flood, 0.3);
+  tl.to(ENV, { flood: 0, duration: 0.7, ease: "power2.out" }, T.flood + 0.05);
 
-  // ── final chorus: party, rainbow, message, confetti ──
-  const F0 = ts("f.1") - 0.3, F1 = te("f.8");
-  tl.to(ENV, { rainbow: 1, duration: 3.0, ease: "power1.inOut" }, F0); tl.to(ENV, { glow: 1, duration: 0.3 }, F0); tl.to(ENV, { glow: 0, duration: 0.6 }, F1);
-  tl.to(AN, { party: 1, swim: 1, duration: 0.8 }, F0); tl.to(R, { dance: 1, earAmp: 1.8, duration: 0.5 }, F0);
-  cam(F0, { s: 1.0, x: 960, y: 560 }, 1.0);
-  const fdur = F1 - F0;
-  [[0.18, { s: 1.3, x: 1450, y: 680 }], [0.36, { s: 1.0, x: 960, y: 540 }], [0.55, { s: 1.3, x: 820, y: 500 }], [0.74, { s: 1.25, x: 1350, y: 700 }], [0.9, { s: 1.0, x: 960, y: 540 }]]
-    .forEach(([f, c]) => cam(F0 + fdur * f, c, 1.3));
-  for (let t = F0 + 0.6, i = 0; t < F1; t += BEAT * 4, i++) { jump("f" + (i % 3), t, 0.75); if (i % 2 === 0) jump("frog", t + BEAT * 2, 0.45); }
-  ["f.2", "f.6"].forEach((tag) => LINES[LT[tag]].words.forEach(([w, t]) => { if (norm(w) === "pırt") { kick(t); } }));
+  // ── R16 · final: golden hour conga, message flies onto the chart, stickers turn into hearts ──
+  tl.to(AN, { party: 1, swim: 1, duration: 0.8 }, T.fin - 0.3); tl.to(R, { dance: 1, earAmp: 1.8, duration: 0.5 }, T.fin - 0.3); tl.to(ENV, { glow: 1, duration: 0.3 }, T.fin);
+  cam(T.fin, { s: 1.15, x: 1160, y: 620 }, 3.0, "power1.inOut");
+  for (let t = T.fin + 0.3, i = 0; t < te("f.8"); t += BEAT * 4, i++) { jump("f" + (i % 3), t, 0.75); jump("frog", t + BEAT * 2, 0.45); }
+  ["f.2", "f.6"].forEach((tag) => words(tag).forEach(([w, t]) => { if (norm(w) === "pırt") kick(t); }));
   tl.to(R, { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], duration: 0.4 }, te("f.2") + 0.2); tl.to(R, { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], duration: 0.4 }, te("f.6") + 0.2);
-  tl.to("#msg", { opacity: 1, duration: 0.01 }, ts("f.3") - 0.2);
-  tl.from("#msgBig span", { y: -200, opacity: 0, scale: 0.3, duration: 0.45, ease: "back.out(2.5)", stagger: 0.03, immediateRender: false }, ts("f.3") - 0.2);
-  tl.to("#msg", { opacity: 0, y: -30, duration: 0.3 }, te("f.4") + 0.6);
-  confetti(ts("f.4"), 960, 300); confetti(ts("f.4") + 0.5, 600, 260); confetti(ts("f.8"), 960, 300); confetti(ts("f.8") + 0.4, 1350, 280);
-  [ts("f.4"), ts("f.8")].forEach((t) => shake(t, 8));
-
-  // ── goodbye ──
-  const O1 = ts("o.1");
-  tl.to(AN, { party: 0.4, duration: 1.0 }, O1 - 0.6); tl.to(R, { dance: 0, duration: 0.5 }, O1 - 0.6);
-  tl.to("#bug", { x: -360, duration: 0.4, ease: "back.in(1.6)" }, O1 - 0.6);
-  cam(O1 - 0.6, { s: 1.12, x: 1160, y: 580 }, 1.4);
-  [O1, O1 + 0.7].forEach((t) => { tl.to(R, { A: 10, C: -110, L: 27, duration: 0.3, ease: "sine.inOut" }, t); tl.to(R, { A: 40, C: -130, L: 26, duration: 0.3, ease: "sine.inOut" }, t + 0.35); });
-  tl.set("#end", { opacity: 1 }, O1);
-  tl.from("#endBig span", { y: -300, opacity: 0, rotation: (i) => (i % 2 ? 12 : -12), duration: 0.55, ease: "bounce.out", stagger: 0.05, immediateRender: false }, O1);
-  tl.from("#bye", { scale: 0, duration: 0.45, ease: "back.out(2)", immediateRender: false }, O1 + 0.6);
+  
+  
+  cam(T.chart - 0.6, { s: 1.0, x: 960, y: 560 }, 0.8);
+  
+       // type carry → header
+   
+  confetti(T.chart + 2.6, 960, 260); confetti(T.chart + 3.0, 560, 240); confetti(te("f.8"), 1350, 260); shake(T.chart + 2.6, 8);
+  
+  // ── R17 · dolly-out, goodbye sign swings on a branch ──
+  cam(te("f.7"), { s: 1.0, x: 960, y: 560 }, 2.0, "power2.inOut");
+  tl.to(AN, { party: 0.4, duration: 1.0 }, T.out - 0.6); tl.to(R, { dance: 0, duration: 0.5 }, T.out - 0.6);
+  tl.to("#bug", { x: -360, duration: 0.4, ease: "back.in(1.6)" }, T.out - 0.6);
+  [T.out, T.out + 0.7].forEach((t) => { tl.to(R, { A: 10, C: -110, L: 27, duration: 0.3, ease: "sine.inOut" }, t); tl.to(R, { A: 40, C: -130, L: 26, duration: 0.3, ease: "sine.inOut" }, t + 0.35); });
+  
+  
+  
   jump("frog", ts("o.2"), 0.6); splash(ts("o.2") + 0.5, LILY, S - 10, 10, 1.2); pose("rest", ts("o.2") + 0.4, 0.4, "sine.inOut");
 
-  window.__fistik = { R, render, POSE, CAM, AN, JUMP };
+  window.__fistik = { R, render, POSE, CAM, AN, JUMP, ENV, T };
   const master = gsap.timeline({ paused: true });
   const clock = { _t: 0 };
   Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
