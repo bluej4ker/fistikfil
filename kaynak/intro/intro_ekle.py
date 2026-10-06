@@ -52,6 +52,7 @@ def main():
     ap.add_argument("--acilis-yok", action="store_true"); ap.add_argument("--kapanis-yok", action="store_true")
     ap.add_argument("--sessiz-bant", action="store_true", help="bandın tık/zil seslerini ekleme")
     ap.add_argument("--renders", default=os.path.join(HERE, "renders"))
+    ap.add_argument("--crf", default="17"); ap.add_argument("--preset", default="slow")
     a = ap.parse_args()
 
     W, H, fps, dur = probe(a.video)
@@ -93,7 +94,7 @@ def main():
     fc.append("".join(f"[{v}][{s}]" for v, s in parts) + f"concat=n={len(parts)}:v=1:a=1[v][a]")
 
     cmd = ["ffmpeg", "-v", "error", "-stats", "-y", *inputs, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
-           "-c:v", "libx264", "-crf", "17", "-tune", "animation", "-preset", "slow", "-pix_fmt", "yuv420p",
+           "-c:v", "libx264", "-crf", a.crf, "-tune", "animation", "-preset", a.preset, "-pix_fmt", "yuv420p",
            "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", a.out]
     subprocess.run(cmd, check=True)
     print("tamam:", a.out)

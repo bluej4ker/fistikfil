@@ -1,0 +1,4 @@
+{"comp": "/home/user/fistikfil/kaynak/04-kucuk-kurbaga/index.html", "start": 28.5, "end": 58.5, "audio": "/home/user/fistikfil/kaynak/04-kucuk-kurbaga/renders/kk2-ses.mp4", "lines": "/home/user/fistikfil/kaynak/04-kucuk-kurbaga/lines.json",
+ "hook": "Kurbağanın kulağı<br/>var mı?", "hookSecs": 4.0,
+ "track": [[28.5, "frogPos"], [52.6, 1000]], "bias": [[32.0, 0], [32.8, -200], [42.6, -200], [43.4, 0]],
+ "hide": ["#msg", "#hud"], "out": "/tmp/claude-0/-home-user-fistikfil/f34c749d-e638-57b0-a651-0499d26014f4/scratchpad/reels/reels-3-kucuk-kurbaga"}

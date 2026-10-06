@@ -1,0 +1,4 @@
+{"comp": "/home/user/fistikfil/kaynak/04-kucuk-kurbaga/index.html", "start": 130.4, "end": 160.4, "audio": "/home/user/fistikfil/kaynak/04-kucuk-kurbaga/renders/kk2-ses.mp4", "lines": "/home/user/fistikfil/kaynak/04-kucuk-kurbaga/lines.json",
+ "hook": "Peki ya Fıstık'ın<br/>kulakları?", "hookSecs": 4.0,
+ "track": [[130.4, "head"]], "bias": [[136.0, 0], [136.8, 150], [142.4, 150], [143.2, 0]],
+ "hide": ["#msg", "#hud"], "out": "/tmp/claude-0/-home-user-fistikfil/f34c749d-e638-57b0-a651-0499d26014f4/scratchpad/reels/reels-4-fistik-sahnede"}
