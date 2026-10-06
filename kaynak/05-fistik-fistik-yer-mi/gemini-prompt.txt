@@ -1,6 +1,6 @@
 Okul öncesi çocuklar için kısa, akılda kalıcı, tekerleme gibi neşeli bir Türkçe çocuk şarkısı üret.
 Tempo: hızlı, yaklaşık 165 BPM, 4/4, düz ritim. Melodi: minör, muzip bir tekerleme; basit ve tekrarlı.
-Enstrümanlar: ukulele, ksilofon, el çırpma, hafif davul; ses taklitlerinde ("kıtır kıtır", "vırak", "vak vak", "gurul gurul") tahta blok sesi.
+Enstrümanlar: ukulele, ksilofon, el çırpma, hafif davul; ses taklitlerinde ("kıtır kıtır", "vırak", "vak vak", "gurul gurul guruldar") tahta blok sesi.
 Vokal: neşeli, net Türkçe diksiyonlu kadın vokal; finalde neşeli bir koro katılsın.
 Yapı: Önce 8 saniyelik tamamen enstrümantal giriş (vokal yok). Sonra aşağıdaki 3 kıtayı aynı melodiyle sırasıyla söyle, ardından 1. kıtayı final olarak koro ile bir kez daha söyle. Her kıtadan sonra 4 ölçü enstrümantal ara. Final bir ton yukarı, alkışlı ve "Hey!" ile bitsin.
 Süre: yaklaşık 2:00–2:30.
@@ -14,10 +14,10 @@ Fıstık Fil fıstık yer,
 Fıstık yer de ne der?
 Bir fıstık sana,
 Bir fıstık bana!
-Kıtır kıtır kıt kıt,
-Kalmadı hiç fıstık!
-Gurul gurul gur gur,
-Hadi yine fıstık bul!
+Kıtır kıtır kıtırdık,
+Bütün fıstığı bitirdik!
+Gurul gurul guruldar,
+Dolapta daha var!
 
 [Kıta 2]
 Kurbağa kiraz yer,
@@ -26,8 +26,8 @@ Bir kiraz sana,
 Bir kiraz bana!
 Vırak vırak vır vır,
 Kirazlar bitti bir bir!
-Gurul gurul gur gur,
-Hadi yine kiraz bul!
+Gurul gurul guruldar,
+Dalda daha kiraz var!
 
 [Kıta 3]
 Ördek mısır yer,
@@ -36,15 +36,15 @@ Bir mısır sana,
 Bir mısır bana!
 Vak vak vak vak vak,
 Mısır bitti, bak bak!
-Gurul gurul gur gur,
-Hep beraber sofra kur!
+Gurul gurul guruldar,
+Gelin, sofrada yer var!
 
 [Final — 1. kıta, koro, bir ton yukarı, alkışlı]
 Fıstık Fil fıstık yer,
 Fıstık yer de ne der?
 Bir fıstık sana,
 Bir fıstık bana!
-Kıtır kıtır kıt kıt,
-Kalmadı hiç fıstık!
-Gurul gurul gur gur,
-Hep beraber sofra kur! Hey!
+Kıtır kıtır kıtırdık,
+Bütün fıstığı bitirdik!
+Gurul gurul guruldar,
+Gelin, sofrada yer var! Hey!
