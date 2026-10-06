@@ -1,13 +1,13 @@
 Okul öncesi çocuklar için kısa, akılda kalıcı, tekerleme gibi neşeli bir Türkçe çocuk şarkısı üret.
 Tempo: hızlı, yaklaşık 165 BPM, 4/4, düz ritim. Melodi: minör, muzip bir tekerleme; basit ve tekrarlı.
-Enstrümanlar: ukulele, ksilofon, el çırpma, hafif davul; "kıtır kıtır" ve "gurul gurul"da tahta blok sesi.
+Enstrümanlar: ukulele, ksilofon, el çırpma, hafif davul; ses taklitlerinde ("kıtır kıtır", "vırak", "vak vak", "gurul gurul") tahta blok sesi.
 Vokal: neşeli, net Türkçe diksiyonlu kadın vokal; son turda neşeli bir koro katılsın.
-Yapı: Önce 8 saniyelik tamamen enstrümantal giriş (vokal yok). Sonra aşağıdaki tek kıtayı aynı melodiyle 4 kez söyle; her turdan sonra 4 ölçü enstrümantal ara. Son tur bir ton yukarı, alkışlı ve "Hey!" ile bitsin.
-Süre: yaklaşık 2:30–3:00.
+Yapı: Önce 8 saniyelik tamamen enstrümantal giriş (vokal yok). Sonra aşağıdaki 3 kıtayı aynı melodiyle sırasıyla söyle, ardından 1. kıtayı final olarak koro ile bir kez daha söyle. Her kıtadan sonra 4 ölçü enstrümantal ara. Final bir ton yukarı, alkışlı ve "Hey!" ile bitsin.
+Süre: yaklaşık 2:00–2:30.
 
-Sözler (her turda aynen, tekerleme gibi ritmik ve vurgulu):
+Sözler (AYNEN, sırasıyla; tekerleme gibi ritmik ve vurgulu):
 
-[Tur 1]
+[Kıta 1]
 Fıstık Fil fıstık yer,
 Fıstık yer de ne der?
 Bir fıstık sana,
@@ -17,6 +17,32 @@ Kalmadı hiç fıstık!
 Gurul gurul gur gur,
 Hadi yine fıstık bul!
 
-[Tur 2 — aynı sözler]
-[Tur 3 — aynı sözler]
-[Tur 4 — aynı sözler, bir ton yukarı, koro, alkış, sonunda "Hey!"]
+[Kıta 2]
+Kurbağa kiraz yer,
+Kiraz yer de ne der?
+Bir kiraz sana,
+Bir kiraz bana!
+Vırak vırak vır vır,
+Kirazlar bitti bir bir!
+Gurul gurul gur gur,
+Hadi yine kiraz bul!
+
+[Kıta 3]
+Ördek mısır yer,
+Mısır yer de ne der?
+Bir mısır sana,
+Bir mısır bana!
+Vak vak vak vak vak,
+Mısır bitti, bak bak!
+Gurul gurul gur gur,
+Hep beraber sofra kur!
+
+[Final — 1. kıta, koro, bir ton yukarı, alkışlı]
+Fıstık Fil fıstık yer,
+Fıstık yer de ne der?
+Bir fıstık sana,
+Bir fıstık bana!
+Kıtır kıtır kıt kıt,
+Kalmadı hiç fıstık!
+Gurul gurul gur gur,
+Hep beraber sofra kur! Hey!
