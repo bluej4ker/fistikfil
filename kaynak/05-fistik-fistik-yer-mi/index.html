@@ -56,7 +56,7 @@
             <svg id="setPond" class="full" viewBox="0 0 1920 1300"></svg>
             <svg id="setCorn" class="full" viewBox="0 0 1920 1300"></svg>
             <svg id="setPicnic" class="full" viewBox="0 0 1920 1300"></svg>
-            <svg id="backActors" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="backActors" class="full" viewBox="0 0 1920 1300"><ellipse id="fShadow" rx="120" ry="26" fill="url(#gShadow)"/></svg>
             <div id="charWrap" class="abs"><div id="char"></div></div>
             <svg id="actors" class="full" viewBox="0 0 1920 1300"></svg>
             <svg id="front" class="full" viewBox="0 0 1920 1300"></svg>
@@ -89,29 +89,72 @@
 window.CAST = (function () {
   const INK = "#2B2D42";
   // ── kadro (Küçük Kurbağa'dan) ──
-  // Kurbağa: orijin alt orta. Gruplar: .mHappy .mOpen .legs .belly .hatC
-  const frog = () => `
-    <g class="legs"><ellipse cx="-58" cy="-14" rx="36" ry="18" fill="#58B848" stroke="${INK}" stroke-width="4.5"/><ellipse cx="58" cy="-14" rx="36" ry="18" fill="#58B848" stroke="${INK}" stroke-width="4.5"/></g>
-    <ellipse cx="0" cy="-58" rx="78" ry="60" fill="#6CCB5A" stroke="${INK}" stroke-width="4.5"/>
-    <ellipse class="belly" cx="0" cy="-40" rx="50" ry="32" fill="#C8F0A8"/>
-    <circle cx="-38" cy="-112" r="30" fill="#6CCB5A" stroke="${INK}" stroke-width="4.5"/><circle cx="38" cy="-112" r="30" fill="#6CCB5A" stroke="${INK}" stroke-width="4.5"/>
-    <circle cx="-38" cy="-114" r="20" fill="#fff" stroke="${INK}" stroke-width="3"/><circle cx="38" cy="-114" r="20" fill="#fff" stroke="${INK}" stroke-width="3"/>
-    <circle cx="-35" cy="-112" r="10" fill="${INK}"/><circle cx="41" cy="-112" r="10" fill="${INK}"/><circle cx="-32" cy="-116" r="3.5" fill="#fff"/><circle cx="44" cy="-116" r="3.5" fill="#fff"/>
-    <ellipse cx="-50" cy="-74" rx="12" ry="7" fill="#FF8FAB" opacity=".7"/><ellipse cx="50" cy="-74" rx="12" ry="7" fill="#FF8FAB" opacity=".7"/>
-    <path class="mHappy" d="M-42 -78 Q0 -48 42 -78" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <path class="mOpen" d="M-42 -80 Q0 -84 42 -80 Q0 -30 -42 -80Z" fill="#8C2F45" stroke="${INK}" stroke-width="4.5" stroke-linejoin="round" opacity="0"/>
-    <g class="hatC" transform="translate(0 -142)">${cherries(1.1)}</g>`;
-  // Ördek (karada, ayaklı): orijin ayak altı orta, sola bakar. Gruplar: .beakTop .beakBot .wing .head
-  const duck = (body = "#FFD84D", s = 1) => `<g transform="scale(${s})"><g transform="translate(0 -26)">
-    <g fill="#FF9F1C" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"><path d="M-22 4 L-22 22 L-44 28 L-8 28 L-12 4Z"/><path d="M24 4 L24 22 L2 28 L38 28 L34 4Z"/></g>
-    <path d="M-70 -10 Q-80 -60 -20 -58 L60 -60 Q96 -64 92 -30 Q90 6 40 8 L-50 8 Q-70 6 -70 -10Z" fill="${body}" stroke="${INK}" stroke-width="4.5" stroke-linejoin="round"/>
-    <path d="M78 -52 L100 -78 L94 -42Z" fill="${body}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
-    <g class="wing"><path d="M0 -40 Q40 -52 62 -30 Q40 -10 4 -18Z" fill="#fff" stroke="${INK}" stroke-width="3.5" opacity=".9"/></g>
-    <g class="head"><circle cx="-44" cy="-96" r="40" fill="${body}" stroke="${INK}" stroke-width="4.5"/>
-    <circle cx="-56" cy="-104" r="9" fill="${INK}"/><circle cx="-53" cy="-107" r="3" fill="#fff"/>
-    <ellipse cx="-66" cy="-84" rx="9" ry="5" fill="#FF8FAB" opacity=".7"/>
-    <path class="beakTop" d="M-80 -92 Q-112 -94 -114 -84 Q-100 -80 -78 -84Z" fill="#FF9F1C" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>
-    <path class="beakBot" d="M-80 -84 Q-108 -82 -110 -78 Q-96 -70 -78 -78Z" fill="#F07F0C" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/></g></g></g>`;
+  // ── ortak gradyanlar (bir kez, #actors içine) ──
+  const defs = () => `<defs>
+    <radialGradient id="gFrogB" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#A8EC86"/><stop offset=".6" stop-color="#6CCB5A"/><stop offset="1" stop-color="#46A23F"/></radialGradient>
+    <radialGradient id="gFrogBelly" cx="50%" cy="35%" r="70%"><stop offset="0" stop-color="#F2FFE0"/><stop offset="1" stop-color="#C8F0A8"/></radialGradient>
+    <radialGradient id="gDuckB" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#FFF6B8"/><stop offset=".6" stop-color="#FFDB4D"/><stop offset="1" stop-color="#F7B92A"/></radialGradient>
+    <radialGradient id="gDuckK" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#FFFBD8"/><stop offset=".6" stop-color="#FFEC8A"/><stop offset="1" stop-color="#FFD24D"/></radialGradient>
+    <linearGradient id="gBeak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB547"/><stop offset="1" stop-color="#F07F0C"/></linearGradient>
+    <radialGradient id="gMouse" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F1ECF8"/><stop offset=".6" stop-color="#CFC6E2"/><stop offset="1" stop-color="#A99FC0"/></radialGradient>
+    <radialGradient id="gShadow"><stop offset="0" stop-color="#1E2A40" stop-opacity=".28"/><stop offset="1" stop-color="#1E2A40" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gHeart" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#FFB3C6"/><stop offset="1" stop-color="#FF4F7B"/></radialGradient></defs>`;
+  const shadow = (rx = 90) => `<ellipse class="shd" cx="0" cy="2" rx="${rx}" ry="${rx * 0.22}" fill="url(#gShadow)"/>`;
+  const heart = (s = 1) => `<g transform="scale(${s})"><path d="M0 22 C-26 4 -30 -8 -22 -18 C-14 -26 -4 -22 0 -12 C4 -22 14 -26 22 -18 C30 -8 26 4 0 22Z" fill="url(#gHeart)" stroke="#D93A63" stroke-width="3.5" stroke-linejoin="round"/><ellipse cx="-12" cy="-12" rx="5" ry="3.5" fill="#fff" opacity=".8" transform="rotate(-30 -12 -12)"/></g>`;
+  // göz: sklera + bebek (.pup) + kapak (.lid, scaleY ile kırpılır). p = benzersiz önek
+  const eye = (p, cx, cy, rx, ry, skin, ol, pr = 0.55) => `<clipPath id="${p}"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/></clipPath>
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" stroke="${ol}" stroke-width="3.5"/>
+    <g clip-path="url(#${p})"><g class="pup"><circle cx="${cx + rx * 0.12}" cy="${cy + ry * 0.12}" r="${Math.min(rx, ry) * pr}" fill="${INK}"/><circle cx="${cx + rx * 0.32}" cy="${cy - ry * 0.12}" r="${Math.min(rx, ry) * pr * 0.36}" fill="#fff"/><circle cx="${cx - rx * 0.1}" cy="${cy + ry * 0.4}" r="${Math.min(rx, ry) * pr * 0.16}" fill="#fff"/></g>
+      <rect class="lid" data-top="${cy - ry}" x="${cx - rx - 2}" y="${cy - ry - 2}" width="${rx * 2 + 4}" height="${ry * 2 + 4}" fill="${skin}" transform="translate(0 ${cy - ry}) scale(1 0) translate(0 ${-(cy - ry)})"/></g>`;
+
+  // Kurbağa: orijin alt orta. Gruplar: .body .legs .armL .armR .sac .mHappy .mOpen .pup .lid .hatC .shd
+  const frog = (p = "fr") => `${shadow(96)}<g class="body">
+    <g class="legs"><path d="M-96 -6 Q-104 -40 -62 -44 Q-30 -40 -36 -6Z" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="4.5" stroke-linejoin="round"/><path d="M96 -6 Q104 -40 62 -44 Q30 -40 36 -6Z" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="4.5" stroke-linejoin="round"/>
+      <path d="M-104 0 q8 -14 18 -4 q8 -12 18 -2 q8 -10 16 2Z" fill="#58B848" stroke="#2F7A2B" stroke-width="3.5" stroke-linejoin="round"/><path d="M104 0 q-8 -14 -18 -4 q-8 -12 -18 -2 q-8 -10 -16 2Z" fill="#58B848" stroke="#2F7A2B" stroke-width="3.5" stroke-linejoin="round"/></g>
+    <ellipse cx="0" cy="-60" rx="80" ry="62" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="5"/>
+    <ellipse cx="0" cy="-40" rx="52" ry="34" fill="url(#gFrogBelly)"/>
+    <g fill="#4FAE48" opacity=".55"><circle cx="-52" cy="-82" r="7"/><circle cx="56" cy="-70" r="9"/><circle cx="40" cy="-96" r="5"/></g>
+    <g class="armL"><path d="M-46 -40 Q-62 -14 -50 -4" stroke="#2F7A2B" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M-46 -40 Q-62 -14 -50 -4" stroke="#7FD76A" stroke-width="8" fill="none" stroke-linecap="round"/></g>
+    <g class="armR"><path d="M46 -40 Q62 -14 50 -4" stroke="#2F7A2B" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M46 -40 Q62 -14 50 -4" stroke="#7FD76A" stroke-width="8" fill="none" stroke-linecap="round"/></g>
+    <ellipse class="sac" cx="0" cy="-58" rx="30" ry="0" fill="#E9FFD6" stroke="#2F7A2B" stroke-width="3" opacity=".95"/>
+    <circle cx="-40" cy="-114" r="31" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="5"/><circle cx="40" cy="-114" r="31" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="5"/>
+    ${eye(p + "L", -40, -116, 21, 22, "#6CCB5A", "#2F7A2B")}${eye(p + "R", 40, -116, 21, 22, "#6CCB5A", "#2F7A2B")}
+    <ellipse cx="-54" cy="-74" rx="13" ry="8" fill="#FF8FAB" opacity=".7"/><ellipse cx="54" cy="-74" rx="13" ry="8" fill="#FF8FAB" opacity=".7"/>
+    <path class="mHappy" d="M-44 -80 Q0 -48 44 -80" stroke="#1F4D1C" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <g class="mOpen" opacity="0"><path d="M-44 -82 Q0 -86 44 -82 Q0 -28 -44 -82Z" fill="#8C2F45" stroke="#1F4D1C" stroke-width="4.5" stroke-linejoin="round"/><ellipse cx="0" cy="-58" rx="16" ry="8" fill="#FF8FA3"/></g>
+    <g class="hatC" transform="translate(0 -144)">${cherries(1.1)}</g></g>`;
+  // Ördek: orijin ayak altı orta, sola bakar. Gruplar: .legL .legR .body .wing .head .beakTop .beakBot .pup .lid .shd
+  const DUCKC = { body: "url(#gDuckB)", ol: "#C98512", skin: "#FFDB4D" };
+  const duck = (p = "dk", baby = false) => { const g = baby ? "url(#gDuckK)" : DUCKC.body, skin = baby ? "#FFEC8A" : DUCKC.skin, ol = DUCKC.ol;
+    const leg = (cls, x) => `<g class="${cls}" data-x="${x}"><path d="M${x} -40 L${x} -10" stroke="#E07B0C" stroke-width="9" stroke-linecap="round"/><path d="M${x - 24} 0 Q${x - 14} -16 ${x} -12 Q${x + 10} -16 ${x + 16} 0Z" fill="#FF9F1C" stroke="#C25F05" stroke-width="3.5" stroke-linejoin="round"/></g>`;
+    return `${shadow(80)}${leg("legR", 14)}<g class="body">
+    <path d="M60 -96 Q96 -112 92 -80 Q86 -60 70 -66Z" fill="${g}" stroke="${ol}" stroke-width="4.5" stroke-linejoin="round"/>
+    <ellipse cx="10" cy="-78" rx="76" ry="56" fill="${g}" stroke="${ol}" stroke-width="5"/>
+    <ellipse cx="-4" cy="-62" rx="46" ry="28" fill="#FFF6C8" opacity=".7"/>
+    <g class="wing"><path d="M6 -100 Q58 -112 74 -80 Q62 -54 18 -64 Q4 -80 6 -100Z" fill="${g}" stroke="${ol}" stroke-width="4" stroke-linejoin="round"/><path d="M30 -70 q10 6 20 0 M24 -82 q12 6 26 0" stroke="${ol}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></g></g>
+    ${leg("legL", -18)}
+    <g class="head"><circle cx="-40" cy="-150" r="${baby ? 50 : 44}" fill="${g}" stroke="${ol}" stroke-width="5"/>
+      <path d="M-44 ${baby ? -198 : -192} q-6 -18 4 -24 q2 12 6 20 q4 -14 14 -14 q-4 12 -8 20Z" fill="${g}" stroke="${ol}" stroke-width="3.5" stroke-linejoin="round"/>
+      ${eye(p + "E", -52, -158, 13, 16, skin, ol, 0.6)}<ellipse cx="-30" cy="-136" rx="11" ry="7" fill="#FF8FAB" opacity=".7"/>
+      <path class="beakBot" d="M-78 -138 Q-108 -136 -114 -130 Q-98 -120 -76 -128Z" fill="#F07F0C" stroke="#C25F05" stroke-width="3.5" stroke-linejoin="round"/>
+      <path class="beakTop" d="M-78 -150 Q-110 -152 -118 -140 Q-104 -132 -76 -138Z" fill="url(#gBeak)" stroke="#C25F05" stroke-width="3.5" stroke-linejoin="round"/></g>`; };
+  // Fare: orijin alt orta, sağa bakar. Gruplar: .tail .body .arms .head .earL .earR .mHappy .mOpen .pup .lid .shd
+  const mouse = (p = "ms") => `${shadow(60)}
+    <path class="tail" d="M-30 -14 Q-80 -10 -84 -50 Q-86 -80 -60 -80" stroke="#E9A3B8" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <g class="body"><ellipse cx="-14" cy="-6" rx="16" ry="9" fill="#F7B3C8" stroke="#6E648A" stroke-width="3"/><ellipse cx="22" cy="-6" rx="16" ry="9" fill="#F7B3C8" stroke="#6E648A" stroke-width="3"/>
+      <path d="M-40 -14 Q-46 -80 4 -86 Q50 -82 44 -14 Q2 0 -40 -14Z" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5" stroke-linejoin="round"/>
+      <ellipse cx="4" cy="-38" rx="24" ry="22" fill="#FBF7FF"/>
+      <g class="arms"><path d="M-24 -56 Q-14 -40 -4 -46" stroke="#6E648A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M-24 -56 Q-14 -40 -4 -46" stroke="#E4DDF0" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M30 -56 Q22 -40 12 -46" stroke="#6E648A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M30 -56 Q22 -40 12 -46" stroke="#E4DDF0" stroke-width="6" fill="none" stroke-linecap="round"/></g></g>
+    <g class="head"><g class="earL"><circle cx="-34" cy="-152" r="30" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5"/><circle cx="-34" cy="-152" r="18" fill="#F7B3C8"/></g>
+      <g class="earR"><circle cx="40" cy="-150" r="30" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5"/><circle cx="40" cy="-150" r="18" fill="#F7B3C8"/></g>
+      <ellipse cx="4" cy="-112" rx="46" ry="40" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5"/>
+      ${eye(p + "L", -12, -118, 10, 13, "#DCD4EA", "#6E648A", 0.62)}${eye(p + "R", 22, -118, 10, 13, "#DCD4EA", "#6E648A", 0.62)}
+      <ellipse cx="-22" cy="-96" rx="8" ry="5" fill="#FF8FAB" opacity=".7"/><ellipse cx="36" cy="-96" rx="8" ry="5" fill="#FF8FAB" opacity=".7"/>
+      <circle cx="10" cy="-100" r="7" fill="#FF7FA0" stroke="#6E648A" stroke-width="2.5"/>
+      <path d="M-4 -100 L-34 -104 M-4 -96 L-32 -92 M24 -100 L54 -104 M24 -96 L52 -92" stroke="#6E648A" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      <path class="mHappy" d="M0 -90 Q10 -82 20 -90" stroke="#4A3F63" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path class="mOpen" d="M0 -91 Q10 -92 20 -91 Q10 -70 0 -91Z" fill="#8C2F45" stroke="#4A3F63" stroke-width="3" opacity="0"/></g>`;
   const lily = (s = 1) => `<g transform="scale(${s})"><ellipse cx="0" cy="0" rx="90" ry="26" fill="#4FAE48" stroke="#2E7D32" stroke-width="4"/><path d="M0 0 L60 -20 L66 4Z" fill="#7FD3F5"/>
     <g transform="translate(-50 -10)"><circle r="12" fill="#FF8FB1"/><circle r="5" fill="#FFD84D"/></g></g>`;
   const rock = (w, h, c = "#A8A29E") => `<ellipse cx="0" cy="0" rx="${w}" ry="${h}" fill="${c}" stroke="#6B6560" stroke-width="4"/><ellipse cx="${-w * 0.3}" cy="${-h * 0.35}" rx="${w * 0.3}" ry="${h * 0.2}" fill="#fff" opacity=".25"/>`;
@@ -140,28 +183,10 @@ window.CAST = (function () {
     <path d="M0 -230 l-10 -26 M0 -230 l8 -28 M0 -230 l18 -18" stroke="#E0B040" stroke-width="5" stroke-linecap="round"/></g>`;
   const kernel = () => `<ellipse rx="12" ry="11" fill="#FFD23D" stroke="#D99A0A" stroke-width="2.5"/><ellipse cx="-3" cy="-4" rx="3" ry="2" fill="#fff" opacity=".7"/>`;
 
-  // ── paylaşma tabağı (yeni bileşen): 4 malzeme. Orijin merkez, ~300×120. Gruplar: .slotL (SEN) .slotR (karakter)
-  const plate = (kind, face) => {
-    const base = {
-      tabak: `<ellipse cx="0" cy="8" rx="160" ry="62" fill="#C9D6E8"/><ellipse cx="0" cy="0" rx="160" ry="62" fill="#fff" stroke="#7C93B8" stroke-width="5"/><ellipse cx="0" cy="0" rx="118" ry="42" fill="none" stroke="#9EC3F0" stroke-width="5" stroke-dasharray="10 8"/>`,
-      yaprak: `<path d="M-170 0 Q-150 -66 0 -66 Q150 -66 170 0 Q150 66 0 66 Q-150 66 -170 0Z" fill="#5DBB55" stroke="#2E7D32" stroke-width="5"/><path d="M0 0 L120 -40 L132 0Z" fill="#7FD3F5" opacity=".7"/><path d="M-150 0 H150" stroke="#3F9442" stroke-width="4"/>`,
-      sepet: `<ellipse cx="0" cy="0" rx="166" ry="64" fill="#D9A05B" stroke="#8A5A2B" stroke-width="5"/>${Array.from({ length: 9 }, (_, i) => `<path d="M${-140 + i * 35} -50 Q${-130 + i * 35} 0 ${-140 + i * 35} 50" stroke="#B5763A" stroke-width="5" fill="none"/>`).join("")}<ellipse cx="0" cy="0" rx="166" ry="64" fill="none" stroke="#8A5A2B" stroke-width="10"/>`,
-      ortu: `<ellipse cx="0" cy="0" rx="160" ry="62" fill="#fff" stroke="#E5484D" stroke-width="6"/><ellipse cx="0" cy="0" rx="120" ry="44" fill="none" stroke="#FFC9CC" stroke-width="6"/>`,
-    }[kind];
-    return `${base}<path d="M0 -60 V60" stroke="${kind === "yaprak" ? "#2E7D32" : "#E5484D"}" stroke-width="6" stroke-dasharray="12 9" stroke-linecap="round"/>
-      <g transform="translate(-86 -92)"><rect x="-46" y="-26" width="92" height="50" rx="25" fill="#3D9BFF" stroke="#fff" stroke-width="5"/><text y="14" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="34" fill="#fff">SEN</text></g>
-      <g transform="translate(86 -96) scale(.6)"><circle r="46" fill="#fff" stroke="#FFC23D" stroke-width="7"/>${face}</g>
-      <g class="slotL" transform="translate(-80 4)"></g><g class="slotR" transform="translate(80 4)"></g>`;
-  };
-  const face = {
-    frog: () => `<ellipse cx="0" cy="10" rx="40" ry="30" fill="#6CCB5A" stroke="${INK}" stroke-width="4"/><circle cx="-20" cy="-18" r="15" fill="#6CCB5A" stroke="${INK}" stroke-width="4"/><circle cx="20" cy="-18" r="15" fill="#6CCB5A" stroke="${INK}" stroke-width="4"/>
-      <circle cx="-20" cy="-18" r="8" fill="#fff"/><circle cx="20" cy="-18" r="8" fill="#fff"/><circle cx="-18" cy="-17" r="4.5" fill="${INK}"/><circle cx="22" cy="-17" r="4.5" fill="${INK}"/><path d="M-20 12 Q0 28 20 12" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
-    duck: () => `<circle cx="0" cy="-2" r="32" fill="#FFD84D" stroke="${INK}" stroke-width="4"/><circle cx="-10" cy="-10" r="5" fill="${INK}"/><path d="M-34 4 Q-52 4 -52 12 Q-40 18 -28 12Z" fill="#FF9F1C" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/><ellipse cx="-16" cy="10" rx="6" ry="4" fill="#FF8FAB" opacity=".7"/>`,
-    fistik: () => `<circle cx="0" cy="6" r="34" fill="#A3CAF2" stroke="#4C76B5" stroke-width="4"/><path d="M-32 -6 C-30 -40 30 -40 32 -6 Q0 -14 -32 -6Z" fill="#FFD966" stroke="#D9861A" stroke-width="3.5"/><circle cx="0" cy="-34" r="7" fill="#FF6B4A"/>
-      <circle cx="-12" cy="4" r="6" fill="#fff" stroke="${INK}" stroke-width="2"/><circle cx="12" cy="4" r="6" fill="#fff" stroke="${INK}" stroke-width="2"/><circle cx="-11" cy="5" r="3" fill="${INK}"/><circle cx="13" cy="5" r="3" fill="${INK}"/><path d="M0 14 Q-4 30 6 36" stroke="#4C76B5" stroke-width="9" fill="none" stroke-linecap="round"/>`,
-    all: () => `<path d="M0 22 C-26 4 -30 -8 -22 -18 C-14 -26 -4 -22 0 -12 C4 -22 14 -26 22 -18 C30 -8 26 4 0 22Z" fill="#FF5A7A" stroke="${INK}" stroke-width="4"/>`,
-  };
-
+  // piknik ortası: içi dolu büyük tabak (yazısız)
+  const bowl = () => `<ellipse cx="0" cy="10" rx="170" ry="62" fill="#C9D6E8"/><ellipse cx="0" cy="0" rx="170" ry="62" fill="#fff" stroke="#E5484D" stroke-width="6"/><ellipse cx="0" cy="0" rx="128" ry="44" fill="none" stroke="#FFC9CC" stroke-width="6"/>
+    ${[[-70, -6, 0.9, -20], [-30, 10, 0.9, 30], [10, -8, 0.85, -40], [-50, -26, 0.8, 10]].map(([x, y, sc, r]) => `<g transform="translate(${x} ${y}) rotate(${r})">${peanut(sc)}</g>`).join("")}
+    <g transform="translate(40 -56)">${cherries(0.9)}</g><g transform="translate(90 -46)">${cherries(0.8)}</g><g transform="translate(70 8) rotate(-10)">${corn("bw", 2, 4, 0.36)}</g>`;
   // ── mutfak ──
   const jar = (fill = 1, s = 1, lid = "#E5484D") => `<g transform="scale(${s})"><rect x="-62" y="-170" width="124" height="166" rx="30" fill="rgba(200,235,255,.55)" stroke="#7FB2D9" stroke-width="5"/>
     <clipPath id="cj${Math.round(s * 100)}${Math.round(fill * 10)}"><rect x="-58" y="-166" width="116" height="158" rx="26"/></clipPath>
@@ -206,7 +231,7 @@ window.CAST = (function () {
   // ── piknik ──
   const cushion = (c) => `<ellipse cx="0" cy="0" rx="90" ry="30" fill="${c}" stroke="${INK}" stroke-width="4"/><ellipse cx="0" cy="-8" rx="70" ry="18" fill="#fff" opacity=".25"/>`;
 
-  return { frog, duck, lily, rock, peanut, cherries, cherry, corn, cornPlant, kernel, plate, face, jar, cupboard, kTable, kWindow, pot, cherryTree, branchLow, scarecrow, basket, cushion };
+  return { defs, shadow, heart, frog, duck, mouse, bowl, lily, rock, peanut, cherries, cherry, corn, cornPlant, kernel, jar, cupboard, kTable, kWindow, pot, cherryTree, branchLow, scarecrow, basket, cushion };
 })();
 
 (function () {
@@ -353,10 +378,8 @@ window.CAST = (function () {
   const LILY = 1250, TREE = { x: 1760, y: 840 }, BR = { x: 1690, y: 600 };
   const BRC = [[-60, 12], [-120, 26], [-180, 42], [-240, 60], [-300, 80]].map(([x, y]) => [BR.x + x, BR.y + y + 36]);
   const DUCK = { x: 1250, y: 1010, s: 1.35 }, SCARE = { x: 1660, y: 960 };
-  const SEATS = { fistik: [640, 905, 0.6], frog: [1290, 905, 0.85], duck: [1540, 995, 0.92], sen: [960, 1135] };
-  const PLATES = [{ x: 1120, y: 712, s: 0.72, kind: "tabak", face: "fistik" }, { x: 930, y: S + 6, s: 0.8, kind: "yaprak", face: "frog" },
-    { x: 860, y: 1050, s: 0.78, kind: "sepet", face: "duck" }, { x: 960, y: 985, s: 0.85, kind: "ortu", face: "all" }];
-  const slotPos = (k, side) => { const p = PLATES[k]; return [p.x + (side < 0 ? -80 : 80) * p.s, p.y + 4 * p.s]; };
+  const SEATS = { fistik: [640, 905, 0.6], frog: [1290, 905, 0.85], duck: [1540, 995, 0.92], front: [960, 1135] };
+  const BASKET = { x: 1010, y: 1050 }, BOWL = { x: 960, y: 975, s: 0.8 }, MHOLE = { x: 1360, y: 902 }, LILYCH = [[LILY - 78, S - 22], [LILY + 82, S - 22]];
 
   const mk = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
   const cloud = (x, y, s, c = "#fff") => `<g transform="translate(${x} ${y}) scale(${s})" fill="${c}"><circle cx="80" cy="80" r="50"/><circle cx="150" cy="58" r="62"/><circle cx="222" cy="82" r="46"/><rect x="60" y="80" width="190" height="50" rx="25"/></g>`;
@@ -386,6 +409,7 @@ window.CAST = (function () {
     <g id="clock" transform="translate(1650 200)"><circle r="78" fill="#fff" stroke="#3D9BFF" stroke-width="12"/>${Array.from({ length: 12 }, (_, i) => `<circle cx="${(58 * Math.sin(i * TAU / 12)).toFixed(1)}" cy="${(-58 * Math.cos(i * TAU / 12)).toFixed(1)}" r="5" fill="${INK}"/>`).join("")}
       <path id="clkM" d="M0 0 V-50" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path id="clkH" d="M0 0 V-32" stroke="#E5484D" stroke-width="9" stroke-linecap="round"/><circle r="9" fill="${INK}"/></g>
     <g transform="translate(240 560)">${C.pot("#3FBF6F")}</g><g transform="translate(340 560) scale(.8)">${C.pot("#FF7A3D")}</g>
+    <path d="M${MHOLE.x - 52} ${MHOLE.y} L${MHOLE.x - 52} ${MHOLE.y - 40} Q${MHOLE.x} ${MHOLE.y - 110} ${MHOLE.x + 52} ${MHOLE.y - 40} L${MHOLE.x + 52} ${MHOLE.y}Z" fill="#4A3426" stroke="#B5763A" stroke-width="7"/>
     <g transform="translate(${CUP.x} ${CUP.y})">${C.cupboard()}</g>
     <g transform="translate(${KT.x} ${KT.y})">${C.kTable()}</g>
     <g transform="translate(${JAR.x} ${JAR.y})">${jarDyn("jarK")}</g>`;
@@ -405,7 +429,7 @@ window.CAST = (function () {
     <path d="M1650 ${S - 10} Q1700 ${S - 40} 2220 ${S - 50} V1500 H1700 Q1680 1000 1650 ${S - 10}Z" fill="#6CC75A"/>
     ${[80, 220, 360, 520, 1720, 1860, 2000].map((x, i) => tuft(x, i < 4 ? 900 : S - 30)).join("")}
     ${[[120, 960, "#FF8FB1"], [300, 1010, "#fff"], [520, 970, "#B58CFF"], [1800, 880, "#FFD84D"]].map(([x, y, c]) => flower(x, y, c)).join("")}
-    <g id="lilyG">${C.lily(1.25)}</g><g transform="translate(1560 ${S + 30})">${C.lily(0.7)}</g>
+    <g id="lilyG">${C.lily(1.25)}</g>${LILYCH.map(([x, y], i) => `<g id="lc${i}" transform="translate(${x} ${y})">${C.cherry(1.1)}</g>`).join("")}<g transform="translate(1560 ${S + 30})">${C.lily(0.7)}</g>
     <g id="treeG" transform="translate(${TREE.x} ${TREE.y})">${C.cherryTree()}</g>
     <g transform="translate(${BR.x} ${BR.y})">${C.branchLow()}</g>`;
   let rip = ""; for (let i = 0; i < 5; i++) rip += `<ellipse id="rp${i}" fill="none" stroke="#fff" stroke-width="4" rx="0" ry="0"/>`;
@@ -422,7 +446,7 @@ window.CAST = (function () {
     <path d="M-300 900 Q600 860 1100 900 T2220 890 V1500 H-300Z" fill="#E3B65C"/>
     <path d="M600 1300 Q900 1000 1200 930 L1500 930 Q1300 1050 1300 1300Z" fill="#D9A05B" opacity=".6"/>
     <g id="scare" transform="translate(${SCARE.x} ${SCARE.y})">${C.scarecrow()}</g>
-    <g transform="translate(${PLATES[2].x} ${PLATES[2].y + 30})">${C.basket()}</g>
+    <g transform="translate(${BASKET.x} ${BASKET.y + 30})">${C.basket()}</g><g id="basketCorn">${[0, 1].map((i) => `<g id="bco${i}" transform="translate(${BASKET.x - 40 + i * 70} ${BASKET.y - 30}) rotate(${i ? 20 : -15})">${C.corn("bc" + i, 2, 4, 0.38)}</g>`).join("")}</g>
     <g id="cornFront">${Array.from({ length: 8 }, (_, i) => `<g class="cp" data-x="${-200 + i * 330}" data-y="${1300}" data-s="${1.0 + (i % 2) * 0.15}">${C.cornPlant(1)}</g>`).join("")}</g>`;
 
   // ───────────────────────── SET 4 · sunset picnic → night ─────────────────────────
@@ -445,22 +469,24 @@ window.CAST = (function () {
       ${Array.from({ length: 4 }, (_, i) => { const v0 = i / 4, v1 = (i + 0.5) / 4, y0 = 860 + 220 * v0, y1 = 860 + 220 * v1, l0 = 520 - 100 * v0, r0 = 1400 + 100 * v0, l1 = 520 - 100 * v1, r1 = 1400 + 100 * v1;
       return `<path d="M${l0} ${y0} L${r0} ${y0} L${r1} ${y1} L${l1} ${y1}Z" fill="#E5484D"/>`; }).join("")}</g>
     ${[["fistik", "#3D9BFF"], ["frog", "#3FBF6F"], ["duck", "#FFC23D"]].map(([k, c]) => `<g transform="translate(${SEATS[k][0]} ${SEATS[k][1] + 4})">${C.cushion(c)}</g>`).join("")}
-    <g transform="translate(${SEATS.sen[0]} ${SEATS.sen[1]})">${C.cushion("#FF7AA8")}</g>
-    ${[[720, 930], [1200, 930], [1440, 1040]].map(([x, y], i) => `<g id="sp${i}" transform="translate(${x} ${y})"><ellipse rx="56" ry="20" fill="#fff" stroke="#7C93B8" stroke-width="4"/></g>`).join("")}`;
+    <g transform="translate(${SEATS.front[0] - 90} ${SEATS.front[1]})">${C.cushion("#FF7AA8")}</g><g transform="translate(${SEATS.front[0] + 90} ${SEATS.front[1]})">${C.cushion("#A66BFF")}</g>
+    ${[[720, 930], [1200, 930], [1440, 1040]].map(([x, y], i) => `<g id="sp${i}" transform="translate(${x} ${y})"><ellipse rx="56" ry="20" fill="#fff" stroke="#7C93B8" stroke-width="4"/></g>`).join("")}
+    <g id="bowlG" transform="translate(${BOWL.x} ${BOWL.y}) scale(${BOWL.s})">${C.bowl()}</g>`;
 
   // ───────────────────────── actors: frog + duck (front), plates, fx ─────────────────────────
-  E("actors").innerHTML = `
-    ${PLATES.map((p, k) => `<g id="plate${k}" transform="translate(${p.x} ${p.y}) scale(${p.s})">${C.plate(p.kind, C.face[p.face]())}
-        <g id="sl${k}L" transform="translate(-80 4)" opacity="0">${k === 0 ? C.peanut(1.1) : k === 1 ? C.cherries(1.1).replace("scale(1.1)", "translate(0 -40) scale(1.1)") : k === 2 ? C.corn("ckL", 2, 4, 0.36) : `<g transform="translate(-34 0)">${C.peanut(0.8)}</g><g transform="translate(6 -30)">${C.cherries(0.7)}</g><g transform="translate(30 6)">${C.corn("ckL3", 2, 3, 0.25)}</g>`}</g>
-        <g id="sl${k}R" transform="translate(80 4)" opacity="0">${k === 0 ? C.peanut(1.1) : k === 1 ? C.cherries(1.1).replace("scale(1.1)", "translate(0 -40) scale(1.1)") : k === 2 ? C.corn("ckR", 2, 4, 0.36) : `<g transform="translate(-34 0)">${C.peanut(0.8)}</g><g transform="translate(6 -30)">${C.cherries(0.7)}</g><g transform="translate(30 6)">${C.corn("ckR3", 2, 3, 0.25)}</g>`}</g></g>`).join("")}
+  E("actors").innerHTML = `${C.defs()}
     <g id="pile">${[0, 1, 2, 3].map((i) => `<g id="pc${i}" opacity="0">${C.cherry(1.1)}</g>`).join("")}</g>
-    <g id="frogPos"><g id="frog">${C.frog()}</g></g>
-    <g id="duckPos"><g id="duck">${C.duck("#FFD84D", 1)}</g></g>
+    <g id="mousePos"><g id="mouse">${C.mouse("ms")}</g></g>
+    <g id="frogPos"><g id="frog">${C.frog("fr")}</g></g>
+    <g id="ducklingPos"><g id="duckling">${C.duck("dl", true)}</g></g>
+    <g id="duckPos"><g id="duck">${C.duck("dk")}</g></g>
     <g id="cob" opacity="0">${C.corn("kr", 3, 7, 1.25)}</g>
-    <g id="basketCherry" opacity="0" transform="translate(${PLATES[2].x + 120} ${PLATES[2].y - 40})">${C.cherry(1.3)}</g>
-    <g id="senCard" opacity="0"><rect x="-110" y="-150" width="220" height="130" rx="26" fill="#fff" stroke="#FF5A7A" stroke-width="10"/>
-      <text x="0" y="-62" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="84" fill="#3D9BFF">SEN</text>
-      <g transform="translate(96 -146) scale(.9)">${C.face.all()}</g></g>`;
+    <g id="basketCherry" opacity="0" transform="translate(${BASKET.x + 130} ${BASKET.y - 40})">${C.cherry(1.3)}</g>
+    <g id="xfer">${[0, 1].map((k) => `<g id="xf${k * 3}" opacity="0">${C.peanut(1.1)}</g><g id="xf${k * 3 + 1}" opacity="0"><g transform="translate(0 -26)">${C.cherries(1)}</g></g><g id="xf${k * 3 + 2}" opacity="0">${C.corn("xc" + k, 2, 4, 0.38)}</g>`).join("")}</g>
+    <g id="bridge">${Array.from({ length: 24 }, (_, i) => `<g id="bh${i}" opacity="0">${C.heart(0.62)}</g>`).join("")}</g>
+    <g id="hearts">${Array.from({ length: 18 }, (_, i) => `<g id="ht${i}" opacity="0">${C.heart(0.8)}</g>`).join("")}</g>
+    <g id="bugs">${[0, 1, 2].map((i) => `<g id="bf${i}" opacity="0"><g class="wl"><path d="M0 0 Q-34 -40 -40 -6 Q-30 14 0 0Z" fill="${["#FF8FB1", "#B58CFF", "#FFC23D"][i]}" stroke="${INK}" stroke-width="2.5"/></g><g class="wr"><path d="M0 0 Q34 -40 40 -6 Q30 14 0 0Z" fill="${["#FF8FB1", "#B58CFF", "#FFC23D"][i]}" stroke="${INK}" stroke-width="2.5"/></g><ellipse rx="4" ry="12" fill="${INK}"/></g>`).join("")}</g>
+    <g id="flies">${Array.from({ length: 18 }, (_, i) => `<circle id="ff${i}" r="7" fill="#FFF27A" opacity="0" style="filter:drop-shadow(0 0 8px #FFE27A)"/>`).join("")}</g>`;
   E("fxSvg").innerHTML = `<path id="tongue" fill="none" stroke="#FF6F91" stroke-width="16" stroke-linecap="round" opacity="0"/><circle id="tongueTip" r="13" fill="#FF6F91" opacity="0"/>
     <g id="tongueCherry" opacity="0">${C.cherry(1.1)}</g>
     <g id="rumbleG" fill="none" stroke="#A66BFF" stroke-width="7" stroke-linecap="round">${Array.from({ length: 12 }, (_, i) => `<path id="rb${i}" opacity="0"/>`).join("")}</g>
@@ -485,15 +511,10 @@ window.CAST = (function () {
   letters("Fıstık\u00A0Fil", $("#endBig"));
 
   // screen-space: flying foods, avalanche jars, whip streaks, big cherry, tap
-  const FOODS = { peanut: `<svg class="abs fly" viewBox="-100 -100 200 200">${C.peanut(1.6)}</svg>`, cherry: `<svg class="abs fly" viewBox="-100 -100 200 200"><g transform="translate(0 -46)">${C.cherries(1.7)}</g></svg>`,
-    corn: `<svg class="abs fly" viewBox="-100 -100 200 200">${C.corn("fc", 2, 4, 0.6)}</svg>` };
-  E("flyBox").innerHTML = Array.from({ length: 6 }, (_, i) => FOODS[["peanut", "cherry", "corn"][i % 3]].replace('class="abs fly"', `class="abs fly" id="fy${i}" style="opacity:0"`)).join("");
   E("aval").innerHTML = `<div id="avalBg" class="abs" style="left:0;top:0;width:1920px;height:1200px;background-color:#E8C07A;background-image:radial-gradient(#C99A55 18%, transparent 20%), radial-gradient(#F5D9A0 14%, transparent 16%);background-size:90px 70px, 90px 70px;background-position:0 0, 45px 35px;opacity:0"></div>` +
     Array.from({ length: 34 }, (_, i) => `<svg class="abs" id="av${i}" viewBox="-80 -210 160 220" style="left:0;top:0;width:${220 + (i % 4) * 40}px;height:${300 + (i % 4) * 55}px;opacity:0;overflow:visible">${C.jar(1, 1, TC[i % 6])}</svg>`).join("");
   E("whip").innerHTML = Array.from({ length: 22 }, (_, i) => `<rect id="wh${i}" x="0" y="${(i * 53) % 1080}" width="900" height="${10 + (i % 4) * 8}" rx="8" fill="#fff" opacity=".7"/>`).join("");
   E("bigCherry").innerHTML = `<g id="bcG" opacity="0"><path id="bcStem" d="M0 -1 Q30 -80 10 -150" stroke="#4E8A2E" stroke-width="14" fill="none" stroke-linecap="round"/><circle id="bcC" r="100" fill="#E5304A" stroke="#8E1328" stroke-width="10"/><ellipse id="bcH" cx="-30" cy="-36" rx="22" ry="14" fill="#fff" opacity=".7"/></g>`;
-  E("tap").innerHTML = `<g id="tapG" opacity="0"><circle id="tapR" r="80" fill="none" stroke="#fff" stroke-width="10"/>${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M0 0 L${(140 * Math.cos(i * TAU / 6 + 0.3)).toFixed(0)} ${(140 * Math.sin(i * TAU / 6 + 0.3)).toFixed(0)}" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".8" class="tapL"/>`).join("")}
-    <text id="tapT" y="-150" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="90" fill="#FF5A5F" stroke="#fff" stroke-width="12" paint-order="stroke">TIK!</text></g>`;
   E("laBall").innerHTML = C.peanut(0.9);
 
   // ───────────────────────── lyrics + sound words ─────────────────────────
@@ -518,10 +539,10 @@ window.CAST = (function () {
   const R = { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, flap: 0, walk: 0, sway: 0, tilt: 0, bob: 1, dance: 0, jy: 0, rot: 0 };
   const CAM = { x: 960, y: 560, s: 1.0, r: 0 };
   const ENV = { glow: 0, flash: 0, whip: 0 };
-  const AN = { frogOpen: 0, duckOpen: 0, frogParty: 0, duckParty: 0, scWave: 0, cupOpen: 0 };
+  const AN = { frogOpen: 0, duckOpen: 0, dlOpen: 0, msOpen: 0, frogParty: 0, duckParty: 0, msParty: 0, scWave: 0, cupOpen: 0, sac: 0, frArm: 0, msArms: 0, wingUp: 0, wave: 0 };
   const JUMP = { frog: 0 };
-  const EV = { conf: [], crumbs: [], drops: [] };
-  const FLY = [];                                  // [slot, food, scene k, side(-1 sana/+1 bana), t0, from()]
+  const EV = { conf: [], crumbs: [], drops: [], hearts: [] };
+  const XF = [];                                   // paylaşma: {t0, dur, hold, food, from(), to(), kind: give|eat, who (yiyen)}
   const GRAB = [];                                 // tongue grabs [t0, i]
   let VIEW = { s: 1, cx: 960, cy: 540 };
   const W2S = (x, y) => [960 + (x - VIEW.cx) * VIEW.s, 540 + (y - VIEW.cy) * VIEW.s];
@@ -543,9 +564,31 @@ window.CAST = (function () {
     if (sc === 2) return { x: walkX(t, 60.3, 61.5, 2150, DUCK.x), y: DUCK.y, s: DUCK.s, vis: true, wad: t < 61.5 ? 1 : 0 };
     if (sc === 3) return { x: walkX(t, 82.0, 86.0, 2300, SEATS.duck[0]), y: SEATS.duck[1], s: SEATS.duck[2], vis: true, wad: t > 82 && t < 86 ? 1 : 0 };
     return { vis: false }; }
-  const tipScene = (t) => { const p = fistikPos(t), q = tipLocal(R.A, R.C, R.L); return [p.x + (q[0] - 300) * p.s, p.y + (q[1] - 620) * p.s - R.jy * 0]; };
-  const frogMouth = (t) => { const p = frogPos(t); return [p.x, p.y - 70 * p.s]; };
-  const duckBeak = (t) => { const p = duckPos(t); return [p.x - 112 * p.s, p.y - 112 * p.s]; };
+  function mousePos(t) { const sc = scene(t);
+    if (sc === 0) { const u = smooth(7.55, 8.3, t); return { x: lerp(MHOLE.x, 1215, u), y: MHOLE.y + 4 + (1 - smooth(7.45, 7.8, t)) * 60, s: 1.05, vis: t > 7.45, dir: -1, run: t > 7.55 && t < 8.3 }; }
+    if (sc === 3) { const u = smooth(106.55, 107.5, t); return { x: lerp(-220, SEATS.front[0] - 90, u), y: SEATS.front[1] + 2, s: 0.95, vis: t > 106.5, dir: 1, run: t > 106.55 && t < 107.5 }; }
+    return { vis: false }; }
+  function ducklingPos(t) { const sc = scene(t);
+    if (sc === 2) return { x: walkX(t, 60.6, 61.9, 2350, 1530), y: DUCK.y + 2, s: 0.62, vis: true, wad: t > 60.6 && t < 61.9 ? 1 : 0 };
+    if (sc === 3) return { x: walkX(t, 106.6, 107.6, 2250, SEATS.front[0] + 90), y: SEATS.front[1] + 2, s: 0.72, vis: t > 106.5, wad: t > 106.6 && t < 107.6 ? 1 : 0 };
+    return { vis: false }; }
+  const tipScene = (t) => { const p = fistikPos(t), q = tipLocal(R.A, R.C, R.L); return [p.x + (q[0] - 300) * p.s, p.y + (q[1] - 620) * p.s]; };
+  const fistikMouth = (t) => { const p = fistikPos(t); return [p.x + (250 - 300) * p.s, p.y + (345 - 620) * p.s]; };
+  const frogMouth = (t) => { const p = frogPos(t); return [p.x, p.y - 66 * p.s]; };
+  const frogHand = (t) => { const p = frogPos(t); return [p.x - 58 * p.s, p.y - 30 * p.s]; };
+  const duckBeak = (t) => { const p = duckPos(t); return [p.x - 112 * p.s, p.y - 140 * p.s]; };
+  const ducklingBeak = (t) => { const p = ducklingPos(t); return [p.x - 112 * p.s, p.y - 140 * p.s]; };
+  const mouseHand = (t) => { const p = mousePos(t); return [p.x, p.y - 52 * p.s]; };
+  const headOf = (who, t) => who === "fistik" ? (() => { const p = fistikPos(t); return [p.x, p.y - 470 * p.s]; })() : who === "frog" ? (() => { const p = frogPos(t); return [p.x, p.y - 150 * p.s]; })()
+    : who === "duck" ? (() => { const p = duckPos(t); return [p.x - 40 * p.s, p.y - 200 * p.s]; })() : who === "duckling" ? (() => { const p = ducklingPos(t); return [p.x - 40 * p.s, p.y - 210 * p.s]; })() : (() => { const p = mousePos(t); return [p.x, p.y - 190 * p.s]; })();
+  // eye blink: pure, staggered per character
+  const blinkAmt = (t, seed) => { const ph = ((t + seed * 1.37) % 3.9 + 3.9) % 3.9; return ph < 0.16 ? Math.sin(Math.PI * ph / 0.16) : 0; };
+  function eyes(root, t, seed, lx = 0, ly = 0, extra = 0) { const b = Math.max(blinkAmt(t, seed), extra);
+    root.querySelectorAll(".lid").forEach((l) => { const top = +l.dataset.top; l.setAttribute("transform", `translate(0 ${top}) scale(1 ${b.toFixed(3)}) translate(0 ${-top})`); });
+    root.querySelectorAll(".pup").forEach((p2) => p2.setAttribute("transform", `translate(${lx.toFixed(1)} ${ly.toFixed(1)})`)); }
+  const talk = (root, o) => { const h = root.querySelector(".mHappy"), m = root.querySelector(".mOpen"); if (h) h.setAttribute("opacity", (1 - o).toFixed(2)); if (m) m.setAttribute("opacity", o.toFixed(2)); };
+  // chewing after eating (pure, from XF)
+  const chewOf = (who, t) => { let c = 0; XF.forEach((x) => { if (x.who !== who) return; const L = x.t0 + x.dur + x.hold * 0.4, u = t - L; if (u > 0 && u < 1.0) c = Math.max(c, (0.5 + 0.5 * Math.sin(u * 24)) * (1 - u)); }); return c; };
 
   // juggling (break 1) — pure
   const JG = [ts("k1.8") + 2.6, T.throw];
@@ -577,11 +620,12 @@ window.CAST = (function () {
       g.setAttribute("transform", `translate(${px} ${(py - lift).toFixed(2)}) rotate(${a.toFixed(2)})`); });
     el.pupils.setAttribute("transform", `translate(${R.lookX.toFixed(1)} ${R.lookY.toFixed(1)})`);
     const lid = clamp(R.blink, 0, 1) * 92; el.lidL.setAttribute("height", lid.toFixed(1)); el.lidR.setAttribute("height", lid.toFixed(1));
-    const m = Math.max(0, R.mouth), my = 334, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * m).toFixed(1)} 224 ${my} Z`;
+    const m = Math.max(0, R.mouth, 0.7 * chewOf("fistik", t)), my = 334, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * m).toFixed(1)} 224 ${my} Z`;
     el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", m > 0.04 ? "#8C2F45" : "none");
     el.tongue.setAttribute("ry", (m > 0.15 ? 12 * m : 0).toFixed(1)); el.tongue.setAttribute("cy", (my + 6 + 24 * m).toFixed(1));
     drawTrunk(R.A + 3 * Math.sin(t * 2.3), R.C, R.L);
     const wob = rum * 0.05 * Math.sin(t * 46);
+    { const sh = E("fShadow"), lift = clamp(-R.jy / 300, 0, 1); sh.setAttribute("cx", fp.x.toFixed(1)); sh.setAttribute("cy", (fp.y + 4).toFixed(1)); sh.setAttribute("rx", (170 * fp.s * (1 - 0.4 * lift)).toFixed(1)); sh.setAttribute("ry", (34 * fp.s * (1 - 0.4 * lift)).toFixed(1)); }
     E("charWrap").style.transform = `translate(${(fp.x - 300 * fp.s).toFixed(1)}px, ${(fp.y - 620 * fp.s + R.jy).toFixed(1)}px) scale(${fp.s}) translate(300px, 620px) rotate(${R.rot.toFixed(2)}deg) scale(${(1 + wob).toFixed(3)}, ${(1 - wob).toFixed(3)}) translate(-300px, -620px)`;
 
     // ── kitchen ──
@@ -639,40 +683,33 @@ window.CAST = (function () {
         E("bu" + i).setAttribute("fill", on ? TC[i % 6] : "#8A7A5A"); E("ha" + i).setAttribute("opacity", (blink * nt).toFixed(2)); });
       [0, 1, 2].forEach((i) => { const u = pIn(t, 85.6 + i * BEAT * 2, 0.3); E("sp" + i).setAttribute("opacity", u > 0 ? 1 : 0);
         const [x, y] = [[720, 930], [1200, 930], [1440, 1040]][i]; E("sp" + i).setAttribute("transform", `translate(${x} ${y}) scale(${(0.2 + 0.8 * outBack(u, 2.4)).toFixed(3)})`); });
-      const su = pIn(t, T.seat + 0.2, 0.45), hop = rumbleOf(t, "all") * 10 * Math.abs(Math.sin(t * 22));
-      E("senCard").setAttribute("opacity", su > 0 ? 1 : 0);
-      E("senCard").setAttribute("transform", `translate(${SEATS.sen[0]} ${(SEATS.sen[1] - 10).toFixed(1)}) scale(${(0.2 + 0.8 * outBack(su, 2.6)).toFixed(3)}) rotate(${(su < 1 ? -10 * (1 - su) : 3 * Math.sin(t * 3)).toFixed(2)})`);
+      E("bowlG").setAttribute("transform", `translate(${BOWL.x} ${(BOWL.y - rumbleOf(t, "all") * 14 * Math.abs(Math.sin(t * 26))).toFixed(1)}) scale(${(BOWL.s * (0.3 + 0.7 * outBack(pIn(t, 85.2, 0.5), 2))).toFixed(3)})`);
+      E("bowlG").setAttribute("opacity", t > 85.2 ? 1 : 0);
       const pj = rumbleOf(t, "all"); E("clothP").setAttribute("transform", `translate(0 ${(-pj * 4 * Math.abs(Math.sin(t * 30))).toFixed(1)})`);
       [0, 1, 2].forEach((i) => { if (pIn(t, 85.6 + i * BEAT * 2, 0.3) >= 1) { const [x, y] = [[720, 930], [1200, 930], [1440, 1040]][i]; E("sp" + i).setAttribute("transform", `translate(${x} ${(y - pj * 18 * Math.abs(Math.sin(t * 24 + i))).toFixed(1)})`); } });
     }
 
-    if (sc !== 3) E("senCard").setAttribute("opacity", 0);
-    // ── plates + slots ──
-    PLATES.forEach((p, k) => { const vis = k === sc; E("plate" + k).setAttribute("opacity", vis ? 1 : 0);
-      if (!vis) return;
-      let py = p.y; if (k === 1) py = S + 6 + 3 * Math.sin(t * 1.7 + 1); if (k === 3) py = p.y - rumbleOf(t, "all") * 14 * Math.abs(Math.sin(t * 26));
-      E("plate" + k).setAttribute("transform", `translate(${p.x} ${py.toFixed(1)}) scale(${p.s})`);
-      const ins = (k === 3 ? 79.3 : k === 2 ? 60.0 : k === 1 ? 33.0 : 5.0), pu = pIn(t, ins, 0.5);
-      E("plate" + k).setAttribute("transform", `translate(${p.x} ${py.toFixed(1)}) scale(${(p.s * (0.3 + 0.7 * outBack(pu, 2))).toFixed(3)})`);
-      E("plate" + k).setAttribute("opacity", pu > 0 ? 1 : 0);
-      [-1, 1].forEach((side) => { const f = FLY.find((q) => q.k === k && q.side === side), land = f ? f.t0 + f.dur : 1e9;
-        const gone = side > 0 ? (k === 0 ? ts("k1.5") + 0.2 : k === 1 ? ts("k2.5") - 0.1 : k === 2 ? ts("k3.5") - 0.1 : ts("f.6") + 0.3) : 1e9;
-        const sl = E(`sl${k}${side < 0 ? "L" : "R"}`), lu = pIn(t, land, 0.25);
-        sl.setAttribute("opacity", t >= land && t < gone ? 1 : 0);
-        sl.setAttribute("transform", `translate(${side * 80} ${(4 - 30 * Math.sin(Math.PI * lu)).toFixed(1)})`); }); });
-
+    // snacks waiting at the source (hidden once picked up)
+    const hid = (id) => XF.some((x) => x.hide === id && t >= x.t0);
+    LILYCH.forEach((_, i) => E("lc" + i).setAttribute("opacity", hid("lc" + i) ? 0 : 1));
+    [0, 1].forEach((i) => E("bco" + i).setAttribute("opacity", hid("bco" + i) ? 0 : 1));
     // ── frog ──
     const frp = frogPos(t);
     E("frogPos").setAttribute("opacity", frp.vis ? 1 : 0);
     if (frp.vis) { const fj = JUMP.frog > 0 && JUMP.frog < 1 ? Math.sin(Math.PI * JUMP.frog) : 0, frum = rumbleOf(t, "frog");
-      const party = AN.frogParty * 16 * Math.abs(Math.sin(beatPh / 2));
-      E("frogPos").setAttribute("transform", `translate(${frp.x.toFixed(1)} ${(frp.y - fj * 160 - party).toFixed(1)}) scale(${frp.s})`);
-      const fw = frum * 0.06 * Math.sin(t * 44);
-      E("frog").setAttribute("transform", `scale(${(1 + fw + fj * 0.05).toFixed(3)} ${(1 - fw - fj * 0.04).toFixed(3)})`);
-      const fr = E("frog"); fr.querySelector(".mHappy").setAttribute("opacity", (1 - AN.frogOpen).toFixed(2)); fr.querySelector(".mOpen").setAttribute("opacity", AN.frogOpen.toFixed(2));
-      fr.querySelector(".legs").setAttribute("transform", `translate(0 ${(fj * 30).toFixed(1)})`);
-      fr.querySelector(".hatC").setAttribute("transform", `translate(0 -142) rotate(${(8 * Math.sin(beatPh)).toFixed(1)})`);
-      fr.querySelector(".hatC").setAttribute("opacity", sc === 1 ? 1 : 1); }
+      const party = AN.frogParty * 16 * Math.abs(Math.sin(beatPh / 2)), lift = fj * 160 + party, breath = 0.012 * Math.sin(t * 2.6);
+      E("frogPos").setAttribute("transform", `translate(${frp.x.toFixed(1)} ${frp.y.toFixed(1)}) scale(${frp.s})`);
+      const fr = E("frog"), body = fr.querySelector(".body"), fw = frum * 0.06 * Math.sin(t * 44);
+      const land = JUMP.frog > 0.85 && JUMP.frog < 1 ? Math.sin(Math.PI * (JUMP.frog - 0.85) / 0.15) : 0;    // squash on landing
+      body.setAttribute("transform", `translate(0 ${(-lift / frp.s).toFixed(1)}) scale(${(1 + fw - fj * 0.08 + land * 0.12 + breath).toFixed(3)} ${(1 - fw + fj * 0.1 - land * 0.12 - breath).toFixed(3)})`);
+      fr.querySelector(".shd").setAttribute("transform", `scale(${(1 - 0.5 * clamp(lift / 160, 0, 1)).toFixed(3)})`);
+      talk(fr, Math.max(AN.frogOpen, chewOf("frog", t) * 0.8));
+      fr.querySelector(".legs").setAttribute("transform", `translate(0 ${(fj * 26).toFixed(1)})`);
+      fr.querySelector(".sac").setAttribute("ry", (AN.sac * 26).toFixed(1)); fr.querySelector(".sac").setAttribute("cy", (-50 + AN.sac * 10).toFixed(1));
+      fr.querySelector(".armL").setAttribute("transform", `rotate(${(AN.frArm * 70 + AN.wave * 40 * (0.5 + 0.5 * Math.sin(t * 12))).toFixed(1)} -46 -40)`);
+      fr.querySelector(".armR").setAttribute("transform", `rotate(${(-AN.frogParty * 30 * Math.abs(Math.sin(beatPh / 2))).toFixed(1)} 46 -40)`);
+      fr.querySelector(".hatC").setAttribute("transform", `translate(0 -144) rotate(${(8 * Math.sin(beatPh)).toFixed(1)})`);
+      const lookF = sc === 1 ? -5 : 0; eyes(fr, t, 1, lookF, 1, AN.frogOpen > 0.9 && AN.sac > 0.5 ? 0.6 : 0); }
     // tongue grabs (k2.5) → pile → eaten one by one (k2.6)
     { let on = false; const mo = frogMouth(t);
       GRAB.forEach(([t0, i], gi) => { const u = (t - t0) / 0.42; if (u < 0 || u > 1) return; on = true;
@@ -696,15 +733,32 @@ window.CAST = (function () {
       const ground = x > 1650 ? S - 20 : x > 700 ? S + 10 : 900, y = Math.min(ground, yTop + 900 * u * u), sp = y >= ground ? 1 - (u - Math.sqrt((ground - yTop) / 900)) / 0.6 : 1;
       g.setAttribute("opacity", clamp(sp, 0, 1).toFixed(2)); g.setAttribute("transform", `translate(${(x + vx * u).toFixed(1)} ${y.toFixed(1)}) rotate(${(u * 200 * Math.sign(vx)).toFixed(0)})`); });
 
-    // ── duck ──
+    // ── duck, duckling, mouse ──
+    const duckDraw = (gid, pos, open, party, seed, wing, rum, lookX) => {
+      const g = E(gid + "Pos"), d = E(gid); g.setAttribute("opacity", pos.vis ? 1 : 0); if (!pos.vis) return;
+      const wph = t * 14, step = pos.wad ? Math.sin(wph) : 0, bob = pos.wad ? 6 * Math.abs(Math.sin(wph)) : 0, pb = party * 12 * Math.abs(Math.sin(beatPh / 2 + seed));
+      g.setAttribute("transform", `translate(${pos.x.toFixed(1)} ${pos.y.toFixed(1)}) scale(${pos.s})`);
+      const body = d.querySelector(".body"), head = d.querySelector(".head"), dw = rum * 0.06 * Math.sin(t * 44), breath = 0.012 * Math.sin(t * 2.4 + seed);
+      const yUp = -(bob + pb) / pos.s, tilt = 5 * step + party * 5 * Math.sin(beatPh / 2);
+      body.setAttribute("transform", `translate(0 ${yUp.toFixed(1)}) rotate(${tilt.toFixed(2)} 0 -60) scale(${(1 + dw + breath).toFixed(3)} ${(1 - dw - breath).toFixed(3)})`);
+      const peck = open > 0.5 ? 4 : 0, hb = 3 * Math.sin(beatPh) * (0.4 + party);
+      head.setAttribute("transform", `translate(${(-peck).toFixed(1)} ${(yUp + hb + peck).toFixed(1)}) rotate(${(tilt * 0.6 - peck * 2).toFixed(2)} -40 -150)`);
+      d.querySelector(".beakTop").setAttribute("transform", `rotate(${(14 * open).toFixed(1)} -78 -144)`); d.querySelector(".beakBot").setAttribute("transform", `rotate(${(-18 * open).toFixed(1)} -78 -132)`);
+      d.querySelector(".wing").setAttribute("transform", `rotate(${(party * 22 * Math.sin(beatPh) - 50 * wing).toFixed(1)} 10 -96)`);
+      d.querySelectorAll(".legL, .legR").forEach((l, i) => { const x = +l.dataset.x, a = (i ? -1 : 1) * 24 * step; l.setAttribute("transform", `rotate(${a.toFixed(1)} ${x} -40) translate(0 ${(i ? 1 : -1) * 0}) `); });
+      eyes(d, t, seed, lookX, 0); };
     const dp = duckPos(t);
-    E("duckPos").setAttribute("opacity", dp.vis ? 1 : 0);
-    if (dp.vis) { const drum = rumbleOf(t, "duck"), dw = drum * 0.06 * Math.sin(t * 44), wad = dp.wad ? 7 * Math.sin(t * 14) : 0, party = AN.duckParty * 12 * Math.abs(Math.sin(beatPh / 2 + 1));
-      E("duckPos").setAttribute("transform", `translate(${dp.x.toFixed(1)} ${(dp.y - party - (dp.wad ? 8 * Math.abs(Math.sin(t * 14)) : 0)).toFixed(1)}) scale(${dp.s}) rotate(${(wad + AN.duckParty * 5 * Math.sin(beatPh / 2)).toFixed(2)})`);
-      E("duck").setAttribute("transform", `scale(${(1 + dw).toFixed(3)} ${(1 - dw).toFixed(3)})`);
-      const o = AN.duckOpen, dk = E("duck");
-      dk.querySelector(".beakTop").setAttribute("transform", `rotate(${(-14 * o).toFixed(1)} -80 -88)`); dk.querySelector(".beakBot").setAttribute("transform", `rotate(${(16 * o).toFixed(1)} -80 -80)`);
-      dk.querySelector(".wing").setAttribute("transform", `rotate(${(AN.duckParty * 18 * Math.sin(beatPh) - 40 * AN.wingUp).toFixed(1)} 4 -30)`); }
+    duckDraw("duck", dp, Math.max(AN.duckOpen, 0.8 * chewOf("duck", t)), AN.duckParty, 2, AN.wingUp, rumbleOf(t, "duck"), sc === 2 ? 2 : -2);
+    duckDraw("duckling", ducklingPos(t), Math.max(AN.dlOpen, 0.8 * chewOf("duckling", t)), AN.duckParty, 3.3, 0, 0, -2);
+    { const mp = mousePos(t), g = E("mousePos"), mo = E("mouse"); g.setAttribute("opacity", mp.vis ? 1 : 0);
+      if (mp.vis) { const run = mp.run ? 8 * Math.abs(Math.sin(t * 22)) : 0, pb = AN.msParty * 14 * Math.abs(Math.sin(beatPh / 2 + 0.6)), breath = 0.015 * Math.sin(t * 3);
+        g.setAttribute("transform", `translate(${mp.x.toFixed(1)} ${(mp.y - run - pb).toFixed(1)}) scale(${(mp.s * mp.dir).toFixed(3)} ${mp.s})`);
+        mo.querySelector(".body").setAttribute("transform", `scale(${(1 + breath).toFixed(3)} ${(1 - breath).toFixed(3)})`);
+        mo.querySelector(".head").setAttribute("transform", `rotate(${(4 * Math.sin(beatPh / 2) + (mp.run ? 6 : 0)).toFixed(2)} 4 -80)`);
+        mo.querySelector(".earL").setAttribute("transform", `rotate(${(6 * Math.sin(t * 5)).toFixed(1)} -34 -130)`); mo.querySelector(".earR").setAttribute("transform", `rotate(${(-6 * Math.sin(t * 5 + 1)).toFixed(1)} 40 -128)`);
+        mo.querySelector(".tail").setAttribute("transform", `rotate(${(12 * Math.sin(t * 3.5)).toFixed(1)} -30 -14)`);
+        mo.querySelector(".arms").setAttribute("transform", `translate(0 ${(-22 * AN.msArms).toFixed(1)})`);
+        talk(mo, Math.max(AN.msOpen, 0.8 * chewOf("mouse", t))); eyes(mo, t, 4.1, 2, 0); } }
     // typewriter corn (k3.5–k3.6)
     { const ty0 = ts("k3.5") - 0.3, ty1 = te("k3.6") + 0.2, cob = E("cob");
       if (sc === 2 && t > ty0 - 0.4 && t < ty1 + 0.5) { const [bx, by] = duckBeak(t), cs = 1.25, kk = TYPE.filter((q) => t >= q[0]).length, cur = TYPE[Math.min(TYPE.length - 1, Math.max(0, kk - 1))] || TYPE[0];
@@ -766,7 +820,7 @@ window.CAST = (function () {
     { const g = E("bcG"), u1 = pIn(t, T.cherryBig, T.corn - T.cherryBig), u2 = pIn(t, T.corn + 0.05, 0.6);
       if (t > T.cherryBig && t < T.corn + 0.66) {
         let x, y, r; if (t < T.corn) { const [sx, sy] = W2S(LILY, S - 160); x = lerp(sx, 960, easeIn(u1)); y = lerp(sy, 540, easeIn(u1)) - 260 * Math.sin(Math.PI * u1); r = lerp(30, 1250, Math.pow(u1, 2.4)); }
-        else { const [bx, by] = W2S(PLATES[2].x + 120, PLATES[2].y - 40); x = lerp(960, bx, easeOut(u2)); y = lerp(540, by, easeOut(u2)); r = lerp(1250, 18 * VIEW.s * 1.3, easeOut(u2)); }
+        else { const [bx, by] = W2S(BASKET.x + 130, BASKET.y - 40); x = lerp(960, bx, easeOut(u2)); y = lerp(540, by, easeOut(u2)); r = lerp(1250, 18 * VIEW.s * 1.3, easeOut(u2)); }
         g.setAttribute("opacity", 1); E("bcC").setAttribute("r", r.toFixed(1)); g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
         E("bcH").setAttribute("cx", (-0.3 * r).toFixed(1)); E("bcH").setAttribute("cy", (-0.36 * r).toFixed(1)); E("bcH").setAttribute("rx", (0.22 * r).toFixed(1)); E("bcH").setAttribute("ry", (0.14 * r).toFixed(1));
         E("bcStem").setAttribute("transform", `scale(${(r / 100).toFixed(3)})`); E("bcC").setAttribute("stroke-width", Math.max(4, r * 0.08).toFixed(1)); }
@@ -778,24 +832,39 @@ window.CAST = (function () {
         else { const Q = [[520, 860], [1400, 860], [1500, 1080], [420, 1080]].map(([x, y]) => W2S(x, y)), F = [[0, 0], [1920, 0], [1920, 1080], [0, 1080]], e = easeOut(u2);
           cl.style.clipPath = `polygon(${F.map((f, i) => `${lerp(f[0], Q[i][0], e).toFixed(0)}px ${lerp(f[1], Q[i][1], e).toFixed(0)}px`).join(", ")})`; E("clothRoll").style.opacity = 0; cl.style.opacity = (1 - smooth(0.75, 1, u2)).toFixed(3); } }
       else cl.style.opacity = 0; }
-    // foods fly to the camera ("bir … sana") / to the character ("bir … bana")
-    { const FD = ["peanut", "cherry", "corn"]; let tapOn = 0, tapU = 0; const shown = new Set();
-      FLY.forEach((f) => { const u = (t - f.t0) / f.dur; if (u < 0 || u > 1) return;
-        const items = f.k === 3 ? FD : [f.food];
-        items.forEach((food, q) => { const idx = FD.indexOf(food) + (f.side > 0 ? 3 : 0), el2 = E("fy" + idx); shown.add(idx);
-          const n = items.length, off = n > 1 ? (q - 1) * 330 : 0;
-          const src = f.from(q), [sx, sy] = W2S(src[0], src[1]), dst = slotPos(f.k, f.side), [dx, dy] = W2S(dst[0] + (n > 1 ? [-34, 6, 30][q] * PLATES[3].s : 0), dst[1]);
-          const base = VIEW.s * PLATES[f.k].s * 0.55;
-          let x, y, sc2, rot;
-          if (f.side < 0) { const a = 0.5, h = 0.18;
-            if (u < a) { const e = easeOut(u / a); x = lerp(sx, 960 + off, e); y = lerp(sy, 520, e) - 140 * Math.sin(Math.PI * u / a); sc2 = lerp(base, n > 1 ? 2.6 : 3.6, Math.pow(u / a, 1.6)); rot = -30 + 30 * e; }
-            else if (u < a + h) { const k = (u - a) / h; x = 960 + off; y = 520; sc2 = (n > 1 ? 2.6 : 3.6) * (1 + 0.05 * Math.sin(k * Math.PI)); rot = 4 * Math.sin(k * 12); tapOn = 1; tapU = k; }
-            else { const e = easeIn((u - a - h) / (1 - a - h)); x = lerp(960 + off, dx, e); y = lerp(520, dy, e) - 120 * Math.sin(Math.PI * e); sc2 = lerp(n > 1 ? 2.6 : 3.6, base, e); rot = 20 * e; } }
-          else { const e = smooth(0, 1, u); x = lerp(sx, dx, e); y = lerp(sy, dy, e) - 160 * VIEW.s * Math.sin(Math.PI * u); sc2 = base * (1 + 0.3 * Math.sin(Math.PI * u)); rot = 360 * u; }
-          el2.style.opacity = 1; el2.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${sc2.toFixed(3)}) rotate(${rot.toFixed(1)}deg)`; }); });
-      for (let i = 0; i < 6; i++) if (!shown.has(i)) E("fy" + i).style.opacity = 0;
-      const tg = E("tapG"); tg.setAttribute("opacity", tapOn ? (1 - tapU * 0.6).toFixed(2) : 0);
-      if (tapOn) { tg.setAttribute("transform", `translate(960 520)`); E("tapR").setAttribute("r", (110 + 260 * tapU).toFixed(1)); E("tapT").setAttribute("transform", `scale(${(0.6 + 0.4 * outBack(Math.min(1, tapU * 3), 2.5)).toFixed(3)})`); } }
+    // sharing: foods travel giver → friend (give) or source → own mouth (eat); hold = eaten slowly at the mouth
+    { const shown = new Set();
+      XF.forEach((x) => { const u = (t - x.t0) / x.dur; if (u < 0 || u > 1 + x.hold / x.dur) return;
+        const idx = ["peanut", "cherry", "corn"].indexOf(x.food) + (shown.has(["peanut", "cherry", "corn"].indexOf(x.food)) ? 3 : 0), g = E("xf" + idx); shown.add(idx);
+        const [ax, ay] = x.from(), [bx, by] = x.to();
+        let px, py, sc2, rot;
+        if (u <= 1) { const e = smooth(0, 1, u), h = x.kind === "give" ? 200 + 0.18 * Math.abs(bx - ax) : 70; px = lerp(ax, bx, e); py = lerp(ay, by, e) - h * Math.sin(Math.PI * u); sc2 = 1; rot = (x.kind === "give" ? 540 : 120) * e; }
+        else { const k = (t - x.t0 - x.dur) / x.hold; px = bx; py = by + 3 * Math.sin(k * 30); sc2 = 1 - 0.75 * k; rot = 10 * Math.sin(k * 20); }
+        g.setAttribute("opacity", 1); g.setAttribute("transform", `translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${rot.toFixed(0)}) scale(${(sc2 * (x.size || 0.9)).toFixed(3)})`); });
+      for (let i = 0; i < 6; i++) if (!shown.has(i)) E("xf" + i).setAttribute("opacity", 0); }
+    // heart bridge (new component): after each "give", a dotted arc of hearts links the two friends
+    { let bi = 0;
+      XF.forEach((x) => { if (x.kind !== "give") return; const L = x.t0 + x.dur, u = t - L, life = x.life || 1.9; if (u < 0 || u > life + 0.4) return;
+        const [ax, ay] = headOf(x.giver, t), [bx, by] = headOf(x.who, t), mx = (ax + bx) / 2, my = Math.min(ay, by) - 90 - 0.12 * Math.abs(bx - ax), n = 7;
+        for (let q = 0; q < n && bi < 24; q++, bi++) { const k = (q + 1) / (n + 1), hx = (1 - k) * (1 - k) * ax + 2 * (1 - k) * k * mx + k * k * bx, hy = (1 - k) * (1 - k) * ay + 2 * (1 - k) * k * my + k * k * by;
+          const a = pIn(u, q * 0.06, 0.25), out = pIn(u, life, 0.4), g = E("bh" + bi), beat = 1 + 0.12 * Math.max(0, Math.sin(beatPh));
+          g.setAttribute("opacity", (a * (1 - out)).toFixed(2)); g.setAttribute("transform", `translate(${hx.toFixed(1)} ${(hy - 6 * Math.sin(t * 4 + q)).toFixed(1)}) scale(${(outBack(a, 3) * beat).toFixed(3)})`); } });
+      for (; bi < 24; bi++) E("bh" + bi).setAttribute("opacity", 0); }
+    // hearts pop above whoever just ate
+    { let hi = 0; EV.hearts.forEach(([t0, who]) => { const u = t - t0; if (u < 0 || u > 1.3) return; const [x, y] = headOf(who, t);
+        for (let q = 0; q < 3 && hi < 18; q++, hi++) { const g = E("ht" + hi), k = clamp((u - q * 0.12) / 1.1, 0, 1);
+          g.setAttribute("opacity", k > 0 && k < 1 ? (k < 0.75 ? 1 : (1 - k) / 0.25).toFixed(2) : 0);
+          g.setAttribute("transform", `translate(${(x + (q - 1) * 46 + 14 * Math.sin(k * 7 + q)).toFixed(1)} ${(y - 30 - 150 * k).toFixed(1)}) scale(${(0.5 + 0.6 * outBack(Math.min(1, k * 3), 2.5)).toFixed(3)})`); } });
+      for (; hi < 18; hi++) E("ht" + hi).setAttribute("opacity", 0); }
+    // ambient life: butterflies (dere, tarla) + fireflies (gece)
+    [0, 1, 2].forEach((i) => { const g = E("bf" + i); if (sc !== 1 && sc !== 2) { g.setAttribute("opacity", 0); return; }
+      const bx = [900, 1500, 600][i] + 160 * Math.sin(t * 0.45 + i * 2) + 60 * Math.sin(t * 1.3 + i), by = [420, 520, 600][i] + 50 * Math.sin(t * 0.9 + i * 1.7);
+      g.setAttribute("opacity", 1); g.setAttribute("transform", `translate(${bx.toFixed(1)} ${by.toFixed(1)}) rotate(${(12 * Math.cos(t * 0.45 + i * 2)).toFixed(1)}) scale(.8)`);
+      const fl = Math.abs(Math.cos(t * 16 + i)); g.querySelector(".wl").setAttribute("transform", `scale(${fl.toFixed(3)} 1)`); g.querySelector(".wr").setAttribute("transform", `scale(${fl.toFixed(3)} 1)`); });
+    { const nt = sc === 3 ? smooth(T.night + 0.5, T.night + 3, t) : 0;
+      for (let i = 0; i < 18; i++) { const f = E("ff" + i); if (nt <= 0) { f.setAttribute("opacity", 0); continue; }
+        f.setAttribute("cx", (200 + (i * 197) % 1520 + 60 * Math.sin(t * 0.5 + i)).toFixed(1)); f.setAttribute("cy", (520 + (i * 89) % 380 + 40 * Math.sin(t * 0.8 + i * 1.3)).toFixed(1));
+        f.setAttribute("opacity", (nt * (0.35 + 0.65 * Math.abs(Math.sin(t * 1.7 + i * 0.9)))).toFixed(2)); } }
 
     // ── karaoke peanut for "la la la" ──
     { const lb = E("laBall"); let shown = false;
@@ -859,12 +928,17 @@ window.CAST = (function () {
       tl.to(`#w${li}_${wi}`, { color: snd ? "#E5484D" : "#2B2D42", scale: snd ? 1.28 : 1.14, duration: 0.08, ease: "power2.out" }, w[1]); tl.to(`#w${li}_${wi}`, { scale: 1, duration: 0.18 }, w[1] + 0.1); });
     tl.to("#ln" + li, { opacity: 0, y: -16, duration: 0.18, ease: "power1.in" }, en - 0.18); });
   // lip-sync
-  const MOUTH = { fistik: [R, "mouth", 0.9], frog: [AN, "frogOpen", 1], duck: [AN, "duckOpen", 1] };
+  const MOUTH = { fistik: [R, "mouth", 0.9], frog: [AN, "frogOpen", 1], duck: [AN, "duckOpen", 1], duckling: [AN, "dlOpen", 1], mouse: [AN, "msOpen", 1] };
   ALL.forEach((L) => L.words.forEach((w, wi) => { const nxt = (L.words[wi + 1] || [0, w[1] + 0.6])[1], hold = clamp(nxt - w[1] - 0.12, 0.08, 0.26);
-    const who = L.who === "all" ? ["fistik", "frog", "duck"] : [L.who];
+    const who = L.who === "all" ? (w[1] > T.seat ? ["fistik", "frog", "duck", "duckling", "mouse"] : ["fistik", "frog", "duck"]) : [L.who];
     who.forEach((h) => { const [o, p, v] = MOUTH[h]; tl.to(o, { [p]: v, duration: 0.06 }, w[1]); tl.to(o, { [p]: h === "fistik" ? 0.06 : 0, duration: 0.1 }, w[1] + hold); }); }));
   for (let t = 3.2; t < D - 2; t += 4.1) blink(t);
-  const flyTo = (k, side, t0, food, from, dur) => FLY.push({ k, side, t0, food, from, dur: dur || (side < 0 ? 1.5 : 0.8) });
+  // sharing helper: give (giver → friend) or eat (source → own mouth); friend reacts, hearts pop, crumbs fall
+  const OPEN = { fistik: [R, "mouth", 0.9], frog: [AN, "frogOpen", 1], duck: [AN, "duckOpen", 1], duckling: [AN, "dlOpen", 1], mouse: [AN, "msOpen", 1] };
+  const xfer = (o) => { const x = Object.assign({ hold: 0.7, size: 0.9, dur: o.kind === "give" ? 0.85 : 0.5 }, o); XF.push(x);
+    const L = x.t0 + x.dur, [ob, pk, v] = OPEN[x.who];
+    tl.to(ob, { [pk]: v, duration: 0.08 }, L - 0.12); tl.to(ob, { [pk]: x.who === "fistik" ? 0.06 : 0, duration: 0.1 }, L + 0.05);
+    EV.hearts.push([L + x.hold * 0.6, x.who]); const to = x.to(); crumbs(L + 0.1, to[0], to[1], 5); };
 
   // ── R1 · 0–4.8 · title letters drop with peanuts, poured into the jar ──
   cut(0, { s: 1.0, x: 960, y: 560 });
@@ -874,10 +948,12 @@ window.CAST = (function () {
   // ── R2 · k1.1–k1.4 · Fıstık, the share plate (porcelain) ──
   tl.to(R, { lookX: 0, lookY: 0, duration: 0.3 }, ts("k1.1") - 0.3); tl.to(R, { dance: 0.4, duration: 0.4 }, ts("k1.1"));
   pose("reach", ts("k1.2") + 0.2, 0.35); pose("offer", ts("k1.3") - 0.1, 0.25);
-  cam(ts("k1.2"), { s: 1.22, x: 860, y: 620 }, 1.2);
-  flyTo(0, -1, ts("k1.3") + 0.05, "peanut", () => tipScene(ts("k1.3") + 0.05));
-  pose("reach", ts("k1.4") - 0.25, 0.25); pose("offer", ts("k1.4") + 0.1, 0.25);
-  flyTo(0, 1, ts("k1.4") + 0.15, "peanut", () => tipScene(ts("k1.4") + 0.15));
+  cam(ts("k1.2"), { s: 1.06, x: 960, y: 640 }, 1.2);
+  tl.to(R, { lookX: 18, lookY: 6, duration: 0.25 }, 7.6);                                                // Fıstık notices the mouse
+  xfer({ kind: "give", food: "peanut", giver: "fistik", who: "mouse", t0: ts("k1.3") + 0.2, from: () => tipScene(ts("k1.3") + 0.2), to: () => mouseHand(ts("k1.3") + 1.0), hold: 0.9 });
+  tl.to(AN, { msArms: 1, duration: 0.2, ease: "back.out(2)" }, ts("k1.3") + 0.75); tl.to(AN, { msArms: 0, duration: 0.3 }, ts("k1.3") + 2.0);
+  pose("eat", ts("k1.4") - 0.05, 0.25); tl.to(R, { lookX: 0, lookY: -4, duration: 0.2 }, ts("k1.4"));
+  xfer({ kind: "eat", food: "peanut", who: "fistik", t0: ts("k1.4") + 0.05, from: () => [JAR.x, JAR.y - 200], to: () => fistikMouth(ts("k1.4")), hold: 0.5 });
   // ── R3 · kıtır kıtır: crunch zooms, jar empties, belly rumbles, cupboard opens ──
   pose("eat", ts("k1.5") - 0.15, 0.25);
   words("k1.5").concat(words("k1.6")).forEach(([w, t], i) => { const p = [520 - 20, 940 - 300]; crumbs(t + 0.05, 520 + 40, 940 - 250, 6); squash(t, 0.4);
@@ -887,7 +963,7 @@ window.CAST = (function () {
   cam(ts("k1.7"), { s: 1.38, x: 560, y: 700 }, 0.5, "power3.out");
   tl.to(R, { lookX: 18, lookY: -4, tilt: 4, duration: 0.3 }, ts("k1.8"));
   cam(ts("k1.8"), { s: 1.12, x: 1250, y: 600 }, 0.8);
-  tl.to(AN, { cupOpen: 1, duration: 0.45, ease: "back.out(1.6)" }, ts("k1.8") + 0.5); shake(ts("k1.8") + 0.6, 6);
+  tl.to(AN, { cupOpen: 1, duration: 0.45, ease: "back.out(1.6)" }, ts("k1.8") + 0.5); tl.to(AN, { msArms: 1, duration: 0.2 }, ts("k1.8")); tl.to(AN, { msArms: 0, msParty: 1, duration: 0.3 }, ts("k1.8") + 1.4); tl.to(AN, { msParty: 0, duration: 0.2 }, T.pond); shake(ts("k1.8") + 0.6, 6);
   pose("trumpet", te("k1.8") - 0.4, 0.3);
   // ── R4 · avalanche wipe → juggling (abone bandı) → throw + whip pan ──
   cut(T.avalCut, { s: 1.32, x: 560, y: 600 }); tl.set(AN, { cupOpen: 0 }, T.avalCut); tl.set(R, { tilt: 0, lookX: 0, lookY: -12 }, T.avalCut);
@@ -899,12 +975,18 @@ window.CAST = (function () {
   cut(T.pond, { s: 1.35, x: 200, y: 640 }); cam(T.pond, { s: 1.3, x: 1080, y: 640 }, 0.7, "expo.out"); tl.set(R, { dance: 0.2, lookX: 16, lookY: 0 }, T.pond); pose("rest", T.pond, 0.1);
   splash(32.62, LILY - 20, S, 10); splash(T.frogPop + 0.05, LILY, S - 10, 12); shake(T.frogPop, 6);
   cam(ts("k2.1") - 0.1, { s: 1.12, x: 940, y: 620 }, 1.0);
-  flyTo(1, -1, ts("k2.3") + 0.05, "cherry", () => { const m = frogMouth(ts("k2.3")); return [m[0] - 60, m[1] - 40]; });
-  flyTo(1, 1, ts("k2.4") + 0.1, "cherry", () => { const m = frogMouth(ts("k2.4")); return [m[0] - 60, m[1] - 40]; });
-  cam(ts("k2.3") - 0.2, { s: 1.25, x: 1060, y: 650 }, 0.8);
+  cam(ts("k2.3") - 0.2, { s: 1.02, x: 880, y: 620 }, 0.8);
+  tl.to(AN, { frArm: 1, duration: 0.2, ease: "back.out(2)" }, ts("k2.3")); tl.to(AN, { frArm: 0, duration: 0.25 }, ts("k2.3") + 0.5);
+  pose("up", ts("k2.3") + 0.3, 0.3); tl.to(R, { lookX: 16, lookY: -12, duration: 0.25 }, ts("k2.3") + 0.2);
+  xfer({ kind: "give", food: "cherry", giver: "frog", who: "fistik", hide: "lc0", t0: ts("k2.3") + 0.2, from: () => LILYCH[0], to: () => tipScene(ts("k2.3") + 1.05), hold: 0.15, size: 1.0 });
+  pose("eat", ts("k2.3") + 1.15, 0.3);
+  xfer({ kind: "eat", food: "cherry", who: "fistik", t0: ts("k2.3") + 1.2, from: () => tipScene(ts("k2.3") + 1.2), to: () => fistikMouth(ts("k2.3") + 1.6), hold: 0.5, dur: 0.4, size: 1.0 });
+  pose("rest", te("k2.3") + 0.3, 0.3); tl.to(R, { lookX: 16, lookY: 0, duration: 0.3 }, te("k2.3") + 0.3);
+  cam(ts("k2.4") - 0.1, { s: 1.32, x: 1180, y: 680 }, 0.6);
+  xfer({ kind: "eat", food: "cherry", who: "frog", hide: "lc1", t0: ts("k2.4") + 0.05, from: () => LILYCH[1], to: () => frogMouth(ts("k2.4")), hold: 0.5, size: 1.0 });
   // ── R6 · vırak: tongue lasso + counting; tilt up to the cherry tree ──
   cam(ts("k2.5") - 0.25, { s: 1.38, x: 1400, y: 600 }, 0.4, "power3.out");
-  words("k2.5").forEach(([w, t], i) => GRAB.push([t - 0.05, i]));
+  words("k2.5").forEach(([w, t], i) => { GRAB.push([t - 0.05, i]); tl.to(AN, { sac: 1, duration: 0.08 }, t + 0.32); tl.to(AN, { sac: 0, duration: 0.15 }, t + 0.5); });
   cam(ts("k2.6") - 0.1, { s: 1.62, x: 1230, y: 730 }, 0.5, "power2.out");
   words("k2.6").forEach(([w, t]) => { tl.to(AN, { frogOpen: 1, duration: 0.05 }, t); tl.to(AN, { frogOpen: 0, duration: 0.1 }, t + 0.18); jump("frog", t, 0.32); });
   cam(ts("k2.7") - 0.05, { s: 1.4, x: 1200, y: 720 }, 0.4);
@@ -918,8 +1000,10 @@ window.CAST = (function () {
   cut(T.corn, { s: 1.12, x: 1000, y: 640 }); tl.set(R, { dance: 0.25, lookX: 18, lookY: 0 }, T.corn); pose("rest", T.corn, 0.1);
   tl.to(AN, { scWave: 1, duration: 0.3 }, 62.4); tl.to(AN, { scWave: 0, duration: 0.4 }, 64.6);
   cam(62.6, { s: 1.32, x: 1420, y: 540 }, 0.7); cam(64.4, { s: 1.15, x: 1060, y: 660 }, 0.9);
-  flyTo(2, -1, ts("k3.3") + 0.05, "corn", () => duckBeak(ts("k3.3")));
-  flyTo(2, 1, ts("k3.4") + 0.1, "corn", () => duckBeak(ts("k3.4")));
+  cam(ts("k3.3") - 0.2, { s: 1.22, x: 1230, y: 760 }, 0.7);
+  xfer({ kind: "give", food: "corn", giver: "duck", who: "duckling", hide: "bco0", t0: ts("k3.3") + 0.2, from: () => [BASKET.x - 40, BASKET.y - 30], to: () => ducklingBeak(ts("k3.3") + 1.0), hold: 0.8 });
+  tl.to(AN, { duckOpen: 1, duration: 0.06 }, ts("k3.3") + 0.1); tl.to(AN, { duckOpen: 0, duration: 0.1 }, ts("k3.3") + 0.3);
+  xfer({ kind: "eat", food: "corn", who: "duck", hide: "bco1", t0: ts("k3.4") + 0.05, from: () => [BASKET.x + 30, BASKET.y - 30], to: () => duckBeak(ts("k3.4")), hold: 0.6 });
   // ── R9 · vak vak: the typewriter corn (ding!), rumble, "Gelin" → tablecloth ──
   cam(ts("k3.5") - 0.4, { s: 1.95, x: 1040, y: 860 }, 0.5, "power3.out");
   const TYPE = []; { const tw = words("k3.5").concat(words("k3.6")), t0 = ts("k3.5"), t1 = te("k3.6") - 0.1, n = 21; for (let i = 0; i < n; i++) TYPE.push([t0 + (t1 - t0) * i / n, Math.floor(i / 7), i % 7]); }
@@ -937,15 +1021,24 @@ window.CAST = (function () {
   const ANG = [{ s: 1.15, x: 980, y: 760 }, { s: 1.6, x: 700, y: 700 }, { s: 1.55, x: 1400, y: 780 }, { s: 1.35, x: 960, y: 820 }];
   beatsIn(ts("f.1") - 0.1, ts("f.3") - 0.4).filter((_, i) => i % 4 === 0).forEach((b, i) => cut(b, ANG[i % 4]));
   cut(ts("f.3") - 0.3, { s: 1.12, x: 980, y: 760 });
-  flyTo(3, -1, ts("f.3") + 0.05, "all", (q) => q === 0 ? tipScene(ts("f.3")) : q === 1 ? frogMouth(ts("f.3")) : duckBeak(ts("f.3")));
-  flyTo(3, 1, ts("f.4") + 0.1, "all", (q) => q === 0 ? tipScene(ts("f.4")) : q === 1 ? frogMouth(ts("f.4")) : duckBeak(ts("f.4")));
-  pose("offer", ts("f.3") - 0.1, 0.25); pose("rest", te("f.4"), 0.3);
+  { const t3 = ts("f.3") + 0.15, t4 = ts("f.4") + 0.05, ring = { hold: 0.7, life: 2.6 };            // the sharing ring: everyone gives to the next friend
+    xfer({ ...ring, kind: "give", food: "peanut", giver: "fistik", who: "frog", t0: t3, from: () => tipScene(t3), to: () => frogMouth(t3 + 0.9) });
+    xfer({ ...ring, kind: "give", food: "cherry", giver: "frog", who: "duck", t0: t3 + 0.08, from: () => frogHand(t3), to: () => duckBeak(t3 + 0.9), size: 0.8 });
+    xfer({ ...ring, kind: "give", food: "corn", giver: "duck", who: "fistik", t0: t3 + 0.16, from: () => duckBeak(t3), to: () => fistikMouth(t3 + 1.0), size: 0.8 });
+    [["fistik", "peanut", fistikMouth], ["frog", "cherry", frogMouth], ["duck", "corn", duckBeak]].forEach(([w, f, m], i) =>
+      xfer({ kind: "eat", food: f, who: w, t0: t4 + i * 0.06, from: () => [BOWL.x + (i - 1) * 70, BOWL.y - 30], to: () => m(t4 + 0.5), hold: 0.5, size: 0.8 })); }
+  pose("offer", ts("f.3") - 0.1, 0.25); pose("eat", ts("f.4"), 0.25); pose("rest", te("f.4") + 0.3, 0.3);
   beatsIn(ts("f.5") - 0.1, te("f.6")).filter((_, i) => i % 4 === 0).forEach((b, i) => cut(b, ANG[(i + 1) % 4]));
   words("f.5").forEach(([w, t]) => { crumbs(t + 0.05, 640, 680, 6); crumbs(t + 0.08, 1290, 760, 5); crumbs(t + 0.1, 1440, 860, 5); squash(t, 0.4); });
   cut(ts("f.7") - 0.2, { s: 1.15, x: 980, y: 760 }); words("f.7").forEach(([w, t]) => shake(t, 10)); tl.to(CAM, { r: 1.5, duration: 0.12, yoyo: true, repeat: 22, ease: "sine.inOut" }, ts("f.7"));
   tl.set(CAM, { r: 0 }, te("f.7") + 0.05);
-  cam(T.seat - 0.1, { s: 1.85, x: 960, y: 1040 }, 1.0, "power2.inOut");
+  cam(T.seat - 0.3, { s: 1.32, x: 960, y: 930 }, 1.0, "power2.inOut");                        // "Gelin!" — the mouse and the duckling run to the free cushions
+  tl.to(AN, { wave: 1, duration: 0.2 }, T.seat); tl.to(AN, { wave: 0, duration: 0.3 }, 108.9);
+  [T.seat + 0.1, T.seat + 0.8].forEach((t) => { tl.to(R, { A: 10, C: -110, L: 27, duration: 0.3, ease: "sine.inOut" }, t); tl.to(R, { A: 40, C: -130, L: 26, duration: 0.3, ease: "sine.inOut" }, t + 0.35); });
+  tl.to(AN, { wingUp: 1, duration: 0.25 }, T.seat); tl.to(AN, { wingUp: 0, duration: 0.3 }, 108.6);
+  EV.hearts.push([107.6, "mouse"], [107.7, "duckling"]);
   confetti(108.95, 960, 300); confetti(109.05, 560, 380); confetti(109.15, 1360, 380); shake(108.95, 10); jump("frog", 108.95, 0.5);
+  tl.to(AN, { msParty: 1, duration: 0.2 }, 108.9);
   tl.to(R, { jy: -60, duration: 0.2, ease: "power2.out" }, 108.95); tl.to(R, { jy: 0, duration: 0.25, ease: "power2.in" }, 109.15);
   // ── R12 · outro: night falls, lights on, dance; la la la karaoke; goodbye ──
   cam(te("f.8") + 0.2, { s: 1.0, x: 960, y: 620 }, 2.2, "power2.inOut");
@@ -953,7 +1046,7 @@ window.CAST = (function () {
   cam(113.5, { s: 1.12, x: 1000, y: 640 }, 6, "sine.inOut"); cam(119.5, { s: 1.0, x: 960, y: 620 }, 6, "sine.inOut");
   beatsIn(113, T.end - 0.5).filter((_, i) => i % 2 === 0).forEach((b, i) => jump("frog", b, 0.42));
   tl.to("#bug", { x: -360, duration: 0.4, ease: "back.in(1.6)" }, T.end - 0.6);
-  tl.to(R, { dance: 0.3, duration: 0.5 }, T.end - 0.6); tl.to(AN, { duckParty: 0.4, frogParty: 0.3, duration: 0.5 }, T.end - 0.6);
+  tl.to(R, { dance: 0.3, duration: 0.5 }, T.end - 0.6); tl.to(AN, { msParty: 0.4, duration: 0.5 }, T.end - 0.6); tl.to(AN, { duckParty: 0.4, frogParty: 0.3, duration: 0.5 }, T.end - 0.6);
   [T.end + 0.3, T.end + 1.0, T.end + 1.7].forEach((t) => { tl.to(R, { A: 10, C: -110, L: 27, duration: 0.3, ease: "sine.inOut" }, t); tl.to(R, { A: 40, C: -130, L: 26, duration: 0.3, ease: "sine.inOut" }, t + 0.35); });
   pose("rest", T.end + 2.6, 0.4, "sine.inOut");
 

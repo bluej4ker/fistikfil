@@ -90,17 +90,19 @@ def main():
     place(b, whoosh(0.6), 3.9, 0.35); place(b, slide_whistle(1100, 400, 0.5), 3.95, 0.15)
     for k in range(6): place(b, wood(900 + 80 * k, 0.08), 4.1 + k * 0.06, 0.25)
     place(b, bloop(500, 1200, 0.12), 4.45, 0.4)                                              # lid pop
-    # share plate: fly to camera + glass tap, and "bana"
-    def fly(t0, dur, side):
-        if side < 0:
-            place(b, whoosh(0.5), t0, 0.35); place(b, wood(1500, 0.12), t0 + dur * 0.5, 0.6); place(b, click(), t0 + dur * 0.5, 0.25)
-            place(b, bloop(800, 400, 0.12), t0 + dur, 0.3)
-        else:
-            place(b, slide_whistle(500, 1000, 0.3), t0, 0.12); place(b, bloop(700, 300, 0.12), t0 + dur, 0.35)
-    fly(ts("k1.3") + 0.05, 1.5, -1); fly(ts("k1.4") + 0.15, 0.8, 1)
-    fly(ts("k2.3") + 0.05, 1.5, -1); fly(ts("k2.4") + 0.1, 0.8, 1)
-    fly(ts("k3.3") + 0.05, 1.5, -1); fly(ts("k3.4") + 0.1, 0.8, 1)
-    fly(ts("f.3") + 0.05, 1.5, -1); fly(ts("f.4") + 0.1, 0.8, 1)
+    # sharing: give (whistle + soft pop + chime) and eat (munch chomps) — same times as xfer() in the template
+    def give(t0, dur=0.85):
+        place(b, slide_whistle(600, 1200, 0.3), t0, 0.12); place(b, bloop(800, 400, 0.12), t0 + dur, 0.3)
+        place(b, bell(NOTE(84), 0.7), t0 + dur + 0.1, 0.18); place(b, bell(NOTE(88), 0.7), t0 + dur + 0.2, 0.15); sparkle(t0 + dur + 0.15, b, (2093, 2637, 3136), 0.07, 0.08)
+    def eat(t0, dur=0.5):
+        for k in range(3): place(b, crunch(0.12), t0 + dur + 0.05 + k * 0.17, 0.35)
+    give(ts("k1.3") + 0.2); eat(ts("k1.4") + 0.05)
+    give(ts("k2.3") + 0.2); eat(ts("k2.3") + 1.2, 0.4); eat(ts("k2.4") + 0.05)
+    give(ts("k3.3") + 0.2); eat(ts("k3.4") + 0.05)
+    t3 = ts("f.3") + 0.15; [give(t3 + i * 0.08) for i in range(3)]; t4 = ts("f.4") + 0.05; [eat(t4 + i * 0.06) for i in range(3)]
+    for k in range(8): place(b, wood(700 + (k % 2) * 120, 0.05), 106.6 + k * 0.12, 0.25)          # newcomers patter in
+    place(b, bell(NOTE(79), 0.8), 107.6, 0.2); place(b, bell(NOTE(84), 0.8), 107.75, 0.2)
+    for k in range(6): place(b, wood(900 + (k % 2) * 140, 0.05), 7.55 + k * 0.12, 0.22)            # mouse scurries out
     for t in words("k1.5") + words("k1.6") + words("f.5"): place(b, crunch(), t + 0.03, 0.55)
     for tag in ("k1.7", "k2.7", "k3.7", "f.7"): place(b, rumble(te(tag) - ts(tag) + 0.2), ts(tag), 0.5 if tag != "f.7" else 0.7)
     t = ts("k1.8") + 0.45; place(b, creak(0.5), t, 0.5); sparkle(t + 0.4, b, (1568, 2093, 2637, 3136), 0.05, 0.15)
