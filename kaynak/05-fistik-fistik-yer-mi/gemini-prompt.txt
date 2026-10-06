@@ -1,11 +1,13 @@
 Okul öncesi çocuklar için kısa, akılda kalıcı, tekerleme gibi neşeli bir Türkçe çocuk şarkısı üret.
 Tempo: hızlı, yaklaşık 165 BPM, 4/4, düz ritim. Melodi: minör, muzip bir tekerleme; basit ve tekrarlı.
 Enstrümanlar: ukulele, ksilofon, el çırpma, hafif davul; ses taklitlerinde ("kıtır kıtır", "vırak", "vak vak", "gurul gurul") tahta blok sesi.
-Vokal: neşeli, net Türkçe diksiyonlu kadın vokal; son turda neşeli bir koro katılsın.
+Vokal: neşeli, net Türkçe diksiyonlu kadın vokal; finalde neşeli bir koro katılsın.
 Yapı: Önce 8 saniyelik tamamen enstrümantal giriş (vokal yok). Sonra aşağıdaki 3 kıtayı aynı melodiyle sırasıyla söyle, ardından 1. kıtayı final olarak koro ile bir kez daha söyle. Her kıtadan sonra 4 ölçü enstrümantal ara. Final bir ton yukarı, alkışlı ve "Hey!" ile bitsin.
 Süre: yaklaşık 2:00–2:30.
 
 Sözler (AYNEN, sırasıyla; tekerleme gibi ritmik ve vurgulu):
+
+[Enstrümantal giriş — 8 saniye, vokal YOK]
 
 [Kıta 1]
 Fıstık Fil fıstık yer,
