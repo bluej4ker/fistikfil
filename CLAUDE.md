@@ -345,7 +345,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   - Nakarat/pırt/final pencerelerinde her vuruşta kamera nabzı (+%3,5) ve parlama (`pulse(t)`); kurbağa "zıp"larda zıplar, "şıp"ta su sıçrar.
   - Final: "Herkes farklı, herkes güzel!" dev mesajı + konfeti.
 - Konuşan: soru satırları Fıstık, cevaplar hayvan; `lines.json` içinde `who` alanı (fistik/frog/fish/duck/all).
-- Açılış + abone bandı (0,1 ve ~44 sn) + kapanış `intro_ekle.py --lines lines.json` ile eklendi.
+- Açılış + abone bandı (0,1 ve ~77 sn) + kapanış `intro_ekle.py --lines lines.json` ile eklendi.
 
 ---
 
