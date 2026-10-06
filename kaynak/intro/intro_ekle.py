@@ -4,14 +4,14 @@
   python3 intro_ekle.py BOLUM.mp4 -o BOLUM-final.mp4 --abone 0.5,95.2
 
 --abone   : bandın başlayacağı saniyeler (bölüm videosunun kendi zamanına göre, açılış hariç).
---lines   : lines.json verilirse söz olmayan ≥ 4.7 sn'lik boşluklar otomatik bulunur (ilk boşluk her zaman,
+--lines   : lines.json verilirse söz olmayan ≥ 7.2 sn'lik boşluklar otomatik bulunur (ilk boşluk her zaman,
             sonra en fazla --max-abone kadar, aralarında en az 45 sn). Son boşluk atlanır; kapanış zaten abone çağrısı yapıyor.
 Gerekenler: renders/acilis-<1080|4k>.mp4, renders/kapanis-<..>.mp4, renders/abone-<..>.mov, renders/abone-sfx.m4a (./render.sh üretir)
 """
 import argparse, json, os, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BANNER = 4.5       # bant süresi (src/abone.html D)
+BANNER = 7.0       # bant süresi (src/abone.html D)
 PRE = 0.35         # söz hapı satır başından bu kadar önce görünür
 
 

@@ -65,7 +65,7 @@
   const OL = "#4C76B5";
   const TC = ["#3D9BFF", "#FF5A5F", "#FFC23D", "#3FBF6F", "#A66BFF", "#FF7A3D"];
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const CLICKS = [[1.45, 160 + 172 + 205, 845 + 70 + 37], [2.4, 160 + 612 + 55, 845 + 22 + 55]];   // [t, x, y] (ekran)
+  const CLICKS = [[2.4, 160 + 172 + 205, 845 + 70 + 37], [4.1, 160 + 612 + 55, 845 + 22 + 55]];   // [t, x, y] (ekran)
 /*RIG*/
 
   let fxh = "";
@@ -89,9 +89,9 @@
     E("btn").style.background = ST.done > 0.5 ? "#8E97AB" : "#E5484D";
     E("btn").style.boxShadow = ST.done > 0.5 ? "0 6px 0 #646C80" : "0 6px 0 #B3262B";
     E("bt1").style.opacity = (1 - ST.done).toFixed(3); E("bt2").style.opacity = ST.done.toFixed(3);
-    const bu = t - 2.45, ring = bu > 0 ? 22 * Math.sin(bu * 22) * Math.exp(-bu * 2.2) : 0;
+    const bu = t - 4.15, ring = bu > 0 ? 22 * Math.sin(bu * 18) * Math.exp(-bu * 1.4) : 0;
     E("bell").style.transform = `rotate(${ring.toFixed(2)}deg)`;
-    E("waves").setAttribute("opacity", (bu > 0 && bu < 1.4 ? Math.abs(Math.sin(bu * 11)) * (1 - bu / 1.4) : 0).toFixed(3));
+    E("waves").setAttribute("opacity", (bu > 0 && bu < 2.0 ? Math.abs(Math.sin(bu * 9)) * (1 - bu / 2.0) : 0).toFixed(3));
     // Fıstık
     el.rig.setAttribute("transform", `translate(0 ${(-4 * (1 - Math.cos(beatPh)) / 2).toFixed(2)})`);
     const ea = R.earAmp * 6 * Math.sin(beatPh);
@@ -125,21 +125,21 @@
   const tl = gsap.timeline({ paused: true });
   const blink = (t) => { tl.to(R, { blink: 1, duration: 0.07 }, t); tl.to(R, { blink: 0, duration: 0.09 }, t + 0.1); };
   const press = (t) => { tl.to(ST, { hs: 0.82, duration: 0.07 }, t - 0.05); tl.to(ST, { hs: 1, duration: 0.15, ease: "back.out(3)" }, t + 0.06); };
-  tl.to(ST, { badge: 1, duration: 0.5, ease: "back.out(2)" }, 0.0);
-  tl.to(ST, { pill: 1, duration: 0.45, ease: "power3.out" }, 0.25);
-  tl.to(ST, { hx: CLICKS[0][1] + 20, hy: CLICKS[0][2] + 10, duration: 0.6, ease: "power2.out" }, 0.7);
+  tl.to(ST, { badge: 1, duration: 0.6, ease: "back.out(2)" }, 0.0);
+  tl.to(ST, { pill: 1, duration: 0.7, ease: "power3.out" }, 0.35);
+  tl.to(ST, { hx: CLICKS[0][1] + 20, hy: CLICKS[0][2] + 10, duration: 0.85, ease: "power2.out" }, 1.3);
   press(CLICKS[0][0]);
   tl.to(ST, { btn: 0.9, duration: 0.07 }, CLICKS[0][0] - 0.05); tl.to(ST, { btn: 1, duration: 0.25, ease: "back.out(3)" }, CLICKS[0][0] + 0.06);
   tl.to(ST, { done: 1, duration: 0.15 }, CLICKS[0][0] + 0.05);
   tl.to(R, { mouth: 0.8, earAmp: 2.6, A: POSE.trumpet[0], C: POSE.trumpet[1], L: POSE.trumpet[2], duration: 0.2, ease: "back.out(2)" }, CLICKS[0][0] + 0.05);
-  tl.to(ST, { hx: CLICKS[1][1] + 10, hy: CLICKS[1][2] + 20, duration: 0.45, ease: "power2.inOut" }, 1.8);
+  tl.to(ST, { hx: CLICKS[1][1] + 10, hy: CLICKS[1][2] + 20, duration: 0.65, ease: "power2.inOut" }, 3.2);
   press(CLICKS[1][0]);
-  tl.to(R, { A: POSE.kick[0], C: POSE.kick[1], L: POSE.kick[2], duration: 0.06 }, 2.42); tl.to(R, { A: POSE.trumpet[0], C: POSE.trumpet[1], L: POSE.trumpet[2], duration: 0.2 }, 2.5);
-  tl.to(R, { mouth: 0.15, earAmp: 1, A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], duration: 0.4, ease: "power2.inOut" }, 3.1);
-  blink(0.9); blink(3.4);
-  tl.to(ST, { hx: 1150, hy: 1200, duration: 0.45, ease: "power2.in" }, 3.15);
-  tl.to(ST, { pill: 0, duration: 0.3, ease: "power2.in" }, 3.95);
-  tl.to(ST, { badge: 0, duration: 0.3, ease: "back.in(2)" }, 4.15);
+  tl.to(R, { A: POSE.kick[0], C: POSE.kick[1], L: POSE.kick[2], duration: 0.06 }, 4.12); tl.to(R, { A: POSE.trumpet[0], C: POSE.trumpet[1], L: POSE.trumpet[2], duration: 0.2 }, 4.2);
+  tl.to(R, { mouth: 0.15, earAmp: 1, A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], duration: 0.5, ease: "power2.inOut" }, 5.2);
+  blink(1.0); blink(3.0); blink(5.6);
+  tl.to(ST, { hx: 1150, hy: 1200, duration: 0.6, ease: "power2.in" }, 5.0);
+  tl.to(ST, { pill: 0, duration: 0.4, ease: "power2.in" }, 6.2);
+  tl.to(ST, { badge: 0, duration: 0.35, ease: "back.in(2)" }, 6.5);
 
   const master = gsap.timeline({ paused: true });
   const clock = { _t: 0 };

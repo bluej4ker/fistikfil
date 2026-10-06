@@ -152,7 +152,7 @@ Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama:
 [Final] ...
 ```
 
-- **Neden 8 sn vokalsiz giriş?** Videonun başında söz hapı yokken "Abone ol" bandı (4,5 sn) gösteriliyor (§6.6). Gemini yine de erken başlarsa bandı elle `--abone` ile başka bir boşluğa koy.
+- **Neden 8 sn vokalsiz giriş?** Videonun başında söz hapı yokken "Abone ol" bandı (7 sn) gösteriliyor (§6.6). Gemini yine de erken başlarsa bandı elle `--abone` ile başka bir boşluğa koy.
 - **Ticari kullanım:** Gemini çıktısının ticari hakları belirsiz. Uzun vadede **Suno Pro/Premier** (ticari hak veriyor), insan seslendirmen veya hibrit çözüm önerildi.
 - **Yerel model araştırması:**
   - **ACE-Step 1.5** önerildi: Türkçe sözle şarkı söyleyebilen açık model.
@@ -259,7 +259,7 @@ await pg.route("**/gsap.min.js", lambda r: r.fulfill(path=GSAP, content_type="ap
 
 - **Açılış (5,6 sn):** Turuncu-sarı zemin ve dönen ışınlar. Mavi portal "bloop" sesiyle açılır ve Fıstık içinden yükselir. Çevreden oyuncaklar uçuşur (balon, ördek, ksilofon, kurbağa, fıstık, davul, top, A küpü, kalp, yıldız, nota). Ardından "Fıstık Fil" harfleri yay üzerinde zıplayarak düşer; her harfte bir glockenspiel notası çalar. Alttan "Çocuk Şarkıları" hapı gelir. Fıstık hortumuyla "pırt pırt" yapar: notalar, kıvılcımlar, sarsıntı. Final akorunda konfeti atılır, sonra kamera portala dalar ve beyaz geçişle bölüme kesilir.
 - **Kapanış (7 sn):** Aynı animasyon. Hap "Abone olmayı unutma!" (zilli) olur, ikinci bir pırt pırt gelir ve lacivert kararma ile video biter.
-- **Abone bandı (4,5 sn, şeffaf ProRes 4444 MOV):** Sol altta turuncu halkalı rozet içinde Fıstık, beyaz hap içinde "FISTIK FİL" ve kırmızı "ABONE OL" butonu var. El imleci butona tıklar → "ABONE OLUNDU ✓" + mini konfeti. Sonra zile tıklar → zil sallanır. Tık ve zil sesleri `abone-sfx.m4a`'dan şarkının üstüne karıştırılır.
+- **Abone bandı (7 sn, şeffaf ProRes 4444 MOV):** Sol altta turuncu halkalı rozet içinde Fıstık, beyaz hap içinde "FISTIK FİL" ve kırmızı "ABONE OL" butonu var. El imleci butona tıklar → "ABONE OLUNDU ✓" + mini konfeti. Sonra zile tıklar → zil sallanır. Tık ve zil sesleri `abone-sfx.m4a`'dan şarkının üstüne karıştırılır.
 - **Müzik:** `make_jingle.py` ile tamamen sentetik (numpy), telifsiz. Karplus-Strong ukulele, glockenspiel, kaydıraklı düdük, testere dalgalı "fil trompeti", alkış. build.py bunu −11 LUFS'e normalize eder (Gemini şarkıları da yaklaşık −11 LUFS). HyperFrames render sesi ~4 dB kıstığı için render.sh orijinal jingle'ı videoya geri takar.
 - **Akış:**
 
@@ -271,7 +271,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 #   veya bandın zamanlarını elle ver: --abone 0.5,96.2   (bölümün kendi saniyeleri)
 ```
 
-- `--lines` söz olmayan ≥ 4,7 sn boşlukları bulur. Girişteki boşluk her zaman kullanılır; sonra en fazla `--max-abone` (2) bant konur, aralarında ≥ 45 sn olur. Son boşluk atlanır, çünkü kapanış zaten abone çağrısı yapıyor.
+- `--lines` söz olmayan ≥ 7,2 sn boşlukları bulur. Girişteki boşluk her zaman kullanılır; sonra en fazla `--max-abone` (2) bant konur, aralarında ≥ 45 sn olur. Son boşluk atlanır, çünkü kapanış zaten abone çağrısı yapıyor.
 - Bant sol altta durur. Söz hapı alt ortada olduğu için ikisi aynı anda görünmemeli; o yüzden bant sadece boşluklara konur.
 - Bulut ortamında jsdelivr CDN'i 403 veriyor. Bu projeler GSAP'ı `assets/gsap.min.js` yerel kopyasından yükler (build.py kopyalar).
 - Rig `03-ali-baba/src/rig_part.js`'ten alınır. build.py rig'deki `const E` satırını siler, çünkü şablon `E`'yi daha önce tanımlıyor.

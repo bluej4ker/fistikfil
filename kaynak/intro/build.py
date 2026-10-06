@@ -13,7 +13,7 @@ RIG = RIG.replace('const E = (id) => document.getElementById(id);', '')   # şab
 PROJ = {
     "acilis":  {"src": "src/intro.html", "MODE": "acilis",  "DUR": "5.6", "TITLE": "Açılış"},
     "kapanis": {"src": "src/intro.html", "MODE": "kapanis", "DUR": "7",   "TITLE": "Kapanış"},
-    "abone":   {"src": "src/abone.html", "MODE": "abone",   "DUR": "4.5", "TITLE": "Abone ol"},
+    "abone":   {"src": "src/abone.html", "MODE": "abone",   "DUR": "7", "TITLE": "Abone ol"},
 }
 
 

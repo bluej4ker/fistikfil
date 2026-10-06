@@ -148,13 +148,13 @@ def jingle(mode):
 
 
 def abone_sfx():
-    b = np.zeros(int(4.5 * SR))
+    b = np.zeros(int(7.0 * SR))
     place(b, bloop(300, 900, .14), .05, .4)
     click = lambda: rng.normal(0, 1, int(.02 * SR)) * np.exp(-np.arange(int(.02 * SR)) / (SR * .003))
-    place(b, click(), 1.45, .5); sparkle(1.5, b, (1568, 2093, 2637), .06, .2)
-    place(b, click(), 2.40, .5)
-    for k in range(4): place(b, bell(1760 if k % 2 == 0 else 1975, .5), 2.45 + k * .14, .22)
-    place(b, bloop(900, 300, .14), 4.0, .3)
+    place(b, click(), 2.40, .5); sparkle(2.45, b, (1568, 2093, 2637), .06, .2)
+    place(b, click(), 4.10, .5)
+    for k in range(4): place(b, bell(1760 if k % 2 == 0 else 1975, .5), 4.15 + k * .16, .22)
+    place(b, bloop(900, 300, .14), 6.45, .3)
     return b
 
 
