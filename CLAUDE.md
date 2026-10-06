@@ -14,7 +14,8 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 6. **Uzun render'ları ayrık başlat:** `(setsid nohup npx ... > log 2>&1 < /dev/null &)`. Düz `nohup` kabuk kapanınca ölüyor.
 7. **Kanal üzerinde yayına giden değişiklikleri** (başlık, açıklama, liste, ayar) kullanıcıdan madde madde açık onay almadan yapma.
 8. **Her video (Reels/Shorts hariç)** MUTLAKA açılış (5,6 sn) + söz olmayan girişte "Abone ol" bandı + kapanış (7 sn) ile teslim edilir (§6.6). Bu yüzden şarkı promptunda ilk 8 sn vokalsiz giriş şart (§5).
-9. **Telif:** Bilinen şarkılarda sözlerin anonim olduğunu MESAM/MSG'den teyit ettir; yüklemelerde "Çocuklara özel" ve "Değiştirilmiş/sentetik içerik: Evet" işaretli olsun.
+9. **Her bölümde saas-motion-kit yaratıcı geçişi zorunlu** (§4.1): mesaj + ton cümlesi, hareket defteri (STORYBOARD.md), `variety_audit.py` temiz, en az bir yeni bileşen, ~15 sn'de bir sürpriz; plan tablosu → eskiz sayfası → onay → animasyon.
+10. **Telif:** Bilinen şarkılarda sözlerin anonim olduğunu MESAM/MSG'den teyit ettir; yüklemelerde "Çocuklara özel" ve "Değiştirilmiş/sentetik içerik: Evet" işaretli olsun.
 
 ---
 
@@ -110,9 +111,9 @@ FistikFil/
    - Kelime zamanlarını çıkar.
    - Satır aralıklarını elle doğrula.
    - Gemini'nin atladığı/değiştirdiği dizeleri tespit et. **Ekrandaki söz, gerçekten söyleneni** yazmalı.
-4. **Sahne planı:**
-   - Her kıta için kamera, karakter girişi ve olay listesi.
-   - Kıta başı geniş plan, ses taklidinde yakın plan + sarsıntı.
+4. **Sahne planı + yaratıcı geçiş (§4.1):**
+   - `kaynak/NN-.../storyboard/STORYBOARD.md`: mesaj/ton cümlesi, ton yayı, motif ve sahne başına bir satırlık hareket defteri.
+   - `python3 <kit>/tools/variety_audit.py STORYBOARD.md` temiz çıkana kadar düzelt. Kullanıcıya plan tablosunu sun, onay al.
 5. **Kompozisyonu kur:**
    - `src/template.html` + `rig_part.js` + karakter dosyası + `lines.json`.
    - `build.py` bunları birleştirip `index.html` üretir.
@@ -129,6 +130,18 @@ FistikFil/
 9. **Teslim:**
    - Dosyaları kullanıcının `FistikFil/NN - Başlık/` klasörüne yaz (§8).
    - Sohbete 720p sıkıştırılmış önizleme gönder (30 MB limit).
+
+### 4.1 saas-motion-kit kuralları (Video 4 v2'den itibaren)
+
+Kaynak: https://github.com/tugrawork-creator/saas-motion-kit (`creative/`, `playbook/`, `tools/variety_audit.py`). Klonla: `git clone --depth 1 https://github.com/tugrawork-creator/saas-motion-kit`.
+
+- **Tek kural:** hiçbir video bir öncekinin kopyası gibi hissettirmemeli. Aynı geçiş arka arkaya yok; en az 3 geçiş ailesi (cut, carry, camera, mask, material, time); her geçiş "neden burada?" sorusuna cevap verir.
+- **Hareket defteri sütunları:** `# | start | dur | beat | tone | entrance | transition_out | ease | direction | palette | camera | components | new_component | sfx | notes`. Bilinçli tekrar `motif:` ile, sürpriz `surprise:` ile işaretlenir.
+- **Renk olayları:** perde başına bir renk olayı; arka plan film boyunca 1–2 kez değişir (tek arka plan "slayt" hissi verir).
+- **Yeni bileşen** (component forge): fiil → metafor → UI ilkeli → ters köşe → doğruluk kontrolü → kendine has hareket. Video 4'te: çıkartma tablosu.
+- **Ses:** sıcak efektler (tahta blok, marimba, yaylı "boing", su), saf sinüs bip yok. Video 4: `sfx.py` → şarkının altına `volume=0.32` ile karıştırılır.
+- **Teslim:** 4K render (`--resolution landscape-4k --quality delivery`), gerekirse Lanczos ile küçült.
+- v1 Küçük Kurbağa denetimden 19 uyarıyla kaldı (14 kez aynı "kamera yaklaşması", sürpriz yok); v2 temiz.
 
 ---
 
@@ -346,6 +359,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   - Final: "Herkes farklı, herkes güzel!" dev mesajı + konfeti.
 - Konuşan: soru satırları Fıstık, cevaplar hayvan; `lines.json` içinde `who` alanı (fistik/frog/fish/duck/all).
 - Açılış + abone bandı (0,1 ve ~77 sn) + kapanış `intro_ekle.py --lines lines.json` ile eklendi.
+- **v2 (kit kurallarıyla, kullanıcı "tam beğenemedim" dedi):** `storyboard/STORYBOARD.md` (18 satır, denetim temiz). Dekor değişimleri: dere → su altı (101–118 sn) → sahne (134–155 sn) → gün batımı + gökkuşağı (155 sn+). Geçişler: nilüfer taşıma, kamçı pan, dolly-out, odak irisi, vuruşta donma (polaroid), şekil eşleşmesi (halka → ?), dondur-geri sar (◀◀), su duvarı silmesi (ŞAP!), dalış, baloncuk taşıma, odak kayması, perde, hız rampası, gökkuşağı renk patlaması. Gag'ler: büyüteç, kuyruk kovalama, göbeklama, dev balık sürüsü, gaga, kulak rüzgârı. Yeni bileşen: çıkartma tablosu (✗/✓ → kalp). 4K teslim.
 
 ---
 
@@ -468,6 +482,10 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 | faster-whisper `av.open` hatası | Metadata okuma | librosa ile numpy ses ver |
 | `pkill` kendi kabuğunu öldürdü | Desen komut satırına da uyuyor | `ps … | awk | xargs kill` |
 | Chrome başlatma zaman aşımı | Geçici | Tekrar dene |
+| Kart/balon/tablo HyperFrames karelerinde görünmüyor | Aynı DOM öğesine farklı zamanlarda çok sayıda GSAP `to/fromTo` tween'i; HF kareleri farklı sırayla seek ediyor | Bu öğeleri `render(t)` içinde zaman takvimlerinden (QM, CHS, SLAP…) saf fonksiyonla çiz |
+| `hyperframes snapshot` "Navigation timeout of 10000 ms" | Geçici / ağır sayfa | `--timeout 60000` dene; olmazsa `scratchpad/shots.py` benzeri Playwright betiğiyle `main.seek(t)` + screenshot |
+| Bir svg 1920 px'e şişip kayboldu | `#under > svg` kuralı sonradan eklenen svg'lere de uydu | `:first-child` gibi dar seçici kullan |
+| Bekleme döngüsü hiç bitmedi | `pgrep -f "<desen>"` döngünün kendi komut satırını da buluyor | Bitiş için dosya işareti (`touch DONE`) kullan |
 | Gemini dizeleri atlıyor | Model davranışı | Ekrandaki sözleri gerçekten söylenene göre düzelt |
 
 ---
