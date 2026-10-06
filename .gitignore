@@ -12,3 +12,7 @@ node_modules/
 renders/
 Claude outputs/
 _to_delete/
+# intro projelerine build.py'nin kopyaladığı ortak dosyalar
+kaynak/intro/*/assets/fonts/
+kaynak/intro/*/assets/gsap.min.js
+*.log

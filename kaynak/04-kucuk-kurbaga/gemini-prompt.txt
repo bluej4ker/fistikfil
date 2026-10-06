@@ -3,7 +3,9 @@ Tempo: ~115 BPM, 4/4, majör ton. Enstrümanlar: ukulele, ksilofon, glockenspiel
 Vokal: tatlı, net Türkçe diksiyonlu kadın vokal + çocuk korosu nakaratlarda. Kelimeleri yavaş ve anlaşılır söyle, Türkçe vurguları doğru yap. Konuşma bölümlerini sevimli bir çocuk/karakter sesiyle, şarkı söylemeden konuşarak söyle.
 Ses efektleri sözlerde yazdığı gibi söylensin ("vırak vırak", "zıp zıp", "blup blup", "vak vak", "pırt pırt").
 Her kıta aynı melodiyle söylensin (soru–cevap şeklinde: ilk iki satır soru, son iki satır cevap).
-Süre: yaklaşık 2:30–3:00. Giriş 4 ölçü enstrümantal, her kıta arasında 2 ölçü ara.
+Süre: yaklaşık 2:30–3:00.
+ÇOK ÖNEMLİ — GİRİŞ: Şarkı en az 8 saniyelik (4 ölçü) tamamen enstrümantal bir girişle başlasın. İlk 8 saniyede hiçbir vokal, konuşma, koro ya da "hey/la la" sesi olmasın; sadece neşeli melodi çalsın. Giriş konuşması bu enstrümantal girişten SONRA başlasın.
+Her kıta arasında 2 ölçü enstrümantal ara olsun.
 Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama, hiçbir dizeyi değiştirme:
 
 [Giriş konuşması]

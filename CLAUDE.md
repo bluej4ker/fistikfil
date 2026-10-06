@@ -13,7 +13,8 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 5. **Tek kök kompozisyon:** Proje klasöründe `data-composition-id` taşıyan tek bir HTML olmalı; şablonlar `src/` içinde durur.
 6. **Uzun render'ları ayrık başlat:** `(setsid nohup npx ... > log 2>&1 < /dev/null &)`. Düz `nohup` kabuk kapanınca ölüyor.
 7. **Kanal üzerinde yayına giden değişiklikleri** (başlık, açıklama, liste, ayar) kullanıcıdan madde madde açık onay almadan yapma.
-8. **Telif:** Bilinen şarkılarda sözlerin anonim olduğunu MESAM/MSG'den teyit ettir; yüklemelerde "Çocuklara özel" ve "Değiştirilmiş/sentetik içerik: Evet" işaretli olsun.
+8. **Her yeni bölüm** açılış (5,6 sn) + söz olmayan girişte "Abone ol" bandı + kapanış (7 sn) ile teslim edilir (§6.6). Bu yüzden şarkı promptunda ilk 8 sn vokalsiz giriş şart (§5).
+9. **Telif:** Bilinen şarkılarda sözlerin anonim olduğunu MESAM/MSG'den teyit ettir; yüklemelerde "Çocuklara özel" ve "Değiştirilmiş/sentetik içerik: Evet" işaretli olsun.
 
 ---
 
@@ -54,6 +55,7 @@ FistikFil/
     ├── 01-gum-gum/               ← index.html (v3 kompozisyon), archive/v1-v2, build_v2.py, make_music.py, assets/gemini.mp3
     ├── 02-siril-siril-dere/      ← build.py + src/(template.html, rig_part.js, chars.js, lines.json) → index.html, thumb.html, assets/song.mp3
     ├── 03-ali-baba/              ← build.py, fw.py, lines_build.py, align.py, run.sh, src/(template.html, rig_part.js, cast2.js), index.html, brand/thumb.html, assets/song.m4a
+    ├── intro/                    ← açılış/kapanış/abone bandı: src/(intro.html, abone.html), build.py, make_jingle.py, render.sh, intro_ekle.py (§6.6)
     ├── reels/                    ← make_reel.py, make_cover.py, r1.json, r2.json, reel_lines_v1.json
     └── marka/                    ← extract.py, make.py (profil+banner), thumb.py, poses.json, _thumb.html
 ```
@@ -117,6 +119,7 @@ FistikFil/
    - Kritik anlarda `snapshot --at 10,22,46,... --no-end -o shots/` ile kare kontrolü.
    - Partiküllerin ve suyun doğru durumda olduğunu doğrula.
 7. **Render** (§6.4). 1080p ≈ 15 dk / 3 dk video; 4K ≈ 4 kat.
+   - Ardından `kaynak/intro/intro_ekle.py` ile açılış + abone bandı + kapanış eklenir (§6.6). YouTube'a bu final dosya yüklenir.
 8. **Paketle:**
    - Kapak: YouTube için 1280×720 jpg + 4K png.
    - youtube-metin.txt.
@@ -138,7 +141,9 @@ Türkçe bir çocuk şarkısı üret. Tarz: "Düt düt araba" gibi klasik, neşe
 Tempo: ~120 BPM, 4/4, majör ton. Enstrümanlar: ukulele, ksilofon, glockenspiel, el çırpma, hafif davul; sonda neşeli bir final.
 Vokal: tatlı, net Türkçe diksiyonlu kadın vokal + çocuk korosu nakaratlarda. Kelimeleri yavaş ve anlaşılır söyle, Türkçe vurguları doğru yap.
 Ses efektleri sözlerde yazdığı gibi söylensin (ör. "pırt pırt", "güm güm güm").
-Süre: yaklaşık 2:30–3:00. Giriş 4 ölçü enstrümantal, her kıta arasında 2 ölçü ara.
+Süre: yaklaşık 2:30–3:00.
+ÇOK ÖNEMLİ — GİRİŞ: Şarkı en az 8 saniyelik (4 ölçü) tamamen enstrümantal bir girişle başlasın. İlk 8 saniyede hiçbir vokal, konuşma, koro ya da "hey/la la" sesi olmasın; sadece neşeli melodi çalsın. Giriş konuşması bu enstrümantal girişten SONRA başlasın.
+Her kıta arasında 2 ölçü enstrümantal ara olsun.
 Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama:
 [Giriş konuşması] ...
 [Kıta 1] ...
@@ -147,6 +152,7 @@ Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama:
 [Final] ...
 ```
 
+- **Neden 8 sn vokalsiz giriş?** Videonun başında söz hapı yokken "Abone ol" bandı (4,5 sn) gösteriliyor (§6.6). Gemini yine de erken başlarsa bandı elle `--abone` ile başka bir boşluğa koy.
 - **Ticari kullanım:** Gemini çıktısının ticari hakları belirsiz. Uzun vadede **Suno Pro/Premier** (ticari hak veriyor), insan seslendirmen veya hibrit çözüm önerildi.
 - **Yerel model araştırması:**
   - **ACE-Step 1.5** önerildi: Türkçe sözle şarkı söyleyebilen açık model.
@@ -246,6 +252,30 @@ await pg.route("**/gsap.min.js", lambda r: r.fulfill(path=GSAP, content_type="ap
 
 - Bekleme: `wait_for_function("!!(window.__timelines && window.__timelines.main)")`. `!!` şart: GSAP timeline "thenable" olduğu için onsuz sonsuza kadar bekliyor.
 - Kare almak için `window.__timelines.main.seek(t)` ardından `screenshot`; DPR 2 ile net görüntü.
+
+### 6.6 Açılış, kapanış ve "Abone ol" bandı (`kaynak/intro/`)
+
+İlham: Tatlış Tavşan'ın logo introsu ve alt köşedeki "Abone ol" bandı. Bütün yeni bölümlerde aynı paket kullanılır.
+
+- **Açılış (5,6 sn):** Turuncu-sarı zemin ve dönen ışınlar. Mavi portal "bloop" sesiyle açılır ve Fıstık içinden yükselir. Çevreden oyuncaklar uçuşur (balon, ördek, ksilofon, kurbağa, fıstık, davul, top, A küpü, kalp, yıldız, nota). Ardından "Fıstık Fil" harfleri yay üzerinde zıplayarak düşer; her harfte bir glockenspiel notası çalar. Alttan "Çocuk Şarkıları" hapı gelir. Fıstık hortumuyla "pırt pırt" yapar: notalar, kıvılcımlar, sarsıntı. Final akorunda konfeti atılır, sonra kamera portala dalar ve beyaz geçişle bölüme kesilir.
+- **Kapanış (7 sn):** Aynı animasyon. Hap "Abone olmayı unutma!" (zilli) olur, ikinci bir pırt pırt gelir ve lacivert kararma ile video biter.
+- **Abone bandı (4,5 sn, şeffaf ProRes 4444 MOV):** Sol altta turuncu halkalı rozet içinde Fıstık, beyaz hap içinde "FISTIK FİL" ve kırmızı "ABONE OL" butonu var. El imleci butona tıklar → "ABONE OLUNDU ✓" + mini konfeti. Sonra zile tıklar → zil sallanır. Tık ve zil sesleri `abone-sfx.m4a`'dan şarkının üstüne karıştırılır.
+- **Müzik:** `make_jingle.py` ile tamamen sentetik (numpy), telifsiz. Karplus-Strong ukulele, glockenspiel, kaydıraklı düdük, testere dalgalı "fil trompeti", alkış. build.py bunu −11 LUFS'e normalize eder (Gemini şarkıları da yaklaşık −11 LUFS). HyperFrames render sesi ~4 dB kıstığı için render.sh orijinal jingle'ı videoya geri takar.
+- **Akış:**
+
+```bash
+cd kaynak/intro
+python3 build.py                 # acilis/, kapanis/, abone/ projeleri + jingle'lar (fontu/GSAP'ı kopyalar)
+./render.sh                      # renders/acilis-1080.mp4, kapanis-1080.mp4, abone-1080.mov (+ ./render.sh 4k)
+python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --lines ../04-kucuk-kurbaga/lines.json
+#   veya bandın zamanlarını elle ver: --abone 0.5,96.2   (bölümün kendi saniyeleri)
+```
+
+- `--lines` söz olmayan ≥ 4,7 sn boşlukları bulur. Girişteki boşluk her zaman kullanılır; sonra en fazla `--max-abone` (2) bant konur, aralarında ≥ 45 sn olur. Son boşluk atlanır, çünkü kapanış zaten abone çağrısı yapıyor.
+- Bant sol altta durur. Söz hapı alt ortada olduğu için ikisi aynı anda görünmemeli; o yüzden bant sadece boşluklara konur.
+- Bulut ortamında jsdelivr CDN'i 403 veriyor. Bu projeler GSAP'ı `assets/gsap.min.js` yerel kopyasından yükler (build.py kopyalar).
+- Rig `03-ali-baba/src/rig_part.js`'ten alınır. build.py rig'deki `const E` satırını siler, çünkü şablon `E`'yi daha önce tanımlıyor.
+- Yayındaki 3 video yeniden yüklenmedi; yeniden yüklemek izlenmeleri ve linki sıfırlar. Paket Küçük Kurbağa'dan itibaren kullanılır.
 
 ---
 
@@ -430,6 +460,8 @@ await pg.route("**/gsap.min.js", lambda r: r.fulfill(path=GSAP, content_type="ap
 
 - [ ] Kullanıcının Mac işlemcisi ve RAM bilgisi → ACE-Step kurulum rehberi.
 - [x] Bölüm 2 "Küçük Kurbağa": hikâye, söz ve Gemini promptu (`kaynak/04-kucuk-kurbaga/gemini-prompt.txt`). Sahne: Video 2'nin dere dekoru + `chars.js` kurbağa/balık/ördek/nilüfer yeniden kullanılacak.
+- [x] Açılış / kapanış / abone bandı paketi (`kaynak/intro/`, §6.6).
+- [ ] YouTube son ekranı için kapanışın 20 sn'lik bir varyantı (son ekran öğeleri en az 5 sn ister) düşünülebilir.
 - [ ] Küçük Kurbağa: kullanıcının Gemini'den şarkıyı üretip yüklemesi bekleniyor.
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
