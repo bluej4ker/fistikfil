@@ -148,6 +148,8 @@ Kaynak: https://github.com/tugrawork-creator/saas-motion-kit (`creative/`, `play
 ## 5. Şarkı üretimi (Gemini / Suno)
 
 - **Gemini:** Tek seferde en fazla **~3 dakika** üretiyor; 5 dakika istense bile 3'te kesiyor. Bazen dizeleri atlıyor veya sırasını değiştiriyor, bu yüzden her zaman transkripsiyonla doğrula.
+- **Söz tarzı (Video 5'ten itibaren kullanıcı tercihi): tekerleme.** Referans: Tatlış Tavşan "Anne Karnım Acıktı" (166 BPM, minör tekerleme, tek 10 dizelik kıta 6 kez tekrar, ayrı nakarat yok, kıta sonunda ses taklidi + kafiyeli kanca: "Tok tok tok / Sana yemek yok"). Kural: 8–10 kısa dize (6–7 hece), net kafiye, gündelik kelimeler, ahlak dersi vermeden soru-cevap; kıta 4–6 tur aynen tekrar eder, turda en fazla bir kelime değişir. Uzun, çok kıtalı, açıklamalı sözler beğenilmedi.
+- Gemini promptunda "yaramaz", şiddet çağrıştıran ses ("şak!"), ayrı "çocuk sesi" talebi ve var olan şarkı adları reddedilmeye yol açabilir ("Bu istek biraz ritmin dışına çıktı…"); bunlardan kaçın.
 - Kullanıcının tercih ettiği tarz: **"Düt düt araba" gibi klasik Türk çocuk şarkısı.** Neşeli, 110–125 BPM, ukulele/ksilofon/zil/alkış, net çocuk korosu veya sıcak kadın vokal, basit majör melodi.
 - **Prompt şablonu** (Gemini'ye Türkçe ver):
 
@@ -507,6 +509,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [x] Açılış / kapanış / abone bandı paketi (`kaynak/intro/`, §6.6).
 - [ ] YouTube son ekranı için kapanışın 20 sn'lik bir varyantı (son ekran öğeleri en az 5 sn ister) düşünülebilir.
 - [x] Küçük Kurbağa: şarkı geldi, video + kapak + YouTube metni hazırlandı (`04 - Küçük Kurbağa/`). Yükleme kullanıcıda.
+- [ ] Bölüm 5 "Fıstık Fıstık Yer mi?" (tekerleme, paylaşma): prompt `kaynak/05-fistik-fistik-yer-mi/gemini-prompt.txt`; kullanıcının Gemini'den şarkıyı üretmesi bekleniyor.
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
