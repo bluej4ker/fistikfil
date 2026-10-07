@@ -1,0 +1,8 @@
+{
+ "name": "fistik-fil-ari-viz-viz",
+ "private": true,
+ "type": "module",
+ "scripts": {
+  "render": "npx --yes hyperframes@0.8.78 render"
+ }
+}

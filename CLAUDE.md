@@ -35,6 +35,7 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 3 | Ali Baba'nın Çiftliği · Hayvan Sesleri · Fıstık Fil ile Çocuk Şarkıları | `QvaNHIh9SuA` | 3:01 | Yayında, 1080p, "Fıstık Fil ile Hayvanlar" listesinin 1. bölümü |
 | 4 | Küçük Kurbağa Kulağın Nerede? · Vücudumuzu Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:12 (açılış+kapanış dahil) | Hazır, yüklenmedi; "Fıstık Fil ile Hayvanlar" 2. bölüm |
 | 5 | Fıstık Fil Fıstık Yer · Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır, yüklenmedi; tekerleme tarzı ilk bölüm |
+| 6 | Arı Vız Vız · Renkleri ve Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | ~2:11 (açılış+kapanış dahil) | Hazır, yüklenmedi |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 
@@ -375,6 +376,15 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - **Gag'ler:** kurbağanın dil kementi + 1-2-3-4 sayma, daktilo mısır (taneler satır satır, satır sonunda "ding!"), korkuluğun şapkası uçar, herkesin karnı guruldar (titreşim + mor dalga çizgileri), "Gelin, sofrada yer var" → fare ve ördek yavrusu koşup boş minderlere oturur, gece "la la la"da zıplayan fıstık karaoke topu.
 - Kaynak: `src/template.html`, `src/cast.js` (fıstık, kiraz, mısır koçanı, kavanoz, dolap, korkuluk, tabaklar), `sfx.py`, `kapak.py`. `storyboard/STORYBOARD.md` + `eskiz.jpg`.
 
+### 7.6 Video 6 — "Arı Vız Vız" (117,9 s + açılış/kapanış) · özgün tekerleme
+
+- **Şarkı:** Gemini (`kaynak/06-ari-viz-viz/gemini-prompt.txt`), 112 BPM. Bu sefer giriş 17 sn ve 56–73 sn arası uzun müzik arası var → abone bandı ikisine de rahat sığdı. Gemini m4a içine `mov_text` altyazı (satır zamanları) da gömdü: `ffmpeg -i song.m4a -map 0:s:0 subs.srt` ile çıkar, kaba kılavuz olarak kullan (ses Opus).
+- **Dünya arının gözünden:** kovan içi (petek duvarı) → kırmızı gelincikler → yüzlü ayçiçekleri + kurbağa göleti → altın saatte lavanta → ağaçtaki kovanın altında bal şenliği.
+- **Arı yolu `beePos(t)`:** `BK` anahtar kareleri (t, x, y, yön) arasında smoothstep + havada süzülme; özel bölümler: takla (k1.5), sekiz figürlü arı dansı (`T.wag0–wag1`), hapşırık sonrası silkelenme. Uçuş izi (motif) son 1,7 sn'nin konumlarından kesik çizgi; başlığı gökyüzüne yazar (clipPath genişliği = arının x'i).
+- **Yeni bileşenler:** petek sayacı (sağ üst HUD, her kıtada bir göz o çiçeğin renginde dolar, sonunda bütün petek altın parlar), kuş bakışı harita (yol kovana nokta nokta çizilir), altıgen silme geçişi (`.hw` ızgara, merkezden uzaklığa göre ölçek), finalde altıgen portre panelleri (Fıstık rig'i `innerHTML` id'leri silinerek klonlanır).
+- **Gag'ler:** antenler çalar saat gibi çınlar + esneme, gelincik trambolin, takla, kelebek kovalamaca (kelebek dönüp arıyı kovalar) → sarıya renk eşleşmeli kesme, "HAPŞU!" polen patlaması, kurbağa bal damlasını diliyle yakalar, Fıstık kulaklarını çırpıp uçmaya çalışır ve "güm" düşer, arı sürüsü kalp olur, bal şelalesi, herkes aynı anda kaşığı ağzına götürür.
+- **Netlik (kullanıcı isteği):** konturlar kalın ve renkli, arka planlar açık/sade, karakterler doygun; bulanıklaştırma (blur) yok; final `intro_ekle.py --crf 16 --preset slow`; önizleme 1080p.
+
 ---
 
 ## 8. Teslimat (kullanıcının bilgisayarı)
@@ -493,6 +503,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 | SVG dönme merkezi kayıyor | `transform-origin` SVG'de güvenilmez | `rotate(a x y)` + `data-o` pivot |
 | Lint: birden fazla kök kompozisyon | Şablon HTML'ler de `data-composition-id` taşıyor | Şablonları `src/` altına taşı |
 | Reels altyazısı turuncu hap gibi | `.sub` sınıfı çakışması | `.rsub` |
+| Reels videosu 16:9 sıkışmış / yanlış görüntü | `make_reel.py` ses kaynağı olarak 4K video verilince ffmpeg en büyük görüntü akışını seçti | `-map 0:v:0 -map 1:a:0` + `setsar=1` (düzeltildi) |
 | Git LFS push "verify: Forbidden" | Bulut proxy'si lfs.github.com'u engelliyor | LFS yok; 100 MB üstü videoyu 2 parçaya böl + birlestir.sh |
 | Whisper "Altyazı M.K." | Şarkılı Türkçe vokalde halüsinasyon | demucs + faster-whisper + söz promptu + elle satır aralığı |
 | faster-whisper `av.open` hatası | Metadata okuma | librosa ile numpy ses ver |
@@ -522,6 +533,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [ ] YouTube son ekranı için kapanışın 20 sn'lik bir varyantı (son ekran öğeleri en az 5 sn ister) düşünülebilir.
 - [x] Küçük Kurbağa: şarkı geldi, video + kapak + YouTube metni hazırlandı (`04 - Küçük Kurbağa/`). Yükleme kullanıcıda.
 - [x] Bölüm 5 "Fıstık Fil Fıstık Yer" (tekerleme, paylaşma): video + kapak + YouTube metni `05 - Fıstık Fil Fıstık Yer/`. Yükleme kullanıcıda.
+- [x] Bölüm 6 "Arı Vız Vız": video + kapak + YouTube metni `06 - Arı Vız Vız/`. Yükleme kullanıcıda.
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.

@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Arı Vız Vız · Fıstık Fil</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      /* Baloo 2 · SIL OFL 1.1 (assets/fonts/OFL-Baloo2.txt) */
+      @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #FFE9A8; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Baloo 2", sans-serif; font-weight: 800; color: #2B2D42; background: #FFE9A8; }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      #shake { position: absolute; inset: 0; }
+      .full { position: absolute; left: 0; top: 0; width: 1920px; height: 1300px; overflow: visible; }
+      #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 0 0; }
+      #char { position: absolute; inset: 0; overflow: visible; transform-origin: 300px 620px; }
+      #char svg { width: 600px; height: 640px; overflow: visible; }
+      .snd { left: 0; top: 0; font-size: 92px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 14px #fff; paint-order: stroke fill; text-shadow: 0 8px 0 rgba(0,0,0,.14); transform-origin: 50% 60%; }
+      .conf { width: 26px; height: 30px; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+      .crumb { width: 14px; height: 14px; border-radius: 50%; background: #FFE45C; border: 3px solid #E0A800; }
+      .ov { inset: 0; pointer-events: none; }
+      #bug { left: 40px; top: 36px; padding: 6px 26px 0; border-radius: 30px; background: rgba(255,255,255,.95); font-size: 36px; color: #3D7DD8; z-index: 60; box-shadow: 0 4px 0 rgba(0,0,0,.1); }
+      #bug b { color: #F59E1B; }
+      #lyric { left: 0; right: 0; top: 34px; height: 90px; display: flex; justify-content: center; z-index: 60; }
+      .line { opacity: 0; position: absolute; top: 0; padding: 4px 40px 0; border-radius: 42px; background: #fff; font-size: 60px; line-height: 82px; white-space: nowrap; color: #8A93A6; box-shadow: 0 6px 0 rgba(0,0,0,.1); border: 4px solid #FFD43B; }
+      .line span { display: inline-block; margin: 0 11px; }
+      .big { display: inline-block; font-size: 150px; line-height: 1; }
+      .big span { display: inline-block; -webkit-text-stroke: 12px #fff; paint-order: stroke fill; text-shadow: 0 9px 0 rgba(0,0,0,.13); }
+      #end { left: 0; top: 0; width: 760px; height: 420px; opacity: 0; z-index: 55; }
+      #end .rope { position: absolute; top: 0; width: 8px; height: 110px; background: #3B2A1F; border-radius: 4px; }
+      #end .sign { position: absolute; left: 0; right: 0; top: 100px; padding: 30px 0 34px; text-align: center; background: #FFF4DC; border: 12px solid #D9891A; border-radius: 40px; box-shadow: 0 14px 0 rgba(60,30,0,.25); }
+      .bye { margin-top: 8px; font-size: 62px; font-weight: 700; line-height: 1.3; color: #fff; display: inline-block; padding: 8px 40px 0; border-radius: 50px; background: #3D9BFF; }
+      #flash { inset: 0; background: #fff; opacity: 0; z-index: 48; pointer-events: none; }
+      #glow { inset: 0; background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.5) 0, rgba(255,255,255,0) 60%); opacity: 0; mix-blend-mode: soft-light; z-index: 20; pointer-events: none; }
+      #hapsu { left: 0; top: 0; font-size: 210px; line-height: 1; color: #FFC21A; -webkit-text-stroke: 18px #fff; paint-order: stroke fill; text-shadow: 0 12px 0 rgba(0,0,0,.18); opacity: 0; z-index: 47; white-space: nowrap; }
+      #panels { z-index: 45; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="117.94" data-width="1920" data-height="1080">
+      <audio id="song" src="assets/song.m4a" data-start="0" data-duration="117.94" data-volume="1"></audio>
+      <section id="world" class="clip" data-start="0" data-duration="117.94" data-track-index="0" data-layout-allow-overflow>
+        <div id="cam" data-layout-allow-overflow>
+          <div id="shake" data-layout-allow-overflow>
+            <svg id="setHive" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setPoppy" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setSun" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setLav" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setParty" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="backActors" class="full" viewBox="0 0 1920 1300"><ellipse id="fShadow" rx="120" ry="26" fill="url(#gShadow)"/></svg>
+            <div id="charWrap" class="abs"><div id="char"></div></div>
+            <svg id="actors" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="fxSvg" class="full" viewBox="0 0 1920 1300"></svg>
+            <div id="crumbBox"></div>
+            <div id="sndBox"></div>
+            <div id="confBox"></div>
+          </div>
+        </div>
+        <div id="glow" class="abs"></div>
+        <svg id="pollenOv" class="abs ov" viewBox="0 0 1920 1080" style="z-index:44"></svg>
+        <div id="hapsu" class="abs">HAPŞU!</div>
+        <svg id="mapOv" class="abs ov" viewBox="0 0 1920 1080" style="z-index:43;opacity:0"></svg>
+        <svg id="panels" class="abs ov" viewBox="0 0 1920 1080" style="opacity:0"></svg>
+        <svg id="hexWipe" class="abs ov" viewBox="0 0 1920 1080" style="z-index:49"></svg>
+        <svg id="comb" class="abs" viewBox="0 0 300 130" style="left:1590px;top:24px;width:300px;height:130px;z-index:58;opacity:0;overflow:visible"></svg>
+        <div id="flash" class="abs"></div>
+        <div id="bug" class="abs">Fıstık <b>Fil</b></div>
+        <div id="lyric" class="abs"></div>
+        <div id="end" class="abs"><div class="rope" style="left:150px"></div><div class="rope" style="right:150px"></div>
+          <div class="sign"><div class="big" id="endBig"></div><br/><div class="bye">Hoşça kal!</div></div></div>
+      </section>
+    </div>
+
+    <script>
+// Fıstık Fil · Arı Vız Vız — kadro (Bölüm 5'ten) + arı ve bahçe eşyaları (saf SVG dizeleri, konturlu, bebek dostu)
+window.CAST = (function () {
+  const INK = "#2B2D42";
+  // ── kadro (Küçük Kurbağa'dan) ──
+  // ── ortak gradyanlar (bir kez, #actors içine) ──
+  const defs = () => `<defs>
+    <radialGradient id="gFrogB" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#A8EC86"/><stop offset=".6" stop-color="#6CCB5A"/><stop offset="1" stop-color="#46A23F"/></radialGradient>
+    <radialGradient id="gFrogBelly" cx="50%" cy="35%" r="70%"><stop offset="0" stop-color="#F2FFE0"/><stop offset="1" stop-color="#C8F0A8"/></radialGradient>
+    <radialGradient id="gDuckB" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#FFF6B8"/><stop offset=".6" stop-color="#FFDB4D"/><stop offset="1" stop-color="#F7B92A"/></radialGradient>
+    <radialGradient id="gDuckK" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#FFFBD8"/><stop offset=".6" stop-color="#FFEC8A"/><stop offset="1" stop-color="#FFD24D"/></radialGradient>
+    <linearGradient id="gBeak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB547"/><stop offset="1" stop-color="#F07F0C"/></linearGradient>
+    <radialGradient id="gMouse" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F1ECF8"/><stop offset=".6" stop-color="#CFC6E2"/><stop offset="1" stop-color="#A99FC0"/></radialGradient>
+    <radialGradient id="gShadow"><stop offset="0" stop-color="#1E2A40" stop-opacity=".28"/><stop offset="1" stop-color="#1E2A40" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gBee" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#FFF4A8"/><stop offset=".55" stop-color="#FFD43B"/><stop offset="1" stop-color="#F5A800"/></radialGradient>
+    <radialGradient id="gWing" cx="40%" cy="35%" r="80%"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset="1" stop-color="#BFE6FF" stop-opacity=".75"/></radialGradient>
+    <radialGradient id="gPoppy" cx="50%" cy="70%" r="80%"><stop offset="0" stop-color="#FF7A6B"/><stop offset=".7" stop-color="#F0373A"/><stop offset="1" stop-color="#C81E2A"/></radialGradient>
+    <radialGradient id="gSunP" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#FFC21A"/><stop offset="1" stop-color="#FFE45C"/></radialGradient>
+    <radialGradient id="gSunC" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#A8672E"/><stop offset="1" stop-color="#6E3F17"/></radialGradient>
+    <radialGradient id="gPurp" cx="50%" cy="60%" r="80%"><stop offset="0" stop-color="#D8A8FF"/><stop offset=".7" stop-color="#A66BFF"/><stop offset="1" stop-color="#7B45D6"/></radialGradient>
+    <radialGradient id="gHive" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#FFE7A0"/><stop offset=".6" stop-color="#F6B93B"/><stop offset="1" stop-color="#D9891A"/></radialGradient>
+    <linearGradient id="gHoney" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD54A"/><stop offset="1" stop-color="#F29A0E"/></linearGradient>
+    <radialGradient id="gHeart" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#FFB3C6"/><stop offset="1" stop-color="#FF4F7B"/></radialGradient></defs>`;
+  const shadow = (rx = 90) => `<ellipse class="shd" cx="0" cy="2" rx="${rx}" ry="${rx * 0.22}" fill="url(#gShadow)"/>`;
+  const heart = (s = 1) => `<g transform="scale(${s})"><path d="M0 22 C-26 4 -30 -8 -22 -18 C-14 -26 -4 -22 0 -12 C4 -22 14 -26 22 -18 C30 -8 26 4 0 22Z" fill="url(#gHeart)" stroke="#D93A63" stroke-width="3.5" stroke-linejoin="round"/><ellipse cx="-12" cy="-12" rx="5" ry="3.5" fill="#fff" opacity=".8" transform="rotate(-30 -12 -12)"/></g>`;
+  // göz: sklera + bebek (.pup) + kapak (.lid, scaleY ile kırpılır). p = benzersiz önek
+  const eye = (p, cx, cy, rx, ry, skin, ol, pr = 0.55) => `<clipPath id="${p}"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/></clipPath>
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" stroke="${ol}" stroke-width="3.5"/>
+    <g clip-path="url(#${p})"><g class="pup"><circle cx="${cx + rx * 0.12}" cy="${cy + ry * 0.12}" r="${Math.min(rx, ry) * pr}" fill="${INK}"/><circle cx="${cx + rx * 0.32}" cy="${cy - ry * 0.12}" r="${Math.min(rx, ry) * pr * 0.36}" fill="#fff"/><circle cx="${cx - rx * 0.1}" cy="${cy + ry * 0.4}" r="${Math.min(rx, ry) * pr * 0.16}" fill="#fff"/></g>
+      <rect class="lid" data-top="${cy - ry}" x="${cx - rx - 2}" y="${cy - ry - 2}" width="${rx * 2 + 4}" height="${ry * 2 + 4}" fill="${skin}" transform="translate(0 ${cy - ry}) scale(1 0) translate(0 ${-(cy - ry)})"/></g>`;
+
+  // Kurbağa: orijin alt orta. Gruplar: .body .legs .armL .armR .sac .mHappy .mOpen .pup .lid .hatC .shd
+  const frog = (p = "fr") => `${shadow(96)}<g class="body">
+    <g class="legs"><path d="M-96 -6 Q-104 -40 -62 -44 Q-30 -40 -36 -6Z" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="4.5" stroke-linejoin="round"/><path d="M96 -6 Q104 -40 62 -44 Q30 -40 36 -6Z" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="4.5" stroke-linejoin="round"/>
+      <path d="M-104 0 q8 -14 18 -4 q8 -12 18 -2 q8 -10 16 2Z" fill="#58B848" stroke="#2F7A2B" stroke-width="3.5" stroke-linejoin="round"/><path d="M104 0 q-8 -14 -18 -4 q-8 -12 -18 -2 q-8 -10 -16 2Z" fill="#58B848" stroke="#2F7A2B" stroke-width="3.5" stroke-linejoin="round"/></g>
+    <ellipse cx="0" cy="-60" rx="80" ry="62" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="5"/>
+    <ellipse cx="0" cy="-40" rx="52" ry="34" fill="url(#gFrogBelly)"/>
+    <g fill="#4FAE48" opacity=".55"><circle cx="-52" cy="-82" r="7"/><circle cx="56" cy="-70" r="9"/><circle cx="40" cy="-96" r="5"/></g>
+    <g class="armL"><path d="M-46 -40 Q-62 -14 -50 -4" stroke="#2F7A2B" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M-46 -40 Q-62 -14 -50 -4" stroke="#7FD76A" stroke-width="8" fill="none" stroke-linecap="round"/></g>
+    <g class="armR"><path d="M46 -40 Q62 -14 50 -4" stroke="#2F7A2B" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M46 -40 Q62 -14 50 -4" stroke="#7FD76A" stroke-width="8" fill="none" stroke-linecap="round"/></g>
+    <ellipse class="sac" cx="0" cy="-58" rx="30" ry="0" fill="#E9FFD6" stroke="#2F7A2B" stroke-width="3" opacity=".95"/>
+    <circle cx="-40" cy="-114" r="31" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="5"/><circle cx="40" cy="-114" r="31" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="5"/>
+    ${eye(p + "L", -40, -116, 21, 22, "#6CCB5A", "#2F7A2B")}${eye(p + "R", 40, -116, 21, 22, "#6CCB5A", "#2F7A2B")}
+    <ellipse cx="-54" cy="-74" rx="13" ry="8" fill="#FF8FAB" opacity=".7"/><ellipse cx="54" cy="-74" rx="13" ry="8" fill="#FF8FAB" opacity=".7"/>
+    <path class="mHappy" d="M-44 -80 Q0 -48 44 -80" stroke="#1F4D1C" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <g class="mOpen" opacity="0"><path d="M-44 -82 Q0 -86 44 -82 Q0 -28 -44 -82Z" fill="#8C2F45" stroke="#1F4D1C" stroke-width="4.5" stroke-linejoin="round"/><ellipse cx="0" cy="-58" rx="16" ry="8" fill="#FF8FA3"/></g>
+    <g class="hatC" transform="translate(0 -144)">${cherries(1.1)}</g></g>`;
+  // Ördek: orijin ayak altı orta, sola bakar. Gruplar: .legL .legR .body .wing .head .beakTop .beakBot .pup .lid .shd
+  const DUCKC = { body: "url(#gDuckB)", ol: "#C98512", skin: "#FFDB4D" };
+  const duck = (p = "dk", baby = false) => { const g = baby ? "url(#gDuckK)" : DUCKC.body, skin = baby ? "#FFEC8A" : DUCKC.skin, ol = DUCKC.ol;
+    const leg = (cls, x) => `<g class="${cls}" data-x="${x}"><path d="M${x} -40 L${x} -10" stroke="#E07B0C" stroke-width="9" stroke-linecap="round"/><path d="M${x - 24} 0 Q${x - 14} -16 ${x} -12 Q${x + 10} -16 ${x + 16} 0Z" fill="#FF9F1C" stroke="#C25F05" stroke-width="3.5" stroke-linejoin="round"/></g>`;
+    return `${shadow(80)}${leg("legR", 14)}<g class="body">
+    <path d="M60 -96 Q96 -112 92 -80 Q86 -60 70 -66Z" fill="${g}" stroke="${ol}" stroke-width="4.5" stroke-linejoin="round"/>
+    <ellipse cx="10" cy="-78" rx="76" ry="56" fill="${g}" stroke="${ol}" stroke-width="5"/>
+    <ellipse cx="-4" cy="-62" rx="46" ry="28" fill="#FFF6C8" opacity=".7"/>
+    <g class="wing"><path d="M6 -100 Q58 -112 74 -80 Q62 -54 18 -64 Q4 -80 6 -100Z" fill="${g}" stroke="${ol}" stroke-width="4" stroke-linejoin="round"/><path d="M30 -70 q10 6 20 0 M24 -82 q12 6 26 0" stroke="${ol}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></g></g>
+    ${leg("legL", -18)}
+    <g class="head"><circle cx="-40" cy="-150" r="${baby ? 50 : 44}" fill="${g}" stroke="${ol}" stroke-width="5"/>
+      <path d="M-44 ${baby ? -198 : -192} q-6 -18 4 -24 q2 12 6 20 q4 -14 14 -14 q-4 12 -8 20Z" fill="${g}" stroke="${ol}" stroke-width="3.5" stroke-linejoin="round"/>
+      ${eye(p + "E", -52, -158, 13, 16, skin, ol, 0.6)}<ellipse cx="-30" cy="-136" rx="11" ry="7" fill="#FF8FAB" opacity=".7"/>
+      <path class="beakBot" d="M-78 -138 Q-108 -136 -114 -130 Q-98 -120 -76 -128Z" fill="#F07F0C" stroke="#C25F05" stroke-width="3.5" stroke-linejoin="round"/>
+      <path class="beakTop" d="M-78 -150 Q-110 -152 -118 -140 Q-104 -132 -76 -138Z" fill="url(#gBeak)" stroke="#C25F05" stroke-width="3.5" stroke-linejoin="round"/></g>`; };
+  // Fare: orijin alt orta, sağa bakar. Gruplar: .tail .body .arms .head .earL .earR .mHappy .mOpen .pup .lid .shd
+  const mouse = (p = "ms") => `${shadow(60)}
+    <path class="tail" d="M-30 -14 Q-80 -10 -84 -50 Q-86 -80 -60 -80" stroke="#E9A3B8" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <g class="body"><ellipse cx="-14" cy="-6" rx="16" ry="9" fill="#F7B3C8" stroke="#6E648A" stroke-width="3"/><ellipse cx="22" cy="-6" rx="16" ry="9" fill="#F7B3C8" stroke="#6E648A" stroke-width="3"/>
+      <path d="M-40 -14 Q-46 -80 4 -86 Q50 -82 44 -14 Q2 0 -40 -14Z" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5" stroke-linejoin="round"/>
+      <ellipse cx="4" cy="-38" rx="24" ry="22" fill="#FBF7FF"/>
+      <g class="arms"><path d="M-24 -56 Q-14 -40 -4 -46" stroke="#6E648A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M-24 -56 Q-14 -40 -4 -46" stroke="#E4DDF0" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M30 -56 Q22 -40 12 -46" stroke="#6E648A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M30 -56 Q22 -40 12 -46" stroke="#E4DDF0" stroke-width="6" fill="none" stroke-linecap="round"/></g></g>
+    <g class="head"><g class="earL"><circle cx="-34" cy="-152" r="30" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5"/><circle cx="-34" cy="-152" r="18" fill="#F7B3C8"/></g>
+      <g class="earR"><circle cx="40" cy="-150" r="30" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5"/><circle cx="40" cy="-150" r="18" fill="#F7B3C8"/></g>
+      <ellipse cx="4" cy="-112" rx="46" ry="40" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5"/>
+      ${eye(p + "L", -12, -118, 10, 13, "#DCD4EA", "#6E648A", 0.62)}${eye(p + "R", 22, -118, 10, 13, "#DCD4EA", "#6E648A", 0.62)}
+      <ellipse cx="-22" cy="-96" rx="8" ry="5" fill="#FF8FAB" opacity=".7"/><ellipse cx="36" cy="-96" rx="8" ry="5" fill="#FF8FAB" opacity=".7"/>
+      <circle cx="10" cy="-100" r="7" fill="#FF7FA0" stroke="#6E648A" stroke-width="2.5"/>
+      <path d="M-4 -100 L-34 -104 M-4 -96 L-32 -92 M24 -100 L54 -104 M24 -96 L52 -92" stroke="#6E648A" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      <path class="mHappy" d="M0 -90 Q10 -82 20 -90" stroke="#4A3F63" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path class="mOpen" d="M0 -91 Q10 -92 20 -91 Q10 -70 0 -91Z" fill="#8C2F45" stroke="#4A3F63" stroke-width="3" opacity="0"/></g>`;
+  const lily = (s = 1) => `<g transform="scale(${s})"><ellipse cx="0" cy="0" rx="90" ry="26" fill="#4FAE48" stroke="#2E7D32" stroke-width="4"/><path d="M0 0 L60 -20 L66 4Z" fill="#7FD3F5"/>
+    <g transform="translate(-50 -10)"><circle r="12" fill="#FF8FB1"/><circle r="5" fill="#FFD84D"/></g></g>`;
+  const rock = (w, h, c = "#A8A29E") => `<ellipse cx="0" cy="0" rx="${w}" ry="${h}" fill="${c}" stroke="#6B6560" stroke-width="4"/><ellipse cx="${-w * 0.3}" cy="${-h * 0.35}" rx="${w * 0.3}" ry="${h * 0.2}" fill="#fff" opacity=".25"/>`;
+
+  // ── yiyecekler ──
+  // Fıstık (kabuklu): orijin merkez, ~70×36
+  const peanut = (s = 1) => `<g transform="scale(${s})"><path d="M-34 -2 C-36 -20 -18 -22 -10 -14 C-4 -8 4 -8 10 -14 C18 -22 36 -20 34 -2 C36 16 18 22 10 14 C4 8 -4 8 -10 14 C-18 22 -36 18 -34 -2Z" fill="#E8C07A" stroke="#8A5A2B" stroke-width="4" stroke-linejoin="round"/>
+    <g fill="#C99A55"><circle cx="-24" cy="-4" r="2.6"/><circle cx="-18" cy="6" r="2.6"/><circle cx="-14" cy="-8" r="2.4"/><circle cx="20" cy="-6" r="2.6"/><circle cx="24" cy="5" r="2.6"/><circle cx="14" cy="4" r="2.4"/></g>
+    <path d="M-28 -10 Q-22 -16 -14 -12" stroke="#FFF3D6" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/></g>`;
+  // kiraz çifti: orijin sap tepesi
+  function cherries(s = 1) { return `<g transform="scale(${s})"><path d="M0 0 Q-6 18 -16 34 M0 0 Q8 20 16 32" stroke="#4E8A2E" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M0 0 Q12 -10 22 -4 Q12 2 0 0Z" fill="#6CCB5A" stroke="#3E7D25" stroke-width="2.5"/>
+    <circle cx="-17" cy="44" r="14" fill="#E5304A" stroke="#8E1328" stroke-width="3.5"/><circle cx="17" cy="42" r="14" fill="#E5304A" stroke="#8E1328" stroke-width="3.5"/>
+    <circle cx="-21" cy="39" r="4" fill="#fff" opacity=".7"/><circle cx="13" cy="37" r="4" fill="#fff" opacity=".7"/></g>`; }
+  const cherry = (s = 1) => `<g transform="scale(${s})"><path d="M0 -26 Q4 -14 0 -12" stroke="#4E8A2E" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="0" cy="0" r="14" fill="#E5304A" stroke="#8E1328" stroke-width="3.5"/><circle cx="-4" cy="-5" r="4" fill="#fff" opacity=".7"/></g>`;
+  // mısır koçanı (yatay): taneler .kr id'li (prefix_r_c), orijin merkez
+  const corn = (pre, rows = 3, cols = 7, s = 1) => { let k = "";
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) k += `<ellipse id="${pre}_${r}_${c}" cx="${-84 + c * 28}" cy="${-26 + r * 26}" rx="12" ry="11" fill="#FFD23D" stroke="#D99A0A" stroke-width="2.5"/>`;
+    return `<g transform="scale(${s})"><path d="M-110 -40 Q-170 -70 -190 -10 Q-150 -30 -116 -16Z" fill="#7CC35A" stroke="#3E7D25" stroke-width="4" stroke-linejoin="round"/><path d="M-110 40 Q-176 70 -196 4 Q-150 30 -114 18Z" fill="#6AB34A" stroke="#3E7D25" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="-104" y="-44" width="196" height="88" rx="44" fill="#F2C14E" stroke="#B9800A" stroke-width="4"/>${k}</g>`; };
+  // dik mısır bitkisi (tarla)
+  const cornPlant = (h = 1) => `<g transform="scale(${h})"><path d="M0 0 L0 -230" stroke="#5E9E3A" stroke-width="10" stroke-linecap="round"/>
+    <path d="M0 -60 Q-60 -110 -90 -60" stroke="#6AB34A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M0 -110 Q60 -170 96 -120" stroke="#6AB34A" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M0 -170 Q-50 -220 -80 -190" stroke="#7CC35A" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <g transform="translate(10 -150) rotate(-20)"><rect x="-14" y="-40" width="28" height="70" rx="14" fill="#FFD23D" stroke="#B9800A" stroke-width="3.5"/><path d="M-14 20 Q0 50 14 20" fill="#7CC35A" stroke="#3E7D25" stroke-width="3"/></g>
+    <path d="M0 -230 l-10 -26 M0 -230 l8 -28 M0 -230 l18 -18" stroke="#E0B040" stroke-width="5" stroke-linecap="round"/></g>`;
+  const kernel = () => `<ellipse rx="12" ry="11" fill="#FFD23D" stroke="#D99A0A" stroke-width="2.5"/><ellipse cx="-3" cy="-4" rx="3" ry="2" fill="#fff" opacity=".7"/>`;
+
+  // piknik ortası: içi dolu büyük tabak (yazısız)
+  const bowl = () => `<ellipse cx="0" cy="10" rx="170" ry="62" fill="#C9D6E8"/><ellipse cx="0" cy="0" rx="170" ry="62" fill="#fff" stroke="#E5484D" stroke-width="6"/><ellipse cx="0" cy="0" rx="128" ry="44" fill="none" stroke="#FFC9CC" stroke-width="6"/>
+    ${[[-70, -6, 0.9, -20], [-30, 10, 0.9, 30], [10, -8, 0.85, -40], [-50, -26, 0.8, 10]].map(([x, y, sc, r]) => `<g transform="translate(${x} ${y}) rotate(${r})">${peanut(sc)}</g>`).join("")}
+    <g transform="translate(40 -56)">${cherries(0.9)}</g><g transform="translate(90 -46)">${cherries(0.8)}</g><g transform="translate(70 8) rotate(-10)">${corn("bw", 2, 4, 0.36)}</g>`;
+  // ── mutfak ──
+  const jar = (fill = 1, s = 1, lid = "#E5484D") => `<g transform="scale(${s})"><rect x="-62" y="-170" width="124" height="166" rx="30" fill="rgba(200,235,255,.55)" stroke="#7FB2D9" stroke-width="5"/>
+    <clipPath id="cj${Math.round(s * 100)}${Math.round(fill * 10)}"><rect x="-58" y="-166" width="116" height="158" rx="26"/></clipPath>
+    <g clip-path="url(#cj${Math.round(s * 100)}${Math.round(fill * 10)})">${fill > 0 ? Array.from({ length: 14 }, (_, i) => `<g transform="translate(${-36 + (i % 3) * 36 + (Math.floor(i / 3) % 2) * 16} ${-26 - Math.floor(i / 3) * 30}) rotate(${(i * 47) % 90 - 45}) scale(.62)">${peanut()}</g>`).filter((_, i) => i < 14 * fill).join("") : ""}</g>
+    <rect x="-70" y="-196" width="140" height="34" rx="12" fill="${lid}" stroke="${INK}" stroke-width="4"/><rect x="-40" y="-120" width="80" height="44" rx="10" fill="#FFF4DC" stroke="#B5763A" stroke-width="3"/>
+    <text x="0" y="-90" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="24" fill="#B5763A">FISTIK</text>
+    <path d="M-44 -150 Q-48 -90 -40 -30" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".6"/></g>`;
+  const cupboard = () => `<rect x="-230" y="-560" width="460" height="560" rx="18" fill="#C98A4E" stroke="#7A4A22" stroke-width="6"/>
+    <rect x="-210" y="-540" width="420" height="520" rx="10" fill="#8E5A2E"/>
+    <g id="cupIn">${[-400, -220].map((y) => `<rect x="-206" y="${y}" width="412" height="14" fill="#B5763A"/>`).join("")}
+      ${[-150, -50, 50, 150].map((x, i) => `<g transform="translate(${x} -406)">${jar(1, 0.62, ["#E5484D", "#3D9BFF", "#3FBF6F", "#FFC23D"][i])}</g>`).join("")}
+      ${[-150, -50, 50, 150].map((x, i) => `<g transform="translate(${x} -226)">${jar(1, 0.62, ["#A66BFF", "#FF7A3D", "#E5484D", "#3D9BFF"][i])}</g>`).join("")}
+      ${[-140, -40, 60, 150].map((x, i) => `<g transform="translate(${x} -40)">${jar(1, 0.55, ["#3FBF6F", "#FFC23D", "#A66BFF", "#FF7A3D"][i])}</g>`).join("")}</g>
+    <g id="cupL"><rect x="-212" y="-542" width="212" height="524" rx="10" fill="#E0A465" stroke="#7A4A22" stroke-width="6"/><rect x="-180" y="-500" width="148" height="200" rx="12" fill="none" stroke="#B5763A" stroke-width="6"/><rect x="-180" y="-260" width="148" height="200" rx="12" fill="none" stroke="#B5763A" stroke-width="6"/><circle cx="-26" cy="-280" r="12" fill="#FFC23D" stroke="#7A4A22" stroke-width="4"/></g>
+    <g id="cupR"><rect x="0" y="-542" width="212" height="524" rx="10" fill="#E0A465" stroke="#7A4A22" stroke-width="6"/><rect x="32" y="-500" width="148" height="200" rx="12" fill="none" stroke="#B5763A" stroke-width="6"/><rect x="32" y="-260" width="148" height="200" rx="12" fill="none" stroke="#B5763A" stroke-width="6"/><circle cx="26" cy="-280" r="12" fill="#FFC23D" stroke="#7A4A22" stroke-width="4"/></g>`;
+  const kTable = () => `<rect x="-300" y="-30" width="600" height="40" rx="14" fill="#E0A465" stroke="#7A4A22" stroke-width="6"/><rect x="-270" y="6" width="28" height="210" rx="10" fill="#C98A4E" stroke="#7A4A22" stroke-width="5"/><rect x="242" y="6" width="28" height="210" rx="10" fill="#C98A4E" stroke="#7A4A22" stroke-width="5"/>
+    <path d="M-300 -10 H300" stroke="#FF5A5F" stroke-width="10" stroke-dasharray="26 26"/>`;
+  const kWindow = () => `<rect x="-200" y="-170" width="400" height="300" rx="20" fill="#9BD8FF" stroke="#fff" stroke-width="16"/><circle cx="110" cy="-80" r="40" fill="#FFD84D"/><path d="M-200 60 Q-100 10 0 50 T200 40 V130 H-200Z" fill="#8CCB6E"/>
+    <path d="M0 -170 V130 M-200 -20 H200" stroke="#fff" stroke-width="12"/>
+    <path d="M-236 -196 Q-170 -40 -230 150 L-150 150 Q-190 -30 -150 -196Z" fill="#FF8FAB" stroke="#E2577A" stroke-width="4"/><path d="M236 -196 Q170 -40 230 150 L150 150 Q190 -30 150 -196Z" fill="#FF8FAB" stroke="#E2577A" stroke-width="4"/>
+    <rect x="-250" y="-210" width="500" height="26" rx="13" fill="#B5763A"/>`;
+  const pot = (c) => `<path d="M-40 0 L-34 -60 L34 -60 L40 0Z" fill="${c}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/><path d="M-44 -60 H44" stroke="${INK}" stroke-width="8" stroke-linecap="round"/>`;
+
+  // ── dere + kiraz ağacı ──
+  const cherryTree = () => { let ch = ""; const P = [[-250, -470], [-170, -560], [-60, -620], [60, -600], [170, -540], [250, -450], [-200, -380], [-90, -470], [30, -500], [140, -430], [-20, -380], [210, -360], [-280, -330], [90, -330], [-140, -300]];
+    P.forEach(([x, y], i) => (ch += `<g class="tc" transform="translate(${x} ${y}) rotate(${(i * 23) % 40 - 20})">${cherries(1)}</g>`));
+    return `<path d="M-30 0 Q-24 -180 -40 -300 L40 -300 Q24 -180 30 0Z" fill="#A0703F" stroke="#6E4A27" stroke-width="5"/>
+      <path d="M0 -260 Q-90 -320 -170 -330 M10 -280 Q100 -330 180 -340" stroke="#8B5A2B" stroke-width="22" fill="none" stroke-linecap="round"/>
+      ${[[-200, -420, 150], [0, -520, 190], [200, -420, 150], [-110, -360, 120], [120, -350, 120]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#7CC35A" stroke="#4F9F45" stroke-width="6"/>`).join("")}
+      ${Array.from({ length: 22 }, (_, i) => `<g transform="translate(${-260 + (i * 97) % 520} ${-620 + (i * 61) % 300})"><circle r="9" fill="#FFC9D9"/><circle r="4" fill="#FF8FB1"/></g>`).join("")}${ch}`; };
+  const branchLow = () => `<path d="M0 0 Q-160 30 -320 90" stroke="#8B5A2B" stroke-width="18" fill="none" stroke-linecap="round"/>${[[-60, 12], [-120, 26], [-180, 42], [-240, 60], [-300, 80]].map(([x, y], i) => `<g id="bc${i}" transform="translate(${x} ${y})">${cherry(1)}</g><path d="M${x - 10} ${y - 20} q-20 -20 -6 -34 q18 8 6 34z" fill="#7CC35A" stroke="#3E7D25" stroke-width="2.5"/>`).join("")}`;
+
+  // ── tarla ──
+  const scarecrow = () => `<path d="M0 0 V-300" stroke="#8B5A2B" stroke-width="16"/><g id="scArm"><path d="M-150 -220 H150" stroke="#8B5A2B" stroke-width="14" stroke-linecap="round"/>
+      <path d="M-120 -250 L120 -250 L100 -130 L-100 -130Z" fill="#3D9BFF" stroke="${INK}" stroke-width="4"/><rect x="-24" y="-250" width="48" height="120" fill="#FF5A5F"/>
+      <path d="M150 -220 l20 -14 M150 -220 l24 0 M150 -220 l18 14" stroke="#E0B040" stroke-width="6" stroke-linecap="round"/></g>
+    <circle cx="0" cy="-300" r="50" fill="#F5D9A8" stroke="${INK}" stroke-width="4"/><circle cx="-16" cy="-306" r="6" fill="${INK}"/><circle cx="16" cy="-306" r="6" fill="${INK}"/><path d="M-20 -284 Q0 -268 20 -284" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <ellipse cx="-30" cy="-288" rx="9" ry="5" fill="#FF8FAB" opacity=".7"/><ellipse cx="30" cy="-288" rx="9" ry="5" fill="#FF8FAB" opacity=".7"/>
+    <g id="scHat"><ellipse cx="0" cy="-338" rx="90" ry="18" fill="#E0B040" stroke="#8A6A1A" stroke-width="4"/><path d="M-46 -340 Q-40 -400 0 -400 Q40 -400 46 -340Z" fill="#E0B040" stroke="#8A6A1A" stroke-width="4"/><rect x="-46" y="-356" width="92" height="12" fill="#FF5A5F"/></g>`;
+  const basket = () => `<path d="M-120 0 Q-130 -60 -110 -80 H110 Q130 -60 120 0 Q0 30 -120 0Z" fill="#D9A05B" stroke="#8A5A2B" stroke-width="5"/>`;
+
+  // ── piknik ──
+  const cushion = (c) => `<ellipse cx="0" cy="0" rx="90" ry="30" fill="${c}" stroke="${INK}" stroke-width="4"/><ellipse cx="0" cy="-8" rx="70" ry="18" fill="#fff" opacity=".25"/>`;
+
+
+  // ── ARI (yeni kahraman): orijin gövde ortası, sağa bakar. Gruplar: .wingB .wingF .body .pollen .head .antL .antR .mHappy .mOpen .pup .lid .stripe
+  const BOL = "#3B2A1F";
+  const bee = (p = "be") => `<clipPath id="${p}Bc"><ellipse cx="-16" cy="8" rx="74" ry="56"/></clipPath>
+    <g class="wingB"><path d="M-20 -40 C-60 -150 40 -170 30 -50Z" fill="url(#gWing)" stroke="#7FB8E0" stroke-width="4"/><path d="M-8 -60 Q0 -110 18 -120" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/></g>
+    <g class="legs" stroke="${BOL}" stroke-width="7" stroke-linecap="round" fill="none"><path d="M-40 52 q-6 22 -18 26"/><path d="M-10 60 q-2 22 -12 30"/><path d="M20 56 q2 20 -6 30"/></g>
+    <g class="body"><ellipse cx="-16" cy="8" rx="74" ry="56" fill="url(#gBee)" stroke="${BOL}" stroke-width="6"/>
+      <g clip-path="url(#${p}Bc)" class="stripe"><path d="M-60 -60 Q-44 8 -60 76 L-40 76 Q-24 8 -40 -60Z" fill="${BOL}"/><path d="M-22 -60 Q-6 8 -22 76 L-2 76 Q14 8 -2 -60Z" fill="${BOL}"/></g>
+      <ellipse cx="-30" cy="-22" rx="26" ry="10" fill="#fff" opacity=".55" transform="rotate(-18 -30 -22)"/>
+      <path d="M-92 6 L-112 12 L-92 20Z" fill="${BOL}" stroke="${BOL}" stroke-width="4" stroke-linejoin="round"/>
+      <g class="pollen" opacity="0">${Array.from({ length: 16 }, (_, i) => `<circle cx="${(-70 + (i * 37) % 150).toFixed(0)}" cy="${(-38 + (i * 23) % 90).toFixed(0)}" r="${5 + (i % 3) * 2}" fill="#FFE45C" stroke="#E0A800" stroke-width="2"/>`).join("")}</g></g>
+    <g class="head"><g class="antL"><path d="M50 -50 Q36 -96 14 -108" stroke="${BOL}" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="14" cy="-108" r="11" fill="${BOL}"/><circle cx="11" cy="-111" r="3.5" fill="#fff" opacity=".7"/></g>
+      <g class="antR"><path d="M70 -46 Q78 -96 100 -106" stroke="${BOL}" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="100" cy="-106" r="11" fill="${BOL}"/><circle cx="97" cy="-109" r="3.5" fill="#fff" opacity=".7"/></g>
+      <circle cx="62" cy="-6" r="52" fill="url(#gBee)" stroke="${BOL}" stroke-width="6"/>
+      ${eye(p + "L", 46, -14, 15, 19, "#FFD43B", BOL, 0.6)}${eye(p + "R", 84, -14, 15, 19, "#FFD43B", BOL, 0.6)}
+      <ellipse cx="34" cy="14" rx="11" ry="7" fill="#FF8FAB" opacity=".75"/><ellipse cx="100" cy="12" rx="10" ry="7" fill="#FF8FAB" opacity=".75"/>
+      <path class="mHappy" d="M54 16 Q66 28 78 16" stroke="${BOL}" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <g class="mOpen" opacity="0"><path d="M54 14 Q66 14 78 14 Q66 40 54 14Z" fill="#8C2F45" stroke="${BOL}" stroke-width="4" stroke-linejoin="round"/></g></g>
+    <g class="wingF"><path d="M0 -40 C-10 -150 100 -150 50 -42Z" fill="url(#gWing)" stroke="#7FB8E0" stroke-width="4"/><path d="M20 -62 Q34 -104 56 -112" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/></g>`;
+  const beeMini = (c = "url(#gBee)") => `<path class="mw" d="M-6 -12 C-14 -44 18 -46 10 -12Z" fill="url(#gWing)" stroke="#7FB8E0" stroke-width="2.5"/>
+    <ellipse cx="-4" cy="2" rx="22" ry="16" fill="${c}" stroke="${BOL}" stroke-width="3.5"/><path d="M-14 -12 v28 M-4 -14 v32" stroke="${BOL}" stroke-width="5"/>
+    <circle cx="18" cy="-2" r="14" fill="${c}" stroke="${BOL}" stroke-width="3.5"/><circle cx="21" cy="-4" r="3.5" fill="${BOL}"/><path d="M16 4 q4 4 8 0" stroke="${BOL}" stroke-width="2.5" fill="none"/>`;
+  // ── bahçe ──
+  const stem = (h, c = "#4E9E3A") => `<path d="M0 0 Q-12 ${-h * 0.5} 0 ${-h}" stroke="#2F6B22" stroke-width="16" fill="none" stroke-linecap="round"/><path d="M0 0 Q-12 ${-h * 0.5} 0 ${-h}" stroke="${c}" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M-4 ${-h * 0.35} Q-70 ${-h * 0.45} -96 ${-h * 0.3} Q-60 ${-h * 0.22} -4 ${-h * 0.3}Z" fill="#6CC75A" stroke="#2F6B22" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M-2 ${-h * 0.55} Q60 ${-h * 0.66} 90 ${-h * 0.52} Q56 ${-h * 0.44} -2 ${-h * 0.5}Z" fill="#7CD066" stroke="#2F6B22" stroke-width="4" stroke-linejoin="round"/>`;
+  // gelincik: orijin sap dibi; çiçek başı .head (h yüksekliğinde)
+  const poppy = (h = 420, s = 1) => `<g transform="scale(${s})">${stem(h)}<g class="head" transform="translate(0 ${-h})">
+    ${[0, 72, 144, 216, 288].map((a) => `<path d="M0 0 C-70 -30 -90 -150 0 -160 C90 -150 70 -30 0 0Z" fill="url(#gPoppy)" stroke="#9E1422" stroke-width="5" transform="rotate(${a}) scale(.9)"/>`).join("")}
+    ${[36, 108, 180, 252, 324].map((a) => `<path d="M0 -40 Q-14 -90 0 -120" stroke="#FFB0A4" stroke-width="6" fill="none" opacity=".55" stroke-linecap="round" transform="rotate(${a})"/>`).join("")}
+    <circle r="40" fill="#2B2D42" stroke="#111" stroke-width="4"/>${Array.from({ length: 12 }, (_, i) => `<circle cx="${(30 * Math.cos(i * 0.52)).toFixed(1)}" cy="${(30 * Math.sin(i * 0.52)).toFixed(1)}" r="5" fill="#FFD84D"/>`).join("")}
+    <circle r="14" fill="#5A4A7A"/></g></g>`;
+  // ayçiçeği (yüzlü): orijin sap dibi; .head içinde .face .mouthO
+  const sunflower = (p, h = 460, s = 1) => `<g transform="scale(${s})">${stem(h, "#5DAE3F")}<g class="head" transform="translate(0 ${-h})">
+    ${Array.from({ length: 22 }, (_, i) => `<path d="M0 -90 C-20 -120 -16 -170 0 -186 C16 -170 20 -120 0 -90Z" fill="url(#gSunP)" stroke="#D98B00" stroke-width="4" transform="rotate(${(i * 360 / 22).toFixed(1)})"/>`).join("")}
+    <circle r="96" fill="url(#gSunC)" stroke="#4A2A0E" stroke-width="5"/>
+    ${Array.from({ length: 30 }, (_, i) => { const r = 20 + (i % 5) * 15, a = i * 2.39; return `<circle cx="${(r * Math.cos(a)).toFixed(1)}" cy="${(r * Math.sin(a)).toFixed(1)}" r="3.5" fill="#4A2A0E" opacity=".5"/>`; }).join("")}
+    <g class="face"><path class="eyeC" d="M-44 -16 Q-30 -30 -16 -16" stroke="#2B1A0A" stroke-width="7" fill="none" stroke-linecap="round"/><path class="eyeC" d="M16 -16 Q30 -30 44 -16" stroke="#2B1A0A" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <ellipse cx="-54" cy="16" rx="14" ry="9" fill="#FF8F6B" opacity=".75"/><ellipse cx="54" cy="16" rx="14" ry="9" fill="#FF8F6B" opacity=".75"/>
+      <path class="mHappy" d="M-26 18 Q0 46 26 18" stroke="#2B1A0A" stroke-width="7" fill="none" stroke-linecap="round"/></g></g></g>`;
+  // lavanta sapı
+  const lavender = (h = 200) => `<path d="M0 0 Q4 ${-h * 0.5} 0 ${-h}" stroke="#5E9E5A" stroke-width="6" fill="none"/>${Array.from({ length: 9 }, (_, i) => `<ellipse cx="${i % 2 ? 6 : -6}" cy="${-h + i * 13}" rx="9" ry="12" fill="${i % 3 ? "#9B6BE0" : "#B48CF0"}" stroke="#6B3FB8" stroke-width="2"/>`).join("")}`;
+  // büyük mor çiçek (iniş)
+  const purple = (h = 380, s = 1) => `<g transform="scale(${s})">${stem(h)}<g class="head" transform="translate(0 ${-h})">
+    ${Array.from({ length: 10 }, (_, i) => `<ellipse cx="0" cy="-74" rx="34" ry="70" fill="url(#gPurp)" stroke="#5A2DA8" stroke-width="4.5" transform="rotate(${i * 36})"/>`).join("")}
+    <circle r="44" fill="#FFD84D" stroke="#D99A0A" stroke-width="5"/>${Array.from({ length: 10 }, (_, i) => `<circle cx="${(24 * Math.cos(i * 0.63)).toFixed(1)}" cy="${(24 * Math.sin(i * 0.63)).toFixed(1)}" r="4" fill="#E0A800"/>`).join("")}</g></g>`;
+  // kelebek
+  const butterfly = (c1 = "#FFC21A", c2 = "#FF7A3D") => `<g class="wl"><path d="M0 0 C-70 -90 -110 -10 -60 20 C-90 50 -40 80 0 10Z" fill="${c1}" stroke="${BOL}" stroke-width="4"/><circle cx="-56" cy="-24" r="12" fill="${c2}"/></g>
+    <g class="wr"><path d="M0 0 C70 -90 110 -10 60 20 C90 50 40 80 0 10Z" fill="${c1}" stroke="${BOL}" stroke-width="4"/><circle cx="56" cy="-24" r="12" fill="${c2}"/></g>
+    <ellipse rx="9" ry="34" fill="${BOL}"/><path d="M-4 -30 q-14 -24 -24 -26 M4 -30 q14 -24 24 -26" stroke="${BOL}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  // altıgen yolu
+  const hexPath = (r) => { let d = ""; for (let i = 0; i < 6; i++) { const a = Math.PI / 6 + i * Math.PI / 3; d += (i ? "L" : "M") + (r * Math.cos(a)).toFixed(1) + " " + (r * Math.sin(a)).toFixed(1); } return d + "Z"; };
+  // kovan (ağaçta asılı): orijin asılma noktası
+  const hive = () => `<path d="M0 0 V30" stroke="#6E4A27" stroke-width="10"/>
+    <path d="M-120 140 C-150 40 -70 24 0 24 C70 24 150 40 120 140 C150 200 100 260 0 262 C-100 260 -150 200 -120 140Z" fill="url(#gHive)" stroke="#9A5B10" stroke-width="7"/>
+    ${[70, 110, 150, 190, 228].map((y, i) => `<path d="M${-122 + (i === 4 ? 30 : 0)} ${y} Q0 ${y + 18} ${122 - (i === 4 ? 30 : 0)} ${y}" stroke="#C47A12" stroke-width="7" fill="none" opacity=".7"/>`).join("")}
+    <path d="${hexPath(34)}" transform="translate(0 160)" fill="#5A3A10" stroke="#9A5B10" stroke-width="6"/>
+    <ellipse cx="-60" cy="80" rx="26" ry="14" fill="#fff" opacity=".45" transform="rotate(-25 -60 80)"/>
+    <path class="drip" d="M-30 258 q0 30 10 30 q10 0 10 -30Z" fill="url(#gHoney)" stroke="#C47A12" stroke-width="3"/>`;
+  // ağaç
+  const oak = () => `<path d="M-60 0 Q-50 -220 -80 -420 L80 -420 Q50 -220 60 0Z" fill="#A0703F" stroke="#6E4A27" stroke-width="7"/>
+    <path d="M10 -360 Q160 -420 300 -430" stroke="#8B5A2B" stroke-width="40" fill="none" stroke-linecap="round"/><path d="M10 -360 Q160 -420 300 -430" stroke="#A0703F" stroke-width="26" fill="none" stroke-linecap="round"/>
+    ${[[-220, -560, 210], [0, -680, 250], [230, -580, 210], [-120, -440, 160], [140, -440, 160]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#6CC75A" stroke="#3F8A35" stroke-width="7"/>`).join("")}
+    ${[[-200, -620], [40, -760], [220, -640], [-60, -520]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="70" ry="34" fill="#9BE07A" opacity=".55"/>`).join("")}`;
+  const honeyPot = () => `<path d="M-120 -170 Q-170 -80 -110 0 L110 0 Q170 -80 120 -170Z" fill="#E0A465" stroke="#7A4A22" stroke-width="7"/>
+    <ellipse cx="0" cy="-170" rx="122" ry="30" fill="url(#gHoney)" stroke="#7A4A22" stroke-width="7"/><path d="M-140 -160 Q0 -120 140 -160" stroke="#FF6B4A" stroke-width="14" fill="none"/>
+    <text x="0" y="-60" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="52" fill="#7A4A22">BAL</text><ellipse cx="-70" cy="-110" rx="18" ry="34" fill="#fff" opacity=".35"/>`;
+  const spoon = () => `<path d="M0 0 L0 -90" stroke="#B5763A" stroke-width="10" stroke-linecap="round"/><ellipse cx="0" cy="-104" rx="20" ry="16" fill="#E0A465" stroke="#7A4A22" stroke-width="4"/><ellipse class="sh" cx="0" cy="-106" rx="13" ry="9" fill="url(#gHoney)" opacity="0"/>`;
+  const honeyDrop = (s = 1) => `<g transform="scale(${s})"><path d="M0 -26 C10 -10 18 0 18 10 C18 22 9 28 0 28 C-9 28 -18 22 -18 10 C-18 0 -10 -10 0 -26Z" fill="url(#gHoney)" stroke="#C47A12" stroke-width="3.5"/><ellipse cx="-6" cy="6" rx="4" ry="7" fill="#fff" opacity=".7"/></g>`;
+
+  return { defs, shadow, heart, eye, frog, duck, mouse, lily, rock, cherries, bee, beeMini, poppy, sunflower, lavender, purple, butterfly, hexPath, hive, oak, honeyPot, spoon, honeyDrop, BOL };
+})();
+
+(function () {
+  window.__timelines = window.__timelines || {};
+  const $ = (s) => document.querySelector(s);
+  const NS = "http://www.w3.org/2000/svg";
+  const D = 117.94, TAU = Math.PI * 2;
+  const TC = ["#3D9BFF", "#FF5A5F", "#FFC23D", "#3FBF6F", "#A66BFF", "#FF7A3D"];
+  const OL = "#4C76B5";
+  const INK = "#2B2D42";
+  const C = window.CAST;
+  const LINES = [{"tag": "k1.1", "who": "bee", "words": [["Arı", 17.56], ["vız", 18.08], ["vız", 18.341], ["vız", 18.601], ["eder,", 18.861]], "end": 19.54}, {"tag": "k1.2", "who": "bee", "words": [["Çiçek", 19.62], ["çiçek", 20.048], ["gezer,", 20.476], ["gider.", 20.903]], "end": 21.48}, {"tag": "k1.3", "who": "bee", "words": [["Kırmızı", 21.8], ["çiçeğe", 22.504], ["kondu,", 23.208]], "end": 23.84}, {"tag": "k1.4", "who": "bee", "words": [["Tatlı", 24.02], ["tatlı", 24.466], ["balı", 24.912], ["buldu!", 25.359]], "end": 25.96}, {"tag": "k1.5", "who": "bee", "words": [["Vızır", 26.06], ["vızır", 26.57], ["vızıldar,", 27.08]], "end": 28}, {"tag": "k1.6", "who": "bee", "words": [["Kanatları", 28.3], ["pırıldar!", 29.194]], "end": 30}, {"tag": "k1.7", "who": "bee", "words": [["Bal", 30.46], ["bal", 30.77], ["bal,", 31.079], ["tatlı", 31.389], ["bal,", 32.009]], "end": 32.48}, {"tag": "k1.8", "who": "bee", "words": [["Fıstık'a", 32.48], ["da", 33.257], ["biraz", 33.516], ["al!", 34.033]], "end": 34.45}, {"tag": "k2.1", "who": "bee", "words": [["Arı", 38.98], ["vız", 39.485], ["vız", 39.737], ["vız", 39.989], ["eder,", 40.242]], "end": 40.9}, {"tag": "k2.2", "who": "bee", "words": [["Çiçek", 41.0], ["çiçek", 41.451], ["gezer,", 41.902], ["gider.", 42.352]], "end": 42.96}, {"tag": "k2.3", "who": "bee", "words": [["Sarı", 43.24], ["çiçeğe", 43.713], ["kondu,", 44.423]], "end": 45.04}, {"tag": "k2.4", "who": "bee", "words": [["Sarı", 45.38], ["tozla", 45.822], ["burnu", 46.263], ["doldu!", 46.705]], "end": 47.3}, {"tag": "k2.5", "who": "bee", "words": [["Vızır", 47.42], ["vızır", 47.862], ["vızıldar,", 48.303]], "end": 49.1}, {"tag": "k2.6", "who": "bee", "words": [["Kanatları", 49.6], ["pırıldar!", 50.599]], "end": 51.5}, {"tag": "k2.7", "who": "bee", "words": [["Bal", 51.8], ["bal", 52.085], ["bal,", 52.37], ["tatlı", 52.656], ["bal,", 53.226]], "end": 53.66}, {"tag": "k2.8", "who": "bee", "words": [["Kurbağaya", 53.96], ["biraz", 54.875], ["al!", 55.332]], "end": 55.7}, {"tag": "k3.1", "who": "bee", "words": [["Arı", 73.2], ["vız", 73.678], ["vız", 73.918], ["vız", 74.157], ["eder,", 74.396]], "end": 75.02}, {"tag": "k3.2", "who": "bee", "words": [["Çiçek", 75.02], ["çiçek", 75.434], ["gezer,", 75.848], ["gider.", 76.262]], "end": 76.82}, {"tag": "k3.3", "who": "bee", "words": [["Mor", 77.38], ["çiçeğe", 77.677], ["kondu,", 78.57]], "end": 79.32}, {"tag": "k3.4", "who": "bee", "words": [["Kovanına", 79.32], ["yolu", 80.166], ["buldu!", 80.59]], "end": 81.16}, {"tag": "k3.5", "who": "bee", "words": [["Vızır", 81.46], ["vızır", 81.97], ["vızıldar,", 82.48]], "end": 83.4}, {"tag": "k3.6", "who": "bee", "words": [["Kanatları", 83.64], ["pırıldar!", 84.513]], "end": 85.3}, {"tag": "k3.7", "who": "bee", "words": [["Bal", 85.78], ["bal", 86.013], ["bal,", 86.246], ["tatlı", 86.479], ["bal,", 86.945]], "end": 87.3}, {"tag": "k3.8", "who": "bee", "words": [["Herkese", 87.92], ["bir", 88.661], ["kaşık", 88.908], ["bal!", 89.403]], "end": 89.8}, {"tag": "f.1", "who": "all", "words": [["Arı", 98.48], ["vız", 98.932], ["vız", 99.158], ["vız", 99.384], ["eder,", 99.61]], "end": 100.2}, {"tag": "f.2", "who": "all", "words": [["Çiçek", 100.48], ["çiçek", 100.876], ["gezer,", 101.271], ["gider.", 101.667]], "end": 102.2}, {"tag": "f.3", "who": "all", "words": [["Kırmızı", 102.64], ["çiçeğe", 103.178], ["kondu,", 103.716]], "end": 104.2}, {"tag": "f.4", "who": "all", "words": [["Tatlı", 104.9], ["tatlı", 105.323], ["balı", 105.746], ["buldu!", 106.17]], "end": 106.74}, {"tag": "f.5", "who": "all", "words": [["Vızır", 106.86], ["vızır", 107.37], ["vızıldar,", 107.88]], "end": 108.8}, {"tag": "f.6", "who": "all", "words": [["Kanatları", 109.04], ["pırıldar!", 110.07]], "end": 111}, {"tag": "f.7", "who": "all", "words": [["Bal", 111.2], ["bal", 111.482], ["bal,", 111.764], ["tatlı", 112.046], ["bal,", 112.611]], "end": 113.04}, {"tag": "f.8", "who": "all", "words": [["Herkese", 113.36], ["bir", 114.202], ["kaşık", 114.482], ["bal!", 115.044], ["Vız!", 115.324]], "end": 115.8}];
+  const BEATS = [0.441, 0.975, 1.509, 2.043, 2.577, 3.111, 3.669, 4.203, 4.737, 5.294, 5.828, 6.362, 6.896, 7.454, 7.988, 8.522, 9.079, 9.613, 10.147, 10.681, 11.215, 11.773, 12.307, 12.841, 13.375, 13.932, 14.466, 15.0, 15.534, 16.022, 16.509, 16.997, 17.485, 17.972, 18.506, 19.04, 19.598, 20.132, 20.666, 21.2, 21.757, 22.291, 22.825, 23.359, 23.893, 24.427, 24.961, 25.496, 26.03, 26.564, 27.098, 27.632, 28.189, 28.723, 29.257, 29.791, 30.325, 30.836, 31.37, 31.904, 32.438, 32.996, 33.53, 34.064, 34.598, 35.132, 35.666, 36.2, 36.734, 37.268, 37.802, 38.336, 38.87, 39.404, 39.938, 40.472, 41.006, 41.54, 42.075, 42.609, 43.143, 43.677, 44.211, 44.722, 45.256, 45.79, 46.324, 46.858, 47.392, 47.926, 48.46, 48.994, 49.528, 50.062, 50.596, 51.107, 51.641, 52.175, 52.686, 53.22, 53.754, 54.288, 54.822, 55.356, 55.89, 56.424, 56.959, 57.493, 58.027, 58.538, 59.072, 59.606, 60.14, 60.674, 61.208, 61.742, 62.276, 62.787, 63.321, 63.855, 64.389, 64.923, 65.457, 65.991, 66.525, 67.059, 67.593, 68.104, 68.638, 69.172, 69.706, 70.24, 70.774, 71.308, 71.843, 72.377, 72.911, 73.421, 73.956, 74.49, 75.024, 75.558, 76.092, 76.603, 77.137, 77.671, 78.205, 78.716, 79.273, 79.784, 80.318, 80.852, 81.386, 81.92, 82.454, 82.988, 83.522, 84.056, 84.59, 85.101, 85.635, 86.146, 86.68, 87.214, 87.748, 88.282, 88.816, 89.327, 89.861, 90.395, 90.929, 91.463, 91.997, 92.508, 93.042, 93.576, 94.11, 94.645, 95.179, 95.689, 96.223, 96.758, 97.292, 97.826, 98.36, 98.871, 99.405, 99.939, 100.473, 100.984, 101.518, 102.052, 102.586, 103.097, 103.654, 104.165, 104.699, 105.233, 105.767, 106.301, 106.835, 107.346, 107.88, 108.414, 108.948, 109.459, 109.993, 110.527, 111.061, 111.572, 112.106, 112.617, 113.151, 113.685, 114.219];
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const smooth = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
+  const easeOut = (x) => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
+  const easeIn = (x) => Math.pow(clamp(x, 0, 1), 3);
+  const outBack = (x, s = 1.7) => { x = clamp(x, 0, 1); return 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const pIn = (t, t0, d) => clamp((t - t0) / d, 0, 1);
+
+  function leg(c) { return `<path d="M-38 -30 L38 -30 L38 74 Q38 104 0 104 Q-38 104 -38 74 Z" fill="${c}"/><path d="M-38 -6 L-38 74 Q-38 104 0 104 Q38 104 38 74 L38 -6" fill="none" stroke="${OL}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+      <g fill="#EEF5FD" stroke="${OL}" stroke-width="2"><ellipse cx="-20" cy="96" rx="9" ry="6"/><ellipse cx="0" cy="99" rx="9" ry="6"/><ellipse cx="20" cy="96" rx="9" ry="6"/></g>`; }
+  function ear() { return `<path d="M222 168 C128 92 26 160 44 278 C60 374 160 386 222 322 Z" fill="url(#gEar)" stroke="${OL}" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M205 196 C140 146 76 192 88 272 C100 336 164 344 205 302 Z" fill="#F7B3C8"/>`; }
+
+  // ───────────────────────── Fıstık rig (SVG) ─────────────────────────
+  $("#char").innerHTML = `
+  <svg viewBox="0 0 600 640">
+    <defs>
+      <radialGradient id="gHead" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#C4E1FD"/><stop offset=".6" stop-color="#A3CAF2"/><stop offset="1" stop-color="#85B1E6"/></radialGradient>
+      <radialGradient id="gBody" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#B5D6F8"/><stop offset="1" stop-color="#7FA9DE"/></radialGradient>
+      <radialGradient id="gEar" cx="60%" cy="40%" r="80%"><stop offset="0" stop-color="#A6CBF2"/><stop offset="1" stop-color="#7DA6DC"/></radialGradient>
+      <linearGradient id="gTrunk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A2C8F1"/><stop offset="1" stop-color="#7AA6DD"/></linearGradient>
+      <linearGradient id="gHat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD966"/><stop offset="1" stop-color="#FFB627"/></linearGradient>
+      <clipPath id="cEyeL"><ellipse cx="248" cy="246" rx="34" ry="41"/></clipPath>
+      <clipPath id="cEyeR"><ellipse cx="352" cy="246" rx="34" ry="41"/></clipPath>
+      <clipPath id="cHat"><path d="M156 196 C160 60 440 60 444 196 Z"/></clipPath>
+    </defs>
+    <g id="rig">
+      <g id="tail"><path d="M432 470 Q482 452 494 492" stroke="${OL}" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M432 470 Q482 452 494 492" stroke="#8DB6E8" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M486 488 q8 22 -2 30 q16 -4 18 -24 z" fill="#5E86C2" stroke="${OL}" stroke-width="3"/></g>
+      <g id="legBL">${leg("#86AEE2")}</g><g id="legBR">${leg("#86AEE2")}</g>
+      <g id="earL">${ear()}</g><g id="earR">${ear()}</g>
+      <ellipse cx="300" cy="462" rx="146" ry="116" fill="url(#gBody)" stroke="${OL}" stroke-width="5"/>
+      <g id="legFL">${leg("#8DB4E6")}</g><g id="legFR">${leg("#8DB4E6")}</g>
+      <ellipse cx="300" cy="482" rx="92" ry="66" fill="#D3E7FA"/>
+      <g id="head">
+        <ellipse cx="300" cy="236" rx="152" ry="141" fill="url(#gHead)" stroke="${OL}" stroke-width="5"/>
+        <g id="hat">
+          <path d="M156 196 C160 60 440 60 444 196 Q300 170 156 196Z" fill="url(#gHat)" stroke="#D9861A" stroke-width="5"/>
+          <g clip-path="url(#cHat)" opacity=".9"><path d="M150 120 Q300 92 450 120" stroke="#FF8A3D" stroke-width="16" fill="none"/><path d="M150 152 Q300 126 450 152" stroke="#FF8A3D" stroke-width="16" fill="none"/></g>
+          <path d="M150 194 Q300 160 450 194 L452 218 Q300 186 148 218Z" fill="#FF9F1C" stroke="#D9861A" stroke-width="5" stroke-linejoin="round"/>
+          <g id="pom"><circle cx="300" cy="74" r="30" fill="#FF6B4A" stroke="#C94A2E" stroke-width="5"/><circle cx="290" cy="64" r="9" fill="#FF9F86"/></g>
+        </g>
+        <ellipse cx="203" cy="304" rx="27" ry="16" fill="#FF8FAB" opacity=".7"/><ellipse cx="397" cy="304" rx="27" ry="16" fill="#FF8FAB" opacity=".7"/>
+        <g id="eyes">
+          <ellipse cx="248" cy="246" rx="34" ry="41" fill="#fff" stroke="#2B2D42" stroke-width="3.5"/>
+          <ellipse cx="352" cy="246" rx="34" ry="41" fill="#fff" stroke="#2B2D42" stroke-width="3.5"/>
+          <g id="pupils">
+            <circle cx="254" cy="254" r="24" fill="#2B2D42"/><circle cx="358" cy="254" r="24" fill="#2B2D42"/>
+            <circle cx="263" cy="243" r="8.5" fill="#fff"/><circle cx="367" cy="243" r="8.5" fill="#fff"/>
+            <circle cx="248" cy="265" r="3.8" fill="#fff"/><circle cx="352" cy="265" r="3.8" fill="#fff"/>
+          </g>
+          <g clip-path="url(#cEyeL)"><rect id="lidL" x="210" y="200" width="80" height="0" fill="#9EC6F0"/></g>
+          <g clip-path="url(#cEyeR)"><rect id="lidR" x="314" y="200" width="80" height="0" fill="#9EC6F0"/></g>
+        </g>
+        <clipPath id="cMouth"><path id="mouthClip" d=""/></clipPath><path id="mouth" d="" fill="#8C2F45" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+        <g clip-path="url(#cMouth)"><ellipse id="tongue" cx="252" cy="350" rx="16" ry="0" fill="#FF8FA3"/></g>
+        <g id="trunk"><path id="trunkShadow" fill="rgba(40,70,130,.22)" transform="translate(7 9)"/><path id="trunkFill" fill="url(#gTrunk)"/><path id="trunkLine" fill="none" stroke="${OL}" stroke-width="5" stroke-linejoin="round"/>
+          <path id="trunkWr" fill="none" stroke="#6F9AD3" stroke-width="4" stroke-linecap="round"/><ellipse id="nostril" rx="12" ry="7" fill="#6F9AD3"/></g>
+      </g>
+    </g>
+  </svg>`;
+  const E = (id) => document.getElementById(id);
+  const el = { rig: E("rig"), tail: E("tail"), earL: E("earL"), earR: E("earR"), head: E("head"), pom: E("pom"), pupils: E("pupils"),
+    lidL: E("lidL"), lidR: E("lidR"), mouth: E("mouth"), mclip: E("mouthClip"), tongue: E("tongue"), tf: E("trunkFill"), ts: E("trunkShadow"), tl: E("trunkLine"), tw: E("trunkWr"), nos: E("nostril"),
+    legs: [E("legFL"), E("legFR"), E("legBL"), E("legBR")] };
+  const LEGP = [[250, 518, 0], [350, 518, Math.PI], [218, 500, Math.PI], [382, 500, 0]];  // pivot x,y, phase
+
+  // trunk geometry: base at TB, TN segments, direction A + C·f²
+  const TB = [300, 298], TN = 9, TL = 22;
+  function trunkGeom(A, C, TLx = TL) {
+    const P = [[TB[0], TB[1]]], ANG = [];
+    for (let i = 0; i < TN; i++) { const f = i / (TN - 1), a = (A + C * f * f) * Math.PI / 180; ANG.push(a);
+      const p = P[P.length - 1]; P.push([p[0] + TLx * Math.cos(a), p[1] + TLx * Math.sin(a)]); }
+    ANG.push(ANG[ANG.length - 1]);
+    return { P, ANG };
+  }
+  function drawTrunk(A, C, Lx) {
+    const { P, ANG } = trunkGeom(A, C, Lx), Lp = [], Rp = [];
+    P.forEach((p, i) => { const w = (60 - 26 * i / TN) / 2, a = ANG[i], nx = -Math.sin(a), ny = Math.cos(a);
+      Lp.push([p[0] + nx * w, p[1] + ny * w]); Rp.push([p[0] - nx * w, p[1] - ny * w]); });
+    const f = (q) => q[0].toFixed(1) + " " + q[1].toFixed(1), wt = (60 - 26) / 2;
+    const side = "M" + Lp.map(f).join(" L") + ` A${wt} ${wt} 0 0 0 ` + f(Rp[TN]) + " L" + Rp.slice(0, TN).reverse().map(f).join(" L");
+    el.tf.setAttribute("d", side + " Z"); el.tl.setAttribute("d", side); el.ts.setAttribute("d", side + " Z");
+    let wr = ""; [3, 4, 5].forEach((i) => { const a = Lp[i], b = Rp[i], m = P[i];
+      const ax = m[0] + (a[0] - m[0]) * 0.55, ay = m[1] + (a[1] - m[1]) * 0.55, bx = m[0] + (b[0] - m[0]) * 0.55, by = m[1] + (b[1] - m[1]) * 0.55;
+      wr += `M${ax.toFixed(1)} ${ay.toFixed(1)} Q${(m[0] + Math.cos(ANG[i]) * 5).toFixed(1)} ${(m[1] + Math.sin(ANG[i]) * 5).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)} `; });
+    el.tw.setAttribute("d", wr);
+    const tp = P[TN], ta = ANG[TN], nx = tp[0] + Math.cos(ta) * 4, ny = tp[1] + Math.sin(ta) * 4;
+    el.nos.setAttribute("cx", nx.toFixed(1)); el.nos.setAttribute("cy", ny.toFixed(1));
+    el.nos.setAttribute("transform", `rotate(${(ta * 180 / Math.PI + 90).toFixed(1)} ${nx.toFixed(1)} ${ny.toFixed(1)})`);
+  }
+  const tipLocal = (A, C, Lx) => trunkGeom(A, C, Lx).P[TN];
+
+
+  // ───────────────────────── tempo + lyric helpers ─────────────────────────
+  function beatPos(t) {
+    const n = BEATS.length;
+    if (t <= BEATS[0]) return (t - BEATS[0]) / (BEATS[1] - BEATS[0]);
+    if (t >= BEATS[n - 1]) return n - 1 + (t - BEATS[n - 1]) / (BEATS[n - 1] - BEATS[n - 2]);
+    let lo = 0, hi = n - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (BEATS[m] <= t) lo = m; else hi = m; }
+    return lo + (t - BEATS[lo]) / (BEATS[hi] - BEATS[lo]);
+  }
+  const BEAT = (BEATS[BEATS.length - 1] - BEATS[0]) / (BEATS.length - 1);
+  const beatsIn = (a, b) => BEATS.filter((x) => x >= a && x <= b);
+  const LT = {}; LINES.forEach((L, i) => (LT[L.tag] = i));
+  const ts = (tag) => LINES[LT[tag]].words[0][1];
+  const te = (tag) => LINES[LT[tag]].end;
+  const words = (tag) => LINES[LT[tag]].words;
+  const norm = (w) => w.replace("İ", "i").replace("I", "ı").toLowerCase().replace(/[^a-zçğıöşü]/g, "");
+  const SOUND = { "vız": "bee", "vızır": "bee", "vızıldar": "bee", "bal": "honey" };
+  const SCOL = { bee: "#F5A800", honey: "#E07B0C" };
+
+  // ───────────────────────── key times + scenes ─────────────────────────
+  const T = { door: 7.6, poppy: 9.1, sun: 38.75, lav: 72.4, party: 89.95, sneeze: 47.05, fly0: 56.2, fall: 60.7, wag0: 64.4, wag1: 71.2,
+    map0: 79.0, map1: 81.5, wipe: 89.25, pan0: 98.2, pan1: 111.0, end: 115.9 };
+  const scene = (t) => t < T.poppy ? 0 : t < T.sun ? 1 : t < T.lav ? 2 : t < T.party ? 3 : 4;
+  const SETS = ["setHive", "setPoppy", "setSun", "setLav", "setParty"];
+
+  // ───────────────────────── layout (scene space 1920×1300) ─────────────────────────
+  const POP = [[780, 1010, 380, 0.95], [1150, 1010, 470, 1.0], [1560, 1010, 350, 0.9]];       // x, y, stem h, scale
+  const SFL = [[880, 1020, 470, 0.95], [1240, 1020, 520, 1.0]];
+  const POND = { x: 1660, y: 935 };
+  const PURP = { x: 1120, y: 1020, h: 400 };
+  const TREE = { x: 1000, y: 1010 }, HIVE = { x: 1300, y: 575 }, POTP = { x: 1300, y: 1065 };
+  const SEAT = { fistik: [540, 1010, 0.62], mouse: [800, 1022, 0.95], duckling: [1060, 1022, 0.66], frog: [1560, 1022, 0.82], duck: [1770, 1032, 0.86] };
+  const headPos = (P, i) => [P[i][0], P[i][1] - P[i][2] * P[i][3]];
+  const TONGUE = ts("k2.8") + 0.95, CATCH = [POND.x - 70, POND.y - 210];          // the frog catches the honey drop here
+
+  const mk = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+  const cloud = (x, y, s, c = "#fff") => `<g transform="translate(${x} ${y}) scale(${s})" fill="${c}"><circle cx="80" cy="80" r="50"/><circle cx="150" cy="58" r="62"/><circle cx="222" cy="82" r="46"/><rect x="60" y="80" width="190" height="50" rx="25"/></g>`;
+  const sunFace = (id) => `<g id="${id}"><g class="rays" fill="#FFD84D">${Array.from({ length: 12 }, (_, i) => `<rect x="-7" y="-118" width="14" height="42" rx="7" transform="rotate(${i * 30})"/>`).join("")}</g>
+      <circle r="70" fill="#FFD84D" stroke="#F5B921" stroke-width="6"/><ellipse cx="-20" cy="-8" rx="7" ry="9" fill="#9A5B1E"/><ellipse cx="20" cy="-8" rx="7" ry="9" fill="#9A5B1E"/>
+      <ellipse cx="-36" cy="12" rx="12" ry="7" fill="#FF9F7A" opacity=".75"/><ellipse cx="36" cy="12" rx="12" ry="7" fill="#FF9F7A" opacity=".75"/><path d="M-18 14 Q0 32 18 14" stroke="#9A5B1E" stroke-width="6" fill="none" stroke-linecap="round"/></g>`;
+  const tuft = (x, y, c = "#4FAE48") => `<path d="M${x - 18} ${y} q7 -30 11 0 q5 -38 11 0 q7 -28 14 0z" fill="${c}"/>`;
+  const groundSet = (top, c1, c2) => `<path d="M-300 ${top} Q500 ${top - 40} 1000 ${top - 10} T2220 ${top} V1600 H-300Z" fill="${c1}"/><path d="M-300 ${top + 120} Q600 ${top + 90} 1200 ${top + 110} T2220 ${top + 105} V1600 H-300Z" fill="${c2}"/>`;
+  const sky = (id, a, b, c) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient></defs><rect x="-300" y="-400" width="2520" height="2100" fill="url(#${id})"/>`;
+
+  // ── SET 0 · hive interior (honeycomb wall) ──
+  { let cells = ""; const r = 74, w = r * Math.sqrt(3);
+    for (let row = -1; row < 12; row++) for (let col = -1; col < 15; col++) { const x = col * w + (row % 2 ? w / 2 : 0), y = row * r * 1.5;
+      if (Math.hypot(x - 960, y - 610) < 120) continue;
+      const k = (row * 7 + col * 13) % 9, fill = k < 3 ? "url(#gHoney)" : k < 5 ? "#FFE7A0" : "#F6C55A";
+      cells += `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><path d="${C.hexPath(r - 4)}" fill="${fill}" stroke="#C47A12" stroke-width="7"/>${k < 3 ? `<ellipse cx="-18" cy="-20" rx="16" ry="9" fill="#fff" opacity=".45" transform="rotate(-25 -18 -20)"/>` : ""}</g>`; }
+    E("setHive").innerHTML = `<rect x="-300" y="-400" width="2520" height="2100" fill="#E9A53A"/>${cells}
+      <g transform="translate(960 610)"><path d="${C.hexPath(150)}" fill="#7A4A12" stroke="#C47A12" stroke-width="10"/><path d="${C.hexPath(130)}" fill="#5A3408"/></g>
+      <g id="door" transform="translate(960 150)"><path d="${C.hexPath(120)}" fill="#BFE9FF" stroke="#C47A12" stroke-width="12"/><circle cx="40" cy="-20" r="30" fill="#FFF3B0"/><path d="M-100 50 Q-20 0 100 40 L100 70 L-100 70Z" fill="#8CD46A"/></g>
+      <g id="zzz" font-family="Baloo 2" font-weight="800" fill="#fff" stroke="#C47A12" stroke-width="5" paint-order="stroke">${[0, 1, 2].map((i) => `<text id="zz${i}" font-size="${60 + i * 16}" opacity="0">Z</text>`).join("")}</g>`; }
+
+  // ── SET 1 · red poppies ──
+  E("setPoppy").innerHTML = sky("gSk1", "#6EC3FF", "#B9E6FF", "#F2FBFF") + `<g id="cl1">${cloud(140, 120, 0.8) + cloud(1300, 70, 0.6) + cloud(800, 200, 0.45)}</g>
+    <g transform="translate(1680 180)">${sunFace("sun1")}</g>
+    <path d="M-300 760 Q300 680 900 740 T2220 720 V1600 H-300Z" fill="#CFEFB4"/>
+    ${Array.from({ length: 16 }, (_, i) => `<g transform="translate(${-150 + i * 140} ${770 + (i % 3) * 12}) scale(.28)">${C.poppy(260)}</g>`).join("")}
+    ${groundSet(900, "#8FD46E", "#79C25A")}
+    ${[60, 220, 1880, 1980, 360, 1720].map((x, i) => tuft(x, 960 + (i % 3) * 30)).join("")}
+    ${POP.map(([x, y, h, s], i) => `<g id="pp${i}" transform="translate(${x} ${y})">${C.poppy(h, s)}</g>`).join("")}`;
+
+  // ── SET 2 · sunflowers + frog pond ──
+  E("setSun").innerHTML = sky("gSk2", "#79CCFF", "#C6EDFF", "#FFF6D6") + `<g id="cl2">${cloud(200, 90, 0.7) + cloud(1100, 140, 0.55)}</g>
+    <path d="M-300 740 Q400 660 1000 720 T2220 700 V1600 H-300Z" fill="#E6F3B8"/>
+    ${Array.from({ length: 14 }, (_, i) => `<g class="sfb" data-x="${-120 + i * 160}" data-y="${790 + (i % 2) * 18}">${C.sunflower("sb" + i, 300, 0.36)}</g>`).join("")}
+    ${groundSet(905, "#93D673", "#7FC860")}
+    <ellipse cx="${POND.x}" cy="${POND.y + 20}" rx="300" ry="70" fill="#5CC2F0" stroke="#3A9AD0" stroke-width="7"/><ellipse cx="${POND.x - 60}" cy="${POND.y + 8}" rx="160" ry="22" fill="#B9EAFF" opacity=".6"/>
+    <g id="lily6" transform="translate(${POND.x} ${POND.y + 14})">${C.lily(1.2)}</g>
+    ${SFL.map(([x, y, h, s], i) => `<g id="sf${i}" transform="translate(${x} ${y})">${C.sunflower("sf" + i, h, s)}</g>`).join("")}`;
+
+  // ── SET 3 · lavender at golden hour ──
+  { let lav = ""; for (let i = 0; i < 70; i++) { const x = -200 + (i * 37) % 2320, y = 880 + (i * 53) % 260, h = 150 + (i * 29) % 90; lav += `<g class="lv" data-x="${x}" data-y="${y}" data-i="${i}">${C.lavender(h)}</g>`; }
+    E("setLav").innerHTML = sky("gSk3", "#FFB3A8", "#FFD6B0", "#FFF1D6") + `<g id="cl3">${cloud(160, 110, 0.7, "#FFF6F0") + cloud(1250, 70, 0.55, "#FFF6F0")}</g>
+      <g transform="translate(300 260)">${sunFace("sun3")}</g>
+      <path d="M-300 760 Q400 690 1000 740 T2220 720 V1600 H-300Z" fill="#D9C2F0"/>
+      ${groundSet(880, "#B99AE6", "#A584DC")}
+      ${lav}<g id="purpG" transform="translate(${PURP.x} ${PURP.y})">${C.purple(PURP.h)}</g>`; }
+
+  // ── SET 4 · honey party under the oak ──
+  E("setParty").innerHTML = sky("gSk4", "#7CCBFF", "#C8EEFF", "#FFF4D6") + `<g id="cl4">${cloud(120, 80, 0.7) + cloud(1450, 120, 0.6)}</g>
+    <g transform="translate(260 200)">${sunFace("sun4")}</g>
+    <path d="M-300 760 Q300 690 900 740 T2220 720 V1600 H-300Z" fill="#CDEFB0"/>
+    ${groundSet(920, "#8FD46E", "#7BC55C")}
+    ${[[200, 980, "#FF5A5F"], [380, 1050, "#FFC21A"], [1820, 990, "#A66BFF"], [1500, 1120, "#FF5A5F"], [120, 1130, "#A66BFF"]].map(([x, y, c]) => `<g transform="translate(${x} ${y}) scale(.4)">${c === "#FF5A5F" ? C.poppy(200) : c === "#FFC21A" ? C.sunflower("ps" + x, 220) : C.purple(200)}</g>`).join("")}
+    <g transform="translate(${TREE.x} ${TREE.y})">${C.oak()}</g>
+    <g id="hiveG" transform="translate(${HIVE.x} ${HIVE.y})">${C.hive()}</g>
+    <path id="fall" fill="url(#gHoney)" stroke="#C47A12" stroke-width="4" opacity="0"/>
+    <g transform="translate(${POTP.x} ${POTP.y})">${C.honeyPot()}</g>`;
+
+  // ───────────────────────── actors ─────────────────────────
+  E("actors").innerHTML = `${C.defs()}
+    <g id="frogPos"><g id="frog">${C.frog("fr")}</g></g>
+    <g id="mousePos"><g id="mouse">${C.mouse("ms")}</g></g>
+    <g id="ducklingPos"><g id="duckling">${C.duck("dl", true)}</g></g>
+    <g id="duckPos"><g id="duck">${C.duck("dk")}</g></g>
+    <g id="spoons">${["fistik", "mouse", "duckling", "frog", "duck"].map((k) => `<g id="sp_${k}" opacity="0">${C.spoon()}</g>`).join("")}</g>
+    <g id="minis">${Array.from({ length: 16 }, (_, i) => `<g id="mb${i}" opacity="0">${C.beeMini()}</g>`).join("")}</g>
+    <g id="bfly" opacity="0">${C.butterfly()}</g>
+    <path id="trail" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-dasharray="4 18" opacity="0"/>
+    <g id="beePos"><g id="bee">${C.bee("be")}</g></g>
+    <g id="drops">${Array.from({ length: 6 }, (_, i) => `<g id="hd${i}" opacity="0">${C.honeyDrop(1.1)}</g>`).join("")}</g>
+    <g id="hearts">${Array.from({ length: 15 }, (_, i) => `<g id="ht${i}" opacity="0">${C.heart(0.8)}</g>`).join("")}</g>
+    <g id="bridge">${Array.from({ length: 14 }, (_, i) => `<g id="bh${i}" opacity="0">${C.heart(0.6)}</g>`).join("")}</g>
+    <path id="tongue6" fill="none" stroke="#FF6F91" stroke-width="15" stroke-linecap="round" opacity="0"/>
+    <g id="title" font-family="Baloo 2" font-weight="800"><clipPath id="titleClip"><rect id="titleR" x="0" y="0" width="0" height="600"/></clipPath>
+      <g clip-path="url(#titleClip)">${[..."Arı Vız Vız"].map((ch, i) => `<text class="tch" x="${420 + i * 106}" y="330" font-size="190" fill="${TC[i % 6]}" stroke="#fff" stroke-width="22" paint-order="stroke" text-anchor="middle">${ch}</text>`).join("")}</g></g>
+    <g id="rings">${[0, 1].map((i) => `<g id="rg${i}" opacity="0" stroke="#FF5A5F" stroke-width="6" fill="none" stroke-linecap="round"><path d="M-22 -10 q-10 10 0 20"/><path d="M22 -10 q10 10 0 20"/><path d="M-34 -18 q-16 18 0 36"/><path d="M34 -18 q16 18 0 36"/></g>`).join("")}</g>`;
+  E("fxSvg").innerHTML = `<g id="spark">${Array.from({ length: 14 }, (_, i) => `<path id="sk${i}" d="M0 -16 L4 -4 L16 0 L4 4 L0 16 L-4 4 L-16 0 L-4 -4Z" fill="#FFF3B0" stroke="#F5A800" stroke-width="2.5" opacity="0"/>`).join("")}</g>
+    <g id="dust">${Array.from({ length: 10 }, (_, i) => `<circle id="du${i}" r="20" fill="#fff" opacity="0"/>`).join("")}</g>`;
+
+  // ── screen-space overlays ──
+  E("pollenOv").innerHTML = `<rect id="polBg" width="1920" height="1080" fill="#FFE45C" opacity="0"/>${Array.from({ length: 46 }, (_, i) => `<circle id="pl${i}" r="10" fill="#FFE45C" stroke="#F0B400" stroke-width="3" opacity="0"/>`).join("")}`;
+  { // map: top-down patchwork, trail from the lavender to the hive
+    const P = [[1390, 790], [1180, 690], [980, 600], [860, 470], [1000, 360], [1240, 300], [1430, 330], [1520, 310]];
+    E("mapOv").innerHTML = `<rect width="1920" height="1080" fill="#BFE8A0"/>
+      ${[[120, 640, 360, 300, "#FF6B6B"], [700, 220, 420, 260, "#FFD43B"], [200, 140, 340, 260, "#7CC35A"], [1180, 560, 420, 320, "#B48CF0"], [1500, 700, 300, 240, "#7CC35A"]].map(([x, y, w, h, c], i) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="60" fill="${c}" stroke="#fff" stroke-width="10" opacity=".9"/>${Array.from({ length: 10 }, (_, k) => `<circle cx="${x + 40 + (k * 71) % (w - 70)}" cy="${y + 40 + (k * 53) % (h - 70)}" r="12" fill="#fff" opacity=".35"/>`).join("")}`).join("")}
+      <path d="M0 520 Q500 460 980 520 T1920 480" stroke="#7FD3F5" stroke-width="34" fill="none" opacity=".9"/>
+      <g transform="translate(1560 300)"><circle r="120" fill="#5DBB55" stroke="#3F8A35" stroke-width="8"/><circle cx="-50" cy="-30" r="60" fill="#6CC75A"/><g transform="translate(40 30) scale(.45)">${C.hive()}</g></g>
+      <g id="mapDots">${Array.from({ length: 30 }, (_, i) => `<circle id="md${i}" r="9" fill="#fff" stroke="#3B2A1F" stroke-width="3" opacity="0"/>`).join("")}</g>
+      <g transform="translate(1390 830)"><circle r="40" fill="#A66BFF" stroke="#fff" stroke-width="6"/></g>
+      <g id="mapBee">${C.beeMini()}</g>
+      <rect x="20" y="20" width="1880" height="1040" rx="40" fill="none" stroke="#fff" stroke-width="16"/>`;
+    window.__mapPts = P; }
+  { // honeycomb counter (HUD): 3 cells fill with the colour of each flower
+    const cell = (i, c) => `<g transform="translate(${60 + i * 92} ${i % 2 ? 76 : 54})"><clipPath id="cc${i}"><path d="${C.hexPath(44)}"/></clipPath><path d="${C.hexPath(46)}" fill="#FFF4DC" stroke="#C47A12" stroke-width="7"/>
+      <g clip-path="url(#cc${i})"><rect id="cf${i}" x="-50" y="50" width="100" height="100" fill="${c}"/><rect id="cg${i}" x="-50" y="-50" width="100" height="100" fill="url(#gHoney)" opacity="0"/><ellipse cx="-14" cy="-18" rx="12" ry="7" fill="#fff" opacity=".6"/></g></g>`;
+    E("comb").innerHTML = `<rect x="6" y="2" width="288" height="128" rx="40" fill="rgba(255,255,255,.85)" stroke="#FFD43B" stroke-width="5"/>${cell(0, "#FF5A5F")}${cell(1, "#FFC21A")}${cell(2, "#A66BFF")}`; }
+  { // hex wipe grid
+    let h = ""; const r = 92, w = r * Math.sqrt(3); for (let row = -1; row < 9; row++) for (let col = -1; col < 13; col++) { const x = col * w + (row % 2 ? w / 2 : 0), y = row * r * 1.5;
+      h += `<path class="hw" data-d="${Math.hypot(x - 960, y - 540).toFixed(0)}" d="${C.hexPath(r + 2)}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(0)" fill="${(row + col) % 3 ? "#FFC93D" : "#F5A800"}" stroke="#C47A12" stroke-width="6"/>`; }
+    E("hexWipe").innerHTML = h; }
+
+  // pools
+  const pool = (host, n, cls, id, extra) => { for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "abs " + cls; d.id = id + i; d.style.opacity = 0; d.style.left = "0px"; d.style.top = "0px"; if (extra) extra(d, i); E(host).appendChild(d); } };
+  pool("confBox", 150, "conf", "cf", (d, i) => { d.style.background = ["#FFC21A", "#FF5A5F", "#A66BFF", "#3FBF6F", "#3D9BFF"][i % 5]; });
+  pool("crumbBox", 40, "crumb", "cr");
+  const letters = (txt, host) => [...txt].forEach((ch, i) => { const s = document.createElement("span"); s.textContent = ch === " " ? " " : ch; s.style.color = TC[i % 6]; host.appendChild(s); });
+  letters("Fıstık Fil", $("#endBig"));
+
+  // ───────────────────────── lyrics + sound words ─────────────────────────
+  LINES.forEach((L, li) => { const d = document.createElement("div"); d.className = "line"; d.id = "ln" + li;
+    L.words.forEach((w, wi) => { const s = document.createElement("span"); s.id = `w${li}_${wi}`; s.textContent = w[0]; d.appendChild(s); }); E("lyric").appendChild(d); });
+
+  // ───────────────────────── animated state ─────────────────────────
+  const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5], wave: [40, -130, 26], up: [-70, -30, 27], reach: [10, 60, 25], eat: [150, -60, 20], flyup: [-90, 20, 24] };
+  const R = { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, flap: 0, walk: 0, sway: 0, tilt: 0, bob: 1, dance: 0, jy: 0, rot: 0 };
+  const CAM = { x: 960, y: 600, s: 1.0, r: 0 };
+  const ENV = { glow: 0, flash: 0, trail: 0, pollen: 0, map: 0, panels: 0 };
+  const AN = { beeOpen: 0, frogOpen: 0, duckOpen: 0, dlOpen: 0, msOpen: 0, party: 0, wingUp: 0, beeSleep: 1, yawn: 0, beeStretch: 0, sac: 0, frArm: 0 };
+  const JUMP = { frog: 0 };
+  const EV = { conf: [], crumbs: [], hearts: [], dust: [], spark: [] };
+  const XF = [];                                   // honey drops: {t0, dur, hold, from(), to(), who, giver, kind}
+  let VIEW = { s: 1, cx: 960, cy: 540 };
+  const W2S = (x, y) => [960 + (x - VIEW.cx) * VIEW.s, 540 + (y - VIEW.cy) * VIEW.s];
+
+  // ───────────────────────── the bee's flight (pure function of t) ─────────────────────────
+  const [P1x, P1y] = headPos(POP, 1), [S1x, S1y] = headPos(SFL, 1);
+  // keyframes [t, x, y, face]; held positions = hover stops
+  const BK = [
+    [0, 960, 640, 1], [5.0, 960, 640, 1], [6.4, 900, 470, 1], [7.4, 960, 260, 1], [8.6, 960, 120, 1],
+    [9.1, 120, 330, 1], [9.5, 260, 300, 1], [15.4, 1660, 290, 1], [16.6, 1560, 520, 1],
+    [17.4, 780, 520, -1], [18.6, 980, 430, 1], [19.6, 760, 560, -1], [20.6, 1000, 400, 1], [21.6, P1x - 10, P1y - 70, 1], [26.0, P1x - 10, P1y - 70, 1],
+    [28.8, P1x, P1y - 230, 1], [30.2, 900, 420, -1], [31.4, 700, 400, -1], [33.8, 700, 400, -1],
+    [34.6, 900, 420, 1], [36.6, 1640, 360, 1], [38.4, 1100, 420, -1],
+    [38.75, 400, 260, 1], [39.6, 600, 360, 1], [40.8, 900, 320, 1], [42.0, 700, 420, -1], [43.2, S1x + 40, S1y - 190, 1], [45.0, S1x + 40, S1y - 190, 1], [47.0, S1x + 40, S1y - 190, 1],
+    [47.25, S1x - 40, S1y - 260, -1], [49.5, S1x - 20, S1y - 260, 1], [51.0, 1450, 520, 1], [52.0, POND.x - 80, POND.y - 330, -1], [55.6, POND.x - 80, POND.y - 330, -1],
+    [56.6, 980, 520, -1], [63.6, 980, 520, -1],
+    [72.4, 260, 380, 1], [73.4, 520, 440, 1], [75.0, 860, 380, 1], [76.2, 700, 480, -1], [77.4, PURP.x + 10, PURP.y - PURP.h - 90, 1], [81.2, PURP.x + 10, PURP.y - PURP.h - 90, 1],
+    [82.0, PURP.x, 470, 1], [85.6, PURP.x, 470, 1], [87.0, PURP.x - 120, 430, -1], [89.2, PURP.x, 420, 1],
+    [89.95, HIVE.x - 260, 420, 1], [91.5, HIVE.x - 220, 470, 1], [97.5, HIVE.x - 220, 470, 1], [111.2, HIVE.x - 220, 470, 1], [113.0, HIVE.x - 120, 520, -1], [115.9, HIVE.x - 120, 520, -1], [117.94, 2300, 180, 1],
+  ];
+  function kfAt(t) { let i = 0; while (i < BK.length - 2 && BK[i + 1][0] <= t) i++;
+    const a = BK[i], b = BK[i + 1], u = smooth(a[0], b[0], t); return [lerp(a[1], b[1], u), lerp(a[2], b[2], u), u < 0.5 ? a[3] : b[3]]; }
+  function beePos(t) {
+    let [x, y, f] = kfAt(t), rot = 0, s = 0.8, sleep = t < 5.0 ? 1 : 0;
+    if (t < T.poppy) s = t < 5 ? 1.25 : lerp(1.25, 0.9, pIn(t, 5, 2));
+    // loop-the-loop on "vızır vızır vızıldar"
+    { const a0 = 26.0, a1 = 28.8; if (t > a0 && t < a1) { const u = easeOut(pIn(t, a0, a1 - a0) * 1.0), ang = -Math.PI / 2 + u * TAU; x = P1x - 10 + 170 * Math.cos(ang) * 1.1; y = P1y - 240 + 170 * Math.sin(ang); rot = u * 360; } }
+    // figure-eight waggle dance
+    if (t > T.wag0 && t < T.wag1) { const w = pIn(t, T.wag0, T.wag1 - T.wag0) * 2 * TAU, cx = 980, cy = 480; x = cx + 300 * Math.sin(w); y = cy + 120 * Math.sin(2 * w); f = Math.cos(w) >= 0 ? 1 : -1; rot = 12 * Math.sin(t * 30); }
+    // shake-off after the sneeze
+    if (t > 47.6 && t < 49.4) rot = 22 * Math.sin(t * 40) * (1 - pIn(t, 48.8, 0.6));
+    const hov = t < 5 ? 0 : 1; x += hov * 8 * Math.sin(t * 3.3); y += hov * 12 * Math.sin(t * 5.1);
+    // landed on a flower: ride the petals (trampoline)
+    if (t > 21.6 && t < 26) y += 18 * Math.abs(Math.sin((t - 21.6) * 7)) * Math.exp(-(t - 21.6) * 1.2);
+    return { x, y, s, f, rot, sleep };
+  }
+  const beeMouth = (t) => { const b = beePos(t); return [b.x + 66 * b.s * b.f, b.y + 20 * b.s]; };
+
+  // ── other characters ──
+  function fistikPos(t) { const sc = scene(t);
+    if (sc === 1) return { x: 430, y: 990, s: 0.76, vis: true };
+    if (sc === 2) return { x: 560, y: 1000, s: 0.7, vis: true };
+    if (sc === 3) return { x: 360, y: 1015, s: 0.62, vis: true };
+    if (sc === 4) return { x: lerp(-260, SEAT.fistik[0], smooth(90.3, 93.0, t)), y: SEAT.fistik[1], s: SEAT.fistik[2], vis: true, walk: t > 90.3 && t < 93 };
+    return { x: -999, y: 0, s: 0.7, vis: false }; }
+  function frogPos(t) { const sc = scene(t);
+    if (sc === 2) return { x: POND.x, y: POND.y + 6, s: 0.85, vis: t > 49.0 };
+    if (sc === 4) { const u = pIn(t, 91.0, 3.2), h = u > 0 && u < 1 ? Math.abs(Math.sin(Math.PI * u * 5)) * 60 : 0; return { x: lerp(2250, SEAT.frog[0], u), y: SEAT.frog[1] - h, s: SEAT.frog[2], vis: true }; }
+    return { vis: false }; }
+  const duckP = (t, k, t0, x0) => ({ x: lerp(x0, SEAT[k][0], smooth(t0, t0 + 2.8, t)), y: SEAT[k][1], s: SEAT[k][2], vis: scene(t) === 4, wad: t > t0 && t < t0 + 2.8 ? 1 : 0 });
+  function mousePos(t) { const u = smooth(91.4, 93.4, t); return { x: lerp(-200, SEAT.mouse[0], u), y: SEAT.mouse[1], s: SEAT.mouse[2], vis: scene(t) === 4, run: t > 91.4 && t < 93.4 }; }
+  const tipScene = (t) => { const p = fistikPos(t), q = tipLocal(R.A, R.C, R.L); return [p.x + (q[0] - 300) * p.s, p.y + (q[1] - 620) * p.s + R.jy]; };
+  const fistikMouth = (t) => { const p = fistikPos(t); return [p.x + (250 - 300) * p.s, p.y + (345 - 620) * p.s + R.jy]; };
+  const frogMouth = (t) => { const p = frogPos(t); return [p.x, p.y - 66 * p.s]; };
+  const beakOf = (k, t) => { const p = duckP(t, k, k === "duck" ? 92.0 : 92.6, 2300); return [p.x - 112 * p.s, p.y - 140 * p.s]; };
+  const mouseMouth = (t) => { const p = mousePos(t); return [p.x + 10 * p.s, p.y - 92 * p.s]; };
+  const headOf = (who, t) => who === "fistik" ? (() => { const p = fistikPos(t); return [p.x, p.y - 470 * p.s + R.jy]; })() : who === "frog" ? (() => { const p = frogPos(t); return [p.x, p.y - 150 * p.s]; })()
+    : who === "bee" ? (() => { const b = beePos(t); return [b.x, b.y - 80 * b.s]; })() : who === "mouse" ? (() => { const p = mousePos(t); return [p.x, p.y - 190 * p.s]; })()
+    : (() => { const p = duckP(t, who, who === "duck" ? 92.0 : 92.6, 2300); return [p.x - 40 * p.s, p.y - 210 * p.s]; })();
+
+  // eyes / mouths (shared)
+  const blinkAmt = (t, seed) => { const ph = ((t + seed * 1.37) % 3.9 + 3.9) % 3.9; return ph < 0.16 ? Math.sin(Math.PI * ph / 0.16) : 0; };
+  function eyes(root, t, seed, lx = 0, ly = 0, extra = 0) { const b = Math.max(blinkAmt(t, seed), extra);
+    root.querySelectorAll(".lid").forEach((l) => { const top = +l.dataset.top; l.setAttribute("transform", `translate(0 ${top}) scale(1 ${b.toFixed(3)}) translate(0 ${-top})`); });
+    root.querySelectorAll(".pup").forEach((p2) => p2.setAttribute("transform", `translate(${lx.toFixed(1)} ${ly.toFixed(1)})`)); }
+  const talk = (root, o) => { const h = root.querySelector(".mHappy"), m = root.querySelector(".mOpen"); if (h) h.setAttribute("opacity", (1 - o).toFixed(2)); if (m) m.setAttribute("opacity", o.toFixed(2)); };
+  const chewOf = (who, t) => { let c = 0; XF.forEach((x) => { if (x.who !== who) return; const L = x.t0 + x.dur + x.hold * 0.4, u = t - L; if (u > 0 && u < 1.0) c = Math.max(c, (0.5 + 0.5 * Math.sin(u * 24)) * (1 - u)); }); return c; };
+
+  // hexagon panels (final): portraits of every friend, cloned from the live drawings
+  const PANEL = { r: 186, d: 324 }, PANELS = [[960, 540, "bee", "#FFE45C"]];
+  [-90, -30, 30, 90, 150, 210].forEach((a, i) => PANELS.push([960 + PANEL.d * Math.cos(a * Math.PI / 180), 540 + PANEL.d * Math.sin(a * Math.PI / 180), ["fistik", "frog", "duck", "duckling", "mouse", "sun"][i], ["#8CD3FF", "#B6F09A", "#FFD7A8", "#FFF2B0", "#E5D8FF", "#FFC9C9"][i]]));
+
+  function render(t) {
+    const bp = beatPos(t), beatPh = TAU * bp, sc = scene(t);
+    // ── camera ──
+    const s = Math.max(1, CAM.s), hx = 960 / s, hy = 540 / s;
+    const cx = Math.min(1920 - hx + 160, Math.max(hx - 160, CAM.x)), cy = Math.min(1300 - hy, Math.max(hy - 120, CAM.y));
+    VIEW = { s, cx, cy };
+    E("cam").style.transform = `translate(960px, 540px) rotate(${CAM.r.toFixed(2)}deg) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)}px, ${(-cy).toFixed(1)}px)`;
+    SETS.forEach((id, i) => (E(id).style.display = i === sc ? "block" : "none"));
+
+    // ── Fıstık rig ──
+    const fp = fistikPos(t);
+    E("charWrap").style.display = fp.vis ? "block" : "none"; E("fShadow").setAttribute("opacity", fp.vis ? 1 : 0);
+    if (fp.vis) {
+      const walking = fp.walk ? 1 : R.walk, bob = R.bob * (9 + 10 * R.dance) * (1 - Math.cos(beatPh)) / 2;
+      el.rig.setAttribute("transform", `translate(0 ${(-bob).toFixed(2)})`);
+      const ea = R.earAmp * 6 * Math.sin(beatPh) + R.flap * 34 * Math.sin(t * 24);
+      el.earL.setAttribute("transform", `rotate(${(-ea).toFixed(2)} 222 230)`);
+      el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-ea).toFixed(2)} 222 230)`);
+      el.tail.setAttribute("transform", `rotate(${(14 * Math.sin(beatPh / 2)).toFixed(2)} 432 470)`);
+      el.pom.setAttribute("transform", `rotate(${(10 * Math.sin(beatPh - 0.8)).toFixed(2)} 300 100)`);
+      const tilt = R.tilt + (R.sway + R.dance) * 7 * Math.sin(beatPh / 2) + 2 * Math.sin(TAU * t / (BEAT * 8));
+      el.head.setAttribute("transform", `rotate(${tilt.toFixed(2)} 300 360)`);
+      el.legs.forEach((g, i) => { const [px, py, ph] = LEGP[i], a = walking * 20 * Math.sin(beatPh + ph), lift = walking * 8 * Math.max(0, Math.sin(beatPh + ph));
+        g.setAttribute("transform", `translate(${px} ${(py - lift).toFixed(2)}) rotate(${a.toFixed(2)})`); });
+      el.pupils.setAttribute("transform", `translate(${R.lookX.toFixed(1)} ${R.lookY.toFixed(1)})`);
+      const lid = clamp(Math.max(R.blink, blinkAmt(t, 0.3)), 0, 1) * 92; el.lidL.setAttribute("height", lid.toFixed(1)); el.lidR.setAttribute("height", lid.toFixed(1));
+      const m = Math.max(0, R.mouth, 0.7 * chewOf("fistik", t)), my = 334, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * m).toFixed(1)} 224 ${my} Z`;
+      el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", m > 0.04 ? "#8C2F45" : "none");
+      el.tongue.setAttribute("ry", (m > 0.15 ? 12 * m : 0).toFixed(1)); el.tongue.setAttribute("cy", (my + 6 + 24 * m).toFixed(1));
+      drawTrunk(R.A + 3 * Math.sin(t * 2.3), R.C, R.L);
+      const sh = E("fShadow"), lift = clamp(-R.jy / 300, 0, 1); sh.setAttribute("cx", fp.x.toFixed(1)); sh.setAttribute("cy", (fp.y + 4).toFixed(1)); sh.setAttribute("rx", (170 * fp.s * (1 - 0.5 * lift)).toFixed(1)); sh.setAttribute("ry", (34 * fp.s * (1 - 0.5 * lift)).toFixed(1));
+      E("charWrap").style.transform = `translate(${(fp.x - 300 * fp.s).toFixed(1)}px, ${(fp.y - 620 * fp.s + R.jy).toFixed(1)}px) scale(${fp.s}) translate(300px, 620px) rotate(${R.rot.toFixed(2)}deg) translate(-300px, -620px)`; }
+
+    // ── sets: ambient motion ──
+    const sway = (id, base, i, a = 2) => { const g = E(id); if (g) g.setAttribute("transform", `${base} rotate(${(a * Math.sin(t * 1.3 + i)).toFixed(2)})`); };
+    if (sc === 0) { const zz = ["zz0", "zz1", "zz2"]; zz.forEach((id, i) => { const u = ((t * 0.6 + i / 3) % 1), on = t < 3.4; const z = E(id);
+        z.setAttribute("opacity", on ? (Math.sin(Math.PI * u)).toFixed(2) : 0); z.setAttribute("x", (1010 + 60 * u + 20 * i).toFixed(1)); z.setAttribute("y", (560 - 160 * u - 20 * i).toFixed(1)); });
+      E("door").setAttribute("transform", `translate(960 150) scale(${(1 + 0.04 * Math.sin(t * 3)).toFixed(3)})`); }
+    if (sc === 1) { E("cl1").setAttribute("transform", `translate(${((t * 10) % 300).toFixed(1)} 0)`); E("sun1").querySelector(".rays").setAttribute("transform", `rotate(${(t * 12).toFixed(1)})`);
+      POP.forEach(([x, y, h, s2], i) => { let a = 2 * Math.sin(t * 1.2 + i), sy = 1; if (i === 1 && t > 21.6 && t < 26) { const k = t - 21.6; sy = 1 - 0.12 * Math.abs(Math.sin(k * 7)) * Math.exp(-k * 1.2); }
+        E("pp" + i).setAttribute("transform", `translate(${x} ${y}) rotate(${a.toFixed(2)}) scale(1 ${sy.toFixed(3)})`); }); }
+    if (sc === 2) { E("cl2").setAttribute("transform", `translate(${((t * 10) % 300).toFixed(1)} 0)`);
+      document.querySelectorAll(".sfb").forEach((g, i) => g.setAttribute("transform", `translate(${g.dataset.x} ${g.dataset.y}) rotate(${(3 * Math.sin(beatPh / 2 + i)).toFixed(2)})`));
+      SFL.forEach(([x, y], i) => { const nod = 4 * Math.sin(beatPh / 2 + i), recoil = i === 1 ? -14 * Math.exp(-Math.max(0, t - T.sneeze) * 3) * (t > T.sneeze ? 1 : 0) : 0;
+        E("sf" + i).setAttribute("transform", `translate(${x} ${y}) rotate(${(nod + recoil).toFixed(2)})`);
+        E("sf" + i).querySelectorAll(".eyeC").forEach((e) => e.setAttribute("transform", `translate(0 ${(blinkAmt(t, i + 5) * 6).toFixed(1)})`)); });
+      E("lily6").setAttribute("transform", `translate(${POND.x} ${(POND.y + 14 + 3 * Math.sin(t * 1.7)).toFixed(1)})`); }
+    if (sc === 3) { E("cl3").setAttribute("transform", `translate(${((t * 8) % 300).toFixed(1)} 0)`); E("sun3").querySelector(".rays").setAttribute("transform", `rotate(${(t * 10).toFixed(1)})`);
+      document.querySelectorAll(".lv").forEach((g) => { const i = +g.dataset.i; g.setAttribute("transform", `translate(${g.dataset.x} ${g.dataset.y}) rotate(${(4 * Math.sin(t * 1.6 + i * 0.4)).toFixed(2)})`); });
+      E("purpG").setAttribute("transform", `translate(${PURP.x} ${PURP.y}) rotate(${(2 * Math.sin(t * 1.2)).toFixed(2)})`); }
+    if (sc === 4) { E("cl4").setAttribute("transform", `translate(${((t * 10) % 300).toFixed(1)} 0)`); E("sun4").querySelector(".rays").setAttribute("transform", `rotate(${(t * 12).toFixed(1)})`);
+      E("hiveG").setAttribute("transform", `translate(${HIVE.x} ${HIVE.y}) rotate(${(2.5 * Math.sin(t * 1.4)).toFixed(2)})`);
+      const fu = pIn(t, 90.6, 0.8), top = HIVE.y + 262, bot = POTP.y - 175, w = 18 + 4 * Math.sin(t * 9);
+      E("fall").setAttribute("opacity", fu > 0 ? 1 : 0);
+      E("fall").setAttribute("d", `M${HIVE.x - 34} ${top} Q${HIVE.x - w} ${lerp(top, bot, 0.5)} ${HIVE.x - w} ${lerp(top, bot, fu)} L${HIVE.x + w} ${lerp(top, bot, fu)} Q${HIVE.x + w} ${lerp(top, bot, 0.5)} ${HIVE.x + 10} ${top}Z`); }
+
+    // ── the bee ──
+    { const b = beePos(t), g = E("beePos"), bee = E("bee"), wing = b.sleep ? 0 : Math.sin(t * 62), stretch = AN.beeStretch;
+      g.setAttribute("transform", `translate(${b.x.toFixed(1)} ${b.y.toFixed(1)}) rotate(${b.rot.toFixed(1)}) scale(${(b.s * b.f).toFixed(3)} ${b.s.toFixed(3)})`);
+      bee.querySelector(".wingF").setAttribute("transform", `rotate(${(28 * wing).toFixed(1)} 26 -44)`); bee.querySelector(".wingB").setAttribute("transform", `rotate(${(-24 * wing).toFixed(1)} 0 -44)`);
+      const breath = 0.03 * Math.sin(t * (b.sleep ? 2 : 4)); bee.querySelector(".body").setAttribute("transform", `scale(${(1 + breath + 0.1 * stretch).toFixed(3)} ${(1 - breath - 0.06 * stretch).toFixed(3)})`);
+      bee.querySelector(".head").setAttribute("transform", `rotate(${(6 * Math.sin(beatPh / 2) * (1 - b.sleep) + (b.sleep ? 14 : 0)).toFixed(2)} 62 30)`);
+      const ring = t > 2.4 && t < 3.5 ? 18 * Math.sin(t * 60) : 0;
+      bee.querySelector(".antL").setAttribute("transform", `rotate(${(ring + 6 * Math.sin(t * 4)).toFixed(1)} 50 -50)`); bee.querySelector(".antR").setAttribute("transform", `rotate(${(-ring + 6 * Math.sin(t * 4 + 1)).toFixed(1)} 70 -46)`);
+      bee.querySelector(".pollen").setAttribute("opacity", ENV.pollen.toFixed(2));
+      talk(bee, Math.max(AN.beeOpen, AN.yawn)); eyes(bee, t, 2.2, 3, 0, b.sleep ? 1 : 0);
+      [0, 1].forEach((i) => { const r2 = E("rg" + i); if (ring) { r2.setAttribute("opacity", 1); r2.setAttribute("transform", `translate(${(b.x + (i ? 100 : 14) * b.s * b.f).toFixed(1)} ${(b.y - 108 * b.s).toFixed(1)}) scale(${(1 + 0.2 * Math.abs(Math.sin(t * 20))).toFixed(2)})`); } else r2.setAttribute("opacity", 0); }); }
+    // flight trail (motif): recent positions of the bee, dashed
+    { const tr = ENV.trail, p = E("trail"); if (tr > 0.01) { const pts = []; for (let k = 0; k < 34; k++) { const tt = t - k * 0.05; if (scene(tt) !== sc) break; const b = beePos(tt); pts.push(`${(b.x - 60 * b.s * b.f).toFixed(1)} ${(b.y + 10 * b.s).toFixed(1)}`); }
+        p.setAttribute("d", pts.length > 1 ? "M" + pts.join(" L") : ""); p.setAttribute("opacity", tr.toFixed(2)); } else p.setAttribute("opacity", 0); }
+    // skywritten title
+    { const b = beePos(t), on = sc === 1 && t < 17.4; E("title").setAttribute("opacity", on ? (1 - pIn(t, 16.6, 0.6)).toFixed(2) : 0);
+      E("titleR").setAttribute("width", on ? Math.max(0, b.x - 340).toFixed(0) : 0);
+      document.querySelectorAll(".tch").forEach((c, i) => c.setAttribute("transform", `translate(0 ${(8 * Math.sin(t * 3 + i) - 60 * pIn(t, 16.6, 0.6)).toFixed(1)})`)); }
+
+    // ── butterfly (break 1) ──
+    { const g = E("bfly"); if (sc === 1 && t > 33.8) { const u = t < 36.6 ? pIn(t, 34.0, 2.6) : 1 - pIn(t, 36.6, 1.8), x = lerp(1000, 1800, easeOut(u)) + (t > 36.6 ? -220 : 0), y = 380 + 40 * Math.sin(t * 4);
+        const dir = t < 36.6 ? 1 : -1; g.setAttribute("opacity", 1); g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(8 * Math.sin(t * 3)).toFixed(1)}) scale(${(0.8 * dir).toFixed(2)} 0.8)`);
+        const fl = Math.abs(Math.cos(t * 16)); g.querySelector(".wl").setAttribute("transform", `scale(${fl.toFixed(3)} 1)`); g.querySelector(".wr").setAttribute("transform", `scale(${fl.toFixed(3)} 1)`); window.__bf = [x, y]; }
+      else g.setAttribute("opacity", 0); }
+
+    // ── mini bees: waggle followers + heart swarm ──
+    for (let i = 0; i < 16; i++) { const g = E("mb" + i); let on = false, x = 0, y = 0, f = 1, sc2 = 0.9;
+      if (sc === 2 && t > T.wag0 + 1.2 + (i % 4) * 0.4 && t < T.wag1 + 0.6 && i < 4) { const b = beePos(t - 0.35 * (i + 1)); on = true; x = b.x - 30; y = b.y + 30; f = b.f; }
+      if (sc === 3 && t > 81.3 && t < 86.6) { const th = i / 16 * TAU, hx2 = 16 * Math.pow(Math.sin(th), 3), hy2 = -(13 * Math.cos(th) - 5 * Math.cos(2 * th) - 2 * Math.cos(3 * th) - Math.cos(4 * th));
+        const b = beePos(t), tx = b.x + hx2 * 19, ty = b.y - 30 + hy2 * 19, sx = b.x + (i % 2 ? 1400 : -1400) * (0.6 + (i % 5) * 0.1), sy = b.y - 600 + (i * 97) % 900;
+        const u = easeOut(pIn(t, 81.4 + i * 0.05, 1.1)), o = pIn(t, 85.9, 0.7); on = true; x = lerp(sx, tx, u) + o * (tx - b.x) * 3; y = lerp(sy, ty, u) + 6 * Math.sin(t * 6 + i) - o * 400; f = tx > b.x ? 1 : -1; sc2 = 0.8 * (1 + 0.1 * Math.max(0, Math.sin(beatPh))); }
+      if (on) { g.setAttribute("opacity", 1); g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(sc2 * f).toFixed(2)} ${sc2.toFixed(2)})`); g.querySelector(".mw").setAttribute("transform", `rotate(${(30 * Math.sin(t * 60 + i)).toFixed(0)} 0 -12)`); }
+      else g.setAttribute("opacity", 0); }
+
+    // ── frog, mouse, duck, duckling ──
+    const frp = frogPos(t);
+    E("frogPos").setAttribute("opacity", frp.vis ? 1 : 0);
+    if (frp.vis) { const fj = JUMP.frog > 0 && JUMP.frog < 1 ? Math.sin(Math.PI * JUMP.frog) : 0, party = AN.party * 14 * Math.abs(Math.sin(beatPh / 2)), lift = fj * 140 + party, breath = 0.012 * Math.sin(t * 2.6);
+      E("frogPos").setAttribute("transform", `translate(${frp.x.toFixed(1)} ${frp.y.toFixed(1)}) scale(${frp.s})`);
+      const fr = E("frog"), body = fr.querySelector(".body"), land = JUMP.frog > 0.85 && JUMP.frog < 1 ? Math.sin(Math.PI * (JUMP.frog - 0.85) / 0.15) : 0;
+      body.setAttribute("transform", `translate(0 ${(-lift / frp.s).toFixed(1)}) scale(${(1 - fj * 0.08 + land * 0.12 + breath).toFixed(3)} ${(1 + fj * 0.1 - land * 0.12 - breath).toFixed(3)})`);
+      fr.querySelector(".shd").setAttribute("transform", `scale(${(1 - 0.5 * clamp(lift / 140, 0, 1)).toFixed(3)})`);
+      talk(fr, Math.max(AN.frogOpen, chewOf("frog", t) * 0.8)); fr.querySelector(".hatC").setAttribute("opacity", 0);
+      fr.querySelector(".sac").setAttribute("ry", (AN.sac * 26).toFixed(1)); fr.querySelector(".sac").setAttribute("cy", (-50 + AN.sac * 10).toFixed(1));
+      fr.querySelector(".armL").setAttribute("transform", `rotate(${(AN.frArm * 70).toFixed(1)} -46 -40)`); fr.querySelector(".armR").setAttribute("transform", `rotate(${(-AN.party * 30 * Math.abs(Math.sin(beatPh / 2))).toFixed(1)} 46 -40)`);
+      eyes(fr, t, 1, -4, -3); }
+    const duckDraw = (gid, pos, open, party, seed) => {
+      const g = E(gid + "Pos"), d = E(gid); g.setAttribute("opacity", pos.vis ? 1 : 0); if (!pos.vis) return;
+      const wph = t * 14, step = pos.wad ? Math.sin(wph) : 0, bob = pos.wad ? 6 * Math.abs(Math.sin(wph)) : 0, pb = party * 12 * Math.abs(Math.sin(beatPh / 2 + seed));
+      g.setAttribute("transform", `translate(${pos.x.toFixed(1)} ${pos.y.toFixed(1)}) scale(${pos.s})`);
+      const body = d.querySelector(".body"), head = d.querySelector(".head"), breath = 0.012 * Math.sin(t * 2.4 + seed), yUp = -(bob + pb) / pos.s, tilt = 5 * step + party * 5 * Math.sin(beatPh / 2);
+      body.setAttribute("transform", `translate(0 ${yUp.toFixed(1)}) rotate(${tilt.toFixed(2)} 0 -60) scale(${(1 + breath).toFixed(3)} ${(1 - breath).toFixed(3)})`);
+      head.setAttribute("transform", `translate(0 ${(yUp + 3 * Math.sin(beatPh) * (0.4 + party)).toFixed(1)}) rotate(${(tilt * 0.6).toFixed(2)} -40 -150)`);
+      d.querySelector(".beakTop").setAttribute("transform", `rotate(${(14 * open).toFixed(1)} -78 -144)`); d.querySelector(".beakBot").setAttribute("transform", `rotate(${(-18 * open).toFixed(1)} -78 -132)`);
+      d.querySelector(".wing").setAttribute("transform", `rotate(${(party * 22 * Math.sin(beatPh)).toFixed(1)} 10 -96)`);
+      d.querySelectorAll(".legL, .legR").forEach((l, i) => { const x = +l.dataset.x; l.setAttribute("transform", `rotate(${((i ? -1 : 1) * 24 * step).toFixed(1)} ${x} -40)`); });
+      eyes(d, t, seed, -2, 0); };
+    duckDraw("duck", duckP(t, "duck", 92.0, 2300), Math.max(AN.duckOpen, 0.8 * chewOf("duck", t)), AN.party, 2);
+    duckDraw("duckling", duckP(t, "duckling", 92.6, 2300), Math.max(AN.dlOpen, 0.8 * chewOf("duckling", t)), AN.party, 3.3);
+    { const mp = mousePos(t), g = E("mousePos"), mo = E("mouse"); g.setAttribute("opacity", mp.vis ? 1 : 0);
+      if (mp.vis) { const run = mp.run ? 8 * Math.abs(Math.sin(t * 22)) : 0, pb = AN.party * 14 * Math.abs(Math.sin(beatPh / 2 + 0.6)), breath = 0.015 * Math.sin(t * 3);
+        g.setAttribute("transform", `translate(${mp.x.toFixed(1)} ${(mp.y - run - pb).toFixed(1)}) scale(${mp.s} ${mp.s})`);
+        mo.querySelector(".body").setAttribute("transform", `scale(${(1 + breath).toFixed(3)} ${(1 - breath).toFixed(3)})`);
+        mo.querySelector(".head").setAttribute("transform", `rotate(${(4 * Math.sin(beatPh / 2)).toFixed(2)} 4 -80)`);
+        mo.querySelector(".earL").setAttribute("transform", `rotate(${(6 * Math.sin(t * 5)).toFixed(1)} -34 -130)`); mo.querySelector(".earR").setAttribute("transform", `rotate(${(-6 * Math.sin(t * 5 + 1)).toFixed(1)} 40 -128)`);
+        mo.querySelector(".tail").setAttribute("transform", `rotate(${(12 * Math.sin(t * 3.5)).toFixed(1)} -30 -14)`);
+        talk(mo, Math.max(AN.msOpen, 0.8 * chewOf("mouse", t))); eyes(mo, t, 4.1, 2, 0); } }
+    // spoons in hand at the party
+    [["fistik", () => tipScene(t)], ["mouse", () => { const p = mousePos(t); return [p.x + 30 * p.s, p.y - 40 * p.s]; }], ["duckling", () => { const p = duckP(t, "duckling", 92.6, 2300); return [p.x - 60 * p.s, p.y - 70 * p.s]; }],
+     ["frog", () => { const p = frogPos(t); return [p.x - 60 * p.s, p.y - 40 * p.s]; }], ["duck", () => { const p = duckP(t, "duck", 92.0, 2300); return [p.x - 60 * p.s, p.y - 70 * p.s]; }]].forEach(([k, f], i) => {
+      const g = E("sp_" + k), on = sc === 4 && t > 94.0 + i * 0.25; g.setAttribute("opacity", on ? 1 : 0); if (!on) return;
+      const [x, y] = f(), pop = outBack(pIn(t, 94.0 + i * 0.25, 0.35), 2.5), lift = pIn(t, ts("f.8") + 0.2, 0.3) * (1 - pIn(t, ts("f.8") + 1.6, 0.4));
+      g.setAttribute("transform", `translate(${x.toFixed(1)} ${(y + 20).toFixed(1)}) rotate(${(-20 + 10 * Math.sin(beatPh / 2 + i) - 40 * lift).toFixed(1)}) scale(${(0.7 * pop).toFixed(3)})`);
+      g.querySelector(".sh").setAttribute("opacity", t > 113.0 && t < ts("f.8") + 1.4 ? 1 : 0); });
+
+    // ── honey drops (give / eat) + hearts + heart bridge ──
+    { let di = 0; XF.forEach((x) => { const u = (t - x.t0) / x.dur; if (u < 0 || u > 1 + x.hold / x.dur || di >= 6) return; const g = E("hd" + di++), [ax, ay] = x.from(), [bx, by] = x.to();
+        let px, py, s2; if (u <= 1) { const e = smooth(0, 1, u); px = lerp(ax, bx, e); py = lerp(ay, by, e) - (x.arc ?? 120) * Math.sin(Math.PI * u); s2 = 1; } else { const k = (t - x.t0 - x.dur) / x.hold; px = bx; py = by; s2 = 1 - 0.8 * k; }
+        g.setAttribute("opacity", 1); g.setAttribute("transform", `translate(${px.toFixed(1)} ${py.toFixed(1)}) scale(${(s2 * (x.size || 1)).toFixed(3)})`); });
+      for (; di < 6; di++) E("hd" + di).setAttribute("opacity", 0); }
+    { let hi = 0; EV.hearts.forEach(([t0, who]) => { const u = t - t0; if (u < 0 || u > 1.3) return; const [x, y] = headOf(who, t);
+        for (let q = 0; q < 3 && hi < 15; q++, hi++) { const g = E("ht" + hi), k = clamp((u - q * 0.12) / 1.1, 0, 1);
+          g.setAttribute("opacity", k > 0 && k < 1 ? (k < 0.75 ? 1 : (1 - k) / 0.25).toFixed(2) : 0);
+          g.setAttribute("transform", `translate(${(x + (q - 1) * 46 + 14 * Math.sin(k * 7 + q)).toFixed(1)} ${(y - 30 - 150 * k).toFixed(1)}) scale(${(0.5 + 0.6 * outBack(Math.min(1, k * 3), 2.5)).toFixed(3)})`); } });
+      for (; hi < 15; hi++) E("ht" + hi).setAttribute("opacity", 0); }
+    { let bi = 0; XF.forEach((x) => { if (x.kind !== "give") return; const L = x.t0 + x.dur, u = t - L; if (u < 0 || u > 2.3) return;
+        const [ax, ay] = headOf("bee", t), [bx, by] = headOf(x.who, t), mx = (ax + bx) / 2, my = Math.min(ay, by) - 80, n = 7;
+        for (let q = 0; q < n && bi < 14; q++, bi++) { const k = (q + 1) / (n + 1), hx2 = (1 - k) * (1 - k) * ax + 2 * (1 - k) * k * mx + k * k * bx, hy2 = (1 - k) * (1 - k) * ay + 2 * (1 - k) * k * my + k * k * by;
+          const a = pIn(u, q * 0.06, 0.25), out = pIn(u, 1.9, 0.4), g = E("bh" + bi);
+          g.setAttribute("opacity", (a * (1 - out)).toFixed(2)); g.setAttribute("transform", `translate(${hx2.toFixed(1)} ${(hy2 - 6 * Math.sin(t * 4 + q)).toFixed(1)}) scale(${outBack(a, 3).toFixed(3)})`); } });
+      for (; bi < 14; bi++) E("bh" + bi).setAttribute("opacity", 0); }
+    // frog's tongue catches the honey (k2.8)
+    { const tg = TONGUE, u = (t - tg) / 0.4, p = E("tongue6"); if (sc === 2 && u > 0 && u < 1) { const [mx, my] = frogMouth(t), [hx2, hy2] = CATCH, e = u < 0.4 ? easeOut(u / 0.4) : 1 - easeIn((u - 0.4) / 0.6);
+        p.setAttribute("opacity", 1); p.setAttribute("d", `M${mx} ${my} Q${lerp(mx, hx2, 0.5) - 40} ${lerp(my, hy2, 0.5) - 30} ${lerp(mx, hx2, e).toFixed(1)} ${lerp(my, hy2, e).toFixed(1)}`); } else p.setAttribute("opacity", 0); }
+
+    drawParticles(t, sc);
+
+    // ── screen-space: pollen burst ──
+    { const u = t - T.sneeze, on = sc === 2 && u > 0 && u < 1.4; E("polBg").setAttribute("opacity", on ? (0.85 * Math.max(0, 1 - Math.abs(u - 0.25) / 0.6)).toFixed(2) : 0);
+      const b = beePos(T.sneeze), [ox, oy] = W2S(b.x + 70 * b.s, b.y);
+      for (let i = 0; i < 46; i++) { const c = E("pl" + i); if (!on) { c.setAttribute("opacity", 0); continue; } const a = i * 2.39, v = 500 + (i * 53) % 900, k = easeOut(Math.min(1, u / 0.9));
+        c.setAttribute("cx", (ox + Math.cos(a) * v * k).toFixed(1)); c.setAttribute("cy", (oy + Math.sin(a) * v * k * 0.8).toFixed(1)); c.setAttribute("r", (14 + (i % 5) * 9).toFixed(0)); c.setAttribute("opacity", (1 - pIn(u, 0.8, 0.6)).toFixed(2)); }
+      const hz = E("hapsu"), hu = pIn(t, T.sneeze + 0.05, 0.25); hz.style.opacity = sc === 2 && t > T.sneeze && t < T.sneeze + 1.3 ? (1 - pIn(t, T.sneeze + 1.0, 0.3)).toFixed(2) : 0;
+      hz.style.transform = `translate(${(ox - 380).toFixed(0)}px, ${(oy - 300).toFixed(0)}px) rotate(-8deg) scale(${(0.4 + 0.6 * outBack(hu, 3)).toFixed(3)})`; }
+    // ── map overlay: the way home ──
+    { const mo = E("mapOv"), on = ENV.map; mo.style.opacity = on.toFixed(3); if (on > 0.01) { const P = window.__mapPts, u = pIn(t, T.map0 + 0.3, 1.8);
+        const at = (k) => { const f = k * (P.length - 1), i = Math.min(P.length - 2, Math.floor(f)), r = f - i; return [lerp(P[i][0], P[i + 1][0], r), lerp(P[i][1], P[i + 1][1], r)]; };
+        for (let i = 0; i < 30; i++) { const k = i / 29, [x, y] = at(k), d = E("md" + i); d.setAttribute("cx", x.toFixed(1)); d.setAttribute("cy", y.toFixed(1)); d.setAttribute("opacity", k <= u ? 1 : 0); }
+        const [bx, by] = at(u); E("mapBee").setAttribute("transform", `translate(${bx.toFixed(1)} ${(by - 30 + 6 * Math.sin(t * 10)).toFixed(1)}) scale(1.6)`);
+        mo.style.transform = `scale(${(0.9 + 0.1 * easeOut(pIn(t, T.map0, 0.5))).toFixed(3)}) rotate(${(-3 * (1 - easeOut(pIn(t, T.map0, 0.5)))).toFixed(2)}deg)`; } }
+    // ── honeycomb counter (HUD) ──
+    { const cb = E("comb"), vis = t > 17.2 && t < T.wipe + 0.1; cb.style.opacity = vis ? (pIn(t, 17.2, 0.4) * (1 - pIn(t, T.wipe - 0.2, 0.3))).toFixed(2) : 0;
+      const fills = [[ts("k1.8") + 0.9], [TONGUE + 0.6], [ts("k3.8") - 0.4]];
+      fills.forEach(([f0], i) => { const u = easeOut(pIn(t, f0, 0.8)); E("cf" + i).setAttribute("y", (50 - 100 * u).toFixed(1)); E("cg" + i).setAttribute("opacity", (pIn(t, ts("k3.8") + 0.5, 0.5)).toFixed(2)); });
+      const gl = pIn(t, ts("k3.8") + 0.5, 0.4), pul = fills.reduce((m, [f0]) => Math.max(m, Math.max(0, 1 - Math.abs(t - f0 - 0.4) / 0.4)), 0);
+      cb.style.transform = `scale(${(1 + 0.15 * pul + 0.12 * gl * Math.abs(Math.sin(t * 8))).toFixed(3)})`; cb.style.transformOrigin = "150px 65px";
+      cb.style.filter = gl > 0 ? `drop-shadow(0 0 ${(20 * gl).toFixed(0)}px #FFD43B)` : "none"; }
+    // ── hex wipe ──
+    { const u1 = pIn(t, T.wipe, T.party - T.wipe), u2 = pIn(t, T.party + 0.05, 0.7), on = t > T.wipe && t < T.party + 0.8;
+      document.querySelectorAll(".hw").forEach((h) => { const d = +h.dataset.d / 1200, k = on ? (t < T.party ? clamp(u1 * 1.7 - d * 0.7, 0, 1) : 1 - clamp(u2 * 1.7 - (1 - d) * 0.7, 0, 1)) : 0;
+        const tr = h.getAttribute("transform").replace(/scale\([^)]*\)/, `scale(${k.toFixed(3)})`); h.setAttribute("transform", tr); }); }
+    // ── hexagon panels (final) ──
+    { const pa = E("panels"), on = ENV.panels; pa.style.opacity = on > 0.01 ? 1 : 0;
+      if (on > 0.01) { const k = Math.floor(bp) % PANELS.length;
+        PANELS.forEach(([x, y], i) => { const g = E("pn" + i), pop = outBack(pIn(t, T.pan0 + i * 0.07, 0.4), 2), out = pIn(t, T.pan1 + (6 - i) * 0.03, 0.4);
+          const act = i === k ? 1 + 0.1 * Math.max(0, Math.cos(TAU * (bp % 1))) : 1, sx = x + (x - 960) * 2.2 * easeIn(out), sy = y + (y - 540) * 2.2 * easeIn(out);
+          g.setAttribute("transform", `translate(${sx.toFixed(1)} ${sy.toFixed(1)}) scale(${(pop * act * (1 - 0.3 * out)).toFixed(3)})`); g.setAttribute("opacity", (1 - out).toFixed(2));
+          const pr = E("pp_" + i); pr.setAttribute("transform", `translate(0 ${(-14 * Math.abs(Math.sin(beatPh / 2 + i))).toFixed(1)}) rotate(${(5 * Math.sin(beatPh / 2 + i)).toFixed(1)})`);
+          if (pr.__root) { eyes(pr.__root, t, 7 + i, 0, 0); } E("pr_" + i).setAttribute("stroke", i === k ? "#FF5A5F" : "#fff"); }); } }
+
+    // ── goodbye: the bee carries the sign, Fıstık pushes it ──
+    { const e2 = E("end"); if (t < T.end) e2.style.opacity = 0; else { const b = beePos(t), [sx, sy] = W2S(b.x, b.y);
+        e2.style.opacity = 1; e2.style.transform = `translate(${clamp(sx - 380, 40, 1120).toFixed(1)}px, ${(sy + 40 * VIEW.s - 0).toFixed(1)}px) rotate(${(4 * Math.sin(t * 5)).toFixed(2)}deg) scale(${(0.6 + 0.4 * easeOut(pIn(t, T.end, 0.5))).toFixed(3)})`; } }
+    E("glow").style.opacity = (ENV.glow * 0.8).toFixed(3);
+    E("flash").style.opacity = ENV.flash.toFixed(3);
+  }
+
+  // ───────────────────────── particles: pure functions of t ─────────────────────────
+  const confetti = (t, x, y) => EV.conf.push([t, x, y]);
+  const crumbs = (t, x, y, n = 8) => EV.crumbs.push([t, x, y, n]);
+  const dust = (t, x, y) => EV.dust.push([t, x, y]);
+  const spark = (t, x, y) => EV.spark.push([t, x, y]);
+  const SND = [];
+  function drawParticles(t, sc) {
+    let ci = 0, ki = 0, ui = 0, si = 0;
+    EV.conf.forEach(([t0, ox, oy]) => { const u = t - t0; if (u < 0 || u > 1.8) return;
+      for (let q = 0; q < 50 && ci < 150; q++, ci++) { const a = -Math.PI / 2 + (q / 50 - 0.5) * 2.8, v = 700 + (q % 7) * 90, cc = E("cf" + ci);
+        cc.style.transform = `translate(${(ox + Math.cos(a) * v * u).toFixed(1)}px, ${(oy + Math.sin(a) * v * u + 760 * u * u).toFixed(1)}px) rotate(${(u * 500 + q * 37).toFixed(0)}deg)`;
+        cc.style.opacity = (u < 1.3 ? 1 : 1 - (u - 1.3) / 0.5).toFixed(3); } });
+    for (; ci < 150; ci++) E("cf" + ci).style.opacity = 0;
+    EV.crumbs.forEach(([t0, x, y, n]) => { const u = t - t0; if (u < 0 || u > 0.8) return;
+      for (let q = 0; q < n && ki < 40; q++, ki++) { const a = -Math.PI * (0.1 + 0.8 * q / Math.max(1, n - 1)), r = 110 + (q % 3) * 50, d = E("cr" + ki);
+        d.style.transform = `translate(${(x + Math.cos(a) * r * u * 1.6).toFixed(1)}px, ${(y + Math.sin(a) * r * u * 1.6 + 500 * u * u).toFixed(1)}px)`; d.style.opacity = (1 - u / 0.8).toFixed(2); } });
+    for (; ki < 40; ki++) E("cr" + ki).style.opacity = 0;
+    EV.dust.forEach(([t0, x, y]) => { const u = t - t0; if (u < 0 || u > 0.9) return;
+      for (let q = 0; q < 10 && ui < 10; q++, ui++) { const d = E("du" + ui), a = Math.PI * (q / 9), r = 60 + 200 * easeOut(u / 0.9);
+        d.setAttribute("cx", (x + Math.cos(a) * r * (q % 2 ? 1 : -1)).toFixed(1)); d.setAttribute("cy", (y - 20 - 40 * u).toFixed(1)); d.setAttribute("r", (24 + 30 * u).toFixed(1)); d.setAttribute("opacity", (0.85 * (1 - u / 0.9)).toFixed(2)); } });
+    for (; ui < 10; ui++) E("du" + ui).setAttribute("opacity", 0);
+    EV.spark.forEach(([t0, x, y]) => { const u = t - t0; if (u < 0 || u > 0.9) return;
+      for (let q = 0; q < 7 && si < 14; q++, si++) { const d = E("sk" + si), a = q * TAU / 7 + t0, r = 40 + 130 * easeOut(u / 0.9);
+        d.setAttribute("opacity", (1 - u / 0.9).toFixed(2)); d.setAttribute("transform", `translate(${(x + Math.cos(a) * r).toFixed(1)} ${(y + Math.sin(a) * r).toFixed(1)}) rotate(${(u * 200).toFixed(0)}) scale(${(1.2 - u).toFixed(2)})`); } });
+    for (; si < 14; si++) E("sk" + si).setAttribute("opacity", 0);
+    SND.forEach((s, i) => { const u = t - s.t, d = E("sd" + i);
+      if (u < 0 || u > 0.62) { d.style.opacity = 0; return; }
+      const e1 = Math.min(1, u / 0.14), sc2 = 0.25 + 0.75 * (1 - Math.pow(1 - e1, 3)) * (1 + 0.15 * Math.sin(Math.PI * e1)) + (u > 0.42 ? (u - 0.42) * 1.5 : 0);
+      d.style.transform = `translate(${s.x}px, ${(s.y - 30 * u).toFixed(1)}px) rotate(${(s.r + (1 - e1) * -20).toFixed(1)}deg) scale(${sc2.toFixed(3)})`;
+      d.style.opacity = (u > 0.42 ? 1 - (u - 0.42) / 0.2 : 1).toFixed(2); });
+  }
+  // sound words near the bee / honey
+  LINES.forEach((L) => { let k = 0; L.words.forEach(([w, t]) => { const n = norm(w); if (!(n in SOUND)) return; const j = k++ % 3, b = beePos(t);
+    const x = clamp(b.x + [-300, 120, -90][j], 80, 1500), y = clamp(b.y + [-150, -230, -330][j], 160, 900);
+    SND.push({ txt: w.replace(/[^\p{L}]/gu, "").toLocaleUpperCase("tr") + "!", t, x, y, r: [-9, 7, -3][j], c: SCOL[SOUND[n]] }); }); });
+  E("sndBox").innerHTML = SND.map((s, i) => `<div class="abs snd" id="sd${i}" style="opacity:0;color:${s.c}">${s.txt}</div>`).join("");
+
+  // ───────────────────────── timeline ─────────────────────────
+  gsap.defaults({ lazy: false });
+  const tl = gsap.timeline({ paused: true });
+  const pose = (name, t, d = 0.3, ease = "back.out(1.8)") => tl.to(R, { A: POSE[name][0], C: POSE[name][1], L: POSE[name][2], duration: d, ease }, t);
+  const shake = (t, a = 10) => tl.fromTo("#shake", { y: 0, x: 0 }, { keyframes: [{ y: a, x: -a * 0.4, duration: 0.04 }, { y: -a * 0.6, x: a * 0.3, duration: 0.05 }, { y: a * 0.3, x: 0, duration: 0.05 }, { y: 0, x: 0, duration: 0.06 }], immediateRender: false }, t);
+  const cam = (t, c, d = 1.2, ease = "power2.inOut") => tl.to(CAM, { ...c, duration: d, ease }, t);
+  const cut = (t, c) => tl.set(CAM, c, t);
+  const jump = (key, t, d = 0.55) => tl.fromTo(JUMP, { [key]: 0 }, { [key]: 1, duration: d, ease: "none", immediateRender: false }, t - 0.12);
+  const OPEN = { fistik: [R, "mouth", 0.9], frog: [AN, "frogOpen", 1], duck: [AN, "duckOpen", 1], duckling: [AN, "dlOpen", 1], mouse: [AN, "msOpen", 1], bee: [AN, "beeOpen", 1] };
+  const drop = (o) => { const x = Object.assign({ hold: 0.6, dur: 0.7, kind: "give" }, o); XF.push(x); const L = x.t0 + x.dur, [ob, pk, v] = OPEN[x.who];
+    tl.to(ob, { [pk]: v, duration: 0.08 }, L - 0.15); tl.to(ob, { [pk]: x.who === "fistik" ? 0.06 : 0, duration: 0.1 }, L + 0.05); EV.hearts.push([L + x.hold * 0.6, x.who]); };
+
+  // lyric pills
+  LINES.forEach((L, li) => { const st = L.words[0][1] - 0.35, nx = LINES[li + 1], en = nx && nx.words[0][1] - L.end < 3 ? Math.min(nx.words[0][1] - 0.35, L.end + 1.6) : L.end + 1.0;
+    tl.fromTo("#ln" + li, { opacity: 0, y: -24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.22, ease: "back.out(2)", immediateRender: false }, st);
+    L.words.forEach((w, wi) => { const snd = norm(w[0]) in SOUND;
+      tl.to(`#w${li}_${wi}`, { color: snd ? "#E5484D" : "#2B2D42", scale: snd ? 1.28 : 1.14, duration: 0.08, ease: "power2.out" }, w[1]); tl.to(`#w${li}_${wi}`, { scale: 1, duration: 0.18 }, w[1] + 0.1); });
+    tl.to("#ln" + li, { opacity: 0, y: -16, duration: 0.18, ease: "power1.in" }, en - 0.18); });
+  // lip-sync: verses are the bee; the final is everyone
+  LINES.forEach((L) => L.words.forEach((w, wi) => { const nxt = (L.words[wi + 1] || [0, w[1] + 0.6])[1], hold = clamp(nxt - w[1] - 0.12, 0.08, 0.26);
+    (L.who === "all" ? ["bee", "fistik", "frog", "duck", "duckling", "mouse"] : ["bee"]).forEach((h) => { const [o, p, v] = OPEN[h]; tl.to(o, { [p]: v, duration: 0.06 }, w[1]); tl.to(o, { [p]: h === "fistik" ? 0.06 : 0, duration: 0.1 }, w[1] + hold); }); }));
+  for (let t = 3.2; t < D - 2; t += 4.1) { tl.to(R, { blink: 1, duration: 0.07, ease: "none" }, t); tl.to(R, { blink: 0, duration: 0.09, ease: "none" }, t + 0.1); }
+
+  // ── R1 · hive: the bee sleeps, antennae ring like an alarm, yawn, flies to the door ──
+  cut(0, { s: 1.0, x: 960, y: 640 }); cam(1.0, { s: 1.35, x: 960, y: 600 }, 3.5, "sine.inOut");
+  tl.to(AN, { yawn: 1, duration: 0.4, ease: "sine.out" }, 3.6); tl.to(AN, { yawn: 0, duration: 0.3 }, 4.5); tl.to(AN, { beeStretch: 1, duration: 0.3 }, 3.7); tl.to(AN, { beeStretch: 0, duration: 0.3 }, 4.5);
+  cam(5.0, { s: 1.3, x: 960, y: 330 }, 2.4, "power2.inOut"); cam(T.door, { s: 4.4, x: 960, y: 150 }, 1.45, "expo.in");
+  // ── R2 · meadow: skywriting the title ──
+  cut(T.poppy, { s: 1.0, x: 960, y: 560 }); tl.to(ENV, { trail: 1, duration: 0.3 }, T.poppy + 0.2);
+  tl.to(R, { lookX: 10, lookY: -16, duration: 0.4 }, 10.0);
+  // ── R3 · zigzag, land on the poppy (trampoline), loop-the-loop ──
+  cam(16.8, { s: 1.12, x: 1000, y: 600 }, 0.8);
+  cam(21.5, { s: 1.62, x: P1x - 10, y: P1y - 40 }, 0.35, "expo.out"); shake(21.6, 7); spark(21.7, P1x, P1y - 80);
+  tl.to(ENV, { glow: 1, duration: 0.2 }, 24.0); tl.to(ENV, { glow: 0, duration: 0.5 }, 25.6); spark(24.4, P1x - 10, P1y - 110);
+  cam(25.8, { s: 1.3, x: P1x - 10, y: P1y - 200 }, 0.6);
+  words("k1.5").concat(words("k1.6")).forEach(([w, t]) => spark(t, beePos(t).x, beePos(t).y));
+  // ── R4 · honey for Fıstık ──
+  cam(29.9, { s: 1.25, x: 640, y: 600 }, 1.0); pose("up", 30.6, 0.35); tl.to(R, { lookX: 14, lookY: -14, duration: 0.3 }, 30.6);
+  drop({ who: "fistik", t0: ts("k1.8") + 0.1, from: () => beeMouth(ts("k1.8") + 0.1), to: () => tipScene(ts("k1.8") + 0.8), hold: 0.25, arc: 40 });
+  pose("eat", ts("k1.8") + 0.9, 0.3); drop({ kind: "eat", who: "fistik", t0: ts("k1.8") + 0.95, dur: 0.4, from: () => tipScene(ts("k1.8") + 0.95), to: () => fistikMouth(ts("k1.8") + 1.3), hold: 0.4, arc: 30 });
+  pose("rest", te("k1.8") + 0.4, 0.4); tl.to(R, { lookX: 0, lookY: 0, duration: 0.3 }, te("k1.8") + 0.4);
+  // ── R5 · butterfly chase → match cut on yellow ──
+  cam(34.4, { s: 1.15, x: 1380, y: 500 }, 2.0, "sine.inOut"); cam(36.6, { s: 1.15, x: 1000, y: 480 }, 1.5, "sine.inOut");
+  tl.to(CAM, { s: 4.2, x: 1580, y: 380, duration: 0.42, ease: "expo.in" }, 38.3);
+  cut(T.sun, { s: 3.2, x: S1x, y: S1y }); cam(T.sun + 0.05, { s: 1.05, x: 980, y: 600 }, 1.0, "expo.out");
+  // ── R6 · sunflowers: land, pollen fills the nose, HAPŞU! ──
+  cam(42.6, { s: 1.45, x: S1x - 40, y: S1y - 80 }, 1.2);
+  tl.to(ENV, { pollen: 1, duration: 1.5 }, 45.4);
+  tl.to(AN, { beeOpen: 0.4, duration: 0.25 }, T.sneeze - 0.45); tl.to(AN, { beeOpen: 1, duration: 0.05 }, T.sneeze); tl.to(AN, { beeOpen: 0, duration: 0.2 }, T.sneeze + 0.3);
+  shake(T.sneeze, 16); cam(T.sneeze, { s: 1.2, x: S1x - 80, y: S1y - 60 }, 0.3, "expo.out");
+  tl.to(ENV, { pollen: 0, duration: 1.4 }, 47.7); [47.8, 48.2, 48.6].forEach((t) => spark(t, beePos(t).x, beePos(t).y));
+  // ── R7 · honey for the frog (tongue catch) ──
+  cam(49.6, { s: 1.25, x: POND.x - 220, y: 640 }, 1.4); jump("frog", 49.3, 0.6);
+  drop({ who: "frog", t0: TONGUE - 0.5, dur: 0.5, from: () => beeMouth(TONGUE - 0.5), to: () => CATCH, hold: 0.0, arc: -10 });
+  drop({ kind: "eat", who: "frog", t0: TONGUE + 0.15, dur: 0.25, from: () => CATCH, to: () => frogMouth(TONGUE + 0.4), hold: 0.4, arc: 0 });
+  // ── R8 · Fıstık tries to fly like a bee; GÜM ──
+  cam(55.6, { s: 1.15, x: 760, y: 640 }, 1.0); tl.to(R, { lookX: 12, lookY: -10, duration: 0.3 }, 55.8);
+  tl.to(R, { flap: 1, earAmp: 2, duration: 0.3 }, T.fly0); pose("flyup", T.fly0, 0.4);
+  tl.to(R, { jy: -40, duration: 0.6, ease: "power2.out" }, T.fly0 + 0.5); tl.to(R, { jy: -170, duration: 2.2, ease: "sine.inOut" }, T.fly0 + 1.1);
+  tl.to(R, { rot: 8, duration: 0.4, yoyo: true, repeat: 5, ease: "sine.inOut" }, T.fly0 + 1.2); tl.set(R, { rot: 0 }, T.fall - 0.05);
+  cam(T.fly0 + 1.2, { y: 520 }, 2.0, "sine.inOut");
+  tl.to(R, { flap: 0, duration: 0.15 }, T.fall - 0.2); tl.to(R, { lookY: 12, duration: 0.1 }, T.fall - 0.2);
+  tl.to(R, { jy: 0, duration: 0.42, ease: "power2.in" }, T.fall); shake(T.fall + 0.42, 18); dust(T.fall + 0.42, 760, 1000);
+  tl.to("#char", { scaleY: 0.82, scaleX: 1.14, duration: 0.08, yoyo: true, repeat: 1 }, T.fall + 0.42);
+  tl.to(R, { jy: -50, duration: 0.2, ease: "power2.out" }, T.fall + 0.6); tl.to(R, { jy: 0, duration: 0.2, ease: "power2.in" }, T.fall + 0.8);
+  pose("rest", T.fall + 0.9, 0.4); tl.to(R, { lookY: 0, lookX: 14, tilt: -8, duration: 0.3 }, T.fall + 1.0); tl.to(R, { tilt: 0, duration: 0.4 }, T.fall + 2.4);
+  [T.fall + 0.9, T.fall + 1.3, T.fall + 1.7].forEach((t) => { tl.to(AN, { beeOpen: 1, duration: 0.05 }, t); tl.to(AN, { beeOpen: 0, duration: 0.1 }, t + 0.15); });
+  // ── R9 · waggle dance; other bees join; the trail leads on (carry) ──
+  cam(63.4, { s: 1.1, x: 980, y: 520 }, 1.0);
+  cam(T.wag1, { x: 2000 }, 1.2, "expo.in");
+  // ── R10 · lavender, the map home, the heart swarm, the comb fills ──
+  cut(T.lav, { s: 1.15, x: 300, y: 520 }); cam(T.lav + 0.05, { s: 1.05, x: 900, y: 580 }, 1.0, "expo.out");
+  cam(76.8, { s: 1.4, x: PURP.x, y: PURP.y - PURP.h - 40 }, 1.0);
+  tl.to(ENV, { map: 1, duration: 0.35 }, T.map0); tl.to(ENV, { map: 0, duration: 0.3 }, T.map1);
+  cut(T.map1, { s: 1.12, x: PURP.x, y: 520 });
+  words("k3.5").forEach(([w, t]) => tl.to(CAM, { s: 1.22, duration: 0.08, yoyo: true, repeat: 1 }, t));
+  cam(85.6, { s: 1.55, x: PURP.x, y: 460 }, 1.6, "power2.in");
+  // ── R11 · hex wipe → honey party ──
+  cut(T.party, { s: 1.12, x: 1100, y: 620 }); cam(T.party + 0.1, { s: 1.02, x: 1080, y: 640 }, 8, "sine.inOut");
+  tl.set(R, { dance: 0.3, lookX: 0, lookY: 0 }, T.party);
+  tl.to(AN, { party: 0.6, duration: 0.5 }, 94.0);
+  // ── R12 · final: hexagon panels on the beat → everybody gets a spoonful ──
+  tl.to(ENV, { panels: 1, duration: 0.01 }, T.pan0); tl.to(ENV, { panels: 0, duration: 0.01 }, T.pan1 + 0.5);
+  tl.to(R, { dance: 1, earAmp: 1.8, duration: 0.3 }, T.pan0); tl.to(AN, { party: 1, duration: 0.3 }, T.pan0);
+  cut(T.pan1 + 0.2, { s: 1.06, x: 1150, y: 680 }); cam(ts("f.8") - 0.2, { s: 1.12, x: 1150, y: 720 }, 1.0);
+  const f8 = ts("f.8") + 0.3;
+  [["fistik", () => fistikMouth(f8 + 0.6)], ["mouse", () => mouseMouth(f8 + 0.6)], ["duckling", () => beakOf("duckling", f8 + 0.6)], ["frog", () => frogMouth(f8 + 0.6)], ["duck", () => beakOf("duck", f8 + 0.6)]]
+    .forEach(([w, to], i) => drop({ kind: "eat", who: w, t0: f8 + i * 0.05, dur: 0.6, from: () => [POTP.x, POTP.y - 180], to, hold: 0.4, size: 0.8, arc: 160 }));
+  confetti(115.1, 960, 300); confetti(115.2, 560, 380); confetti(115.3, 1360, 380); shake(115.1, 8);
+  tl.to(AN, { beeOpen: 1, duration: 0.05 }, 115.2); tl.to(AN, { beeOpen: 0, duration: 0.1 }, 115.5);
+  // ── R13 · goodbye: the sign is heavy; Fıstık pushes ──
+  tl.to("#bug", { x: -360, duration: 0.4, ease: "back.in(1.6)" }, T.end - 0.5);
+  cam(T.end, { s: 1.0, x: 1000, y: 600 }, 1.2); pose("up", T.end + 0.3, 0.4);
+
+  // ── frog tongue (constants used in render) ──
+  window.__fistik = { R, render, POSE, CAM, AN, ENV, T };
+  const master = gsap.timeline({ paused: true });
+  const clock = { _t: 0 };
+  Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+  tl.paused(false); master.add(tl, 0);
+  master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+  window.addEventListener("hf-seek", (e) => render(e && e.detail ? e.detail.time : master.time()));
+  render(0);
+  { // hexagon portrait panels for the final (clones of the live drawings; ids stripped so nothing collides)
+    const fist = `<svg x="-250" y="-200" width="500" height="533" viewBox="0 0 600 640" overflow="visible">${E("char").querySelector("svg").innerHTML.replace(/ id="[^"]*"/g, "")}</svg>`;
+    const POR = { bee: `<g transform="translate(-20 20) scale(1.05)">${C.bee("pb")}</g>`, fistik: fist, frog: `<g transform="translate(0 100) scale(1.15)">${C.frog("pf")}</g>`,
+      duck: `<g transform="translate(20 120) scale(1.0)">${C.duck("pd")}</g>`, duckling: `<g transform="translate(20 120) scale(1.15)">${C.duck("pdl", true)}</g>`,
+      mouse: `<g transform="translate(0 110) scale(1.2)">${C.mouse("pm")}</g>`, sun: `<g transform="translate(0 10) scale(.9)">${C.sunflower("psf", 10)}</g>` };
+    E("panels").innerHTML = `<rect width="1920" height="1080" fill="#5A3408" opacity=".55"/>` + PANELS.map(([x, y, k, bg], i) => `<g id="pn${i}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(0)">
+        <clipPath id="pc${i}"><path d="${C.hexPath(PANEL.r)}"/></clipPath><path d="${C.hexPath(PANEL.r)}" fill="${bg}"/>
+        <g clip-path="url(#pc${i})"><circle r="${PANEL.r * 0.75}" fill="#fff" opacity=".35"/><g id="pp_${i}">${POR[k]}</g></g>
+        <path id="pr_${i}" d="${C.hexPath(PANEL.r)}" fill="none" stroke="#fff" stroke-width="12"/></g>`).join("");
+    PANELS.forEach((_, i) => { E("pp_" + i).__root = E("pp_" + i); E("pp_" + i).querySelectorAll(".shd").forEach((n) => n.remove()); }); }
+  window.__timelines["main"] = master;
+})();
+    </script>
+  </body>
+</html>
