@@ -299,6 +299,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 #   veya bandın zamanlarını elle ver: --abone 0.5,96.2   (bölümün kendi saniyeleri)
 ```
 
+- `--abone-olcek 0.75` bandı küçültür (sol alt köşeye yaslı); `--max-abone 1` sadece giriş bandını koyar.
 - `--lines` söz olmayan ≥ 7,2 sn boşlukları bulur. Girişteki boşluk her zaman kullanılır; sonra en fazla `--max-abone` (2) bant konur, aralarında ≥ 45 sn olur. Son boşluk atlanır, çünkü kapanış zaten abone çağrısı yapıyor.
 - Bant sol altta durur. Söz hapı alt ortada olduğu için ikisi aynı anda görünmemeli; o yüzden bant sadece boşluklara konur.
 - Bulut ortamında jsdelivr CDN'i 403 veriyor. Bu projeler GSAP'ı `assets/gsap.min.js` yerel kopyasından yükler (build.py kopyalar).
@@ -384,6 +385,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - **Yeni bileşenler:** petek sayacı (sağ üst HUD, her kıtada bir göz o çiçeğin renginde dolar, sonunda bütün petek altın parlar), kuş bakışı harita (yol kovana nokta nokta çizilir), altıgen silme geçişi (`.hw` ızgara, merkezden uzaklığa göre ölçek), finalde altıgen portre panelleri (Fıstık rig'i `innerHTML` id'leri silinerek klonlanır).
 - **Gag'ler:** antenler çalar saat gibi çınlar + esneme, gelincik trambolin, takla, kelebek kovalamaca (kelebek dönüp arıyı kovalar) → sarıya renk eşleşmeli kesme, "HAPŞU!" polen patlaması, kurbağa bal damlasını diliyle yakalar, Fıstık kulaklarını çırpıp uçmaya çalışır ve "güm" düşer, arı sürüsü kalp olur, bal şelalesi, herkes aynı anda kaşığı ağzına götürür.
 - **Netlik (kullanıcı isteği):** konturlar kalın ve renkli, arka planlar açık/sade, karakterler doygun; bulanıklaştırma (blur) yok; final `intro_ekle.py --crf 16 --preset slow`; önizleme 1080p.
+- **v2 (kullanıcı geri bildirimi):** (1) "altyazı ekranı çok kesiyor" → söz hapı 60→44 px, ince kenar, yarı saydam, satır bitince 0,6–0,9 sn'de kalkar; ses kelimeleri 92→66 px ve ekranın üst 230 px'ine girmez. (2) "abone ol yanlış yerde ve büyük" → ikinci bant Fıstık'ın uçma gag'inin üstüne düşmüştü: `--max-abone 1` (sadece giriş) + `--abone-olcek 0.75` (yeni seçenek, sol alta yaslı küçültür). Bandın düştüğü boşlukta önemli bir aksiyon varsa ikinci bandı koyma. (3) "arının hareketi düzgün değil" → anahtar kareler arası smoothstep her durakta durduruyordu; yerine Catmull-Rom teğetli kübik Hermite (duraklarda ve sahne kesmelerinde teğet 0), yön değişimi 0,45 sn'de yumuşak (ölçek −1↔1), hıza göre ±14° eğilme, takla ve sekiz dansı yolun üstüne eklemeli (başladığı yerde biter), kanat çırpma 62→27 rad/s (30 fps'te titreme yapmasın). Kontrol: 30 fps örnekleyip ivme > 9000 px/s² olan kare sayısı 0 olmalı (`scratchpad/beecheck.py` benzeri). Sahne kesmesinden hemen önce yolun karşı sahneye kaymaması için kesmeden 0,01 sn önce bir tutma karesi koy.
 
 ---
 
