@@ -1,0 +1,5 @@
+{"comp": "/home/user/fistikfil/kaynak/06-ari-viz-viz/index.html", "start": 38.3, "end": 68.3, "audio": "/home/user/fistikfil/kaynak/06-ari-viz-viz/renders/ari-4k-ses.mp4", "lines": "/home/user/fistikfil/kaynak/06-ari-viz-viz/lines.json",
+ "hook": "Arı hapşırdı!<br/>HAPŞU!", "hookSecs": 4.0,
+ "track": [[38.3, "beePos"], [50.6, "frogPos"], [55.4, "head"], [63.6, "beePos"]],
+ "bias": [[50.6, -160], [55.2, -160], [55.6, 0]],
+ "hide": ["#comb"], "out": "/tmp/claude-0/-home-user-fistikfil/f34c749d-e638-57b0-a651-0499d26014f4/scratchpad/reels/reels-7-ari-hapsu"}
