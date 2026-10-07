@@ -1,18 +1,20 @@
-SUNO — "Anneannem ve Dedem" (Custom mode) · v4 kısa
+SUNO — "Anneannem ve Dedem" (Custom mode) · v5
 
 ▶ Title
 Anneannem ve Dedem
 
 ▶ Style of Music
-Turkish kids song, funny nursery rhyme, cheerful, 112 BPM, bouncy piano, ukulele, glockenspiel, hand claps, warm female vocal, kids choir, 8 second instrumental intro
+Turkish kids song, funny nursery rhyme, cheerful, major key, 112 BPM, bouncy piano, ukulele, glockenspiel, hand claps, warm female vocal, kids choir on final, 8 second instrumental intro
 
 ▶ Lyrics
 [Intro]
 [Instrumental, 8 seconds]
 
 [Verse 1]
-Din don, kapı çalar,
-Anneannem çorba yapar.
+Din don, din don, kapı çalar,
+Anneannem kapıyı açar.
+Önlük takar, kepçe kapar,
+Tencerede çorba yapar!
 Pof pof pof, un savurur,
 Bembeyaz kardan adam olur!
 Ha ha ha, kahkaha,
@@ -21,20 +23,30 @@ Anneannem, bir daha!
 [Instrumental Break]
 
 [Verse 2]
-Din don, kapı çalar,
-Dedem piyanoyu açar.
-Dın dın dın, tuşa vurur,
-Horr fiuu, uyur durur!
+Din don, din don, kapı çalar,
+Dedem gözlüğünü takar.
+Piyanoya hop oturur,
+Dın dın dın, tuşlara vurur.
+Çalar çalar, yorulur,
+Horr fiuu, horlar durur!
 Ha ha ha, kahkaha,
 Dedeciğim, bir daha!
 
 [Instrumental Break]
 
-[Final Chorus, kids choir, hand claps]
+[Verse 3]
 Pırt pırt pırt, hortum öter,
 Dedem uyanır, gülümser!
+Anneannem göbek atar,
+Kepçesiyle tempo tutar!
+Ha ha ha, kahkaha,
+Hep birlikte bir daha!
+
+[Final Chorus, key change up, kids choir, hand claps]
 Üf üf üf, ham ham ham,
 Çorba bitti, tamam tamam!
+Anneannem, dedeciğim,
+Sizi çok çok severim!
 Ha ha ha, kahkaha,
 Hep birlikte bir daha!
 
