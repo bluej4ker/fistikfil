@@ -117,6 +117,7 @@ asyncio.run(main())
 fade = T1 - T0 - 0.8
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", str(FPS), "-i", f"{FR}/f%05d.png",
     "-ss", str(T0), "-t", str(T1 - T0), "-i", cfg["audio"],
-    "-vf", "scale=1080:1920:flags=lanczos,format=yuv420p", "-af", f"afade=t=in:d=0.25,afade=t=out:st={fade:.2f}:d=0.8",
+    "-map", "0:v:0", "-map", "1:a:0",                      # the audio source may be a video (e.g. 4K render): never take its picture
+    "-vf", "scale=1080:1920:flags=lanczos,setsar=1,format=yuv420p", "-af", f"afade=t=in:d=0.25,afade=t=out:st={fade:.2f}:d=0.8",
     "-c:v", "libx264", "-crf", "18", "-preset", "slow", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", OUT + ".mp4"], check=True)
 print("done", OUT + ".mp4")
