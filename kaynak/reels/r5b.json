@@ -1,0 +1,5 @@
+{"comp": "/home/user/fistikfil/kaynak/05-fistik-fistik-yer-mi/index.html", "start": 70.0, "end": 100.0, "audio": "/home/user/fistikfil/kaynak/05-fistik-fistik-yer-mi/renders/fy-4k-ses.mp4", "lines": "/home/user/fistikfil/kaynak/05-fistik-fistik-yer-mi/lines.json",
+ "hook": "Ördek mısırı<br/>daktilo gibi yiyor!", "hookSecs": 4.0,
+ "track": [[70.0, "duckPos"], [78.9, "head"], [84.5, "frogPos"], [88.7, "head"], [93.5, "frogPos"], [95.7, "head"], [97.9, "duckPos"]],
+ "bias": [[70.0, -170], [74.8, -170], [75.6, 0]],
+ "hide": ["#flyBox", "#tap", "#laBall"], "out": "/tmp/claude-0/-home-user-fistikfil/f34c749d-e638-57b0-a651-0499d26014f4/scratchpad/reels/reels-6-daktilo-misir"}
