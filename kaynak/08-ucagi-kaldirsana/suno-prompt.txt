@@ -1,0 +1,139 @@
+SUNO — "Uçağı Kaldırsana" (Custom mode) · Fıstık Fil uyarlaması
+================================================================
+
+Hikâye: Fıstık uçmak istiyor (Arı Vız Vız'da kulaklarını çırpıp "güm" düşmüştü). Bu sefer
+arkadaşlarıyla karton kutudan uçak yapıyor. İlk deneme "güm", olmadı mı? Bir daha! Hortumu
+"pırt pırt" pervaneyi çeviriyor ve uçak havalanıyor. Mesaj: hayal kur, dene, vazgeçme, birlikte yap.
+
+▶ Title (Başlık)
+Uçağı Kaldırsana
+
+▶ Style of Music (Tarz) — kopyala-yapıştır
+Turkish children's song, cheerful modern kids pop, cartoon opening theme feel, playful and bouncy, major key, 124 BPM, 4/4, ukulele, acoustic guitar, glockenspiel, xylophone, simple drums, hand claps, light trumpet, toy instruments, warm smiling female lead vocal, energetic kids choir call and response, catchy simple hook, short instrumental breaks, 8 second instrumental intro
+
+▶ Exclude Styles (Hariç tut) — varsa
+heavy rock, rap, epic cinematic, military march, orchestral, electronic, autotune, sad, minor key, male lead vocal
+
+▶ Ayarlar
+- Vocal Gender: Female
+- Weirdness: düşük (~30%) · Style Influence: yüksek (~75%)
+- Instrumental: KAPALI
+
+▶ Lyrics (Sözler) — kopyala-yapıştır
+[Intro]
+[Instrumental intro, 8 seconds, ukulele and glockenspiel, no vocals]
+
+[Pre-Verse, playful female vocal]
+Haydi Fıstık, kalksana,
+Bir hayal kursana,
+Kulakla uçulmaz ki,
+Bir uçak yapsana!
+
+[Verse 1]
+Kutuyu alsana,
+Kanadı taksana,
+Tekerlek mi eksik?
+Düğmeden taksana!
+
+Pervane koysana,
+Hortumla üflesene,
+Pırt pırt pırt diyerek,
+Motoru çalıştırsana!
+
+[Chorus, kids choir joins, hand claps]
+Takozu kaldırsana!
+Motoru çalıştırsana!
+Pist seni bekliyor,
+Uçağı kaldırsana!
+
+İHA yapsana!
+Roket yapsana!
+Bulutlara, göklere,
+Fıstık, uçsana!
+
+[Verse 2]
+Bir, iki, üç, vın vın,
+Güm! Uçak düştü mü?
+Olmadı mı? Bir daha!
+Bir daha! Bir daha!
+
+Vidayı sıksana,
+Kanadı düzeltsene,
+Arkadaşlar yardıma,
+Hep beraber itsene!
+
+Çalışınca sonunda,
+Olduuu diye bağırsana!
+
+[Chorus, kids choir joins, hand claps]
+Takozu kaldırsana!
+Motoru çalıştırsana!
+Pist seni bekliyor,
+Uçağı kaldırsana!
+
+İHA yapsana!
+Roket yapsana!
+Bulutlara, göklere,
+Fıstık, uçsana!
+
+[Bridge, call and response, lead vocal asks, kids choir shouts the answer]
+Takozu!
+KALDIRSANA!
+Motoru!
+ÇALIŞTIRSANA!
+Kanadı!
+TAKSANA!
+Uçağı!
+UÇURSANA!
+İHA'yı!
+YAPSANA!
+Roketi!
+YAPSANA!
+En iyisini?
+SEN YAPSANA!
+
+[Final Chorus, key change up, full kids choir, big hand claps]
+Takozu kaldırsana!
+Motoru çalıştırsana!
+İHA yapsana!
+Uçak yapsana!
+
+Oyna, öğren, dene,
+Hayalini başlatsana!
+Türkiye'nin çocukları,
+En iyisini yapsana!
+
+[Slowing down, funny spoken ending]
+Ee... şimdi ne yapıyoruz?
+[Kids choir shouting]
+UÇUYORUUUZ!
+Kim yapacak?
+[Kids choir shouting]
+BİİİZ!
+[All together]
+EN İYİSİNİ BİZ YAPARIZ!
+[Trumpet honk]
+[Applause]
+[End]
+
+▶ Notlar
+- Köşeli parantez [ ] içindekiler söylenmez, Suno'ya yön verir. Normal parantez ( ) arka vokal olarak SÖYLENİR, kullanma. Tırnak işareti de kullanma.
+- Soru-cevapta koro cevapları BÜYÜK HARF yazıldı; Suno bunları daha yüksek ve bağırarak söyler.
+- "İHA" bazen "iha" diye tek hece okunabilir; olmazsa "İ-HA" diye yaz.
+- Giriş 8 sn'den kısa gelirse yeniden üret ("Abone ol" bandı girişe konuyor). 2–4 varyant üretip en net Türkçe telaffuzu seç.
+- Ticari kullanım: şarkıyı Suno Pro/Premier aboneliği aktifken üret.
+- İndirirken WAV (yoksa MP3) seç; buraya yükle.
+
+▶ Orijinalden farklar (0–6 yaş için)
+- "Dersine çalışsana / kodunu yazsana / devreyi kursana" → çocuğun gördüğü somut işler: kutu, kanat, düğme tekerlek, vida, hortumla pervane.
+- Fıstık'ın imza "pırt pırt"ı motoru çalıştırıyor; "güm" düşüş + "bir daha" deneme hikâyeye bağlandı.
+- Kanca ("Takozu kaldırsana / Motoru çalıştırsana / Pist seni bekliyor / Uçağı kaldırsana") ve soru-cevap aynen korundu.
+- "En iyisini siz yapsana" → "En iyisini yapsana" (dil bilgisi); komik finalde "YAPIYORUZ" → "UÇUYORUUUZ".
+
+▶ Videoda (yazı yok, eylem var)
+- Giriş: Fıstık kulaklarını çırpıp uçmaya çalışır, olmaz (Arı Vız Vız'a gönderme); aklına ampul yanar → uçak!
+- Kıta 1 · Bahçe atölyesi: karton kutu, kanatlar, fare düğme tekerlekleri yuvarlayarak getirir, Fıstık hortumuyla pervaneyi "pırt pırt" çevirir.
+- Nakarat: tahta takozlar zıplayarak kalkar, motor öksürür, pist çizgileri ritimle yanar.
+- Kıta 2: ilk deneme "güm" (toz bulutu, yıldızlar), kurbağa vidayı sıkar, ördek kanadı düzeltir, hep beraber iterler; "Olduuu!"
+- Köprü: koro her cevapta bir parça yerine "klik" diye oturur (takoz, motor, kanat…), en sonda Fıstık kocaman gülümser.
+- Final: uçak bulutların arasında; arı yanında eşlik eder, mahalle aşağıda küçülür; kuyrukta minik ay-yıldız. Komik finalde herkes kokpitten bağırır.
