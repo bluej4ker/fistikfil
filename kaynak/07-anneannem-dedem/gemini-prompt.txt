@@ -1,4 +1,4 @@
-ESKİ SÜRÜM (v1) — güncel sözler ve prompt: suno-prompt.txt
+ESKİ SÜRÜM (v1, anneanne+babaanne+dede) — güncel sözler ve prompt: suno-prompt.txt (Anneannem ve Dedem)
 
 Okul öncesi çocuklar için kısa, akılda kalıcı, tekerleme gibi sıcacık ve neşeli bir Türkçe çocuk şarkısı üret. Konu: torunun anneannesini, babaannesini ve dedesini ziyaret etmesi.
 Tempo: yaklaşık 112 BPM, 4/4, düz ritim. Melodi: majör, sıcak, basit ve tekrarlı bir tekerleme melodisi.

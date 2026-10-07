@@ -1,0 +1,88 @@
+SUNO — "Anneannem ve Dedem" (Custom mode) · v3 (anneanne yemek yapar, dede piyano çalar, komik)
+=========================================================================================
+
+▶ Title (Başlık)
+Anneannem ve Dedem
+
+▶ Style of Music (Tarz) — kopyala-yapıştır
+Turkish children's song, funny nursery rhyme, playful tekerleme, cheerful and comedic, major key, 112 BPM, 4/4, bouncy honky-tonk piano, ukulele, xylophone, glockenspiel, hand claps, light darbuka, cartoon sound effects, warm clear female vocal, Turkish lyrics, clear diction, kids laughing, kids choir on final chorus, long instrumental intro
+
+▶ Exclude Styles (Hariç tut) — varsa
+male vocals, rap, rock, metal, electronic, autotune, sad, minor key, spoken word
+
+▶ Ayarlar
+- Vocal Gender: Female
+- Weirdness: orta-düşük (~35%) · Style Influence: yüksek (~70%)
+- Instrumental: KAPALI
+
+▶ Lyrics (Sözler) — kopyala-yapıştır
+[Intro]
+[Instrumental intro, 4 bars, bouncy piano and glockenspiel, no vocals]
+
+[Verse 1]
+[Doorbell chime]
+Din don, din don, kapı çalar,
+Anneannem kapıyı açar.
+Önlük takar, kepçe kapar,
+Tencerede çorba yapar!
+Pof pof pof, un savurur,
+Bembeyaz kardan adam olur!
+Ha ha ha, kahkaha,
+Anneannem, bir daha!
+
+[Instrumental Break, 4 bars, piano]
+
+[Verse 2]
+[Doorbell chime]
+Din don, din don, kapı çalar,
+Dedem gözlüğünü takar.
+Piyanoya hop oturur,
+Dın dın dın, tuşlara vurur.
+Çalar çalar, yorulur,
+Horr fiuu, horlar durur!
+Ha ha ha, kahkaha,
+Dedeciğim, bir daha!
+
+[Instrumental Break, 4 bars, slow sleepy piano, then a sudden trumpet honk]
+
+[Verse 3]
+Pırt pırt pırt, hortum öter,
+Dedem uyanır, gülümser!
+Dın dın dın, dedem çalar,
+Fokur fokur, kapak zıplar!
+Anneannem göbek atar,
+Kepçesiyle tempo tutar!
+Ha ha ha, kahkaha,
+Hep birlikte bir daha!
+
+[Instrumental Break, 4 bars, drum roll]
+
+[Key Change Up]
+[Final Chorus, kids choir and female vocal, hand claps]
+Sofra kuruldu, gelin gelin,
+Çorbalar sıcak, üfleyin!
+Üf üf üf, ham ham ham,
+Çorba bitti, tamam tamam!
+Anneannem, dedeciğim,
+Sizi çok çok severim!
+Ha ha ha, kahkaha,
+Hep birlikte bir daha!
+
+[Outro]
+[Kids laughing]
+Bir daha!
+[Applause]
+[End]
+
+▶ Notlar
+- Köşeli parantez [ ] içindekiler söylenmez, Suno'ya yön verir. Normal parantez ( ) arka vokal olarak SÖYLENİR, kullanma. Tırnak işareti de kullanma.
+- "Horr fiuu" horlama taklidi; Suno komik söylemezse "Horrr, fiyuuu" diye yazmayı dene.
+- Giriş 8 sn'den kısa gelirse yeniden üret. 2–4 varyant üretip en net Türkçe telaffuzu seç.
+- Ticari kullanım: şarkıyı Suno Pro/Premier aboneliği aktifken üret.
+- İndirirken WAV (yoksa MP3) seç; buraya yükle.
+
+▶ Videoda (yazı yok, eylem var)
+- Kıta 1 · Mutfak: anneanne önlüğü bağlar, kepçeyi kapar, kocaman tencerede çorba; un paketini açınca "pof" → baştan aşağı bembeyaz, kardan adam gibi; gözlerini kırpıştırır, Fıstık güler.
+- Kıta 2 · Salon: dede gözlüğünü takar, piyanoya hop oturur, parmakları tuşlarda koşar, notalar uçar; yavaşlar, başı tuşlara düşer, burnundan baloncuk çıkar (horr fiuu), Z harfleri değil baloncuk ve ay-yıldız.
+- Kıta 3 · Hepsi: Fıstık hortumuyla "pırt pırt" → dede zıplayıp uyanır, gözlüğü burnuna kayar, gülümser; piyanoya geçer, mutfaktaki tencere kapağı müziğe göre zıplar; anneanne kepçeyle göbek atar, Fıstık kulaklarıyla tempo tutar.
+- Final · Sofra: üç kâse sıcak çorba, buhar; herkes "üf üf" üfler (buhar dağılır), "ham ham", kâseler bir anda boş → herkes karnını sıvazlar; sarılma, kalp.
