@@ -555,7 +555,7 @@ window.CAST = (function () {
     L.words.forEach((w, wi) => { const s = document.createElement("span"); s.id = `w${li}_${wi}`; s.textContent = w[0]; d.appendChild(s); }); E("lyric").appendChild(d); });
 
   // ───────────────────────── animated state ─────────────────────────
-  const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5], wave: [40, -130, 26], up: [-70, -30, 27], reach: [10, 60, 25], eat: [150, -60, 20], flyup: [-90, 20, 24] };
+  const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5], wave: [40, -130, 26], up: [45, -150, 28], reach: [10, 60, 25], eat: [150, -60, 20], flyup: [40, -170, 31] };   // raised trunks curl beside the face, never across it
   const R = { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, flap: 0, walk: 0, sway: 0, tilt: 0, bob: 1, dance: 0, jy: 0, rot: 0 };
   const CAM = { x: 960, y: 600, s: 1.0, r: 0 };
   const ENV = { glow: 0, flash: 0, trail: 0, pollen: 0, map: 0, panels: 0 };
@@ -979,7 +979,8 @@ window.CAST = (function () {
   window.addEventListener("hf-seek", (e) => render(e && e.detail ? e.detail.time : master.time()));
   render(0);
   { // hexagon portrait panels for the final (clones of the live drawings; ids stripped so nothing collides)
-    const fist = `<svg x="-250" y="-200" width="500" height="533" viewBox="0 0 600 640" overflow="visible">${E("char").querySelector("svg").innerHTML.replace(/ id="[^"]*"/g, "")}</svg>`;
+    drawTrunk(45, -150, 28);                                           // the live trunk is still empty at t=0: draw a happy raised trunk before cloning
+    const fist = `<svg x="-205" y="-215" width="410" height="437" viewBox="0 0 600 640" overflow="visible">${E("char").querySelector("svg").innerHTML.replace(/ id="[^"]*"/g, "")}</svg>`;
     const POR = { bee: `<g transform="translate(-20 20) scale(1.05)">${C.bee("pb")}</g>`, fistik: fist, frog: `<g transform="translate(0 100) scale(1.15)">${C.frog("pf")}</g>`,
       duck: `<g transform="translate(20 120) scale(1.0)">${C.duck("pd")}</g>`, duckling: `<g transform="translate(20 120) scale(1.15)">${C.duck("pdl", true)}</g>`,
       mouse: `<g transform="translate(0 110) scale(1.2)">${C.mouse("pm")}</g>`, sun: `<g transform="translate(0 10) scale(.9)">${C.sunflower("psf", 10)}</g>` };
@@ -987,7 +988,7 @@ window.CAST = (function () {
         <clipPath id="pc${i}"><path d="${C.hexPath(PANEL.r)}"/></clipPath><path d="${C.hexPath(PANEL.r)}" fill="${bg}"/>
         <g clip-path="url(#pc${i})"><circle r="${PANEL.r * 0.75}" fill="#fff" opacity=".35"/><g id="pp_${i}">${POR[k]}</g></g>
         <path id="pr_${i}" d="${C.hexPath(PANEL.r)}" fill="none" stroke="#fff" stroke-width="12"/></g>`).join("");
-    PANELS.forEach((_, i) => { E("pp_" + i).__root = E("pp_" + i); E("pp_" + i).querySelectorAll(".shd").forEach((n) => n.remove()); }); }
+    PANELS.forEach((_, i) => { E("pp_" + i).__root = E("pp_" + i); E("pp_" + i).querySelectorAll(".shd, .hatC").forEach((n) => n.remove()); }); }   // .hatC = ep5 cherry hat, never in this episode
   window.__timelines["main"] = master;
 })();
     </script>

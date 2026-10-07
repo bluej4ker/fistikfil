@@ -535,7 +535,7 @@ window.CAST = (function () {
   E("sndBox").innerHTML = SND.map((s, i) => `<div class="abs snd" id="sd${i}" style="opacity:0;color:${s.c}">${s.txt}</div>`).join("");
 
   // ───────────────────────── animated state ─────────────────────────
-  const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5], wave: [40, -130, 26], reach: [10, 60, 25], offer: [-20, 20, 27], eat: [150, -60, 20], up: [-70, -30, 27] };
+  const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5], wave: [40, -130, 26], reach: [10, 60, 25], offer: [-20, 20, 27], eat: [150, -60, 20], up: [45, -150, 28] };   // raised trunk curls beside the face, never across it
   const R = { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, flap: 0, walk: 0, sway: 0, tilt: 0, bob: 1, dance: 0, jy: 0, rot: 0 };
   const CAM = { x: 960, y: 560, s: 1.0, r: 0 };
   const ENV = { glow: 0, flash: 0, whip: 0 };
@@ -708,7 +708,7 @@ window.CAST = (function () {
       fr.querySelector(".sac").setAttribute("ry", (AN.sac * 26).toFixed(1)); fr.querySelector(".sac").setAttribute("cy", (-50 + AN.sac * 10).toFixed(1));
       fr.querySelector(".armL").setAttribute("transform", `rotate(${(AN.frArm * 70 + AN.wave * 40 * (0.5 + 0.5 * Math.sin(t * 12))).toFixed(1)} -46 -40)`);
       fr.querySelector(".armR").setAttribute("transform", `rotate(${(-AN.frogParty * 30 * Math.abs(Math.sin(beatPh / 2))).toFixed(1)} 46 -40)`);
-      fr.querySelector(".hatC").setAttribute("transform", `translate(0 -144) rotate(${(8 * Math.sin(beatPh)).toFixed(1)})`);
+      fr.querySelector(".hatC").setAttribute("opacity", 0);   // the cherry hat read as red eyes/nose on the frog: never shown
       const lookF = sc === 1 ? -5 : 0; eyes(fr, t, 1, lookF, 1, AN.frogOpen > 0.9 && AN.sac > 0.5 ? 0.6 : 0); }
     // tongue grabs (k2.5) → pile → eaten one by one (k2.6)
     { let on = false; const mo = frogMouth(t);

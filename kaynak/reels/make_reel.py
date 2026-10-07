@@ -1,7 +1,8 @@
 """Render a 1080x1920 reel from a Fıstık Fil composition.
 usage: python make_reel.py <config.json>
 Config keys: comp, start, end, audio (mp3/m4a/mp4), lines (list-of-lists or Video-3/4 dict format), hook, hookSecs,
-  bias [[t, dx]...], out, optional: gsap (local path to route CDN GSAP to), track [[t, "elementId" | x_px]...], hide ["#sel", ...]
+  bias [[t, dx]...], out, optional: gsap (local path to route CDN GSAP to), track [[t, "elementId" | x_px]...], hide ["#sel", ...],
+  smooth (crop follow speed), css (extra CSS for this reel), hookHide ["#sel", ...] (hidden while the hook text is on screen)
 Seeks the composition frame by frame (DPR 2), follows Fıstık with a smoothed vertical crop,
 draws hook text + karaoke subtitles + end card inside the crop, then muxes the song segment."""
 import asyncio, json, sys, os, subprocess, math
@@ -37,7 +38,8 @@ OVERLAY_CSS = """
 #reelOv .end .t { font-size:64px; line-height:1.05; text-align:center; color:#fff; -webkit-text-stroke:10px #2B2D42; paint-order:stroke fill; }
 #reelOv .end .c { margin-top:26px; background:#FF3B5C; color:#fff; font-size:38px; border-radius:40px; padding:10px 34px 2px; border:5px solid #fff; }
 #lyric, #bug, #title, #end, #vignette { display:none !important; }
-""" + "".join(f"{sel} {{ display:none !important; }}\n" for sel in cfg.get("hide", []))
+""" + "".join(f"{sel} {{ display:none !important; }}\n" for sel in cfg.get("hide", [])) + cfg.get("css", "")
+HOOKHIDE = cfg.get("hookHide", [])
 
 def line_at(t):
     cur = None
@@ -104,10 +106,11 @@ async def main():
             endo = max(0.0, min(1.0, (t - (T1 - 2.2)) / 0.35))
             hooko = 1.0 if t - T0 < cfg.get("hookSecs", 4.0) else max(0.0, 1 - (t - T0 - cfg.get("hookSecs", 4.0)) / 0.4)
             async def shot(pg):
-                await pg.evaluate("""([t, left, html, endo, hooko]) => { window.__timelines.main.seek(t);
+                await pg.evaluate("""([t, left, html, endo, hooko, hh]) => { window.__timelines.main.seek(t);
                     const o = document.getElementById('reelOv'); o.style.left = left + 'px';
                     o.querySelector(".rsub").innerHTML = html; o.querySelector(".rsub").style.opacity = endo > 0.5 ? 0 : 1;
-                    o.querySelector('.end').style.opacity = endo; o.querySelector('.hook').style.opacity = hooko; }""", [t, left, html, endo, hooko])
+                    o.querySelector('.end').style.opacity = endo; o.querySelector('.hook').style.opacity = hooko;
+                    for (const sel of hh) document.querySelectorAll(sel).forEach((n) => n.style.visibility = hooko > 0.02 ? 'hidden' : ''); }""", [t, left, html, endo, hooko, HOOKHIDE])
                 await pg.screenshot(path=path, clip={"x": left, "y": 0, "width": CW, "height": 1080})
             await safe(shot)
             if f % 150 == 0: print("frame", f, "/", N, flush=True)
