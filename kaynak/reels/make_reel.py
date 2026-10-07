@@ -91,7 +91,7 @@ async def main():
             for (a, va), (b2, vb) in zip(bias, bias[1:]):
                 if t <= b2: k = (t - a) / (b2 - a); k = k * k * (3 - 2 * k); return va + (vb - va) * k
             return bias[-1][1]
-        sm = xs[:]; a = 0.06                                     # heavy smoothing both ways so the crop glides
+        sm = xs[:]; a = cfg.get("smooth", 0.06)                   # smoothing both ways so the crop glides (higher = follows faster subjects)
         for i in range(1, N): sm[i] = sm[i - 1] + a * (sm[i] - sm[i - 1])
         for i in range(N - 2, -1, -1): sm[i] = sm[i + 1] + a * (sm[i] - sm[i + 1])
         centers = [min(1920 - CW / 2, max(CW / 2, sm[i] + bias_at(T0 + i / FPS))) for i in range(N)]
