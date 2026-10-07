@@ -1,0 +1,83 @@
+SUNO — "Anneannem Babaannem" (Custom mode)
+==========================================
+
+▶ Title (Başlık)
+Anneannem Babaannem
+
+▶ Style of Music (Tarz) — kopyala-yapıştır
+Turkish children's song, nursery rhyme, playful tekerleme, cheerful, major key, 112 BPM, 4/4, ukulele, xylophone, glockenspiel, hand claps, light drums, doorbell chime, warm clear female vocal, Turkish lyrics, clear diction, kids choir on final chorus, long instrumental intro
+
+▶ Exclude Styles (Hariç tut) — varsa
+male vocals, rap, rock, metal, electronic, autotune, sad, minor key, spoken word
+
+▶ Ayarlar
+- Vocal Gender: Female
+- Weirdness: düşük (~30%) · Style Influence: yüksek (~70%)
+- Instrumental: KAPALI
+
+▶ Lyrics (Sözler) — kopyala-yapıştır
+[Intro]
+[Instrumental intro, 4 bars, ukulele and glockenspiel, no vocals]
+
+[Verse 1]
+[Doorbell chime]
+Din don, din don, kapı çalar,
+Bakın kimler kapıyı açar?
+Anneannem örgü örer,
+Tık tık şişler döner.
+Örer örer, bitirir,
+Atkımı bana getirir!
+Muck muck muck, öperim,
+Anneannemi severim!
+
+[Instrumental Break, 4 bars]
+
+[Verse 2]
+[Doorbell chime]
+Din don, din don, kapı çalar,
+Bakın kimler kapıyı açar?
+Babaannem kek yapar,
+Fırından mis kokar!
+Ham ham ham, yerim,
+Ellerine sağlık derim!
+Muck muck muck, öperim,
+Babaannemi severim!
+
+[Instrumental Break, 4 bars]
+
+[Verse 3]
+[Doorbell chime]
+Din don, din don, kapı çalar,
+Bakın kimler kapıyı açar?
+Dedem gözlük arıyor,
+Hortumum hemen buluyor!
+Fış fış fış, sularım,
+Dedemle bahçe yaparım!
+Muck muck muck, öperim,
+Dedemi çok severim!
+
+[Instrumental Break, 4 bars, drum roll]
+
+[Key Change Up]
+[Final Chorus, kids choir and female vocal, hand claps]
+Din don, din don, kapı çalar,
+Bakın kimler kapıyı açar?
+Anneannem, babaannem,
+İki dedem, hepsi benim!
+Hep birlikte sarılalım,
+Kocaman bir halka olalım!
+Muck muck muck, öperim,
+Hepinizi çok severim!
+
+[Outro]
+Muck!
+[Applause]
+[End]
+
+▶ Notlar
+- Köşeli parantez [ ] içindekiler söylenmez, Suno'ya yön verir. Normal parantez ( ) arka vokal olarak SÖYLENİR, kullanma.
+- Tırnak işareti kullanma ("Ellerine sağlık" tırnaksız yazıldı); Suno bazen tırnağı garip vurgular.
+- Giriş 8 sn'den kısa gelirse: aynı sözlerle tekrar üret ya da en iyi çıkanın başına "Extend"/"Edit" ile giriş ekle. 2–4 varyant üretip en net Türkçe telaffuzu seç.
+- Türkçe vurgu bozuk çıkan kelime olursa (ör. "öperim") o satırı heceyle yazmayı dene: "ö-pe-rim".
+- Ticari kullanım: YouTube'da para kazanacaksan şarkıyı Suno Pro/Premier aboneliği aktifken üret (ücretsiz plandaki şarkılar ticari kullanılamaz).
+- İndirirken WAV (yoksa MP3) seç; buraya yükle.
