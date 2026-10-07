@@ -51,6 +51,7 @@ def main():
     ap.add_argument("--max-abone", type=int, default=2)
     ap.add_argument("--acilis-yok", action="store_true"); ap.add_argument("--kapanis-yok", action="store_true")
     ap.add_argument("--sessiz-bant", action="store_true", help="bandın tık/zil seslerini ekleme")
+    ap.add_argument("--abone-olcek", type=float, default=1.0, help="bandın boyutu (ör. 0.75: %%25 küçük, sol alt köşeye yaslı)")
     ap.add_argument("--renders", default=os.path.join(HERE, "renders"))
     ap.add_argument("--crf", default="17"); ap.add_argument("--preset", default="slow")
     a = ap.parse_args()
@@ -73,10 +74,11 @@ def main():
     cur = "m0"
     if times:
         bi = inp(R(f"abone-{suf}.mov"))
-        fc.append(f"[{bi}:v]scale={W}:{H}:flags=lanczos,fps={fps},format=yuva420p,split={len(times)}" + "".join(f"[b{k}]" for k in range(len(times))))
+        k_ = a.abone_olcek; bw, bh = int(round(W * k_ / 2)) * 2, int(round(H * k_ / 2)) * 2      # band drawn bottom-left in its own frame → scale toward that corner
+        fc.append(f"[{bi}:v]scale={bw}:{bh}:flags=lanczos,fps={fps},format=yuva420p,split={len(times)}" + "".join(f"[b{k}]" for k in range(len(times))))
         for k, t in enumerate(times):
             fc.append(f"[b{k}]setpts=PTS-STARTPTS+{t}/TB[bt{k}]")
-            fc.append(f"[{cur}][bt{k}]overlay=eof_action=pass:repeatlast=0[m{k + 1}]"); cur = f"m{k + 1}"
+            fc.append(f"[{cur}][bt{k}]overlay=x=0:y={H - bh}:eof_action=pass:repeatlast=0[m{k + 1}]"); cur = f"m{k + 1}"
         if not a.sessiz_bant:
             si = inp(R("abone-sfx.m4a"))
             fc.append(f"[{si}:a]{norm_a},asplit={len(times)}" + "".join(f"[s{k}]" for k in range(len(times))))
