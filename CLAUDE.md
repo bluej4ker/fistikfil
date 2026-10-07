@@ -426,6 +426,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   - Üst katman `#reelOv`: logo, ilk `hookSecs` saniyede kanca yazısı, karaoke altyazı `.rsub`, son kart "Şarkının tamamı kanalda!".
   - Sınıf adı `.rsub` olmalı: `.sub` kompozisyondaki turuncu hap sınıfıyla çakışıyordu.
   - Sonunda ffmpeg ile ilgili şarkı parçası fade in/out ile eklenir.
+- Ek ayarlar: `smooth` (kadraj takip hızı), `css` (reels'e özel CSS, ör. `#hapsu{scale:.6}`), `hookHide` (kanca yazısı ekrandayken gizlenecek seçiciler, ör. `#sndBox`). Yazı/efekt kadraja sığmıyorsa sayfada `getBoundingClientRect` ile ölç, `bias`'ı ölçüme göre ver.
 - `make_cover.py comp t out l1 l2 c1 c2 dx`: 1080×1920 kapak (sahne kırpması + iki satırlık başlık + "YENİ!" + logo).
 - **Örnek ayarlar:**
   - r1: Güm Güm 21.0–51.8 s.
@@ -517,6 +518,10 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 | Bir svg 1920 px'e şişip kayboldu | `#under > svg` kuralı sonradan eklenen svg'lere de uydu | `:first-child` gibi dar seçici kullan |
 | Bekleme döngüsü hiç bitmedi | `pgrep -f "<desen>"` döngünün kendi komut satırını da buluyor | Bitiş için dosya işareti (`touch DONE`) kullan |
 | Gemini dizeleri atlıyor | Model davranışı | Ekrandaki sözleri gerçekten söylenene göre düzelt |
+| Kurbağada "kırmızı göz/burun" (kiraz) | Ep5 `C.frog` içindeki `.hatC` kiraz şapkası; klonlarda/başka bölümde gizlenmemiş | `.hatC` her zaman gizli (ep5 `opacity 0`, ep6 portrede `remove()`) |
+| Hortum yüzün/berenin önünde ince şerit, "hortum yok" gibi | `up [-70,-30,27]` / `flyup [-90,20,24]` pozları hortumu dik kaldırıyor | Yukarı pozlar yana kıvrılmalı: `up [45,-150,28]`, `flyup [40,-170,31]`; yeni pozu `posetest.py` benzeri yan yana karşılaştır |
+| Altıgen portrede Fıstık'ın hortumu yok | Portre `render(0)` anında klonlanıyor, o an hortum yolu boş | Klonlamadan önce `drawTrunk(A,C,L)` çağır |
+| Reels'te "ver" anında iki karakter de yarım | İki karakter ~700 px aralıklı, dikey kadraj 607 px; yumuşatma hedefe varamıyor | Sabit x hedefleri: önce veren (~0,9 sn), sonra alana hızlı kayma; `smooth` 0.15 |
 
 ---
 
