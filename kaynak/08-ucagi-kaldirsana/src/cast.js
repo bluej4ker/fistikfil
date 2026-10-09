@@ -258,8 +258,8 @@ window.CAST = (function () {
     <path d="M-322 -312 H250" stroke="#fff" stroke-width="5" opacity=".35" stroke-linecap="round"/>
     <path d="M-150 -340 V-110 M60 -340 V-110" stroke="${KR}" stroke-width="3" opacity=".28"/>
     <g class="tape"><g transform="translate(-230 -225) rotate(-62)">${tapeStrip(270)}</g><g transform="translate(-60 -225) rotate(-62)">${tapeStrip(270)}</g></g>
-    <g class="lights">${Array.from({ length: 7 }, (_, i) => `<g transform="translate(${-290 + i * 72} -136)"><circle r="16" fill="#5A4A3A" stroke="${KR}" stroke-width="4"/>
-      <circle class="lt" id="${p}lt${i}" r="14" fill="${["#FF5A5F", "#FF9F1C", "#FFD43B", "#3FBF6F", "#3D9BFF", "#7A6CFF", "#FF7FC8"][i]}" opacity="0"/><circle cx="-4" cy="-5" r="4" fill="#fff" opacity=".7"/></g>`).join("")}</g>
+    <g class="lights">${Array.from({ length: 7 }, (_, i) => `<g transform="translate(${-290 + i * 72} -136)"><circle r="23" fill="#5A4A3A" stroke="${KR}" stroke-width="5"/>
+      <circle class="lt" id="${p}lt${i}" r="20" fill="${["#FF5A5F", "#FF9F1C", "#FFD43B", "#3FBF6F", "#3D9BFF", "#7A6CFF", "#FF7FC8"][i]}" opacity="0"/><circle cx="-4" cy="-5" r="4" fill="#fff" opacity=".7"/></g>`).join("")}</g>
     <g class="face">${eye(p + "eL", 118, -262, 31, 36, "#DDA466", KR, 0.56)}${eye(p + "eR", 196, -262, 31, 36, "#DDA466", KR, 0.56)}
       <ellipse cx="88" cy="-200" rx="20" ry="11" fill="#FF8FAB" opacity=".75"/><ellipse cx="232" cy="-200" rx="18" ry="11" fill="#FF8FAB" opacity=".75"/>
       <path class="pMouth" d="M126 -196 Q158 -170 190 -196" stroke="${INK}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -287,7 +287,7 @@ window.CAST = (function () {
     ${eye(p + "E", 0, 2, 40, 40, "#DCE6F2", "#4A5568", 0.58)}
     <circle class="flash" cx="0" cy="2" r="44" fill="#fff" opacity="0"/>
     <path d="M-60 40 q-10 30 -20 34 M60 40 q10 30 20 34" stroke="#4A5568" stroke-width="7" fill="none" stroke-linecap="round"/>
-    <g transform="translate(-6 -66) scale(.42)">${bee(p + "b")}</g>`;
+    <g transform="translate(-10 -86) scale(.66)">${bee(p + "b")}</g>`;
   // kova roket: orijin alt orta; tepede ördek yavrusu + külah şapka (.hatR), .balloons kuyrukta
   const rocket = (p = "rk") => `<g class="balloons">${[["#FF5A5F", -40, 120], ["#FFD43B", 0, 150], ["#3D9BFF", 40, 116], ["#3FBF6F", -14, 190]].map(([c, x, y], i) => `<g class="bl" data-i="${i}"><path d="M0 0 Q${x * 0.5} ${y * 0.5} ${x} ${y - 30}" stroke="#7A6C5D" stroke-width="3" fill="none"/>
       <ellipse cx="${x}" cy="${y}" rx="26" ry="32" fill="${c}" stroke="${INK}" stroke-width="4"/><ellipse cx="${x - 9}" cy="${y - 12}" rx="6" ry="9" fill="#fff" opacity=".55"/></g>`).join("")}</g>
@@ -297,7 +297,7 @@ window.CAST = (function () {
     <g class="pilot" transform="translate(20 -150) scale(.55)">${duck(p + "d", true)}</g>
     <g class="hatR" transform="translate(-2 -250)"><path d="M-30 0 L0 -70 L30 0Z" fill="#FFD43B" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/><path d="M-22 -18 L18 -32 M-12 -42 L10 -50" stroke="#FF5A5F" stroke-width="7"/><circle cy="-72" r="10" fill="#FF5A5F" stroke="${INK}" stroke-width="3"/></g>
     <g class="flame" transform="translate(0 6)"><path d="M-30 0 Q0 80 30 0Z" fill="#FFB547" stroke="#E07B0C" stroke-width="4"/><path d="M-14 0 Q0 40 14 0Z" fill="#FFF3B0"/></g>`;
-  const paperPlane = () => `<path d="M60 0 L-50 -26 L-26 0 L-50 24Z" fill="#fff" stroke="#7FA0C8" stroke-width="4" stroke-linejoin="round"/><path d="M60 0 L-26 0 L-36 14Z" fill="#DCE8F7" stroke="#7FA0C8" stroke-width="3" stroke-linejoin="round"/>`;
+  const paperPlane = () => `<path d="M60 0 L-50 -26 L-26 0 L-50 24Z" fill="#fff" stroke="#4A78B0" stroke-width="5" stroke-linejoin="round"/><path d="M60 0 L-26 0 L-36 14Z" fill="#DCE8F7" stroke="#4A78B0" stroke-width="4" stroke-linejoin="round"/>`;
   const bird = (c = "url(#gBird)") => `<g class="bw2"><path d="M-6 -10 Q-30 -46 -54 -26 Q-34 -16 -10 2Z" fill="#7FC4FF" stroke="#2C6FBF" stroke-width="3.5" stroke-linejoin="round"/></g>
     <ellipse cx="0" cy="0" rx="36" ry="28" fill="${c}" stroke="#2C6FBF" stroke-width="4"/><ellipse cx="4" cy="8" rx="20" ry="13" fill="#E8F6FF"/>
     <circle cx="16" cy="-8" r="6" fill="${INK}"/><circle cx="18" cy="-10" r="2" fill="#fff"/><path d="M32 -4 L50 2 L32 8Z" fill="#FF9F1C" stroke="#C25F05" stroke-width="3" stroke-linejoin="round"/>
