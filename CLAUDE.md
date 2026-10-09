@@ -555,6 +555,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 | Hortum yüzün/berenin önünde ince şerit, "hortum yok" gibi | `up [-70,-30,27]` / `flyup [-90,20,24]` pozları hortumu dik kaldırıyor | Yukarı pozlar yana kıvrılmalı: `up [45,-150,28]`, `flyup [40,-170,31]`; yeni pozu `posetest.py` benzeri yan yana karşılaştır |
 | Altıgen portrede Fıstık'ın hortumu yok | Portre `render(0)` anında klonlanıyor, o an hortum yolu boş | Klonlamadan önce `drawTrunk(A,C,L)` çağır |
 | Reels'te "ver" anında iki karakter de yarım | İki karakter ~700 px aralıklı, dikey kadraj 607 px; yumuşatma hedefe varamıyor | Sabit x hedefleri: önce veren (~0,9 sn), sonra alana hızlı kayma; `smooth` 0.15 |
+| Mac/QuickTime'da 4K videoda yeşil bloklar, pikselleşme, donma (ffmpeg hatasız çözüyor) | x264 4K'da H.264 Level 6.0 seçiyor; Apple VideoToolbox çözemiyor | `-profile:v high -level 5.1` (intro_ekle.py'de var). Kontrol: `ffmpeg -hwaccel videotoolbox -i x.mp4 -f null - 2>&1 \| grep -c failed` → 0 |
 | Denetim temiz ama video "slayt gibi" | Defter fikirleri ekrana yansımadı; aynı geniş plan 30+ sn kaldı | Ekran kapıları E1–E4; render'a `breakdown.py` ile kontak sayfası + ritim ölçümü |
 
 ---
