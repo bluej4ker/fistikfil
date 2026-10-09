@@ -2,6 +2,7 @@
 # `split -n 2 -d -a 1 x.mp4 x.mp4.parca` ile bölünür; tam dosya dışarıda kalır, parçalar + birlestir.sh repoya girer.
 # (Git LFS bulut ortamında lfs.github.com 403 verdiği için kullanılamıyor.)
 04 - Küçük Kurbağa/kucuk-kurbaga-4k.mp4
+08 - Uçağı Kaldırsana/ucagi-kaldirsana-4k.mp4
 *.mov
 # Ara çıktılar (renders/, kaynak/** altındaki videolar) repoya girmez.
 *.wav
