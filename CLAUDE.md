@@ -36,6 +36,7 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 4 | Küçük Kurbağa Kulağın Nerede? · Vücudumuzu Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:12 (açılış+kapanış dahil) | Hazır, yüklenmedi; "Fıstık Fil ile Hayvanlar" 2. bölüm |
 | 5 | Fıstık Fil Fıstık Yer · Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır, yüklenmedi; tekerleme tarzı ilk bölüm |
 | 6 | Arı Vız Vız · Renkleri ve Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | ~2:11 (açılış+kapanış dahil) | Hazır, yüklenmedi |
+| 8 | Uçağı Kaldırsana · Hayal Kur, Dene, Başar · Fıstık Fil ile Çocuk Şarkıları | — | ~2:28 (açılış+kapanış dahil) | Hazırlanıyor (Bölüm 7 Anneannem ve Dedem şarkısı bekleniyor) |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 
@@ -176,7 +177,7 @@ Sözleri AYNEN, sırasıyla söyle; hiçbir dizeyi atlama:
 
 - **Nakarat neden "tempo aynı, ritim iki kat"?** Animasyon tek bir `BEAT` değeriyle senkronlanıyor; şarkının ortasında BPM değişirse kulak/ponpon/dans vuruşu kayar. Hızlı his, double-time davul ve sık el çırpmayla verilir. Bölüm etiketlerine de tarif yazılır: `[Nakarat — hızlı, coşkulu, koro hep bir ağızdan]`.
 - **Neden 8 sn vokalsiz giriş?** Videonun başında söz hapı yokken "Abone ol" bandı (7 sn) gösteriliyor (§6.6). Gemini yine de erken başlarsa bandı elle `--abone` ile başka bir boşluğa koy.
-- **Suno (Video 7'den itibaren kullanıcı şarkıları Suno'da üretiyor):** Custom mode. "Style of Music" alanına İngilizce etiketler (Turkish children's song, nursery rhyme, 112 BPM, ukulele, glockenspiel, warm clear female vocal, Turkish lyrics, long instrumental intro…), "Exclude Styles" alanına istenmeyenler (male vocals, rap, autotune, sad…). Sözler alanında yapı meta etiketleri: `[Intro]`, `[Verse 1]`, `[Instrumental Break, 4 bars]`, `[Key Change Up]`, `[Final Chorus, kids choir…]`, `[Outro]`, `[End]`; efektler `[Doorbell chime]`, `[Applause]` gibi köşeli parantezde. Normal parantez ( ) arka vokal olarak söylenir, kullanma; tırnak kullanma. Örnek: `kaynak/07-anneannem-babaannem/suno-prompt.txt`. Ticari hak için Pro/Premier aboneliği aktifken üretilmeli.
+- **Suno (Video 7'den itibaren kullanıcı şarkıları Suno'da üretiyor):** Custom mode. "Style of Music" alanına İngilizce etiketler (Turkish children's song, nursery rhyme, 112 BPM, ukulele, glockenspiel, warm clear female vocal, Turkish lyrics, long instrumental intro…), "Exclude Styles" alanına istenmeyenler (male vocals, rap, autotune, sad…). Sözler alanında yapı meta etiketleri: `[Intro]`, `[Verse 1]`, `[Instrumental Break, 4 bars]`, `[Key Change Up]`, `[Final Chorus, kids choir…]`, `[Outro]`, `[End]`; efektler `[Doorbell chime]`, `[Applause]` gibi köşeli parantezde. Normal parantez ( ) arka vokal olarak söylenir, kullanma; tırnak kullanma. Örnek: `kaynak/07-anneannem-dedem/suno-prompt.txt`. Ticari hak için Pro/Premier aboneliği aktifken üretilmeli.
 - **Ticari kullanım:** Gemini çıktısının ticari hakları belirsiz. Uzun vadede **Suno Pro/Premier** (ticari hak veriyor), insan seslendirmen veya hibrit çözüm önerildi.
 - **Yerel model araştırması:**
   - **ACE-Step 1.5** önerildi: Türkçe sözle şarkı söyleyebilen açık model.
@@ -388,6 +389,15 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - **Netlik (kullanıcı isteği):** konturlar kalın ve renkli, arka planlar açık/sade, karakterler doygun; bulanıklaştırma (blur) yok; final `intro_ekle.py --crf 16 --preset slow`; önizleme 1080p.
 - **v2 (kullanıcı geri bildirimi):** (1) "altyazı ekranı çok kesiyor" → söz hapı 60→44 px, ince kenar, yarı saydam, satır bitince 0,6–0,9 sn'de kalkar; ses kelimeleri 92→66 px ve ekranın üst 230 px'ine girmez. (2) "abone ol yanlış yerde ve büyük" → ikinci bant Fıstık'ın uçma gag'inin üstüne düşmüştü: `--max-abone 1` (sadece giriş) + `--abone-olcek 0.75` (yeni seçenek, sol alta yaslı küçültür). Bandın düştüğü boşlukta önemli bir aksiyon varsa ikinci bandı koyma. (3) "arının hareketi düzgün değil" → anahtar kareler arası smoothstep her durakta durduruyordu; yerine Catmull-Rom teğetli kübik Hermite (duraklarda ve sahne kesmelerinde teğet 0), yön değişimi 0,45 sn'de yumuşak (ölçek −1↔1), hıza göre ±14° eğilme, takla ve sekiz dansı yolun üstüne eklemeli (başladığı yerde biter), kanat çırpma 62→27 rad/s (30 fps'te titreme yapmasın). Kontrol: 30 fps örnekleyip ivme > 9000 px/s² olan kare sayısı 0 olmalı (`scratchpad/beecheck.py` benzeri). Sahne kesmesinden hemen önce yolun karşı sahneye kaymaması için kesmeden 0,01 sn önce bir tutma karesi koy.
 
+### 7.7 Video 8 — "Uçağı Kaldırsana" (134,7 s + açılış/kapanış) · kullanıcı sözlerinden uyarlama
+
+- **Şarkı:** Kullanıcının getirdiği 5–10 yaş "-sana" şarkısı Fıstık için 0–6 yaşa uyarlandı (`kaynak/08-ucagi-kaldirsana/tek-prompt.txt`, Suno/Gemini tek blok ~2500 karakter; kullanıcı "çok uzun" deyince açıklamalar sıkıştırıldı, "daha canlı" deyince 132 BPM + coşkulu vokal + "Hey!/Vınnn!" nidaları). Gelen dosya m4a + gömülü altyazı (Gemini biçimi), 129 BPM, giriş 8,5 sn, müzik arası yok → tek abone bandı (`--max-abone 1 --abone-olcek 0.75`). Köprüde koro cevapları ayrı satır değil, "-SANA" hecesinde → ekranda tek satır, son kelime kırmızı (`who: "call"`).
+- **Fable ajanı fikri (kullanıcı istedi):** Plan önce `model: "fable"` alt ajanına çocuk gözüyle eleştirtildi; soyut öğeler (mavi plan, düşünce bulutu/ampul, polaroid) somut eylemlerle değiştirildi: canlanan uçak (far-göz, kapak-ağız, her parçada daha mutlu), kâğıt uçak alna çarpar, hamster düğme, pervane bereyi emer + kurbağa ponponu yakalar, herkes iter/yavru dürter, köprüde hortum-megafon ping-pong + 7 ışık sayacı, "SEN YAPSANA"da cam buğusu + kalp, uçan göz İHA (flaş + fotoğraf), kova roket (balonlar), uyuyan uçağa koli bandı yorgan.
+- **Uçak katmanları:** `planeBack` (iç duvar) `#backActors` içinde, `planeFront` `#actors` içinde; Fıstık `#charWrap` arada → kutunun içinde oturur. Arkadaşlar `seat` modunda `#inPlane` (arka), `free` modunda `#outPlane` (ön) grubuna `place()` ile taşınır. Uçak dönüşü pivot `PIV=[0,-300]` etrafında; `P2S(lx,ly,p)` yerel → sahne; takla (`PL.roll` → scaleY) ve kokpit taklası (`PL.rot -360`) içindekileri de döndürür.
+- **Pervane dersi (lint):** `spin: "+=..."` göreli tween'ler render'da aynı karede farklı açı verebilir (`gsap_relative_value_second_writer`). Çözüm: hız tablosu `RATE [t, deg/s]` + analitik integral `spinAt(t)` (saf fonksiyon).
+- **Kiraz:** Ep5 kurbağasındaki `.hatC` bu bölümün cast'ından tamamen silindi.
+- Dekorlar: bahçe → atölye (kraft) → çim pist (gri+turuncu ışık) → gökyüzü (mavi) → bulutların üstü gün batımı → akşam bahçe (iniş). Geçişler: kutu maskesi, kamçı pan (hız çizgileri), beyaz patlama, vinç kalkış + bulut perdesi, buğu → renk patlaması, koli bandı kapanış.
+
 ---
 
 ## 8. Teslimat (kullanıcının bilgisayarı)
@@ -542,6 +552,8 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [x] Küçük Kurbağa: şarkı geldi, video + kapak + YouTube metni hazırlandı (`04 - Küçük Kurbağa/`). Yükleme kullanıcıda.
 - [x] Bölüm 5 "Fıstık Fil Fıstık Yer" (tekerleme, paylaşma): video + kapak + YouTube metni `05 - Fıstık Fil Fıstık Yer/`. Yükleme kullanıcıda.
 - [x] Bölüm 6 "Arı Vız Vız": video + kapak + YouTube metni `06 - Arı Vız Vız/`. Yükleme kullanıcıda.
+- [ ] Bölüm 7 "Anneannem ve Dedem": Suno promptu hazır (`kaynak/07-anneannem-dedem/suno-prompt.txt`), şarkı bekleniyor.
+- [x] Bölüm 8 "Uçağı Kaldırsana": kompozisyon, kapak, YouTube metni (`08 - Uçağı Kaldırsana/`); 4K render.
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
