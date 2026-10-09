@@ -1,32 +1,33 @@
-# Büyük medya: teslim videoları (*.mp4) ve 4K kapaklar repoda. GitHub'ın 100 MB sınırını aşan videolar
-# `split -n 2 -d -a 1 x.mp4 x.mp4.parca` ile bölünür; tam dosya dışarıda kalır, parçalar + birlestir.sh repoya girer.
+# ── Teslim videoları ──────────────────────────────────────────────────────────
+# Teslim videoları (*.mp4) ve 4K kapaklar repoda. GitHub'ın 100 MB sınırını aşan videolar
+# `split -n 2 -d -a 1 x.mp4 x.mp4.parca` ile bölünür; tam dosya dışarıda kalır,
+# parçalar + x.mp4.sha256 + birlestir.sh repoya girer (`sh birlestir.sh` ile birleşir).
 # (Git LFS bulut ortamında lfs.github.com 403 verdiği için kullanılamıyor.)
 04 - Küçük Kurbağa/kucuk-kurbaga-4k.mp4
+05 - Fıstık Fil Fıstık Yer/fistik-yer-4k.mp4
+06 - Arı Vız Vız/ari-viz-viz-4k.mp4
 08 - Uçağı Kaldırsana/ucagi-kaldirsana-4k.mp4
-*.mov
-# Ara çıktılar (renders/, kaynak/** altındaki videolar) repoya girmez.
-*.wav
-*.part_*
+
+# ── Ara çıktılar (kaynak/** altındaki render, ses, log) ───────────────────────
+renders/
 kaynak/**/*.mp4
 kaynak/**/*.mov
 kaynak/**/*-4k.png
-# Sistem / geçici
+*.mov
+*.wav
+*.log
+*.part_*
+Claude outputs/
+_to_delete/
+
+# ── build.py'nin kaynak/ortak'tan kopyaladığı dosyalar (asıl kopya: kaynak/ortak) ──
+kaynak/*/assets/fonts/
+kaynak/*/assets/gsap.min.js
+kaynak/intro/*/assets/fonts/
+kaynak/intro/*/assets/gsap.min.js
+
+# ── Sistem / geçici ───────────────────────────────────────────────────────────
 .DS_Store
 __pycache__/
 node_modules/
-renders/
-Claude outputs/
-_to_delete/
-# intro projelerine build.py'nin kopyaladığı ortak dosyalar
-kaynak/intro/*/assets/fonts/
-kaynak/intro/*/assets/gsap.min.js
-*.log
-# bölüm projelerine build.py'nin kopyaladığı ortak dosyalar
-kaynak/04-kucuk-kurbaga/assets/fonts/
-kaynak/04-kucuk-kurbaga/assets/gsap.min.js
-kaynak/05-fistik-fistik-yer-mi/assets/fonts/
-kaynak/05-fistik-fistik-yer-mi/assets/gsap.min.js
-05 - Fıstık Fil Fıstık Yer/fistik-yer-4k.mp4
-kaynak/06-ari-viz-viz/assets/fonts/
-kaynak/06-ari-viz-viz/assets/gsap.min.js
-06 - Arı Vız Vız/ari-viz-viz-4k.mp4
+.references/

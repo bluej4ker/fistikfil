@@ -16,6 +16,8 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 8. **Her video (Reels/Shorts hariç)** MUTLAKA açılış (5,6 sn) + söz olmayan girişte "Abone ol" bandı + kapanış (7 sn) ile teslim edilir (§6.6). Bu yüzden şarkı promptunda ilk 8 sn vokalsiz giriş şart (§5).
 9. **Her bölümde saas-motion-kit yaratıcı geçişi zorunlu** (§4.1): mesaj + ton cümlesi, hareket defteri (STORYBOARD.md), `variety_audit.py` temiz, en az bir yeni bileşen, ~15 sn'de bir sürpriz; plan tablosu → eskiz sayfası → onay → animasyon.
 10. **Telif:** Bilinen şarkılarda sözlerin anonim olduğunu MESAM/MSG'den teyit ettir; yüklemelerde "Çocuklara özel" ve "Değiştirilmiş/sentetik içerik: Evet" işaretli olsun.
+11. **Doğrudan 4K üret** (kullanıcı isteği, Ekim 2026): kullanıcı videoları kendi bilgisayarından izliyor. Ayrı 1080p/720p önizleme dosyası üretme veya gönderme; final 4K'yı teslim et. Kontrol için kare/kontak sayfası yeterli.
+12. **Git:** Her iş `main`'e de gider (`git push origin <dal>:main`). Yan dallarda iş bırakma; biten dal main'e birleştirilip silinir.
 
 ---
 
@@ -36,9 +38,12 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 4 | Küçük Kurbağa Kulağın Nerede? · Vücudumuzu Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:12 (açılış+kapanış dahil) | Hazır, yüklenmedi; "Fıstık Fil ile Hayvanlar" 2. bölüm |
 | 5 | Fıstık Fil Fıstık Yer · Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır, yüklenmedi; tekerleme tarzı ilk bölüm |
 | 6 | Arı Vız Vız · Renkleri ve Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | ~2:11 (açılış+kapanış dahil) | Hazır, yüklenmedi |
-| 8 | Uçağı Kaldırsana · Hayal Kur, Dene, Başar · Fıstık Fil ile Çocuk Şarkıları | — | ~2:28 (açılış+kapanış dahil) | Hazırlanıyor (Bölüm 7 Anneannem ve Dedem şarkısı bekleniyor) |
+| 7 | Anneannem ve Dedem | — | — | Suno promptu hazır, şarkı bekleniyor |
+| 8 | Uçağı Kaldırsana · Hayal Kur, Dene, Başar · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır (v2, Fable incelemesi sonrası 4K), yüklenmedi |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
+| S3–S8 | Reels 3–4 (Küçük Kurbağa), 5–6 (Fıstık Yer), 7–8 (Arı Vız Vız) | — | ~0:30 | Hazır, `Reels/` + `Reels/reels-metin.txt` |
+| KY | Kayıp Yıldız · 3 Reels (kullanıcının kendi ürettiği, `codex/kayip-yildiz-reels` dalından) | — | ~0:25 | Hazır, `Reels/04 - Kayıp Yıldız/` (kaynak kodu repoda yok) |
 
 ---
 
@@ -47,22 +52,32 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 ```
 FistikFil/
 ├── CLAUDE.md                     ← bu dosya
-├── .gitignore                    ← mp4/wav vb. büyük dosyaları dışarıda tutar
+├── .gitignore                    ← tam 4K mp4'ler, render/ses/log ara çıktıları, kopyalanan font/GSAP dışarıda
 ├── Kanal Görselleri/             ← banner 2560x1440, profil (turuncu/yeşil)
-├── 01 - Güm Güm Güm/             ← video (4K mp4), kapak jpg + 4K png, youtube-metin.txt
-├── 02 - Şırıl Şırıl Dere/        ← video (1080p), kapak, youtube-metin.txt
-├── 03 - Ali Baba'nın Çiftliği/   ← video (1080p), kapak, youtube-metin.txt
-├── Reels/                        ← reels-1/2 mp4 + kapak png + reels-metin.txt
-├── Claude outputs/               ← sohbet sırasında gelen ara çıktılar (önizlemeler)
+├── 01 - Güm Güm Güm/             ← kapak jpg, youtube-metin.txt (video YouTube'da; repoda yok)
+├── 02 - Şırıl Şırıl Dere/        ← kapak jpg, youtube-metin.txt
+├── 03 - Ali Baba'nın Çiftliği/   ← kapak jpg, youtube-metin.txt
+├── 04 - Küçük Kurbağa/           ← 4K mp4 (parça + birlestir.sh), kapak jpg + 4K png, youtube-metin.txt
+├── 05 - Fıstık Fil Fıstık Yer/   ← aynı düzen
+├── 06 - Arı Vız Vız/             ← aynı düzen (3 parça)
+├── 08 - Uçağı Kaldırsana/        ← aynı düzen
+├── Reels/                        ← reels-3…8 mp4 + reels-1…8 kapak png + reels-metin.txt
+│   └── 04 - Kayıp Yıldız/        ← kullanıcının 3 Reels'i + srt + kapak + reels-meta.json
+├── Claude outputs/               ← (git dışı) yerel ara çıktılar; artık önizleme üretilmiyor
 └── kaynak/                       ← TÜM KAYNAK KOD (videoları yeniden üretmek için)
-    ├── ortak/fonts/              ← Baloo2-wght.ttf (+ OFL lisansı)
+    ├── ortak/fonts/              ← Baloo2-wght.ttf (+ OFL lisansı) — build.py'ler buradan assets/fonts'a kopyalar
     ├── ortak/gsap/gsap.min.js    ← GSAP 3.14.2 (yerel kopya; Playwright bununla çalışır)
+    ├── motion-ledger.json        ← film geçmişi (variety_audit --history; 04 v1/v2, 05, 06, 08)
     ├── 01-gum-gum/               ← index.html (v3 kompozisyon), archive/v1-v2, build_v2.py, make_music.py, assets/gemini.mp3
     ├── 02-siril-siril-dere/      ← build.py + src/(template.html, rig_part.js, chars.js, lines.json) → index.html, thumb.html, assets/song.mp3
     ├── 03-ali-baba/              ← build.py, fw.py, lines_build.py, align.py, run.sh, src/(template.html, rig_part.js, cast2.js), index.html, brand/thumb.html, assets/song.m4a
-    ├── 04-kucuk-kurbaga/         ← gemini-prompt.txt, lines_build.py, beats.py, build.py, kapak.py, src/(template.html, rig_part.js, cast.js), lines.json, assets/(song.mp3, beats.json, whisper_words.json)
+    ├── 04-kucuk-kurbaga/         ← gemini-prompt.txt, lines_build.py, beats.py, build.py, sfx.py, kapak.py, src/, lines.json, assets/, storyboard/(v1, v2=STORYBOARD.md, v3 planı)
+    ├── 05-fistik-fistik-yer-mi/  ← aynı düzen (§7.5)
+    ├── 06-ari-viz-viz/           ← aynı düzen (§7.6)
+    ├── 07-anneannem-dedem/       ← suno-prompt.txt (güncel), gemini-prompt.txt (eski v1)
+    ├── 08-ucagi-kaldirsana/      ← aynı düzen + suno-prompt.txt, tek-prompt.txt (§7.7)
     ├── intro/                    ← açılış/kapanış/abone bandı: src/(intro.html, abone.html), build.py, make_jingle.py, render.sh, intro_ekle.py (§6.6)
-    ├── reels/                    ← make_reel.py, make_cover.py, r1.json, r2.json, reel_lines_v1.json
+    ├── reels/                    ← make_reel.py, make_cover.py, r1…r6b.json, reel_lines_v1.json
     └── marka/                    ← extract.py, make.py (profil+banner), thumb.py, poses.json, _thumb.html
 ```
 
@@ -132,7 +147,7 @@ FistikFil/
    - İstenirse 2 adet 30 sn Reels + kapakları.
 9. **Teslim:**
    - Dosyaları kullanıcının `FistikFil/NN - Başlık/` klasörüne yaz (§8).
-   - Sohbete 720p sıkıştırılmış önizleme gönder (30 MB limit).
+   - 4K final + kapak + metin repoya (parçalı) commit'lenir ve main'e pushlanır. Ayrı önizleme dosyası üretilmez (§0 kural 11).
 
 ### 4.1 saas-motion-kit kuralları (Video 4 v2'den itibaren)
 
@@ -145,6 +160,14 @@ Kaynak: https://github.com/tugrawork-creator/saas-motion-kit (`creative/`, `play
 - **Ses:** sıcak efektler (tahta blok, marimba, yaylı "boing", su), saf sinüs bip yok. Video 4: `sfx.py` → şarkının altına `volume=0.32` ile karıştırılır.
 - **Teslim:** 4K render (`--resolution landscape-4k --quality delivery`), gerekirse Lanczos ile küçült.
 - v1 Küçük Kurbağa denetimden 19 uyarıyla kaldı (14 kez aynı "kamera yaklaşması", sürpriz yok); v2 temiz.
+- **Geçmiş denetimi (Ekim 2026):** 05, 06 ve 08 de ledger'a eklendi. "Kamçı pan" (whip-pan) bütün filmlerde var; "şekil eşleşmesi", "odak kayması", "vuruşta yakın plan" da tekrar ediyor. Bölüm 7'de bunları kullanma, yeni geçiş aileleri seç.
+- **Kit v1.4 (Ekim 2026):** sevilen gerçek videolar referans olabilir. `tools/breakdown.py video.mp4 --id 01 --creator … --url …` ile ritmi ölçülür. Çıktı git'e girmeyen `.references/` klasörüne yazılır. Storyboard'un yanındaki `REFERENCES.md`'ye yaratıcı + link yazılır, defter notlarına ref numarası konur. Sadece dil (ritim, yapı, geçiş türü, kamera fikri) ödünç alınır; görüntü, müzik ve karakter asla.
+- **Film geçmişi:** `kaynak/motion-ledger.json`. Her storyboard `variety_audit.py STORYBOARD.md --history kaynak/motion-ledger.json` ile denetlenir. Teslimden sonra `--append "<bölüm-adı>"` ile kaydedilir. v3 taslağında geçmiş, v2'den 13 tekrar yakaladı.
+- **Defter ≠ ekran (v2 dersi):** v2'nin defteri temizdi ama render'da 35,8 sn'lik değişmeyen planlar vardı (sert kesme 1,1 / 10 sn). Bu yüzden **ekran kapıları** zorunlu (`04-kucuk-kurbaga/storyboard/STORYBOARD-v3.md`):
+  - E1: hiçbir kadraj 8 sn'den uzun kalmaz.
+  - E2: söyleyen karakter ekran yüksekliğinin ≥ %35'i olur; karakterler kenarda kesilmez.
+  - E3: vücut parçası, renk gibi kavramlar yazıyla değil şekille anlatılır.
+  - E4: render sonrası kendi filmimize `breakdown.py` çalıştırılır; hedef tutmazsa teslim edilmez.
 
 ---
 
@@ -409,9 +432,9 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   3. Cihazda `cat x.mp4.part_* > x.mp4`, ardından `ffmpeg -v error -i x.mp4 -f null -` ile doğrula.
   4. Parçaları sil.
 - Köprü MP4 başlığına C2PA uuid kutusu ekleyebiliyor; birleştirilen dosya sorunsuz oynuyor.
-- Sohbete gönderilecek önizleme ≤ 30 MB olmalı; 720p'ye sıkıştır.
+- Önizleme gönderilmez (§0 kural 11); kullanıcı 4K'yı repodan alıp `sh birlestir.sh` ile birleştirir.
 - **Repoya medya:** Teslim videoları (`*.mp4`) ve kapaklar repoya girer. Git LFS kullanılamıyor (bulutta `lfs.github.com` 403). 100 MB'ı aşan video `split -n 2 -d -a 1 x.mp4 x.mp4.parca` ile bölünür; tam dosya `.gitignore`'a yazılır, parçalar + `x.mp4.sha256` + `birlestir.sh` commit'lenir. Kullanıcı `sh birlestir.sh` ile birleştirir.
-- Her video klasöründe: `<ad>-1080p.mp4` (veya 4k), `kapak-<ad>-youtube.jpg` (1280×720, < 2 MB), `kapak-<ad>-4k.png`, `youtube-metin.txt`.
+- Her video klasöründe: `<ad>-4k.mp4` (parçalı), `kapak-<ad>-youtube.jpg` (1280×720, < 2 MB), `kapak-<ad>-4k.png`, `youtube-metin.txt`.
 
 ---
 
@@ -532,6 +555,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 | Hortum yüzün/berenin önünde ince şerit, "hortum yok" gibi | `up [-70,-30,27]` / `flyup [-90,20,24]` pozları hortumu dik kaldırıyor | Yukarı pozlar yana kıvrılmalı: `up [45,-150,28]`, `flyup [40,-170,31]`; yeni pozu `posetest.py` benzeri yan yana karşılaştır |
 | Altıgen portrede Fıstık'ın hortumu yok | Portre `render(0)` anında klonlanıyor, o an hortum yolu boş | Klonlamadan önce `drawTrunk(A,C,L)` çağır |
 | Reels'te "ver" anında iki karakter de yarım | İki karakter ~700 px aralıklı, dikey kadraj 607 px; yumuşatma hedefe varamıyor | Sabit x hedefleri: önce veren (~0,9 sn), sonra alana hızlı kayma; `smooth` 0.15 |
+| Denetim temiz ama video "slayt gibi" | Defter fikirleri ekrana yansımadı; aynı geniş plan 30+ sn kaldı | Ekran kapıları E1–E4; render'a `breakdown.py` ile kontak sayfası + ritim ölçümü |
 
 ---
 
@@ -553,7 +577,10 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [x] Bölüm 5 "Fıstık Fil Fıstık Yer" (tekerleme, paylaşma): video + kapak + YouTube metni `05 - Fıstık Fil Fıstık Yer/`. Yükleme kullanıcıda.
 - [x] Bölüm 6 "Arı Vız Vız": video + kapak + YouTube metni `06 - Arı Vız Vız/`. Yükleme kullanıcıda.
 - [ ] Bölüm 7 "Anneannem ve Dedem": Suno promptu hazır (`kaynak/07-anneannem-dedem/suno-prompt.txt`), şarkı bekleniyor.
-- [x] Bölüm 8 "Uçağı Kaldırsana": kompozisyon, kapak, YouTube metni (`08 - Uçağı Kaldırsana/`); 4K render.
+- [x] Bölüm 8 "Uçağı Kaldırsana": kompozisyon, kapak, YouTube metni (`08 - Uçağı Kaldırsana/`); v2 4K final (Fable incelemesi sonrası). Yükleme kullanıcıda.
+- [ ] Bölüm 8 Reels (öneri: pırt pırt bere gag'i; güm + "bir daha" tamiri).
+- [ ] Küçük Kurbağa v3: plan hazır (`storyboard/STORYBOARD-v3.md`, 45 plan, geçmişe karşı denetim temiz). Sırada kullanıcı onayı, ardından eskiz sayfası ve referans videolar.
+- [ ] Kullanıcının kişisel YouTube kanalı: konu/niş bekleniyor (saas-motion-kit ile yapım günlüğü, ürün tanıtımı ve veri görselleştirme fikirleri önerildi).
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
