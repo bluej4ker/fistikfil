@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Uçağı Kaldırsana · Fıstık Fil</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      /* Baloo 2 · SIL OFL 1.1 (assets/fonts/OFL-Baloo2.txt) */
+      @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #BFE6FF; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Baloo 2", sans-serif; font-weight: 800; color: #2B2D42; background: #BFE6FF; }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      #shake { position: absolute; inset: 0; }
+      .full { position: absolute; left: 0; top: 0; width: 1920px; height: 1300px; overflow: visible; }
+      #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 0 0; }
+      #char { position: absolute; inset: 0; overflow: visible; transform-origin: 300px 620px; }
+      #char svg { width: 600px; height: 640px; overflow: visible; }
+      .snd { left: 0; top: 0; font-size: 72px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 12px #fff; paint-order: stroke fill; text-shadow: 0 6px 0 rgba(0,0,0,.14); transform-origin: 50% 60%; }
+      .conf { width: 26px; height: 30px; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+      .ov { inset: 0; pointer-events: none; }
+      #bug { left: 40px; top: 36px; padding: 6px 26px 0; border-radius: 30px; background: rgba(255,255,255,.95); font-size: 36px; color: #3D7DD8; z-index: 60; box-shadow: 0 4px 0 rgba(0,0,0,.1); }
+      #bug b { color: #F59E1B; }
+      #lyric { left: 0; right: 0; top: 22px; height: 70px; display: flex; justify-content: center; z-index: 60; }
+      .line { opacity: 0; position: absolute; top: 0; padding: 2px 26px 0; border-radius: 34px; background: rgba(255,255,255,.9); font-size: 44px; line-height: 60px; white-space: nowrap; color: #8A93A6; box-shadow: 0 4px 0 rgba(0,0,0,.08); border: 3px solid #E2B477; }
+      .line span { display: inline-block; margin: 0 8px; }
+      #flash { inset: 0; background: #fff; opacity: 0; z-index: 48; pointer-events: none; }
+      #burst { inset: 0; opacity: 0; z-index: 47; pointer-events: none; background: radial-gradient(circle at 50% 50%, #FFF6D6 0, #FFB86B 35%, #FF7A8A 70%, #A66BFF 100%); }
+      #glow { inset: 0; background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.5) 0, rgba(255,255,255,0) 60%); opacity: 0; mix-blend-mode: soft-light; z-index: 20; pointer-events: none; }
+      #speed { z-index: 46; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="/*DUR*/" data-width="1920" data-height="1080">
+      <audio id="song" src="assets/song.m4a" data-start="0" data-duration="/*DUR*/" data-volume="1"></audio>
+      <section id="world" class="clip" data-start="0" data-duration="/*DUR*/" data-track-index="0" data-layout-allow-overflow>
+        <div id="cam" data-layout-allow-overflow>
+          <div id="shake" data-layout-allow-overflow>
+            <svg id="setGarden" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setShop" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setRun" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setSky" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setSun" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="backActors" class="full" viewBox="0 0 1920 1300"><ellipse id="fShadow" rx="120" ry="26" fill="url(#gShadow)"/><ellipse id="pShadow" rx="300" ry="40" fill="url(#gShadow)"/>
+              <path id="trailTape" fill="none" stroke="#B98546" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" opacity="0"/><path id="trailTape2" fill="none" stroke="#E2B477" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+              <g id="planeBackG"></g><g id="inPlane"></g></svg>
+            <div id="charWrap" class="abs"><div id="char"></div></div>
+            <svg id="actors" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="fxSvg" class="full" viewBox="0 0 1920 1300"></svg>
+            <div id="sndBox"></div>
+            <div id="confBox"></div>
+          </div>
+        </div>
+        <div id="glow" class="abs"></div>
+        <svg id="speed" class="abs ov" viewBox="0 0 1920 1080"></svg>
+        <svg id="boxMask" class="abs ov" viewBox="0 0 1920 1080" style="z-index:49"></svg>
+        <svg id="cloudWipe" class="abs ov" viewBox="0 0 1920 1080" style="z-index:49"></svg>
+        <svg id="fog" class="abs ov" viewBox="0 0 1920 1080" style="z-index:49;opacity:0"></svg>
+        <svg id="lensWheel" class="abs ov" viewBox="0 0 1920 1080" style="z-index:50"></svg>
+        <svg id="tapeClose" class="abs ov" viewBox="0 0 1920 1080" style="z-index:52"></svg>
+        <div id="burst" class="abs"></div>
+        <div id="flash" class="abs"></div>
+        <div id="bug" class="abs">Fıstık <b>Fil</b></div>
+        <div id="lyric" class="abs"></div>
+      </section>
+    </div>
+
+    <script>
+/*CAST*/
+(function () {
+  window.__timelines = window.__timelines || {};
+  const $ = (s) => document.querySelector(s);
+  const NS = "http://www.w3.org/2000/svg";
+  const D = /*DUR*/, TAU = Math.PI * 2;
+  const TC = ["#3D9BFF", "#FF5A5F", "#FFC23D", "#3FBF6F", "#A66BFF", "#FF7A3D"];
+  const OL = "#4C76B5";
+  const INK = "#2B2D42";
+  const C = window.CAST;
+  const LINES = /*LINES*/;
+  const BEATS = /*BEATS*/;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const smooth = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
+  const easeOut = (x) => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
+  const easeIn = (x) => Math.pow(clamp(x, 0, 1), 3);
+  const outBack = (x, s = 1.7) => { x = clamp(x, 0, 1); return 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const pIn = (t, t0, d) => clamp((t - t0) / d, 0, 1);
+  const bump = (t, t0, d) => { const u = (t - t0) / d; return u > 0 && u < 1 ? Math.sin(Math.PI * u) : 0; };
+
+/*RIG*/
+
+  // ───────────────────────── tempo + lyric helpers ─────────────────────────
+  function beatPos(t) {
+    const n = BEATS.length;
+    if (t <= BEATS[0]) return (t - BEATS[0]) / (BEATS[1] - BEATS[0]);
+    if (t >= BEATS[n - 1]) return n - 1 + (t - BEATS[n - 1]) / (BEATS[n - 1] - BEATS[n - 2]);
+    let lo = 0, hi = n - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (BEATS[m] <= t) lo = m; else hi = m; }
+    return lo + (t - BEATS[lo]) / (BEATS[hi] - BEATS[lo]);
+  }
+  const BEAT = (BEATS[BEATS.length - 1] - BEATS[0]) / (BEATS.length - 1);
+  const beatsIn = (a, b) => BEATS.filter((x) => x >= a && x <= b);
+  const LT = {}; LINES.forEach((L, i) => (LT[L.tag] = i));
+  const ts = (tag) => LINES[LT[tag]].words[0][1];
+  const te = (tag) => LINES[LT[tag]].end;
+  const words = (tag) => LINES[LT[tag]].words;
+  const wt = (tag, i) => { const w = words(tag); return w[i < 0 ? w.length + i : i][1]; };
+  const norm = (w) => w.replace("İ", "i").replace("I", "ı").toLowerCase().replace(/[^a-zçğıöşü]/g, "");
+  const SOUND = { "pırt": "pirt", "vın": "vin", "güm": "gum", "olduuu": "oldu" };
+  const SCOL = { pirt: "#FF7A3D", vin: "#3D9BFF", gum: "#E5484D", oldu: "#3FBF6F" };
+
+  // ───────────────────────── key times + scenes ─────────────────────────
+  const T = { shop: 16.4, run: 31.3, sky: 76.9, sun: 99.65, land: 122.7,
+    hatOff: wt("k1.7", 2) + 0.05, crash: wt("k2.2", 2), poke: 66.4, lift: ts("n2.4"), heart0: ts("f.5"), heart1: te("f.6"), roll: ts("f.7"), loop: ts("s.1a"), fog: wt("b.8", 0) + 0.45 };
+  const scene = (t) => t < T.shop ? 0 : t < T.run ? 1 : t < T.sky ? 2 : t < T.sun ? 3 : t < T.land ? 4 : 5;
+  const SETS = ["setGarden", "setShop", "setRun", "setSky", "setSun", "setGarden"];
+  const GROUND = [1010, 1040, 1060, 0, 0, 1040];
+
+  const mk = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+  const cloud = (x, y, s, c = "#fff", id = "") => `<g ${id ? `id="${id}"` : ""} transform="translate(${x} ${y}) scale(${s})" fill="${c}"><circle cx="80" cy="80" r="50"/><circle cx="150" cy="58" r="62"/><circle cx="222" cy="82" r="46"/><rect x="60" y="80" width="190" height="50" rx="25"/></g>`;
+  const sunFace = (id, c1 = "#FFD84D", c2 = "#F5B921") => `<g id="${id}"><g class="rays" fill="${c1}">${Array.from({ length: 12 }, (_, i) => `<rect x="-7" y="-118" width="14" height="42" rx="7" transform="rotate(${i * 30})"/>`).join("")}</g>
+      <circle r="70" fill="${c1}" stroke="${c2}" stroke-width="6"/><g class="eyeL"><ellipse cx="-20" cy="-8" rx="7" ry="9" fill="#9A5B1E"/></g><g class="eyeR"><ellipse cx="20" cy="-8" rx="7" ry="9" fill="#9A5B1E"/></g>
+      <ellipse cx="-36" cy="12" rx="12" ry="7" fill="#FF9F7A" opacity=".75"/><ellipse cx="36" cy="12" rx="12" ry="7" fill="#FF9F7A" opacity=".75"/><path d="M-18 14 Q0 32 18 14" stroke="#9A5B1E" stroke-width="6" fill="none" stroke-linecap="round"/></g>`;
+  const tuft = (x, y, c = "#4FAE48") => `<path d="M${x - 18} ${y} q7 -30 11 0 q5 -38 11 0 q7 -28 14 0z" fill="${c}"/>`;
+  const groundSet = (top, c1, c2) => `<path d="M-300 ${top} Q500 ${top - 40} 1000 ${top - 10} T2220 ${top} V1600 H-300Z" fill="${c1}"/><path d="M-300 ${top + 120} Q600 ${top + 90} 1200 ${top + 110} T2220 ${top + 105} V1600 H-300Z" fill="${c2}"/>`;
+  const sky = (id, a, b, c, y0 = -400) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient></defs><rect x="-400" y="${y0}" width="2720" height="${1700 - y0}" fill="url(#${id})"/>`;
+  const flowers = (list) => list.map(([x, y, c]) => `<g transform="translate(${x} ${y})"><path d="M0 0 V-46" stroke="#3E8A32" stroke-width="6"/>${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-60" rx="10" ry="15" fill="${c}" stroke="#fff" stroke-width="2" transform="rotate(${a} 0 -46)"/>`).join("")}<circle cy="-46" r="8" fill="#FFD43B"/></g>`).join("");
+  const fence = (y, x0 = -200, n = 24, c = "#FFF4DC") => `<path d="M${x0} ${y - 60} H${x0 + n * 100} M${x0} ${y - 20} H${x0 + n * 100}" stroke="${c}" stroke-width="12"/>${Array.from({ length: n }, (_, i) => `<path d="M${x0 + i * 100} ${y} V${y - 90} l14 -16 l14 16 V${y}Z" fill="${c}" stroke="#C9B48E" stroke-width="3"/>`).join("")}`;
+
+  // ── SET 0/5 · garden (start + landing) ──
+  const TREE = { x: 1640, y: 1012 }, BOX = { x: 1240, y: 1015 }, POND = { x: 1660, y: 1100 }, HAY = { x: 330, y: 1060 }, LINE = { x: 1180, y: 1010 };
+  E("setGarden").innerHTML = sky("gSkG", "#6EC3FF", "#B9E6FF", "#F2FBFF", -1200) + `<defs><linearGradient id="gEve" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF9F7A"/><stop offset=".55" stop-color="#FFC98A"/><stop offset="1" stop-color="#FFF1D2"/></linearGradient></defs><rect id="eveTint" x="-400" y="-1200" width="2720" height="2900" fill="url(#gEve)" opacity="0"/>
+    <g id="clG">${cloud(140, 120, 0.8) + cloud(900, 60, 0.6) + cloud(1400, 180, 0.5)}</g><g transform="translate(560 220)">${sunFace("sunG")}</g>
+    <path d="M-300 790 Q300 700 900 760 T2220 740 V1600 H-300Z" fill="#CFEFB4"/>
+    ${[[120, 820, "#FF8FAB", "#E2577A"], [520, 790, "#FFD43B", "#E0A800"], [1420, 800, "#7FC4FF", "#3D7DD8"]].map(([x, y, c, r]) => `<g transform="translate(${x} ${y}) scale(.7)">${C.house(c, r === "#E0A800" ? "#FF7A3D" : "#FF5A5F", 140, 100)}</g>`).join("")}
+    ${fence(900)}${groundSet(940, "#8FD46E", "#79C25A")}
+    ${[60, 220, 900, 1880, 1980, 360, 1100].map((x, i) => tuft(x, 990 + (i % 3) * 40)).join("")}
+    ${flowers([[110, 1000, "#FF5A5F"], [190, 1030, "#FFD43B"], [1880, 1010, "#A66BFF"], [980, 1050, "#FF8FAB"]])}
+    <g transform="translate(${TREE.x} ${TREE.y})">${C.oak()}</g>
+    <g id="bigBox" transform="translate(${BOX.x} ${BOX.y})"><path d="M-150 -40 L-170 -130 L-60 -130 L-40 -40Z" fill="url(#gKraft)" stroke="#7A4A22" stroke-width="6"/><path d="M150 -40 L176 -128 L70 -128 L40 -40Z" fill="url(#gKraft)" stroke="#7A4A22" stroke-width="6"/>
+      <rect x="-150" y="-40" width="300" height="40" fill="#6E431F"/><rect x="-160" y="-30" width="320" height="200" rx="10" fill="url(#gKraft)" stroke="#7A4A22" stroke-width="7" transform="translate(0 0)"/><path d="M-60 -30 V170" stroke="#B98546" stroke-width="40" opacity=".9"/></g>
+    <g id="landProps" opacity="0"><g transform="translate(${HAY.x} ${HAY.y})">${C.hay()}</g>
+      <ellipse cx="${POND.x}" cy="${POND.y}" rx="230" ry="56" fill="#5CC2F0" stroke="#3A9AD0" stroke-width="7"/><ellipse cx="${POND.x - 50}" cy="${POND.y - 10}" rx="120" ry="18" fill="#B9EAFF" opacity=".6"/>
+      <g transform="translate(${LINE.x} ${LINE.y})">${C.clothesline()}</g></g>`;
+
+  // ── SET 1 · workshop (kraft colour event) ──
+  E("setShop").innerHTML = `<rect x="-400" y="-400" width="2720" height="2100" fill="#E2AE72"/><rect x="-400" y="-400" width="2720" height="1250" fill="#D9A066"/>
+    <g transform="translate(960 760)">${C.pegboard()}</g>
+    <g transform="translate(330 170) rotate(-8)">${C.hammer()}</g><g transform="translate(520 150) rotate(6)">${C.wrench()}</g><g transform="translate(1320 200) rotate(-4)">${C.saw()}</g>
+    <g transform="translate(1660 210)">${C.tapeRoll(1.1)}</g><g transform="translate(1780 260)">${C.tapeRoll(0.8)}</g>
+    <g transform="translate(220 420)"><rect x="-120" y="-90" width="240" height="180" rx="16" fill="#9BD8FF" stroke="#fff" stroke-width="14"/><path d="M0 -90 V90 M-120 0 H120" stroke="#fff" stroke-width="10"/><circle cx="60" cy="-40" r="24" fill="#FFD84D"/></g>
+    <g transform="translate(1500 860)">${C.bench()}</g>
+    <path d="M-400 960 H2320 V1700 H-400Z" fill="#C98A4E"/>${Array.from({ length: 14 }, (_, i) => `<path d="M${-300 + i * 180} 960 L${-420 + i * 200} 1500" stroke="#B5763A" stroke-width="5"/>`).join("")}
+    <path d="M-400 960 H2320" stroke="#7A4A22" stroke-width="10"/>`;
+
+  // ── SET 2 · grass runway (grey + orange lights colour event) ──
+  const RWY = 1100;
+  E("setRun").innerHTML = sky("gSkR", "#5DB8FF", "#A8DEFF", "#F2FBFF", -1600) + `<g id="clR">${cloud(160, 140, 0.8) + cloud(1000, 40, 0.65) + cloud(1500, 210, 0.5) + cloud(500, -500, 0.9) + cloud(1300, -800, 1.0) + cloud(200, -1100, 0.8)}</g>
+    <path d="M-300 820 Q200 690 700 780 T1500 760 T2220 780 V1600 H-300Z" fill="#B7E39A"/><path d="M-300 880 Q400 820 900 870 T2220 860 V1600 H-300Z" fill="#9AD67C"/>
+    ${fence(950, -200, 26, "#FFFFFF")}${groundSet(985, "#8FD46E", "#7BC55C")}
+    <path d="M-400 ${RWY - 70} L2320 ${RWY - 70} L2320 ${RWY + 70} L-400 ${RWY + 70}Z" fill="#9CA3AF" stroke="#6B7280" stroke-width="6"/>
+    <path d="M-400 ${RWY} H2320" stroke="#fff" stroke-width="12" stroke-dasharray="70 60"/>
+    ${Array.from({ length: 13 }, (_, i) => `<g transform="translate(${-80 + i * 170} ${RWY - 78})">${C.rwLight("rl" + i)}</g><g transform="translate(${-80 + i * 170} ${RWY + 104})">${C.rwLight("rm" + i)}</g>`).join("")}
+    <g id="sockG" transform="translate(1800 960)">${C.windsock()}</g>`;
+
+  // ── SET 3 · sky (blue colour event) ──
+  E("setSky").innerHTML = sky("gSkS", "#3FA4FF", "#8FD0FF", "#E6F6FF", -400) + `<g id="town">${Array.from({ length: 16 }, (_, i) => `<g transform="translate(${-200 + i * 150} ${1240 + (i % 3) * 14}) scale(.5)">${C.house(TC[i % 6], ["#FF5A5F", "#FF7A3D", "#3D9BFF"][i % 3], 120, 90)}</g>`).join("")}<path d="M-400 1250 H2320 V1700 H-400Z" fill="#8FD46E"/></g>
+    <g id="clS1">${Array.from({ length: 8 }, (_, i) => cloud(i * 420 - 200, 120 + (i * 137) % 600, 0.9 + (i % 3) * 0.3, "#fff")).join("")}</g>
+    <g id="clS2" opacity=".85">${Array.from({ length: 6 }, (_, i) => cloud(i * 560 - 100, 900 + (i * 91) % 200, 1.4, "#F4FAFF")).join("")}</g>`;
+
+  // ── SET 4 · above the clouds at sunset (pink/orange colour event) ──
+  const SUNC = { x: 960, y: 470 };
+  E("setSun").innerHTML = sky("gSkU", "#7A6CFF", "#FF8FAB", "#FFC27A", -400) + `<g transform="translate(${SUNC.x} ${SUNC.y}) scale(1.5)">${sunFace("sunU", "#FFE08A", "#FFB547")}</g>
+    <g id="clU1" opacity=".9">${Array.from({ length: 7 }, (_, i) => cloud(i * 380 - 200, 140 + (i * 113) % 300, 0.7, "#FFE3EC")).join("")}</g>
+    <g id="clU2">${Array.from({ length: 12 }, (_, i) => cloud(i * 230 - 300, 960 + (i % 3) * 50, 1.6, i % 2 ? "#FFF0F4" : "#FFE0EA")).join("")}<path d="M-400 1080 H2320 V1700 H-400Z" fill="#FFE8EF"/></g>`;
+
+  // ───────────────────────── actors ─────────────────────────
+  E("planeBackG").innerHTML = C.planeBack();
+  const SEATS = { mouse: [-40, -300, 0.9], frog: [-140, -305, 0.8], duck: [-250, -300, 0.75] };
+  E("inPlane").innerHTML = "";
+  E("actors").innerHTML = `${C.defs()}${C.defs8()}
+    <g id="planeFrontG">${C.planeFront("pl")}</g>
+    <g id="steer" opacity="0">${C.wheelSteer()}</g>
+    <g id="wheelRoll" opacity="0"><g class="wr">${C.button("#FF5A5F", 58)}</g></g>
+    <g id="outPlane">
+      <g id="frogPos"><g id="frog">${C.frog("fr")}</g></g>
+      <g id="mousePos"><g id="mouse">${C.mouse("ms")}<g class="spiral" opacity="0">${[-12, 22].map((x) => `<path d="M${x} -118 m-8 0 a8 8 0 1 1 8 8 a12 12 0 1 1 -12 -12" stroke="#4A3F63" stroke-width="3" fill="#fff"/>`).join("")}</g></g></g>
+      <g id="duckPos"><g id="duck">${C.duck("dk")}</g></g>
+      <g id="ducklingPos"><g id="duckling">${C.duck("dl", true)}</g></g></g>
+    <g id="wheelDrop" opacity="0">${C.button("#3D9BFF", 58)}</g>
+    <g id="chocks">${[0, 1].map((i) => `<g id="ch${i}" opacity="0">${C.chock()}</g>`).join("")}</g>
+    <g id="droneG" opacity="0">${C.drone("dr")}</g>
+    <g id="photo" opacity="0"><rect x="-60" y="-70" width="120" height="140" rx="8" fill="#fff" stroke="#9AA8B8" stroke-width="4"/><rect x="-48" y="-58" width="96" height="92" fill="#BFE6FF"/>
+      <circle cx="0" cy="-12" r="34" fill="#A3CAF2" stroke="${OL}" stroke-width="4"/><path d="M-34 -24 C-30 -60 30 -60 34 -24 Q0 -30 -34 -24Z" fill="#FFD966" stroke="#D9861A" stroke-width="3"/><circle cx="-12" cy="-8" r="9" fill="#fff" stroke="${INK}" stroke-width="2.5"/><circle cx="12" cy="-8" r="9" fill="#fff" stroke="${INK}" stroke-width="2.5"/><circle cx="-12" cy="-8" r="3" fill="${INK}"/><circle cx="12" cy="-8" r="3" fill="${INK}"/><ellipse cx="0" cy="12" rx="6" ry="8" fill="#8C2F45"/></g>
+    <g id="rocketG" opacity="0">${C.rocket("rk")}</g>
+    <g id="paperG" opacity="0">${C.paperPlane()}</g>
+    <g id="birds">${[0, 1, 2].map((i) => `<g id="bd${i}" opacity="0">${C.bird()}</g>`).join("")}</g>
+    <g id="flyHat" opacity="0"></g>
+    <g id="flyPom" opacity="0"><circle r="30" fill="#FF6B4A" stroke="#C94A2E" stroke-width="5"/><circle cx="-10" cy="-10" r="9" fill="#FF9F86"/></g>
+    <path id="tongue8" fill="none" stroke="#FF6F91" stroke-width="15" stroke-linecap="round" opacity="0"/>
+    <g id="stars">${Array.from({ length: 5 }, (_, i) => `<g id="st${i}" opacity="0">${C.star5(22)}</g>`).join("")}</g>
+    <g id="blanket" opacity="0">${[0, 1, 2].map((i) => `<g id="bk${i}">${C.tapeStrip(560, 70)}</g>`).join("")}</g>
+    <g id="notes">${Array.from({ length: 9 }, (_, i) => `<g id="nt${i}" opacity="0"><path d="M0 0 V-40 L22 -46 V-8" stroke="#FF7A3D" stroke-width="6" fill="none"/><ellipse cx="-6" cy="2" rx="10" ry="8" fill="#FF7A3D"/><ellipse cx="16" cy="-6" rx="10" ry="8" fill="#FF7A3D"/></g>`).join("")}</g>
+    <g id="hearts">${Array.from({ length: 12 }, (_, i) => `<g id="ht${i}" opacity="0">${C.heart(0.8)}</g>`).join("")}</g>`;
+  E("fxSvg").innerHTML = `<g id="spark">${Array.from({ length: 14 }, (_, i) => `<path id="sk${i}" d="M0 -16 L4 -4 L16 0 L4 4 L0 16 L-4 4 L-16 0 L-4 -4Z" fill="#FFF3B0" stroke="#F5A800" stroke-width="2.5" opacity="0"/>`).join("")}</g>
+    <g id="dust">${Array.from({ length: 12 }, (_, i) => `<circle id="du${i}" r="20" fill="#fff" stroke="#E6DCCB" stroke-width="3" opacity="0"/>`).join("")}</g>
+    <g id="puffs">${Array.from({ length: 12 }, (_, i) => `<circle id="pu${i}" r="20" fill="#F2F4F8" stroke="#B8C4D0" stroke-width="4" opacity="0"/>`).join("")}</g>
+    <g id="strain">${Array.from({ length: 6 }, (_, i) => `<path id="sn${i}" d="M0 0 l18 -10" stroke="${INK}" stroke-width="5" stroke-linecap="round" opacity="0"/>`).join("")}</g>`;
+
+  // ── screen-space overlays ──
+  E("speed").innerHTML = Array.from({ length: 14 }, (_, i) => `<rect id="sl${i}" x="0" y="${60 + i * 72}" width="${300 + (i * 97) % 500}" height="${8 + (i % 3) * 4}" rx="6" fill="#fff" opacity="0"/>`).join("");
+  E("boxMask").innerHTML = `<defs><mask id="bmM"><rect width="1920" height="1080" fill="#fff"/><rect id="bmHole" x="660" y="340" width="600" height="400" rx="30" fill="#000"/></mask></defs><rect width="1920" height="1080" fill="#5A3A1A" mask="url(#bmM)" id="bmR" opacity="0"/>`;
+  E("cloudWipe").innerHTML = `<g id="cwG" opacity="0">${Array.from({ length: 7 }, (_, i) => cloud(-200 + i * 300, -100 + (i % 3) * 300, 3.2, i % 2 ? "#fff" : "#F2F8FF")).join("")}</g>`;
+  E("fog").innerHTML = `<rect width="1920" height="1080" fill="url(#gFog)"/><g opacity=".5">${Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 197) % 1920}" cy="${(i * 331) % 1080}" r="${6 + (i % 4) * 4}" fill="#fff"/>`).join("")}</g>
+    <path id="fogHeart" d="M960 700 C700 520 640 380 760 300 C860 240 940 300 960 380 C980 300 1060 240 1160 300 C1280 380 1220 520 960 700Z" fill="none" stroke="#FF6B8A" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2400" stroke-dashoffset="2400"/>`;
+  E("lensWheel").innerHTML = `<g id="lwG" opacity="0">${C.button("#FF5A5F", 58)}</g>`;
+  E("tapeClose").innerHTML = `<g id="tcL"><rect x="-1100" y="380" width="1100" height="320" fill="#C98A4E"/><rect x="-1100" y="380" width="1100" height="90" fill="#E2B477" opacity=".6"/><path d="M-1100 380 H0 M-1100 700 H0" stroke="#8A5A2B" stroke-width="6"/></g>
+    <g id="tcR"><rect x="1920" y="380" width="1100" height="320" fill="#C98A4E"/><rect x="1920" y="380" width="1100" height="90" fill="#E2B477" opacity=".6"/><path d="M1920 380 H3020 M1920 700 H3020" stroke="#8A5A2B" stroke-width="6"/></g>
+    <g id="tcHeart" opacity="0" transform="translate(960 540)">${C.heart(4)}</g>`;
+
+  // pools
+  const pool = (host, n, cls, id, extra) => { for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "abs " + cls; d.id = id + i; d.style.opacity = 0; d.style.left = "0px"; d.style.top = "0px"; if (extra) extra(d, i); E(host).appendChild(d); } };
+  pool("confBox", 150, "conf", "cf", (d, i) => { d.style.background = ["#FFC21A", "#FF5A5F", "#A66BFF", "#3FBF6F", "#3D9BFF"][i % 5]; });
+
+  // ───────────────────────── lyrics ─────────────────────────
+  LINES.forEach((L, li) => { const d = document.createElement("div"); d.className = "line"; d.id = "ln" + li;
+    L.words.forEach((w, wi) => { const s = document.createElement("span"); s.id = `w${li}_${wi}`; s.textContent = w[0]; d.appendChild(s); }); E("lyric").appendChild(d); });
+
+  // ───────────────────────── animated state ─────────────────────────
+  const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5], up: [45, -150, 28], flyup: [40, -170, 31], reach: [10, 60, 25], back: [150, 60, 24], blow: [-8, -40, 28] };
+  const R = { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, flap: 0, walk: 0, sway: 0, tilt: 0, bob: 1, dance: 0, jy: 0, rot: 0, sq: 0 };
+  const CAM = { x: 960, y: 600, s: 1.0, r: 0 };
+  const ENV = { glow: 0, flash: 0, burst: 0, up: 0, speed: 0, fog: 0 };
+  // plane state: parts (0..1), face, motion extras
+  const PL = { wing: 0, wheels: 0, prop: 0, eye: 0, smile: 0, open: 0, look: 0, sad: 0, dent: 0, patch: 0, bent: 0, jy: 0, rot: 0, roll: 0, flag: 0, lights: 0, lightAll: 0, sleep: 0 };
+  const AN = { frogOpen: 0, duckOpen: 0, dlOpen: 0, msOpen: 0, party: 0, cheer: 0 };
+  const EV = { conf: [], hearts: [], dust: [], dustRev: [], spark: [], puff: [], notes: [] };
+  let VIEW = { s: 1, cx: 960, cy: 540 };
+  const W2S = (x, y) => [960 + (x - VIEW.cx) * VIEW.s, 540 + (y - VIEW.cy) * VIEW.s];
+
+  // ───────────────────────── the plane's path (pure function of t) ─────────────────────────
+  // keyframes [t, x, y, rot]: x,y = ground point under the fuselage (scene space)
+  const PK = [
+    [16.4, 960, 1040, 0], [31.29, 960, 1040, 0],
+    [31.3, 560, RWY + 10, 0], [37.5, 560, RWY + 10, 0], [39.2, 840, RWY + 10, 0], [48.7, 840, RWY + 10, 0], [49.65, 1150, RWY - 70, -12], [49.82, 1230, RWY + 10, 16], [56.5, 1230, RWY + 10, 16], [57.9, 1230, RWY + 10, 0], [66.45, 1230, RWY + 10, 0], [66.95, 1430, RWY + 10, 0], [69.5, 1430, RWY + 10, 0],
+    [69.55, 520, RWY + 10, 0], [73.4, 520, RWY + 10, 0], [75.3, 1150, RWY + 10, 0], [76.89, 1900, 380, -16],
+    [76.9, 860, 850, 0], [84.6, 860, 850, 0], [98.6, 860, 850, 0], [99.64, 860, 850, 0],
+    [99.65, 860, 760, 0], [106.8, 900, 760, 0], [110.6, 900, 760, 0], [114.6, 960, 800, 0], [122.69, 960, 800, 0],
+    [122.7, -320, 640, 14], [123.95, 520, 1040, 0], [126.6, 900, 1040, 0], [134.8, 900, 1040, 0],
+  ];
+  const SAME = (p, q) => Math.abs(p[1] - q[1]) < 1 && Math.abs(p[2] - q[2]) < 1;
+  const PTAN = PK.map((k, i) => { if (i === 0 || i === PK.length - 1) return [0, 0]; const p = PK[i - 1], n = PK[i + 1];
+    if (SAME(k, p) || SAME(k, n) || scene(p[0] + 0.001) !== scene(k[0] + 0.001) || scene(k[0] + 0.001) !== scene(n[0] - 0.001) || n[0] - k[0] < 0.1 || k[0] - p[0] < 0.1) return [0, 0];
+    return [0.8 * (n[1] - p[1]) / (n[0] - p[0]), 0.8 * (n[2] - p[2]) / (n[0] - p[0])]; });
+  function pkAt(t) { let i = 0; while (i < PK.length - 2 && PK[i + 1][0] <= t) i++;
+    const a = PK[i], b = PK[i + 1], h = b[0] - a[0], u = clamp((t - a[0]) / h, 0, 1), u2 = u * u, u3 = u2 * u;
+    const h00 = 2 * u3 - 3 * u2 + 1, h10 = u3 - 2 * u2 + u, h01 = -2 * u3 + 3 * u2, h11 = u3 - u2;
+    return [h00 * a[1] + h10 * h * PTAN[i][0] + h01 * b[1] + h11 * h * PTAN[i + 1][0], h00 * a[2] + h10 * h * PTAN[i][1] + h01 * b[2] + h11 * h * PTAN[i + 1][1], lerp(a[3], b[3], smooth(0, 1, u))]; }
+  // sunset formation: three slots, the plane / drone / rocket swap on f.2 and f.3
+  const SLOT = [[960, 900], [380, 560], [1540, 640]];
+  const slotOf = (who, t) => { const k = t < ts("f.2") ? 0 : t < ts("f.3") ? 1 : 2, base = { plane: 0, drone: 1, rocket: 2 }[who], i = (base + k) % 3;
+    const j = (base + Math.max(0, k - 1)) % 3, tk = k === 0 ? -9 : k === 1 ? ts("f.2") : ts("f.3"), e = smooth(tk, tk + 0.9, t);
+    return k === 0 ? SLOT[base] : [lerp(SLOT[j][0], SLOT[i][0], e), lerp(SLOT[j][1], SLOT[i][1], e)]; };
+  const heartPt = (u) => { const th = u * TAU, x = 16 * Math.pow(Math.sin(th), 3), y = -(13 * Math.cos(th) - 5 * Math.cos(2 * th) - 2 * Math.cos(3 * th) - Math.cos(4 * th)); return [SUNC.x + x * 21, SUNC.y + 40 + y * 21]; };
+  function planePos(t) {
+    const sc = scene(t); let [x, y, rot] = pkAt(t), s = [0, 1.0, 0.82, 0.78, 0.8, 0.8][sc], sy = 1, vis = sc !== 0;
+    if (sc === 1) y += 108 * s * (1 - PL.wheels);                                       // no wheels yet: the box sits on its belly
+    if (sc === 3) { y += 18 * Math.sin(t * 2.2); rot += 3 * Math.sin(t * 1.7);
+      if (t > ts("n2.7") - 0.2 && t < te("n2.8")) { const u = (t - ts("n2.7") + 0.2); y += 120 * Math.sin(u * 3.4) * smooth(ts("n2.7") - 0.2, ts("n2.7") + 0.4, t) * (1 - smooth(te("n2.8") - 0.6, te("n2.8"), t)); rot += -10 * Math.cos(u * 3.4); } }
+    if (sc === 4) { const [sx, syy] = slotOf("plane", t); x = sx; y = syy + 14 * Math.sin(t * 2.0); rot = 2 * Math.sin(t * 1.5);
+      const h0 = T.heart0, h1 = T.heart1; if (t > h0 && t < h1 + 0.6) { const u = pIn(t, h0, h1 - h0), e = smooth(h0, h0 + 0.5, t) * (1 - smooth(h1, h1 + 0.6, t)), [hx, hy] = heartPt(0.5 + u);
+        const [hx2, hy2] = heartPt(0.5 + u + 0.004); x = lerp(x, hx, e); y = lerp(y, hy, e); s = lerp(s, 0.42, e); rot = lerp(rot, Math.atan2(hy2 - hy, hx2 - hx) * 180 / Math.PI, e * 0.35); }
+      if (t > 114.6) { x = lerp(x, 960, smooth(114.6, 115.4, t)); y = lerp(y, 800, smooth(114.6, 115.4, t)); } }
+    if (sc === 5) { const b = [[123.95, 0.55, 150], [124.85, 0.5, 90], [125.65, 0.45, 50]]; b.forEach(([t0, d, h]) => { y -= h * bump(t, t0, d); }); }
+    if (sc === 2 && t > 75.3) s = lerp(s, 0.7, smooth(75.3, 76.9, t));
+    rot += PL.rot; y -= PL.jy * s;
+    sy = Math.cos(PL.roll * TAU);
+    return { x, y, s, rot, sy: Math.abs(sy) < 0.06 ? (sy < 0 ? -0.06 : 0.06) : sy, vis }; }
+  // propeller: rate keyframes [t, deg/s] → angle = exact integral (pure function of t, seek-safe)
+  const [P1, P2, P3] = words("k1.7").slice(0, 3).map((w) => w[1]);
+  const RATE = [[0, 0], [ts("k1.6") + 0.1, 0], [ts("k1.6") + 0.6, 90], [P1 - 0.02, 90], [P1 + 0.06, 700], [P1 + 0.4, 160], [P2 - 0.02, 160], [P2 + 0.06, 800], [P2 + 0.4, 220],
+    [P3 - 0.02, 220], [P3 + 0.06, 900], [P3 + 0.4, 1100], [ts("k1.8"), 1100], [ts("k1.8") + 1.4, 2600], [T.run, 2600], [T.run + 0.01, 300], [T.run + 2, 600], [ts("n1.2"), 600], [ts("n1.2") + 1.6, 2700],
+    [T.crash, 2700], [T.crash + 0.4, 0], [66.0, 0], [66.5, 900], [69.5, 900], [69.6, 1500], [ts("n2.2"), 1500], [ts("n2.2") + 1.2, 3200], [T.land, 3200], [T.land + 0.01, 2000], [129.8, 0], [D + 1, 0]];
+  const RCUM = [0]; for (let i = 1; i < RATE.length; i++) RCUM.push(RCUM[i - 1] + (RATE[i][0] - RATE[i - 1][0]) * (RATE[i][1] + RATE[i - 1][1]) / 2);
+  function spinAt(t) { let i = 0; while (i < RATE.length - 2 && RATE[i + 1][0] <= t) i++; const [a, ra] = RATE[i], [b, rb] = RATE[i + 1], d = clamp(t - a, 0, b - a), r = ra + (rb - ra) * d / (b - a);
+    return (RCUM[i] + d * (ra + r) / 2) % 360; }
+  const PIV = [0, -300];                                                                  // the plane turns around the middle of the box
+  function P2S(lx, ly, p) { const a = p.rot * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a), px = PIV[0] * p.s, py = PIV[1] * p.s * p.sy;
+    const dx = lx * p.s - px, dy = ly * p.s * p.sy - py; return [p.x + px + dx * ca - dy * sa, p.y + py + dx * sa + dy * ca]; }
+  const planeTf = (p) => `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) translate(${(PIV[0] * p.s).toFixed(1)} ${(PIV[1] * p.s * p.sy).toFixed(1)}) rotate(${p.rot.toFixed(2)}) translate(${(-PIV[0] * p.s).toFixed(1)} ${(-PIV[1] * p.s * p.sy).toFixed(1)}) scale(${p.s.toFixed(4)} ${(p.s * p.sy).toFixed(4)})`;
+
+  // ───────────────────────── Fıstık ─────────────────────────
+  const FSEAT = [110, -193], FS = 0.58;
+  function fistikPos(t) { const sc = scene(t);
+    if (sc === 0) { const g = GROUND[0], x = 760; return { x, y: g, s: 0.62, rot: 0, sy: 1, vis: true, free: true }; }
+    const p = planePos(t), [x, y] = P2S(FSEAT[0], FSEAT[1], p); return { x, y, s: FS * p.s, rot: p.rot, sy: p.sy, vis: !(sc === 1 && t < T.shop + 0.15), free: false }; }
+  const tipScene = (t) => { const p = fistikPos(t), q = tipLocal(R.A, R.C, R.L), a = p.rot * Math.PI / 180, dx = (q[0] - 300) * p.s, dy = (q[1] - 620) * p.s * p.sy;
+    return [p.x + dx * Math.cos(a) - dy * Math.sin(a), p.y + dx * Math.sin(a) + dy * Math.cos(a) + R.jy]; };
+  const headScene = (t) => { const p = fistikPos(t), a = p.rot * Math.PI / 180, dx = 0, dy = (236 - 620) * p.s * p.sy; return [p.x - dy * Math.sin(a), p.y + dy * Math.cos(a) + R.jy]; };
+  const pomScene = (t) => { const p = fistikPos(t), a = p.rot * Math.PI / 180, dy = (74 - 620) * p.s * p.sy; return [p.x - dy * Math.sin(a), p.y + dy * Math.cos(a) + R.jy]; };
+
+  // ───────────────────────── friends: seat / free / hidden (pure functions of t) ─────────────────────────
+  const hop = (t, t0, d, A, B, h = 160) => { const u = pIn(t, t0, d), e = smooth(0, 1, u); return { x: lerp(A.x, B.x, e), y: lerp(A.y, B.y, e) - h * Math.sin(Math.PI * u), s: lerp(A.s, B.s, e), r: lerp(A.r || 0, B.r || 0, e) }; };
+  const seatScene = (k, t) => { const p = planePos(t), [sx, sy0, ss] = SEATS[k], [x, y] = P2S(sx, sy0, p); return { x, y, s: ss * p.s, r: p.rot, sy: p.sy }; };
+  // free positions per scene
+  const FREE = {
+    0: { mouse: { x: 1010, y: 1020, s: 0.8 } },
+    1: { mouse: { x: 520, y: 1045, s: 0.85 }, frog: { x: 1420, y: 1045, s: 0.85 }, duck: { x: 1580, y: 1050, s: 0.8 }, duckling: { x: 1700, y: 1050, s: 0.7 } },
+    2: { mouse: { x: 260, y: RWY + 30, s: 0.72 }, frog: { x: 1420, y: RWY + 30, s: 0.72 }, duck: { x: 1580, y: RWY + 34, s: 0.7 }, duckling: { x: 1760, y: RWY + 34, s: 0.62 } },
+  };
+  const CRASH = { mouse: { x: 1530, y: RWY + 40, s: 0.72, r: 82 }, frog: { x: 1680, y: RWY + 40, s: 0.72, r: 86 }, duck: { x: 1830, y: RWY + 44, s: 0.7, r: 84 } };
+  const PUSH = { mouse: { x: 930, y: RWY + 30, s: 0.72, r: 18 }, frog: { x: 810, y: RWY + 30, s: 0.72, r: 18 }, duck: { x: 690, y: RWY + 34, s: 0.7, r: 16, fx: -1 } };
+  function friendPos(k, t) {
+    const sc = scene(t), hide = { mode: "hide" };
+    if (sc === 0) { if (k !== "mouse") return hide; const f = FREE[0].mouse, tb = ts("g.3") + 0.25;              // blown onto the tree, slides down like a leaf, throws the paper plane
+      if (t < tb) return { mode: "free", ...f };
+      if (t < tb + 0.5) return { mode: "free", ...hop(t, tb, 0.5, f, { x: TREE.x - 70, y: 700, s: 0.8, r: -20 }, 60), splat: 1 };
+      if (t < tb + 0.9) return { mode: "free", x: TREE.x - 70, y: 700, s: 0.8, r: -20, splat: 1 };
+      const u = pIn(t, tb + 0.9, 1.4); return { mode: "free", x: TREE.x - 70 - 120 * Math.sin(u * 7) * (1 - u), y: lerp(700, 1020, u), s: 0.8, r: lerp(-20, 0, u) + 25 * Math.sin(u * 7) * (1 - u) }; }
+    if (sc === 1) { const f = FREE[1][k];
+      if (k === "mouse") { const r0 = ts("k1.3"), r1 = ts("k1.4") + 0.05;                                    // hamster wheel
+        if (t > r0 && t < r1 + 1.0) return { mode: "hide" };
+        if (t >= r1 + 1.0 && t < r1 + 2.0) return { mode: "free", ...hop(t, r1 + 1.0, 0.5, { x: 650, y: 1045, s: 0.85 }, f, 120), dizzy: 1 };
+        return { mode: "free", ...f, dizzy: t > r1 + 1.0 && t < r1 + 2.6 ? 1 : 0 }; }
+      if (k === "frog") { const t0 = T.hatOff + 1.0; if (t > t0 && t < t0 + 0.8) { const u = pIn(t, t0, 0.8); return { mode: "free", x: f.x, y: f.y - 220 * Math.sin(Math.PI * u), s: f.s, r: 0 }; } }
+      return { mode: "free", ...f }; }
+    if (sc === 2) { const f = FREE[2][k];
+      if (k === "duckling") { // rides the rocket at n1.6, then clings to the tail (late), claps after the crash
+        const tr = ts("n1.6"), tl = ts("k2.1") + 1.25;
+        if (t > tr - 0.4 && t < tr + 2.65) return { mode: "hide" };
+        if (t >= tr + 2.65 && t < tl) return { mode: "free", x: 1600, y: RWY + 30, s: 0.62 };
+        if (t >= tl && t < tl + 0.5) { const p = planePos(t), [tx, ty] = P2S(-330, -520, p); return { mode: "free", ...hop(t, tl, 0.5, { x: 1600, y: RWY + 30, s: 0.62 }, { x: tx, y: ty + 60, s: 0.55 * p.s / 0.82, r: -20 }, 200) }; }
+        if (t >= tl + 0.5 && t < T.poke - 0.9) { const p = planePos(t), [tx, ty] = P2S(-330, -520, p); return { mode: "free", x: tx - 10, y: ty + 70, s: 0.55, r: -20 + p.rot, clap: t > T.crash + 0.4 && t < T.crash + 2.4 }; }
+        if (t >= T.poke - 0.9 && t < 69.5) { const P0 = { x: 500, y: RWY + 34, s: 0.6 }; return { mode: "free", ...hop(t, T.poke - 0.9, 0.6, { x: 460, y: RWY - 200, s: 0.55 }, P0, 100) }; }
+        if (t >= 69.5) return t < 70.4 ? { mode: "free", ...hop(t, 69.8, 0.6, { x: 300, y: RWY + 34, s: 0.62 }, { x: 1700, y: RWY - 200, s: 0.62 }, 260) } : hide;
+        return { mode: "free", ...f }; }
+      const order = { mouse: 0, frog: 1, duck: 2 }[k], tj = wt("k2.1", order), seat = seatScene(k, t);
+      if (t < tj) return { mode: "free", ...f };
+      if (t < tj + 0.42) return { mode: "free", ...hop(t, tj, 0.42, f, seat, 180) };
+      if (t < T.crash) return { mode: "seat" };
+      const C0 = CRASH[k], tc = T.crash + 0.02;
+      if (t < tc + 0.5) { const p0 = seatScene(k, tc); return { mode: "free", ...hop(t, tc, 0.5, p0, C0, 140) }; }
+      const up = { frog: wt("k2.5", 0), duck: wt("k2.5", 2), mouse: wt("k2.5", 4) }[k];
+      if (t < up) return { mode: "free", ...C0 };
+      const stand = { x: C0.x, y: C0.y, s: C0.s, r: 0 };
+      if (t < up + 0.4) return { mode: "free", ...hop(t, up, 0.4, C0, stand, 90), cheer: 1 };
+      // repair jobs
+      if (k === "frog" && t > ts("k2.6") - 0.6 && t < ts("k2.8")) { const p = planePos(t), [nx] = P2S(300, 0, p), at = { x: nx + 120, y: RWY + 30, s: 0.72, r: 0 };
+        const go = hop(t, ts("k2.6") - 0.6, 0.5, stand, at, 60), sp = t > wt("k2.6", 0) + 0.25 && t < wt("k2.6", 1) + 0.35 ? (t - wt("k2.6", 0) - 0.25) * 900 : 0;
+        return { mode: "free", ...(t < ts("k2.6") - 0.1 ? go : at), spin: sp }; }
+      if (k === "duck" && t > ts("k2.7") - 0.5 && t < ts("k2.8") + 0.2) { const p = planePos(t), [wx] = P2S(-120, 0, p); return { mode: "free", ...hop(t, ts("k2.7") - 0.5, 0.45, stand, { x: wx - 40, y: RWY + 34, s: 0.7, r: 0 }, 50) }; }
+      const P0 = PUSH[k], tp = ts("k2.9") - 0.5;
+      if (t >= tp && t < T.poke + 0.15) return { mode: "free", ...(t < tp + 0.5 ? hop(t, tp, 0.5, stand, P0, 60) : P0), push: t > tp + 0.5 };
+      if (t >= T.poke + 0.15 && t < 69.5) { const flat = { x: P0.x + 60, y: P0.y, s: P0.s, r: 80 }; if (t < T.poke + 0.5) return { mode: "free", ...hop(t, T.poke + 0.15, 0.35, P0, flat, 30) };
+        const up2 = te("k2.10") + 0.2; if (t < up2) return { mode: "free", ...flat }; return { mode: "free", ...hop(t, up2, 0.4, flat, { ...flat, r: 0 }, 80), cheer: 1 }; }
+      if (t >= 69.5 && t < 69.8) return { mode: "free", x: 300 + order * 120, y: RWY + 30, s: 0.72 };
+      if (t >= 69.8) { const tj2 = 69.8 + order * 0.25; if (t < tj2) return { mode: "free", x: 300 + order * 120, y: RWY + 30, s: 0.72 };
+        if (t < tj2 + 0.45) return { mode: "free", ...hop(t, tj2, 0.45, { x: 300 + order * 120, y: RWY + 30, s: 0.72 }, seatScene(k, t), 200) }; return { mode: "seat" }; }
+      return { mode: "free", ...stand }; }
+    if (sc === 3 || sc === 4) { if (k === "duckling") return hide; return { mode: "seat" }; }
+    if (sc === 5) { if (k === "duckling") return hide;
+      const tb = { mouse: 123.95, frog: 124.85, duck: 125.65 }[k], dest = { mouse: { x: HAY.x, y: HAY.y - 110, s: 0.8, r: 0 }, frog: { x: POND.x, y: POND.y + 10, s: 0.8, r: 0 }, duck: { x: LINE.x + 60, y: LINE.y - 210, s: 0.75, r: 0 } }[k];
+      if (t < tb) return { mode: "seat" };
+      if (t < tb + 0.8) return { mode: "free", ...hop(t, tb, 0.8, seatScene(k, tb), dest, 320), spin: (t - tb) * 700 };
+      return { mode: "free", ...dest, hang: k === "duck", splash: k === "frog" ? t - tb - 0.8 : -1 }; }
+    return hide; }
+
+  // ── drone, rocket, chocks, paper plane, birds ──
+  function dronePos(t) { const sc = scene(t);
+    if (sc === 2 && t > ts("n1.5") - 0.3 && t < ts("n1.7") + 0.5) { const u = smooth(ts("n1.5") - 0.3, ts("n1.5") + 0.6, t), out = smooth(ts("n1.7"), ts("n1.7") + 0.5, t);
+      return { x: lerp(2100, 1240, u) + out * 900, y: lerp(150, 420, u) + 14 * Math.sin(t * 3) - out * 300, s: 0.85, vis: true }; }
+    if (sc === 3 && t > ts("n2.5") - 0.4) { const u = smooth(ts("n2.5") - 0.4, ts("n2.5") + 0.6, t); return { x: lerp(2100, 1400, u) + 20 * Math.sin(t * 1.3), y: lerp(100, 300, u) + 18 * Math.sin(t * 2.4), s: 0.7, vis: true }; }
+    if (sc === 4) { const [x, y] = slotOf("drone", t); return { x, y: y + 16 * Math.sin(t * 2.6 + 1), s: 0.62, vis: (t < T.heart0 || t > T.heart1 + 0.4) && t < 114.4 }; }
+    return { vis: false }; }
+  function rocketPos(t) { const sc = scene(t);
+    if (sc === 2 && t > ts("n1.6") - 0.6 && t < ts("n1.6") + 2.65) { const t0 = ts("n1.6") + 0.2, up = easeOut(pIn(t, t0, 0.9)) * (1 - smooth(t0 + 1.4, t0 + 2.4, t)), wob = 5 * Math.sin(t * 9) * (up > 0.05 ? 1 : 0);
+      return { x: 1600, y: RWY + 30 - 640 * up, s: 0.8, r: wob, vis: true, fire: up > 0.02 && up < 0.99 }; }
+    if (sc === 2 && t >= 69.8 && t < T.sky) return { x: 1700, y: RWY + 30 - 900 * easeIn(pIn(t, 70.4, 1.4)), s: 0.8, r: 0, vis: true, fire: t > 70.4 };
+    if (sc === 3 && t > ts("n2.6") - 0.5) { const u = smooth(ts("n2.6") - 0.5, ts("n2.6") + 0.5, t); return { x: 400 + 10 * Math.sin(t * 1.1), y: lerp(1500, 1010, u) + 16 * Math.sin(t * 2.1), s: 0.62, r: 4 * Math.sin(t * 2), vis: true, fire: true }; }
+    if (sc === 4) { const [x, y] = slotOf("rocket", t); return { x, y: y + 18 * Math.sin(t * 2.3 + 2) + 120, s: 0.55, r: 3 * Math.sin(t * 2), vis: (t < T.heart0 || t > T.heart1 + 0.4) && t < 114.4, fire: true }; }
+    return { vis: false }; }
+
+  // eyes / mouths (shared)
+  const blinkAmt = (t, seed) => { const ph = ((t + seed * 1.37) % 3.9 + 3.9) % 3.9; return ph < 0.16 ? Math.sin(Math.PI * ph / 0.16) : 0; };
+  function eyes(root, t, seed, lx = 0, ly = 0, extra = 0) { const b = Math.max(blinkAmt(t, seed), extra);
+    root.querySelectorAll(".lid").forEach((l) => { const top = +l.dataset.top; l.setAttribute("transform", `translate(0 ${top}) scale(1 ${b.toFixed(3)}) translate(0 ${-top})`); });
+    root.querySelectorAll(".pup").forEach((p2) => p2.setAttribute("transform", `translate(${lx.toFixed(1)} ${ly.toFixed(1)})`)); }
+  const talk = (root, o) => { const h = root.querySelector(".mHappy"), m = root.querySelector(".mOpen"); if (h) h.setAttribute("opacity", (1 - o).toFixed(2)); if (m) m.setAttribute("opacity", o.toFixed(2)); };
+  const place = (node, parentId) => { if (node.parentNode.id !== parentId) E(parentId).appendChild(node); };
+
+  function render(t) {
+    const bp = beatPos(t), beatPh = TAU * bp, sc = scene(t);
+    // ── camera ──
+    const s = Math.max(1, CAM.s), hx = 960 / s, hy = 540 / s;
+    const cx = Math.min(1920 - hx + 160, Math.max(hx - 160, CAM.x)), cy = Math.min(1300 - hy, Math.max(hy - 120 - ENV.up, CAM.y));
+    VIEW = { s, cx, cy };
+    E("cam").style.transform = `translate(960px, 540px) rotate(${CAM.r.toFixed(2)}deg) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)}px, ${(-cy).toFixed(1)}px)`;
+    SETS.forEach((id, i) => { if (i === 5) return; E(id).style.display = i === sc || (sc === 5 && i === 0) ? "block" : "none"; });
+    E("eveTint").setAttribute("opacity", sc === 5 ? 1 : 0); E("landProps").setAttribute("opacity", sc === 5 ? 1 : 0); E("bigBox").setAttribute("opacity", sc === 0 ? 1 : 0);
+
+    // ── the plane ──
+    const pp = planePos(t);
+    ["planeBackG", "planeFrontG"].forEach((id) => { E(id).setAttribute("opacity", pp.vis ? 1 : 0); if (pp.vis) E(id).setAttribute("transform", planeTf(pp)); });
+    E("pShadow").setAttribute("opacity", pp.vis && (sc === 1 || sc === 2 || sc === 5) ? 1 : 0);
+    if (pp.vis) { const pf = E("planeFrontG"), g = GROUND[sc] || pp.y, lift = clamp((g - pp.y) / 500, 0, 1);
+      E("pShadow").setAttribute("cx", (pp.x + 40 * pp.s).toFixed(1)); E("pShadow").setAttribute("cy", (g + 4).toFixed(1)); E("pShadow").setAttribute("rx", (340 * pp.s * (1 - 0.6 * lift)).toFixed(1)); E("pShadow").setAttribute("ry", (40 * pp.s * (1 - 0.6 * lift)).toFixed(1));
+      const wingIn = PL.wing, wf = pf.querySelector(".wing");
+      wf.setAttribute("opacity", wingIn > 0.01 ? 1 : 0); wf.setAttribute("transform", `translate(${(-700 * (1 - easeOut(wingIn))).toFixed(1)} 0) rotate(${(PL.bent * 16 + 7 * Math.sin(t * 18) * bump(t, ts("k1.2") + 0.6, 0.9)).toFixed(2)} -150 -214)`);
+      pf.querySelector(".wflag").setAttribute("transform", `translate(-20 -152) scale(${(1 + 0.9 * PL.flag).toFixed(3)})`);
+      const wh = PL.wheels; ["wheelB", "wheelF"].forEach((c, i) => { const n = pf.querySelector("." + c), base = i ? [140, -58] : [-196, -58], roll = (pp.x / (58 * pp.s)) * 180 / Math.PI;
+        const gone = i === 0 && t > 127.0 ? 1 : 0; n.setAttribute("opacity", wh > 0.01 && !gone ? 1 : 0); n.setAttribute("transform", `translate(${base[0]} ${base[1]}) rotate(${roll.toFixed(1)})`); });
+      pf.querySelector(".struts").setAttribute("opacity", wh > 0.5 ? 1 : 0);
+      const pr = pf.querySelector(".prop"), nose = pf.querySelector(".nose"), pin = PL.prop; pr.setAttribute("opacity", pin > 0.01 ? 1 : 0); nose.setAttribute("opacity", pin > 0.01 ? 1 : 0);
+      pr.setAttribute("transform", `translate(356 ${(-225 - 300 * (1 - outBack(pin, 2))).toFixed(1)}) rotate(${spinAt(t).toFixed(1)})`);
+      nose.setAttribute("transform", `translate(0 ${(-300 * (1 - outBack(pin, 2))).toFixed(1)})`);
+      pf.querySelector(".dent").setAttribute("opacity", PL.dent * (1 - PL.patch)); pf.querySelector(".patch").setAttribute("opacity", PL.patch);
+      pf.querySelector(".patch").setAttribute("transform", `translate(301 -226) scale(${(0.6 + 0.4 * outBack(PL.patch, 3)).toFixed(3)})`);
+      pf.querySelector(".tail").querySelector(".ribbon").setAttribute("d", `M-372 -536 q-60 ${(14 * Math.sin(t * 9)).toFixed(1)} -110 ${(-6 + 18 * Math.sin(t * 7 + 1)).toFixed(1)}`);
+      // face: eyes open with every part; sad after the crash; asleep at the end
+      const fc = pf.querySelector(".face"), op = clamp(PL.eye, 0, 1), sl = PL.sleep, lid = clamp(Math.max(1 - op, sl, blinkAmt(t, 6.1)), 0, 1);
+      fc.querySelectorAll(".lid").forEach((l) => { const top = +l.dataset.top; l.setAttribute("transform", `translate(0 ${top}) scale(1 ${lid.toFixed(3)}) translate(0 ${-top})`); });
+      fc.querySelectorAll(".pup").forEach((p2) => p2.setAttribute("transform", `translate(${(4 + 8 * PL.look).toFixed(1)} ${(6 * PL.sad).toFixed(1)}) scale(1)`));
+      const sm = PL.smile - 1.4 * PL.sad, mo = PL.open, my = -196;
+      fc.querySelector(".pMouth").setAttribute("d", mo > 0.05 ? `M126 ${my} Q158 ${my - 6} 190 ${my} Q158 ${(my + 60 * mo).toFixed(1)} 126 ${my}Z` : `M126 ${my} Q158 ${(my + 26 * sm).toFixed(1)} 190 ${my}`);
+      fc.querySelector(".pMouth").setAttribute("fill", mo > 0.05 ? "#8C2F45" : "none");
+      fc.querySelector(".brow").setAttribute("opacity", PL.sad.toFixed(2));
+      for (let i = 0; i < 7; i++) { const on = Math.max(PL.lightAll * (0.6 + 0.4 * Math.sin(t * 14 + i)), i < PL.lights ? 1 : 0, sc === 2 && t > ts("n1.3") && t < ts("n1.4") ? (Math.floor(bp) % 7 === i ? 1 : 0.2) : 0);
+        E("pllt" + i).setAttribute("opacity", on.toFixed(2)); } }
+    // steering wheel (cockpit only)
+    { const g = E("steer"), on = (sc === 3 && t > ts("b.1") - 1) || sc === 4; g.setAttribute("opacity", on ? 1 : 0); if (on) { const [x, y] = P2S(232, -366, pp); g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(pp.rot + 20).toFixed(1)}) scale(${(pp.s * 1.1).toFixed(3)} ${(pp.s * 1.1 * pp.sy).toFixed(3)})`); } }
+
+    // ── Fıstık rig ──
+    const fp = fistikPos(t);
+    E("charWrap").style.display = fp.vis ? "block" : "none"; E("fShadow").setAttribute("opacity", fp.vis && fp.free ? 1 : 0);
+    if (fp.vis) {
+      const bob = R.bob * (9 + 10 * R.dance) * (1 - Math.cos(beatPh)) / 2;
+      el.rig.setAttribute("transform", `translate(0 ${(-bob).toFixed(2)})`);
+      const ea = R.earAmp * 6 * Math.sin(beatPh) + R.flap * 34 * Math.sin(t * 24);
+      el.earL.setAttribute("transform", `rotate(${(-ea).toFixed(2)} 222 230)`);
+      el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-ea).toFixed(2)} 222 230)`);
+      el.tail.setAttribute("transform", `rotate(${(14 * Math.sin(beatPh / 2)).toFixed(2)} 432 470)`);
+      el.pom.setAttribute("transform", `rotate(${(10 * Math.sin(beatPh - 0.8)).toFixed(2)} 300 100)`);
+      const tilt = R.tilt + (R.sway + R.dance) * 7 * Math.sin(beatPh / 2) + 2 * Math.sin(TAU * t / (BEAT * 8));
+      el.head.setAttribute("transform", `rotate(${tilt.toFixed(2)} 300 360)`);
+      el.legs.forEach((g, i) => { const [px, py, ph] = LEGP[i], a = R.walk * 20 * Math.sin(beatPh + ph), lift = R.walk * 8 * Math.max(0, Math.sin(beatPh + ph));
+        g.setAttribute("transform", `translate(${px} ${(py - lift).toFixed(2)}) rotate(${a.toFixed(2)})`); });
+      el.pupils.setAttribute("transform", `translate(${R.lookX.toFixed(1)} ${R.lookY.toFixed(1)})`);
+      const lid = clamp(Math.max(R.blink, blinkAmt(t, 0.3)), 0, 1) * 92; el.lidL.setAttribute("height", lid.toFixed(1)); el.lidR.setAttribute("height", lid.toFixed(1));
+      const m = Math.max(0, R.mouth), my = 334, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * m).toFixed(1)} 224 ${my} Z`;
+      el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", m > 0.04 ? "#8C2F45" : "none");
+      el.tongue.setAttribute("ry", (m > 0.15 ? 12 * m : 0).toFixed(1)); el.tongue.setAttribute("cy", (my + 6 + 24 * m).toFixed(1));
+      drawTrunk(R.A + 3 * Math.sin(t * 2.3), R.C, R.L);
+      const hatGone = sc === 1 && t > T.hatOff && t < T.hatOff + 2.2; E("hat").style.opacity = hatGone ? 0 : 1;
+      const pomGone = sc === 1 && t > T.hatOff && t < T.hatOff + 2.45; E("pom").style.opacity = pomGone ? 0 : 1;
+      if (fp.free) { const sh = E("fShadow"), lift = clamp(-R.jy / 300, 0, 1); sh.setAttribute("cx", fp.x.toFixed(1)); sh.setAttribute("cy", (fp.y + 4).toFixed(1)); sh.setAttribute("rx", (170 * fp.s * (1 - 0.5 * lift)).toFixed(1)); sh.setAttribute("ry", (34 * fp.s * (1 - 0.5 * lift)).toFixed(1)); }
+      const sq = R.sq;
+      E("charWrap").style.transform = `translate(${fp.x.toFixed(1)}px, ${(fp.y + R.jy).toFixed(1)}px) rotate(${(fp.rot + R.rot).toFixed(2)}deg) scale(${(fp.s * (1 + 0.14 * sq)).toFixed(4)}, ${(fp.s * fp.sy * (1 - 0.18 * sq)).toFixed(4)}) translate(-300px, -620px)`; }
+
+    // ── sets: ambient motion ──
+    if (sc === 0 || sc === 5) { E("clG").setAttribute("transform", `translate(${((t * 10) % 300).toFixed(1)} 0)`); E("sunG").querySelector(".rays").setAttribute("transform", `rotate(${(t * 12).toFixed(1)})`); }
+    if (sc === 2) { E("clR").setAttribute("transform", `translate(${(-(t * 14) % 400).toFixed(1)} 0)`); E("sockG").querySelector(".sock").setAttribute("transform", `translate(0 -250) rotate(${(6 * Math.sin(t * 2.3)).toFixed(1)}) scale(1 ${(0.9 + 0.1 * Math.sin(t * 7)).toFixed(3)})`);
+      for (let i = 0; i < 13; i++) { const chase = t > ts("n1.3") && t < ts("n1.4") + 0.6 || t > ts("n2.3") && t < ts("n2.4") + 0.6, k = Math.floor(bp * 2) % 13, on = chase ? (i === k || i === (k + 1) % 13 ? 1 : 0.15) : (t > ts("n1.1") ? 0.55 + 0.45 * Math.max(0, Math.sin(beatPh + i)) : 0);
+        E("rl" + i).setAttribute("opacity", on.toFixed(2)); E("rm" + i).setAttribute("opacity", on.toFixed(2)); } }
+    if (sc === 3) { const v = 260; E("clS1").setAttribute("transform", `translate(${(-((t * v) % 1680)).toFixed(1)} 0)`); E("clS2").setAttribute("transform", `translate(${(-((t * v * 1.6) % 1120)).toFixed(1)} 0)`);
+      E("town").setAttribute("transform", `translate(${(-((t * 90) % 300)).toFixed(1)} ${(400 * smooth(T.sky, T.sky + 3, t)).toFixed(1)})`); }
+    if (sc === 4) { E("clU1").setAttribute("transform", `translate(${(-((t * 60) % 760)).toFixed(1)} 0)`); E("clU2").setAttribute("transform", `translate(${(-((t * 180) % 460)).toFixed(1)} 0)`);
+      E("sunU").querySelector(".rays").setAttribute("transform", `rotate(${(t * 10).toFixed(1)})`); const wk = bump(t, te("f.6") - 0.6, 0.5); E("sunU").querySelector(".eyeR").setAttribute("transform", `translate(20 -8) scale(1 ${(1 - 0.9 * wk).toFixed(3)}) translate(-20 8)`); }
+
+    // ── friends ──
+    const drawFriend = (k) => { const g = E(k + "Pos"), d = E(k), f = friendPos(k, t);
+      if (f.mode === "hide") { g.setAttribute("opacity", 0); return f; } g.setAttribute("opacity", 1);
+      if (f.mode === "seat") { place(g, "inPlane"); const [sx, sy0, ss] = SEATS[k]; const pb = AN.party * 14 * Math.abs(Math.sin(beatPh / 2 + sx)) + AN.cheer * 46 * Math.abs(Math.sin(t * 12 + sx * 0.05));
+        g.setAttribute("transform", `${planeTf(pp)} translate(${sx} ${(sy0 - pb).toFixed(1)}) scale(${ss})`); }
+      else { place(g, "outPlane"); g.setAttribute("transform", `translate(${f.x.toFixed(1)} ${f.y.toFixed(1)}) rotate(${((f.r || 0) + (f.spin || 0)).toFixed(1)}) scale(${(f.s * (f.fx || 1)).toFixed(3)} ${f.s.toFixed(3)})`); }
+      return f; };
+    { const f = drawFriend("frog"); if (f.mode !== "hide") { const fr = E("frog"), body = fr.querySelector(".body"), breath = 0.012 * Math.sin(t * 2.6), ch = (f.cheer || AN.cheer) ? 14 * Math.abs(Math.sin(t * 10)) : 0;
+        body.setAttribute("transform", `translate(0 ${(-ch).toFixed(1)}) scale(${(1 + breath).toFixed(3)} ${(1 - breath).toFixed(3)})`);
+        talk(fr, AN.frogOpen); fr.querySelector(".armL").setAttribute("transform", `rotate(${(f.push ? 70 : (f.cheer ? 60 * Math.abs(Math.sin(t * 10)) : 0)).toFixed(1)} -46 -40)`);
+        fr.querySelector(".armR").setAttribute("transform", `rotate(${(-AN.party * 30 * Math.abs(Math.sin(beatPh / 2))).toFixed(1)} 46 -40)`); eyes(fr, t, 1, -4, -3, f.push ? 0.6 : 0); } }
+    const duckDraw = (k, open, seed) => { const f = drawFriend(k); if (f.mode === "hide") return; const d = E(k);
+      const body = d.querySelector(".body"), head = d.querySelector(".head"), breath = 0.012 * Math.sin(t * 2.4 + seed), ch = (f.cheer || f.clap) ? 10 * Math.abs(Math.sin(t * 11)) : 0;
+      body.setAttribute("transform", `translate(0 ${(-ch).toFixed(1)}) scale(${(1 + breath).toFixed(3)} ${(1 - breath).toFixed(3)})`);
+      head.setAttribute("transform", `translate(0 ${(-ch + 3 * Math.sin(beatPh) * (0.4 + AN.party)).toFixed(1)}) rotate(${(f.hang ? 10 * Math.sin(t * 3) : 0).toFixed(1)} -40 -150)`);
+      d.querySelector(".beakTop").setAttribute("transform", `rotate(${(14 * open).toFixed(1)} -78 -144)`); d.querySelector(".beakBot").setAttribute("transform", `rotate(${(-18 * open).toFixed(1)} -78 -132)`);
+      const wingA = f.clap ? 40 * Math.abs(Math.sin(t * 14)) : f.hang ? -70 : f.push ? -40 : (f.cheer ? 40 * Math.abs(Math.sin(t * 10)) : AN.party * 22 * Math.sin(beatPh));
+      d.querySelector(".wing").setAttribute("transform", `rotate(${wingA.toFixed(1)} 10 -96)`); eyes(d, t, seed, -2, 0, f.push ? 0.6 : 0); };
+    duckDraw("duck", AN.duckOpen, 2); duckDraw("duckling", AN.dlOpen, 3.3);
+    { const f = drawFriend("mouse"); if (f.mode !== "hide") { const mo = E("mouse"), breath = 0.015 * Math.sin(t * 3);
+        mo.querySelector(".body").setAttribute("transform", `scale(${(1 + breath + (f.splat ? 0.2 : 0)).toFixed(3)} ${(1 - breath - (f.splat ? 0.2 : 0)).toFixed(3)})`);
+        mo.querySelector(".head").setAttribute("transform", `rotate(${(4 * Math.sin(beatPh / 2) + (f.dizzy ? 10 * Math.sin(t * 9) : 0)).toFixed(2)} 4 -80)`);
+        mo.querySelector(".earL").setAttribute("transform", `rotate(${(6 * Math.sin(t * 5)).toFixed(1)} -34 -130)`); mo.querySelector(".earR").setAttribute("transform", `rotate(${(-6 * Math.sin(t * 5 + 1)).toFixed(1)} 40 -128)`);
+        mo.querySelector(".tail").setAttribute("transform", `rotate(${(12 * Math.sin(t * 3.5)).toFixed(1)} -30 -14)`);
+        mo.querySelector(".spiral").setAttribute("opacity", f.dizzy ? 1 : 0); mo.querySelector(".spiral").setAttribute("transform", `rotate(${(t * 400).toFixed(0)} 5 -118)`);
+        talk(mo, AN.msOpen); eyes(mo, t, 4.1, 2, 0, f.splat || f.push ? 0.7 : 0); } }
+    // hamster wheel (mouse inside the red button) + the blue button dropping in
+    { const g = E("wheelRoll"), r0 = ts("k1.3"), r1 = ts("k1.4") + 0.05, on = sc === 1 && t > r0 && t < r1 + 1.0; g.setAttribute("opacity", on ? 1 : 0);
+      if (on) { const p = planePos(t), [bx, by] = P2S(-196, -58, { ...p, y: p.y }), u = smooth(r0, r1, t), x = lerp(-150, bx, u), y = lerp(1040 - 58, by, u), rot = (x / 58) * 180 / Math.PI + (t > r1 ? (t - r1) * 900 : 0);
+        g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${p.s})`); g.querySelector(".wr").setAttribute("transform", `rotate(${rot.toFixed(1)})`);
+        const mg = E("mousePos"); place(mg, "outPlane"); mg.setAttribute("opacity", 1); mg.setAttribute("transform", `translate(${x.toFixed(1)} ${(y + 40 - 6 * Math.abs(Math.sin(t * 22))).toFixed(1)}) scale(0.42)`);
+        E("mouse").querySelector(".spiral").setAttribute("opacity", 0); }
+      const wd = E("wheelDrop"), d0 = r1 + 0.15, don = sc === 1 && t > d0 && t < d0 + 0.6; wd.setAttribute("opacity", don ? 1 : 0);
+      if (don) { const p = planePos(t), [fx, fy] = P2S(140, -58, p), u = pIn(t, d0, 0.6); wd.setAttribute("transform", `translate(${fx.toFixed(1)} ${(fy - 700 * (1 - easeIn(u))).toFixed(1)}) scale(${p.s})`); } }
+    // chocks hop away like bunnies
+    for (let i = 0; i < 2; i++) { const g = E("ch" + i), on = sc === 2 && t < ts("n1.1") + 1.8; g.setAttribute("opacity", on ? 1 : 0); if (!on) continue;
+      const p = planePos(t), [wx, wy] = P2S(i ? 140 : -196, 0, p), t0 = ts("n1.1") + 0.15 + i * 0.25, u = pIn(t, t0, 1.4), dir = i ? 1 : -1, hops = u * 3, hh = Math.abs(Math.sin(Math.PI * hops)) * 70 * (u > 0 ? 1 : 0);
+      g.setAttribute("transform", `translate(${(wx + (i ? 74 : -74) * p.s + dir * 900 * u).toFixed(1)} ${(RWY + 18 - hh).toFixed(1)}) scale(${(p.s * 1.1 * dir).toFixed(3)} ${(p.s * 1.1).toFixed(3)})`); }
+    // drone (eye) + flash + falling photo
+    { const d = dronePos(t), g = E("droneG"); g.setAttribute("opacity", d.vis ? 1 : 0);
+      if (d.vis) { g.setAttribute("transform", `translate(${d.x.toFixed(1)} ${d.y.toFixed(1)}) rotate(${(4 * Math.sin(t * 2)).toFixed(1)}) scale(${d.s})`);
+        g.querySelectorAll(".rot").forEach((r, i) => r.setAttribute("transform", `scale(${Math.abs(Math.cos(t * 30 + i)).toFixed(3)} 1)`));
+        const fl = Math.max(bump(t, wt("n1.5", 1), 0.3), bump(t, wt("n2.5", 1), 0.3)); g.querySelector(".flash").setAttribute("opacity", fl.toFixed(2));
+        const dd = g.querySelector("#droneG > g:last-of-type"); eyes(g, t, 8, -12, 6, 0); }
+      const ph = E("photo"), f0 = sc === 2 ? wt("n1.5", 1) + 0.1 : wt("n2.5", 1) + 0.1, u = (t - f0) / 1.6, on = (sc === 2 || sc === 3) && u > 0 && u < 1 && d.vis !== undefined; ph.setAttribute("opacity", on ? 1 : 0);
+      if (on) { const d2 = dronePos(f0); ph.setAttribute("transform", `translate(${(d2.x - 140 * u + 30 * Math.sin(u * 9)).toFixed(1)} ${(d2.y + 80 + 520 * u).toFixed(1)}) rotate(${(20 * Math.sin(u * 7)).toFixed(1)}) scale(${(0.9 * outBack(Math.min(1, u * 4), 2)).toFixed(3)})`); } }
+    // rocket (bucket + balloons + duckling with a cone hat)
+    { const r = rocketPos(t), g = E("rocketG"); g.setAttribute("opacity", r.vis ? 1 : 0);
+      if (r.vis) { g.setAttribute("transform", `translate(${r.x.toFixed(1)} ${r.y.toFixed(1)}) rotate(${(r.r || 0).toFixed(1)}) scale(${r.s})`);
+        g.querySelector(".flame").setAttribute("opacity", r.fire ? 1 : 0); g.querySelector(".flame").setAttribute("transform", `translate(0 6) scale(1 ${(0.8 + 0.3 * Math.sin(t * 30)).toFixed(3)})`);
+        g.querySelectorAll(".bl").forEach((b, i) => b.setAttribute("transform", `rotate(${(8 * Math.sin(t * 3 + i)).toFixed(1)})`));
+        const tip = Math.max(bump(t, ts("n1.6") + 1.0, 1.0), sc === 3 ? bump(t, wt("n2.6", 1), 1.0) : 0); g.querySelector(".hatR").setAttribute("transform", `translate(-2 ${(-250 - 70 * tip).toFixed(1)}) rotate(${(-30 * tip).toFixed(1)})`);
+        eyes(g.querySelector(".pilot"), t, 9, -2, 0); } }
+    // paper plane: mouse throws it (g.4) → bonk on Fıstık's forehead → Fıstık throws it into the box
+    { const g = E("paperG"), t0 = ts("g.4") - 0.2, hit = t0 + 0.55, back = hit + 0.35, inBox = back + 0.75; let on = false, x = 0, y = 0, r = 0, s2 = 1;
+      if (sc === 0 && t > t0 && t < inBox) { on = true; const [hx, hy] = headScene(t);
+        if (t < hit) { const u = pIn(t, t0, hit - t0); x = lerp(TREE.x - 120, hx + 40, u); y = lerp(1000, hy - 10, u) - 120 * Math.sin(Math.PI * u); r = 180 + 20 * Math.sin(u * 6); }
+        else if (t < back) { x = hx + 50; y = hy - 10 + 30 * pIn(t, hit, 0.3); r = 160; }
+        else { const u = pIn(t, back, inBox - back); x = lerp(hx + 60, BOX.x, u); y = lerp(hy - 30, BOX.y - 60, u) - 180 * Math.sin(Math.PI * u); r = 15 * Math.sin(u * 5); s2 = 1 - 0.5 * u; } }
+      if (sc === 5 && t > 132.0) { on = true; const u = smooth(132.0, 132.9, t), p = planePos(t), [nx, ny] = P2S(300, -330, p); x = lerp(-100, nx, u); y = lerp(500, ny - 20, u) - 80 * Math.sin(Math.PI * u); r = -10 + 10 * u; s2 = 1.1; }
+      g.setAttribute("opacity", on ? 1 : 0); if (on) g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r.toFixed(1)}) scale(${s2.toFixed(3)})`); }
+    // birds: two pass by at the start; one lands on the pompom in the sky and pecks
+    for (let i = 0; i < 3; i++) { const g = E("bd" + i); let on = false, x = 0, y = 0, f = 1, s2 = 0.9, flap = 1;
+      if (sc === 0 && i < 2 && t > 2.4 + i * 0.4 && t < 7.2) { on = true; const u = pIn(t, 2.4 + i * 0.4, 4.6), [hx, hy] = headScene(t); x = lerp(-150, 2100, u); y = hy - 200 - i * 70 + 40 * Math.sin(u * 8);
+        if (u > 0.3 && u < 0.5) { x = lerp(-150, 2100, 0.3) + (x - lerp(-150, 2100, 0.3)) * 0.3; } }
+      if (sc === 3 && i === 2 && t > ts("n2.7") - 0.4 && t < ts("b.1") - 0.2) { on = true; const land = ts("n2.7") + 0.3, peck0 = land + 0.2, flee = wt("n2.8", 1) + 0.15, [px, py] = pomScene(t);
+        if (t < land) { const u = pIn(t, ts("n2.7") - 0.4, 0.7); x = lerp(px + 500, px + 10, u); y = lerp(py - 300, py - 40, u); }
+        else if (t < flee) { x = px + 10; y = py - 40 - 10 * Math.abs(Math.sin((t - peck0) * 14)) * (t > peck0 ? 1 : 0); flap = 0; f = -1; }
+        else { const u = pIn(t, flee, 0.9); x = px + 10 + 700 * u; y = py - 40 - 500 * u; } s2 = 0.75; }
+      g.setAttribute("opacity", on ? 1 : 0); if (on) { g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(s2 * f).toFixed(2)} ${s2})`); const w = flap ? 30 * Math.sin(t * 26 + i) : -10;
+        g.querySelector(".bw").setAttribute("transform", `rotate(${w.toFixed(1)} -6 -6)`); g.querySelector(".bw2").setAttribute("transform", `rotate(${(-w * 0.8).toFixed(1)} -6 -6)`); } }
+    // hat sucked into the propeller → pinwheel → pompom flies → frog's tongue catches it → back on the head
+    { const g = E("flyHat"), pm = E("flyPom"), t0 = T.hatOff, on = sc === 1 && t > t0 && t < t0 + 2.2; g.setAttribute("opacity", on ? 1 : 0);
+      const p = planePos(t), [ax, ay] = P2S(356, -225, p), [hx, hy] = headScene(t);
+      if (on) { const toProp = pIn(t, t0, 0.35), back = pIn(t, t0 + 1.6, 0.6); let x = lerp(hx, ax + 30, easeIn(toProp)), y = lerp(hy - 90, ay, easeIn(toProp)), r = 0, sc2 = 0.5 * p.s;
+        if (toProp >= 1) { r = (t - t0 - 0.35) * 1600 * (1 - back); }
+        if (back > 0) { x = lerp(ax + 30, hx, easeOut(back)); y = lerp(ay, hy - 90, easeOut(back)) - 200 * Math.sin(Math.PI * back); }
+        g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r.toFixed(1)}) scale(${sc2.toFixed(3)}) translate(-300 -150)`); }
+      const fpos = friendPos("frog", t), catchT = t0 + 1.25, pon = sc === 1 && t > t0 + 0.9 && t < t0 + 2.45; pm.setAttribute("opacity", pon ? 1 : 0);
+      if (pon) { let x, y; if (t < catchT) { const u = pIn(t, t0 + 0.9, catchT - t0 - 0.9); x = lerp(ax + 30, fpos.x - 40, u); y = lerp(ay, 560, u) - 240 * Math.sin(Math.PI * u * 0.7); }
+        else if (t < t0 + 2.0) { const fm = [FREE[1].frog.x, FREE[1].frog.y - 66 * FREE[1].frog.s], u = pIn(t, catchT, 0.25); x = lerp(fpos.x - 40, fm[0], u); y = lerp(560, fm[1], u); }
+        else { const u = pIn(t, t0 + 2.0, 0.45), [px, py] = pomScene(t); x = lerp(FREE[1].frog.x, px, u); y = lerp(FREE[1].frog.y - 60, py, u) - 260 * Math.sin(Math.PI * u); }
+        pm.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(0.5 * p.s / 0.5 * 0.55).toFixed(3)})`); }
+      const tg = E("tongue8"), tu = (t - (catchT - 0.25)) / 0.5; if (sc === 1 && tu > 0 && tu < 1) { const fx = FREE[1].frog.x, fy = FREE[1].frog.y - 66 * FREE[1].frog.s - (fpos.y - FREE[1].frog.y), e = tu < 0.5 ? easeOut(tu / 0.5) : 1 - easeIn((tu - 0.5) / 0.5);
+        tg.setAttribute("opacity", 1); tg.setAttribute("d", `M${fx} ${fy} Q${fx - 60} ${fy - 140} ${lerp(fx, fpos.x - 40, e).toFixed(1)} ${lerp(fy, 560, e).toFixed(1)}`); }
+      else if (sc === 2 && t > wt("k2.6", 0) && t < wt("k2.6", 1) + 0.6) { const f2 = friendPos("frog", t), [nx, ny] = P2S(301, -226, pp), u = pIn(t, wt("k2.6", 0), 0.25), mx = f2.x, my2 = f2.y - 66 * f2.s;
+        tg.setAttribute("opacity", 1); tg.setAttribute("d", `M${mx} ${my2} Q${lerp(mx, nx, 0.5)} ${my2 - 40} ${lerp(mx, nx, u).toFixed(1)} ${lerp(my2, ny, u).toFixed(1)}`); }
+      else tg.setAttribute("opacity", 0); }
+    // dizzy stars around Fıstık after the crash
+    for (let i = 0; i < 5; i++) { const g = E("st" + i), on = sc === 2 && t > T.crash + 0.2 && t < wt("k2.5", 4); g.setAttribute("opacity", on ? 1 : 0); if (!on) continue;
+      const [hx, hy] = headScene(t), a = t * 4 + i * TAU / 5; g.setAttribute("transform", `translate(${(hx + 120 * Math.cos(a)).toFixed(1)} ${(hy - 120 + 36 * Math.sin(a)).toFixed(1)}) scale(${(0.8 + 0.2 * Math.sin(t * 6 + i)).toFixed(2)})`); }
+    // tape blanket over the sleeping plane
+    { const g = E("blanket"), on = sc === 5 && t > 130.8; g.setAttribute("opacity", on ? 1 : 0);
+      if (on) [0, 1, 2].forEach((i) => { const [x, y] = P2S(-150 + i * 8, -290 + i * 52, pp), u = outBack(pIn(t, 130.8 + i * 0.35, 0.35), 2); E("bk" + i).setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(-4 + i * 4).toFixed(1)}) scale(${(pp.s * 0.62 * u).toFixed(3)} ${(pp.s * u).toFixed(3)})`); E("bk" + i).setAttribute("opacity", u > 0.02 ? 1 : 0); }); }
+    // tape trail (motif): ribbon behind the tail in the sky; the heart in the sunset
+    { const tp = E("trailTape"), tp2 = E("trailTape2"); let d = "";
+      if (sc === 3) { const pts = []; for (let k = 0; k < 26; k++) { const tt = t - k * 0.06; if (scene(tt) !== 3) break; const q = planePos(tt), [x, y] = P2S(-480, -536, q); pts.push(`${(x - k * 0.06 * 260).toFixed(1)} ${(y + 10 * Math.sin(tt * 9)).toFixed(1)}`); } if (pts.length > 1) d = "M" + pts.join(" L"); }
+      if (sc === 4 && t > T.heart0) { const u = pIn(t, T.heart0, T.heart1 - T.heart0), pts = []; for (let k = 0; k <= 80; k++) { const v = k / 80; if (v > u) break; const [x, y] = heartPt(0.5 + v); pts.push(`${x.toFixed(1)} ${y.toFixed(1)}`); } if (pts.length > 1) d = "M" + pts.join(" L"); }
+      const o = sc === 3 ? 1 : sc === 4 ? 1 - pIn(t, ts("f.8") + 0.6, 1.0) : 0; tp.setAttribute("d", d); tp2.setAttribute("d", d); tp.setAttribute("opacity", d ? o : 0); tp2.setAttribute("opacity", d ? o * 0.8 : 0); }
+
+    drawParticles(t, sc);
+
+    // ── screen-space overlays ──
+    { const u = pIn(t, 15.95, 0.45), out = pIn(t, T.shop, 0.5), on = t > 15.95 && t < T.shop + 0.5; E("bmR").setAttribute("opacity", on ? 1 : 0);
+      if (on) { const k = t < T.shop ? 1 - smooth(0, 1, u) : easeOut(out), w = lerp(0, 2400, k), h = lerp(0, 1500, k); E("bmHole").setAttribute("x", (960 - w / 2).toFixed(1)); E("bmHole").setAttribute("y", (540 - h / 2).toFixed(1)); E("bmHole").setAttribute("width", w.toFixed(1)); E("bmHole").setAttribute("height", h.toFixed(1)); } }
+    { const t0 = T.sky - 0.6, u = pIn(t, t0, 1.3), on = u > 0 && u < 1, g = E("cwG"); g.setAttribute("opacity", on ? 1 : 0); if (on) g.setAttribute("transform", `translate(${lerp(2200, -2600, u).toFixed(1)} 0)`); }
+    { const f = E("fog"), on = ENV.fog; f.style.opacity = on.toFixed(3); E("fogHeart").setAttribute("stroke-dashoffset", (2400 * (1 - smooth(T.fog + 0.25, T.fog + 1.0, t))).toFixed(0)); }
+    { const g = E("lwG"), t0 = 127.2, t1 = 128.3, on = sc === 5 && t > t0 && t < t1 + 0.7; g.setAttribute("opacity", on ? 1 : 0);
+      if (on) { const u = pIn(t, t0, t1 - t0), [wx, wy] = W2S(...P2S(-196, -58, pp)), back = pIn(t, t1, 0.7), sc2 = lerp(pp.s * VIEW.s, 7.5, easeIn(u)) * (1 - 0.3 * bump(t, t1, 0.25)) * (1 - back * 0.8);
+        g.setAttribute("transform", `translate(${lerp(wx, 980, easeIn(u)).toFixed(1)} ${(lerp(wy, 600, easeIn(u)) + 900 * easeIn(back)).toFixed(1)}) rotate(${(t * 500).toFixed(0)}) scale(${sc2.toFixed(3)})`); } }
+    { const t0 = 133.3, u = smooth(t0, t0 + 0.8, t); E("tcL").setAttribute("transform", `translate(${(1100 + 960 * u - 1100 * (1 - u) * 0 + (u - 1) * 1100).toFixed(1)} 0)`); E("tcR").setAttribute("transform", `translate(${(-960 * u).toFixed(1)} 0)`);
+      E("tcL").setAttribute("transform", `translate(${(1060 * u).toFixed(1)} 0)`); E("tcR").setAttribute("transform", `translate(${(-1060 * u).toFixed(1)} 0)`);
+      const hh = outBack(pIn(t, t0 + 0.85, 0.4), 2.5); E("tcHeart").setAttribute("opacity", hh > 0.02 ? 1 : 0); E("tcHeart").setAttribute("transform", `translate(960 540) scale(${(4 * hh).toFixed(3)})`); }
+    { for (let i = 0; i < 14; i++) { const r = E("sl" + i), o = ENV.speed; r.setAttribute("opacity", (o * (0.5 + 0.5 * Math.sin(t * 20 + i))).toFixed(2)); r.setAttribute("x", ((2200 - ((t * 3400 + i * 397) % 2600))).toFixed(1)); } }
+    E("glow").style.opacity = (ENV.glow * 0.8).toFixed(3);
+    E("flash").style.opacity = ENV.flash.toFixed(3);
+    E("burst").style.opacity = ENV.burst.toFixed(3); E("burst").style.transform = `scale(${(1 + 0.4 * ENV.burst).toFixed(3)})`;
+  }
+
+  // ───────────────────────── particles: pure functions of t ─────────────────────────
+  const confetti = (t, x, y) => EV.conf.push([t, x, y]);
+  const dust = (t, x, y) => EV.dust.push([t, x, y]);
+  const dustRev = (t, x, y) => EV.dustRev.push([t, x, y]);
+  const spark = (t, x, y) => EV.spark.push([t, x, y]);
+  const puff = (t, who = "nose") => EV.puff.push([t, who]);
+  const notes = (t) => EV.notes.push(t);
+  const SND = [];
+  function drawParticles(t, sc) {
+    let ci = 0, ui = 0, si = 0, pi = 0, ni = 0;
+    EV.conf.forEach(([t0, ox, oy]) => { const u = t - t0; if (u < 0 || u > 1.8) return;
+      for (let q = 0; q < 50 && ci < 150; q++, ci++) { const a = -Math.PI / 2 + (q / 50 - 0.5) * 2.8, v = 700 + (q % 7) * 90, cc = E("cf" + ci);
+        cc.style.transform = `translate(${(ox + Math.cos(a) * v * u).toFixed(1)}px, ${(oy + Math.sin(a) * v * u + 760 * u * u).toFixed(1)}px) rotate(${(u * 500 + q * 37).toFixed(0)}deg)`;
+        cc.style.opacity = (u < 1.3 ? 1 : 1 - (u - 1.3) / 0.5).toFixed(3); } });
+    for (; ci < 150; ci++) E("cf" + ci).style.opacity = 0;
+    const dustOne = (t0, x, y, rev) => { const u0 = t - t0; if (u0 < 0 || u0 > 0.9) return; const u = rev ? 0.9 - u0 : u0;
+      for (let q = 0; q < 12 && ui < 12; q++, ui++) { const d = E("du" + ui), a = Math.PI * (q / 11), r = 60 + 220 * easeOut(u / 0.9);
+        d.setAttribute("cx", (x + Math.cos(a) * r * (q % 2 ? 1 : -1)).toFixed(1)); d.setAttribute("cy", (y - 20 - 50 * u).toFixed(1)); d.setAttribute("r", (24 + 30 * u).toFixed(1)); d.setAttribute("opacity", (0.9 * (1 - u / 0.9)).toFixed(2)); } };
+    EV.dust.forEach(([t0, x, y]) => dustOne(t0, x, y, false)); EV.dustRev.forEach(([t0, x, y]) => dustOne(t0, x, y, true));
+    for (; ui < 12; ui++) E("du" + ui).setAttribute("opacity", 0);
+    EV.spark.forEach(([t0, x, y]) => { const u = t - t0; if (u < 0 || u > 0.9) return;
+      for (let q = 0; q < 7 && si < 14; q++, si++) { const d = E("sk" + si), a = q * TAU / 7 + t0, r = 40 + 130 * easeOut(u / 0.9);
+        d.setAttribute("opacity", (1 - u / 0.9).toFixed(2)); d.setAttribute("transform", `translate(${(x + Math.cos(a) * r).toFixed(1)} ${(y + Math.sin(a) * r).toFixed(1)}) rotate(${(u * 200).toFixed(0)}) scale(${(1.2 - u).toFixed(2)})`); } });
+    for (; si < 14; si++) E("sk" + si).setAttribute("opacity", 0);
+    const pp = planePos(t);
+    EV.puff.forEach(([t0, who]) => { const u = t - t0; if (u < 0 || u > 1.2 || pi >= 12) return; const [x, y] = who === "trunk" ? tipScene(t0) : P2S(330, -170, planePos(t0));
+      for (let q = 0; q < 3 && pi < 12; q++, pi++) { const d = E("pu" + pi), k = clamp((u - q * 0.12) / 1.0, 0, 1);
+        d.setAttribute("cx", (x - 40 - 160 * k - q * 20).toFixed(1)); d.setAttribute("cy", (y - 20 - 120 * k + q * 14).toFixed(1)); d.setAttribute("r", (18 + 40 * k).toFixed(1)); d.setAttribute("opacity", (k > 0 && k < 1 ? 0.95 * (1 - k) : 0).toFixed(2)); } });
+    for (; pi < 12; pi++) E("pu" + pi).setAttribute("opacity", 0);
+    EV.notes.forEach((t0) => { const u = t - t0; if (u < 0 || u > 1.3) return; const [x, y] = tipScene(t0);
+      for (let q = 0; q < 3 && ni < 9; q++, ni++) { const g = E("nt" + ni), k = clamp((u - q * 0.1) / 1.1, 0, 1);
+        g.setAttribute("opacity", k > 0 && k < 1 ? (1 - k * k).toFixed(2) : 0); g.setAttribute("transform", `translate(${(x + 40 + 160 * k + q * 30).toFixed(1)} ${(y - 40 - 140 * k + 30 * Math.sin(k * 6 + q)).toFixed(1)}) rotate(${(20 * Math.sin(k * 5 + q)).toFixed(1)}) scale(${(0.8 + 0.4 * k).toFixed(2)})`); } });
+    for (; ni < 9; ni++) E("nt" + ni).setAttribute("opacity", 0);
+    { let hi = 0; EV.hearts.forEach(([t0, fn]) => { const u = t - t0; if (u < 0 || u > 1.3) return; const [x, y] = fn(t);
+        for (let q = 0; q < 3 && hi < 12; q++, hi++) { const g = E("ht" + hi), k = clamp((u - q * 0.12) / 1.1, 0, 1);
+          g.setAttribute("opacity", k > 0 && k < 1 ? (k < 0.75 ? 1 : (1 - k) / 0.25).toFixed(2) : 0);
+          g.setAttribute("transform", `translate(${(x + (q - 1) * 46 + 14 * Math.sin(k * 7 + q)).toFixed(1)} ${(y - 30 - 150 * k).toFixed(1)}) scale(${(0.5 + 0.6 * outBack(Math.min(1, k * 3), 2.5)).toFixed(3)})`); } });
+      for (; hi < 12; hi++) E("ht" + hi).setAttribute("opacity", 0); }
+    { let ki = 0; for (const t0 of [ts("k2.9") + 0.4]) { const on = sc === 2 && t > t0 && t < T.poke; if (!on) continue; ["mouse", "frog", "duck"].forEach((k) => { const f = friendPos(k, t); for (let q = 0; q < 2 && ki < 6; q++, ki++) { const g = E("sn" + ki); g.setAttribute("opacity", Math.sin(t * 20 + q) > 0 ? 1 : 0); g.setAttribute("transform", `translate(${(f.x + 50 + q * 14).toFixed(1)} ${(f.y - 150 * f.s - q * 26).toFixed(1)}) rotate(${-20 + q * 30})`); } }); }
+      for (; ki < 6; ki++) E("sn" + ki).setAttribute("opacity", 0); }
+    SND.forEach((s, i) => { const u = t - s.t, d = E("sd" + i);
+      if (u < 0 || u > 0.62) { d.style.opacity = 0; return; }
+      const [x0, y0] = s.at(s.t), e1 = Math.min(1, u / 0.14), sc2 = 0.25 + 0.75 * (1 - Math.pow(1 - e1, 3)) * (1 + 0.15 * Math.sin(Math.PI * e1)) + (u > 0.42 ? (u - 0.42) * 1.5 : 0);
+      d.style.transform = `translate(${x0.toFixed(1)}px, ${(y0 - 30 * u).toFixed(1)}px) rotate(${(s.r + (1 - e1) * -20).toFixed(1)}deg) scale(${sc2.toFixed(3)})`;
+      d.style.opacity = (u > 0.42 ? 1 - (u - 0.42) / 0.2 : 1).toFixed(2); });
+  }
+  // sound words: near the trunk (pırt), the plane (vın / güm), everyone (olduuu)
+  LINES.forEach((L) => { let k = 0; L.words.forEach(([w, t]) => { const n = norm(w); if (!(n in SOUND)) return; const j = k++ % 3, kind = SOUND[n];
+    const at = (tt) => { const [x, y] = kind === "pirt" ? tipScene(tt) : kind === "oldu" ? [960, 300] : P2S(260, -420, planePos(tt)); return [clamp(x + [-180, 60, -60][j], 60, 1600), clamp(y + [-160, -230, -300][j], 230, 880)]; };
+    SND.push({ txt: w.replace(/[^\p{L}]/gu, "").toLocaleUpperCase("tr") + "!", t, at, r: [-9, 7, -3][j], c: SCOL[kind] }); }); });
+  E("sndBox").innerHTML = SND.map((s, i) => `<div class="abs snd" id="sd${i}" style="opacity:0;color:${s.c}">${s.txt}</div>`).join("");
+
+  // ───────────────────────── timeline ─────────────────────────
+  gsap.defaults({ lazy: false });
+  const tl = gsap.timeline({ paused: true });
+  const pose = (name, t, d = 0.3, ease = "back.out(1.8)") => tl.to(R, { A: POSE[name][0], C: POSE[name][1], L: POSE[name][2], duration: d, ease }, t);
+  const shake = (t, a = 10) => tl.fromTo("#shake", { y: 0, x: 0 }, { keyframes: [{ y: a, x: -a * 0.4, duration: 0.04 }, { y: -a * 0.6, x: a * 0.3, duration: 0.05 }, { y: a * 0.3, x: 0, duration: 0.05 }, { y: 0, x: 0, duration: 0.06 }], immediateRender: false }, t);
+  const cam = (t, c, d = 1.2, ease = "power2.inOut") => tl.to(CAM, { ...c, duration: d, ease }, t);
+  const cut = (t, c) => tl.set(CAM, c, t);
+  const set = (o, v, t) => tl.set(o, v, t);
+  const to = (o, v, t, d = 0.3, ease = "power2.out") => tl.to(o, { ...v, duration: d, ease }, t);
+  const OPEN = { fistik: [R, "mouth", 0.9], frog: [AN, "frogOpen", 1], duck: [AN, "duckOpen", 1], duckling: [AN, "dlOpen", 1], mouse: [AN, "msOpen", 1], plane: [PL, "open", 1] };
+
+  // lyric pills
+  LINES.forEach((L, li) => { const st = L.words[0][1] - 0.35, nx = LINES[li + 1], en = nx && nx.words[0][1] - L.end < 3 ? Math.min(nx.words[0][1] - 0.35, L.end + 0.9) : L.end + 0.6;
+    tl.fromTo("#ln" + li, { opacity: 0, y: -24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.22, ease: "back.out(2)", immediateRender: false }, st);
+    L.words.forEach((w, wi) => { const snd = norm(w[0]) in SOUND || (L.who === "call" && wi === L.words.length - 1) || L.who === "kids" && /^[A-ZÇĞİÖŞÜ]+!?$/.test(w[0]);
+      tl.to(`#w${li}_${wi}`, { color: snd ? "#E5484D" : "#2B2D42", scale: snd ? 1.28 : 1.14, duration: 0.08, ease: "power2.out" }, w[1]); tl.to(`#w${li}_${wi}`, { scale: 1, duration: 0.18 }, w[1] + 0.1); });
+    tl.to("#ln" + li, { opacity: 0, y: -16, duration: 0.18, ease: "power1.in" }, en - 0.18); });
+  // lip-sync: lead = Fıstık, kids = friends, all = everyone, call = Fıstık asks, friends answer the last word
+  const FR = ["frog", "duck", "duckling", "mouse"];
+  LINES.forEach((L) => L.words.forEach((w, wi) => { const nxt = (L.words[wi + 1] || [0, w[1] + 0.6])[1], hold = clamp(nxt - w[1] - 0.12, 0.08, 0.26);
+    const last = wi === L.words.length - 1, who = L.who === "lead" ? ["fistik"] : L.who === "kids" ? FR : L.who === "all" ? ["fistik", ...FR] : last ? FR : ["fistik"];
+    who.forEach((h) => { const [o, p, v] = OPEN[h]; tl.to(o, { [p]: v, duration: 0.06 }, w[1]); tl.to(o, { [p]: h === "fistik" ? 0.06 : 0, duration: 0.1 }, w[1] + hold); }); }));
+  for (let t = 3.2; t < D - 2; t += 4.1) { tl.to(R, { blink: 1, duration: 0.07, ease: "none" }, t); tl.to(R, { blink: 0, duration: 0.09, ease: "none" }, t + 0.1); }
+
+  // ── R1 · garden: Fıstık flaps his ears, hovers, birds stare, "puf" sits down ──
+  cut(0, { s: 1.0, x: 980, y: 640 }); cam(1.0, { s: 1.18, x: 860, y: 640 }, 3.0, "sine.inOut");
+  to(R, { flap: 1, earAmp: 2, lookY: -14 }, 2.0, 0.3); pose("flyup", 2.0, 0.4);
+  tl.to(R, { jy: -110, duration: 1.6, ease: "sine.inOut" }, 2.4); tl.to(R, { rot: 5, duration: 0.3, yoyo: true, repeat: 5, ease: "sine.inOut" }, 2.5); set(R, { rot: 0 }, 4.3);
+  to(R, { lookX: -16 }, 3.6, 0.3); to(R, { lookX: 16 }, 4.6, 0.3);
+  to(R, { flap: 0 }, 5.6, 0.15); tl.to(R, { jy: 0, duration: 0.35, ease: "power2.in" }, 5.75); tl.to(R, { sq: 1, duration: 0.07 }, 6.1); tl.to(R, { sq: 0, duration: 0.25, ease: "back.out(3)" }, 6.18);
+  shake(6.1, 8); dust(6.1, 760, 1010); pose("rest", 6.2, 0.4); to(R, { lookX: 0, lookY: 8, tilt: -6 }, 6.3, 0.3); to(R, { tilt: 0, lookY: 0 }, 7.6, 0.4);
+  // ── R2 · intro: up, dream, ear-wind blows the MOUSE away, paper plane bonk, into the box ──
+  cam(8.4, { s: 1.08, x: 1060, y: 640 }, 1.2);
+  tl.to(R, { jy: -60, duration: 0.2, ease: "power2.out" }, ts("g.1")); tl.to(R, { jy: 0, duration: 0.25, ease: "power2.in" }, ts("g.1") + 0.2); pose("up", ts("g.1"), 0.3);
+  to(R, { lookY: -18, lookX: 6 }, ts("g.2"), 0.4); to(R, { dance: 0.3 }, ts("g.2"), 0.4);
+  to(R, { flap: 1, earAmp: 2 }, ts("g.3"), 0.2); to(R, { flap: 0, earAmp: 1 }, ts("g.3") + 1.4, 0.2); to(R, { lookX: 18, lookY: 0 }, ts("g.3") + 0.3, 0.3);
+  to(ENV, { speed: 0.7 }, ts("g.3") + 0.1, 0.2); to(ENV, { speed: 0 }, ts("g.3") + 0.9, 0.3);
+  { const hit = ts("g.4") - 0.2 + 0.55; tl.to(R, { tilt: -14, lookX: -10, blink: 1, duration: 0.06 }, hit); tl.to(R, { tilt: 0, blink: 0, duration: 0.3 }, hit + 0.2); shake(hit, 5); spark(hit, 820, 700);
+    pose("kick", hit + 0.3, 0.12); pose("rest", hit + 0.6, 0.3); to(R, { lookX: 18 }, hit + 0.4, 0.2); }
+  cam(15.6, { s: 2.6, x: BOX.x, y: BOX.y - 60 }, 0.6, "expo.in");
+  // ── R3 · workshop: the box wakes up; parts arrive; hamster button; the blue button drops ──
+  cut(T.shop, { s: 1.32, x: 980, y: 780 }); set(PL, { wing: 0, wheels: 0, prop: 0, eye: 0, smile: 0 }, T.shop); set(R, { lookX: 0, lookY: 0, dance: 0, jy: 80, sq: 0 }, T.shop);
+  tl.to(R, { jy: 0, duration: 0.45, ease: "back.out(2)" }, T.shop + 0.15); pose("up", T.shop + 0.2, 0.3);
+  to(PL, { eye: 0.45 }, ts("k1.1") + 0.6, 0.4); to(PL, { smile: 0.2 }, ts("k1.1") + 0.9, 0.3);
+  to(PL, { wing: 1 }, ts("k1.2") - 0.1, 0.55, "power3.out"); to(PL, { eye: 0.7, smile: 0.5 }, ts("k1.2") + 0.5, 0.3);
+  to(PL, { look: -1 }, ts("k1.3"), 0.3); to(PL, { wheels: 1 }, ts("k1.4") + 0.05, 0.25, "back.out(2)"); to(PL, { look: 0, eye: 0.8, smile: 0.7 }, ts("k1.4") + 0.4, 0.3);
+  shake(ts("k1.4") + 0.1, 6); shake(ts("k1.4") + 0.75, 6);
+  to(PL, { prop: 1 }, ts("k1.5") + 0.05, 0.5, "none"); shake(ts("k1.5") + 0.5, 6); to(PL, { eye: 0.9 }, ts("k1.5") + 0.6, 0.3);
+  pose("blow", ts("k1.6"), 0.3); [0, 0.5, 1.0].forEach((d) => puff(ts("k1.6") + 0.2 + d, "trunk"));
+  words("k1.7").slice(0, 3).forEach(([w, t], i) => { pose("kick", t - 0.04, 0.08); pose("trumpet", t + 0.1, 0.12); notes(t); puff(t + 0.1); shake(t, 4); });
+  tl.to(R, { lookY: -18, blink: 0, duration: 0.2 }, T.hatOff + 0.1);
+  { const m = ts("k1.8"); [0, 0.3, 0.6, 0.9].forEach((d) => puff(m + d)); to(PL, { eye: 1, smile: 1 }, m + 0.2, 0.3); to(PL, { open: 1 }, m + 0.7, 0.1); to(PL, { open: 0 }, te("k1.8") + 0.1, 0.2);
+    pose("up", m, 0.3); to(R, { lookY: 0 }, m, 0.3); }
+  tl.to(CAM, { x: 2400, duration: 0.35, ease: "expo.in" }, T.run - 0.35); to(ENV, { speed: 1 }, T.run - 0.35, 0.2); to(ENV, { speed: 0 }, T.run + 0.1, 0.3);
+  // ── R5 · runway: chocks hop away, lights chase, taxi; eye-drone flash; bucket rocket ──
+  cut(T.run, { s: 1.0, x: 900, y: 720 });
+  cam(ts("n1.1"), { s: 1.25, x: 600, y: 800 }, 0.6, "expo.out"); to(PL, { look: 1 }, ts("n1.1") + 0.2, 0.3);
+  { const m = ts("n1.2"); [0, 0.25, 0.5].forEach((d) => puff(m + d)); shake(m + 0.2, 4); to(PL, { look: 0 }, m, 0.3); }
+  cam(ts("n1.3"), { s: 1.0, x: 980, y: 760 }, 1.4, "power3.inOut");
+  cam(ts("n1.5") - 0.2, { s: 1.0, x: 1080, y: 640 }, 0.6); tl.to(R, { blink: 1, duration: 0.05 }, wt("n1.5", 1)); tl.to(R, { blink: 0, lookX: 16, lookY: -12, duration: 0.2 }, wt("n1.5", 1) + 0.15);
+  cam(ts("n1.6"), { s: 1.0, x: 1200, y: 600 }, 0.8); beatsIn(ts("n1.7"), ts("n1.8")).forEach((b) => tl.to(PL, { jy: 26, duration: 0.12, yoyo: true, repeat: 1, ease: "power2.out" }, b));
+  tl.to(PL, { jy: 110, duration: 0.5, ease: "power2.out" }, ts("n1.8")); tl.to(PL, { jy: 0, duration: 0.45, ease: "bounce.out" }, te("n1.8") + 0.1); to(PL, { open: 1 }, ts("n1.8"), 0.1); to(PL, { open: 0 }, te("n1.8"), 0.2);
+  cam(te("n1.8"), { s: 1.0, x: 800, y: 720 }, 0.8);
+  // ── R7 · 1-2-3 friends jump in, vın vın (slow), GÜM ──
+  cam(ts("k2.2"), { s: 1.12, x: 1000, y: 760 }, 0.9, "sine.inOut"); to(PL, { open: 1 }, ts("k2.2"), 0.1);
+  set(PL, { open: 0 }, T.crash); shake(T.crash + 0.05, 22); { const p = planePos(T.crash + 0.2), [nx, ny] = P2S(330, -100, p); dust(T.crash + 0.05, nx, ny); }
+  set(PL, { dent: 1, bent: 1, sad: 0.6, eye: 0.6, smile: 0 }, T.crash + 0.05); tl.to(R, { lookY: 10, blink: 0.5, duration: 0.1 }, T.crash + 0.05);
+  cam(T.crash, { s: 1.35, x: 1300, y: 860 }, 0.12, "expo.out");
+  cam(te("k2.3") - 0.3, { s: 1.12, x: 1250, y: 780 }, 1.0);
+  to(PL, { sad: 1, eye: 0.5 }, ts("k2.4"), 0.4);
+  // ── R8 · bir daha ×3: friends pop up; the dust rewinds; hope ──
+  { const w5 = words("k2.5"); [0, 2, 4].forEach((i) => shake(w5[i][1], 4)); { const p = planePos(T.crash + 0.3), [nx, ny] = P2S(330, -100, p); dustRev(w5[4][1] + 0.1, nx, ny); }
+    to(PL, { sad: 0.3, eye: 0.8, look: -0.6 }, w5[2][1], 0.3); to(PL, { sad: 0, smile: 0.4 }, w5[4][1], 0.4); tl.to(R, { lookY: 0, blink: 0, duration: 0.2 }, w5[4][1]); }
+  // ── R9 · repair: frog's tongue on the screw (spins!), duck straightens the wing, tape patch ──
+  cam(ts("k2.6") - 0.3, { s: 1.3, x: 1500, y: 820 }, 0.6);
+  cam(ts("k2.7") - 0.2, { s: 1.25, x: 1100, y: 840 }, 0.6); to(PL, { bent: 0 }, ts("k2.7") + 0.3, 0.8, "back.out(2)");
+  cam(ts("k2.8") - 0.2, { s: 1.4, x: 1420, y: 800 }, 0.5); to(PL, { patch: 1 }, ts("k2.8") + 0.2, 0.3); to(PL, { smile: 0.9, eye: 1 }, ts("k2.8") + 0.6, 0.3);
+  // ── R10 · push, nothing; the duckling pokes; OLDUUU ──
+  cam(ts("k2.9") - 0.2, { s: 1.0, x: 980, y: 760 }, 0.6); to(PL, { look: -1 }, ts("k2.9"), 0.3);
+  beatsIn(ts("k2.9") + 0.4, T.poke - 0.1).forEach((b) => tl.to(PL, { rot: -1.2, duration: 0.1, yoyo: true, repeat: 1 }, b));
+  shake(T.poke + 0.05, 10); to(PL, { look: 1, open: 1 }, T.poke, 0.1); to(PL, { open: 0 }, T.poke + 0.5, 0.2);
+  to(AN, { cheer: 1 }, ts("k2.11"), 0.2); to(AN, { cheer: 0 }, te("k2.11") + 0.3, 0.3); tl.to(R, { jy: -40, duration: 0.2, yoyo: true, repeat: 3 }, ts("k2.11"));
+  { const t0 = te("k2.11") - 0.3; to(ENV, { flash: 1 }, t0, 0.25, "power2.in"); to(ENV, { flash: 0 }, 69.6, 0.35); }
+  // ── R11 · nakarat 2: everyone in, engine, lights, TAKE-OFF (crane up) → cloud wipe ──
+  cut(69.55, { s: 1.0, x: 820, y: 760 }); set(PL, { look: 0, smile: 1, eye: 1 }, 69.55);
+ [0, 0.3, 0.6].forEach((d) => puff(ts("n2.2") + d));
+  cam(ts("n2.3"), { s: 1.0, x: 1000, y: 740 }, 1.6, "sine.inOut");
+  cam(T.lift, { s: 0.9, x: 1300, y: -200 }, 1.7, "power2.in"); to(ENV, { up: 1400 }, T.lift, 0.1); to(PL, { open: 1 }, T.lift, 0.1); to(PL, { open: 0 }, T.lift + 1.0, 0.2);
+  // ── R12 · sky: drone, rocket, slalom, bird pecks the pompom → pırt ──
+  cut(T.sky, { s: 1.0, x: 960, y: 600 }); set(ENV, { up: 0 }, T.sky);
+  { const fl = wt("n2.8", 1) + 0.15; tl.to(R, { lookY: -18, duration: 0.2 }, ts("n2.7") + 0.4); pose("kick", fl - 0.05, 0.08); pose("trumpet", fl + 0.08, 0.12); notes(fl); shake(fl, 5); pose("up", fl + 0.7, 0.3); to(R, { lookY: 0 }, fl + 0.4, 0.3); }
+  // ── R13 · bridge: ping-pong. Q = Fıstık (left, trunk megaphone); "-SANA!" = friends jump (right); a light per answer ──
+  { const qa = ["b.1", "b.2", "b.3", "b.4", "b.5", "b.6"], FCAM = (t) => { const [x, y] = headScene(t); return { s: 2.45, x: x + 30, y: y + 70 }; }, KCAM = (t) => { const p = planePos(t), [x, y] = P2S(-140, -400, p); return { s: 2.2, x: x - 20, y: y + 40 }; };
+    qa.forEach((tag, i) => { const q0 = ts(tag), a0 = wt(tag, -1); cut(q0 - 0.05, FCAM(q0)); pose("trumpet", q0 - 0.05, 0.15); to(R, { lookX: 14 }, q0, 0.2);
+      cut(a0, KCAM(a0)); to(AN, { cheer: 1 }, a0, 0.05); to(AN, { cheer: 0 }, a0 + 0.55, 0.1); set(PL, { lights: i + 1 }, a0); to(ENV, { glow: 1 }, a0, 0.05); to(ENV, { glow: 0 }, a0 + 0.4, 0.2); shake(a0, 6); });
+    const q7 = ts("b.7"); cut(q7 - 0.05, { s: 1.5, x: 960, y: 560 }); pose("up", q7, 0.3); to(R, { lookX: 0, lookY: 4 }, q7, 0.2); set(PL, { lights: 7 }, q7); to(PL, { lightAll: 1 }, q7 + 0.3, 0.2);
+    const a8 = ts("b.8"); cam(a8, { s: 2.3, x: headScene(a8)[0] + 80, y: headScene(a8)[1] + 60 }, 0.45, "expo.out"); pose("reach", a8, 0.2); to(AN, { cheer: 1 }, a8, 0.05);
+    pose("kick", T.fog - 0.05, 0.08); pose("trumpet", T.fog + 0.08, 0.12); notes(T.fog); to(ENV, { fog: 1 }, T.fog, 0.3); to(AN, { cheer: 0 }, T.fog + 0.4, 0.2); }
+  // ── R15 · sunset colour burst; formation swaps; tape heart; the sun winks; barrel roll shows the flag ──
+  to(ENV, { burst: 1 }, T.sun - 0.3, 0.25, "power2.in"); set(ENV, { fog: 0 }, T.sun); to(ENV, { burst: 0 }, T.sun + 0.05, 0.6);
+  cut(T.sun, { s: 1.0, x: 960, y: 600 }); set(PL, { lightAll: 0, lights: 7 }, T.sun); set(R, { lookX: 0, lookY: 0, dance: 0.5 }, T.sun);
+  to(AN, { party: 0.6 }, T.sun, 0.4); pose("up", T.sun, 0.3);
+  cam(T.heart0 - 0.3, { s: 1.0, x: 960, y: 560 }, 0.8);
+  tl.to(PL, { roll: 1, duration: 1.3, ease: "power2.inOut" }, T.roll); to(PL, { flag: 1 }, T.roll + 0.3, 0.4, "back.out(2)"); to(PL, { flag: 0 }, te("f.8"), 0.4);
+  [T.roll + 0.5, T.roll + 0.9].forEach((t) => { const p = planePos(T.roll + 0.65), [x, y] = P2S(-20, -152, p); spark(t, x, y); });
+  { const t8 = ts("f.8"); confetti(t8 + 0.2, 960, 300); confetti(t8 + 0.35, 560, 380); confetti(t8 + 0.5, 1360, 380); shake(t8 + 0.2, 6); to(AN, { party: 1 }, t8, 0.3); }
+  // ── R17 · cockpit: who? WE! (loop-the-loop, everybody upside down) ──
+  { const c = (t) => { const p = planePos(t), [x, y] = P2S(60, -400, p); return { s: 2.0, x, y: y + 30 }; }; cam(114.4, c(115.3), 0.9, "power2.inOut");
+    to(AN, { party: 0 }, 115.0, 0.3); set(R, { dance: 0 }, 115.0); pose("rest", ts("s.1q") + 0.2, 0.3); to(R, { lookX: -16 }, ts("s.1q") + 0.6, 0.2); to(R, { lookX: 0 }, ts("s.1q") + 1.4, 0.2);
+    tl.to(PL, { rot: -360, duration: 1.0, ease: "power2.inOut" }, T.loop - 0.1); set(PL, { rot: 0 }, T.loop + 0.95); to(AN, { cheer: 1 }, T.loop, 0.05); to(AN, { cheer: 0 }, T.loop + 0.8, 0.2);
+    pose("back", ts("s.2q"), 0.3); to(R, { lookX: -18 }, ts("s.2q"), 0.2);
+    pose("up", ts("s.2a"), 0.2); to(R, { lookX: 0, lookY: 6 }, ts("s.2a"), 0.2); to(AN, { cheer: 1 }, ts("s.2a"), 0.05); shake(ts("s.2a"), 12); to(AN, { cheer: 0 }, ts("s.2a") + 1.0, 0.2);
+    to(AN, { party: 1 }, ts("s.3"), 0.3); confetti(ts("s.3") + 0.3, 960, 260); confetti(ts("s.3") + 0.6, 600, 320); confetti(ts("s.3") + 0.9, 1320, 320);
+    cam(te("s.3") - 0.6, { s: 1.0, x: 960, y: 600 }, 0.7); }
+  // ── R18 · landing: three bounces fling the friends; a button rolls to the lens (tık!); last pırt; the plane sleeps under a tape blanket ──
+  cut(T.land, { s: 1.0, x: 900, y: 690 }); set(PL, { lights: 0, lightAll: 0 }, T.land); set(AN, { party: 0 }, T.land); set(R, { lookX: 0, lookY: 0 }, T.land);
+  [123.95, 124.85, 125.65].forEach((t, i) => { shake(t + 0.02, 10 - i * 2); const p = planePos(t), [x, y] = P2S(-30, 0, p); dust(t + 0.02, x, 1040); tl.to(R, { jy: -50 + i * 10, duration: 0.15, yoyo: true, repeat: 1 }, t); });
+  to(PL, { look: -1 }, 127.0, 0.2); shake(128.3, 14); to(PL, { look: 0 }, 128.6, 0.3);
+  cam(128.6, { s: 1.25, x: 940, y: 760 }, 1.2);
+  pose("kick", 128.95, 0.08); pose("trumpet", 129.08, 0.12); notes(129.0); pose("rest", 129.9, 0.5);
+  to(PL, { sleep: 1, smile: 0.5 }, 129.7, 1.0, "sine.inOut"); tl.to(R, { lookY: 10, duration: 0.4 }, 130.0);
+  EV.hearts.push([131.9, (t) => P2S(160, -420, planePos(t))]); EV.hearts.push([133.0, (t) => headScene(t)]);
+  cam(132.3, { s: 1.4, x: 1060, y: 760 }, 0.8);
+
+  window.__fistik = { R, render, POSE, CAM, AN, ENV, T, PL, planePos };
+  const master = gsap.timeline({ paused: true });
+  const clock = { _t: 0 };
+  Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+  tl.paused(false); master.add(tl, 0);
+  master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+  window.addEventListener("hf-seek", (e) => render(e && e.detail ? e.detail.time : master.time()));
+  // flying hat copy (the rig's hat without the pompom)
+  E("flyHat").innerHTML = `<svg x="0" y="0" width="600" height="300" viewBox="0 0 600 300" overflow="visible">${E("hat").innerHTML.replace(/ id="[^"]*"/g, "").replace(/<g><circle cx="300" cy="74"[\s\S]*?<\/g>/, "")}</svg>`;
+  E("flyHat").querySelectorAll("circle").forEach((c) => { if (c.getAttribute("cx") === "300" || c.getAttribute("cx") === "290") c.remove(); });
+  render(0);
+  window.__timelines["main"] = master;
+})();
+    </script>
+  </body>
+</html>

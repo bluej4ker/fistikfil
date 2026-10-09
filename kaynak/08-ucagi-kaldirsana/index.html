@@ -1,0 +1,1190 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Uçağı Kaldırsana · Fıstık Fil</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      /* Baloo 2 · SIL OFL 1.1 (assets/fonts/OFL-Baloo2.txt) */
+      @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #BFE6FF; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Baloo 2", sans-serif; font-weight: 800; color: #2B2D42; background: #BFE6FF; }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      #shake { position: absolute; inset: 0; }
+      .full { position: absolute; left: 0; top: 0; width: 1920px; height: 1300px; overflow: visible; }
+      #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 0 0; }
+      #char { position: absolute; inset: 0; overflow: visible; transform-origin: 300px 620px; }
+      #char svg { width: 600px; height: 640px; overflow: visible; }
+      .snd { left: 0; top: 0; font-size: 72px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 12px #fff; paint-order: stroke fill; text-shadow: 0 6px 0 rgba(0,0,0,.14); transform-origin: 50% 60%; }
+      .conf { width: 26px; height: 30px; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+      .ov { inset: 0; pointer-events: none; }
+      #bug { left: 40px; top: 36px; padding: 6px 26px 0; border-radius: 30px; background: rgba(255,255,255,.95); font-size: 36px; color: #3D7DD8; z-index: 60; box-shadow: 0 4px 0 rgba(0,0,0,.1); }
+      #bug b { color: #F59E1B; }
+      #lyric { left: 0; right: 0; top: 22px; height: 70px; display: flex; justify-content: center; z-index: 60; }
+      .line { opacity: 0; position: absolute; top: 0; padding: 2px 26px 0; border-radius: 34px; background: rgba(255,255,255,.9); font-size: 44px; line-height: 60px; white-space: nowrap; color: #8A93A6; box-shadow: 0 4px 0 rgba(0,0,0,.08); border: 3px solid #E2B477; }
+      .line span { display: inline-block; margin: 0 8px; }
+      #flash { inset: 0; background: #fff; opacity: 0; z-index: 48; pointer-events: none; }
+      #burst { inset: 0; opacity: 0; z-index: 47; pointer-events: none; background: radial-gradient(circle at 50% 50%, #FFF6D6 0, #FFB86B 35%, #FF7A8A 70%, #A66BFF 100%); }
+      #glow { inset: 0; background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.5) 0, rgba(255,255,255,0) 60%); opacity: 0; mix-blend-mode: soft-light; z-index: 20; pointer-events: none; }
+      #speed { z-index: 46; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="134.74" data-width="1920" data-height="1080">
+      <audio id="song" src="assets/song.m4a" data-start="0" data-duration="134.74" data-volume="1"></audio>
+      <section id="world" class="clip" data-start="0" data-duration="134.74" data-track-index="0" data-layout-allow-overflow>
+        <div id="cam" data-layout-allow-overflow>
+          <div id="shake" data-layout-allow-overflow>
+            <svg id="setGarden" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setShop" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setRun" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setSky" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="setSun" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="backActors" class="full" viewBox="0 0 1920 1300"><ellipse id="fShadow" rx="120" ry="26" fill="url(#gShadow)"/><ellipse id="pShadow" rx="300" ry="40" fill="url(#gShadow)"/>
+              <path id="trailTape" fill="none" stroke="#B98546" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" opacity="0"/><path id="trailTape2" fill="none" stroke="#E2B477" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+              <g id="planeBackG"></g><g id="inPlane"></g></svg>
+            <div id="charWrap" class="abs"><div id="char"></div></div>
+            <svg id="actors" class="full" viewBox="0 0 1920 1300"></svg>
+            <svg id="fxSvg" class="full" viewBox="0 0 1920 1300"></svg>
+            <div id="sndBox"></div>
+            <div id="confBox"></div>
+          </div>
+        </div>
+        <div id="glow" class="abs"></div>
+        <svg id="speed" class="abs ov" viewBox="0 0 1920 1080"></svg>
+        <svg id="boxMask" class="abs ov" viewBox="0 0 1920 1080" style="z-index:49"></svg>
+        <svg id="cloudWipe" class="abs ov" viewBox="0 0 1920 1080" style="z-index:49"></svg>
+        <svg id="fog" class="abs ov" viewBox="0 0 1920 1080" style="z-index:49;opacity:0"></svg>
+        <svg id="lensWheel" class="abs ov" viewBox="0 0 1920 1080" style="z-index:50"></svg>
+        <svg id="tapeClose" class="abs ov" viewBox="0 0 1920 1080" style="z-index:52"></svg>
+        <div id="burst" class="abs"></div>
+        <div id="flash" class="abs"></div>
+        <div id="bug" class="abs">Fıstık <b>Fil</b></div>
+        <div id="lyric" class="abs"></div>
+      </section>
+    </div>
+
+    <script>
+// Fıstık Fil · Uçağı Kaldırsana — kadro (Bölüm 5–6'dan) + karton uçak, İHA, kova roket, pist ve atölye eşyaları;
+// (eski başlık) Arı Vız Vız — kadro (Bölüm 5'ten) + arı ve bahçe eşyaları (saf SVG dizeleri, konturlu, bebek dostu)
+window.CAST = (function () {
+  const INK = "#2B2D42";
+  // ── kadro (Küçük Kurbağa'dan) ──
+  // ── ortak gradyanlar (bir kez, #actors içine) ──
+  const defs = () => `<defs>
+    <radialGradient id="gFrogB" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#A8EC86"/><stop offset=".6" stop-color="#6CCB5A"/><stop offset="1" stop-color="#46A23F"/></radialGradient>
+    <radialGradient id="gFrogBelly" cx="50%" cy="35%" r="70%"><stop offset="0" stop-color="#F2FFE0"/><stop offset="1" stop-color="#C8F0A8"/></radialGradient>
+    <radialGradient id="gDuckB" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#FFF6B8"/><stop offset=".6" stop-color="#FFDB4D"/><stop offset="1" stop-color="#F7B92A"/></radialGradient>
+    <radialGradient id="gDuckK" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#FFFBD8"/><stop offset=".6" stop-color="#FFEC8A"/><stop offset="1" stop-color="#FFD24D"/></radialGradient>
+    <linearGradient id="gBeak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB547"/><stop offset="1" stop-color="#F07F0C"/></linearGradient>
+    <radialGradient id="gMouse" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F1ECF8"/><stop offset=".6" stop-color="#CFC6E2"/><stop offset="1" stop-color="#A99FC0"/></radialGradient>
+    <radialGradient id="gShadow"><stop offset="0" stop-color="#1E2A40" stop-opacity=".28"/><stop offset="1" stop-color="#1E2A40" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gBee" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#FFF4A8"/><stop offset=".55" stop-color="#FFD43B"/><stop offset="1" stop-color="#F5A800"/></radialGradient>
+    <radialGradient id="gWing" cx="40%" cy="35%" r="80%"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset="1" stop-color="#BFE6FF" stop-opacity=".75"/></radialGradient>
+    <radialGradient id="gPoppy" cx="50%" cy="70%" r="80%"><stop offset="0" stop-color="#FF7A6B"/><stop offset=".7" stop-color="#F0373A"/><stop offset="1" stop-color="#C81E2A"/></radialGradient>
+    <radialGradient id="gSunP" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#FFC21A"/><stop offset="1" stop-color="#FFE45C"/></radialGradient>
+    <radialGradient id="gSunC" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#A8672E"/><stop offset="1" stop-color="#6E3F17"/></radialGradient>
+    <radialGradient id="gPurp" cx="50%" cy="60%" r="80%"><stop offset="0" stop-color="#D8A8FF"/><stop offset=".7" stop-color="#A66BFF"/><stop offset="1" stop-color="#7B45D6"/></radialGradient>
+    <radialGradient id="gHive" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#FFE7A0"/><stop offset=".6" stop-color="#F6B93B"/><stop offset="1" stop-color="#D9891A"/></radialGradient>
+    <linearGradient id="gHoney" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD54A"/><stop offset="1" stop-color="#F29A0E"/></linearGradient>
+    <radialGradient id="gHeart" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#FFB3C6"/><stop offset="1" stop-color="#FF4F7B"/></radialGradient></defs>`;
+  const shadow = (rx = 90) => `<ellipse class="shd" cx="0" cy="2" rx="${rx}" ry="${rx * 0.22}" fill="url(#gShadow)"/>`;
+  const heart = (s = 1) => `<g transform="scale(${s})"><path d="M0 22 C-26 4 -30 -8 -22 -18 C-14 -26 -4 -22 0 -12 C4 -22 14 -26 22 -18 C30 -8 26 4 0 22Z" fill="url(#gHeart)" stroke="#D93A63" stroke-width="3.5" stroke-linejoin="round"/><ellipse cx="-12" cy="-12" rx="5" ry="3.5" fill="#fff" opacity=".8" transform="rotate(-30 -12 -12)"/></g>`;
+  // göz: sklera + bebek (.pup) + kapak (.lid, scaleY ile kırpılır). p = benzersiz önek
+  const eye = (p, cx, cy, rx, ry, skin, ol, pr = 0.55) => `<clipPath id="${p}"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/></clipPath>
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" stroke="${ol}" stroke-width="3.5"/>
+    <g clip-path="url(#${p})"><g class="pup"><circle cx="${cx + rx * 0.12}" cy="${cy + ry * 0.12}" r="${Math.min(rx, ry) * pr}" fill="${INK}"/><circle cx="${cx + rx * 0.32}" cy="${cy - ry * 0.12}" r="${Math.min(rx, ry) * pr * 0.36}" fill="#fff"/><circle cx="${cx - rx * 0.1}" cy="${cy + ry * 0.4}" r="${Math.min(rx, ry) * pr * 0.16}" fill="#fff"/></g>
+      <rect class="lid" data-top="${cy - ry}" x="${cx - rx - 2}" y="${cy - ry - 2}" width="${rx * 2 + 4}" height="${ry * 2 + 4}" fill="${skin}" transform="translate(0 ${cy - ry}) scale(1 0) translate(0 ${-(cy - ry)})"/></g>`;
+
+  // Kurbağa: orijin alt orta. Gruplar: .body .legs .armL .armR .sac .mHappy .mOpen .pup .lid .hatC .shd
+  const frog = (p = "fr") => `${shadow(96)}<g class="body">
+    <g class="legs"><path d="M-96 -6 Q-104 -40 -62 -44 Q-30 -40 -36 -6Z" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="4.5" stroke-linejoin="round"/><path d="M96 -6 Q104 -40 62 -44 Q30 -40 36 -6Z" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="4.5" stroke-linejoin="round"/>
+      <path d="M-104 0 q8 -14 18 -4 q8 -12 18 -2 q8 -10 16 2Z" fill="#58B848" stroke="#2F7A2B" stroke-width="3.5" stroke-linejoin="round"/><path d="M104 0 q-8 -14 -18 -4 q-8 -12 -18 -2 q-8 -10 -16 2Z" fill="#58B848" stroke="#2F7A2B" stroke-width="3.5" stroke-linejoin="round"/></g>
+    <ellipse cx="0" cy="-60" rx="80" ry="62" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="5"/>
+    <ellipse cx="0" cy="-40" rx="52" ry="34" fill="url(#gFrogBelly)"/>
+    <g fill="#4FAE48" opacity=".55"><circle cx="-52" cy="-82" r="7"/><circle cx="56" cy="-70" r="9"/><circle cx="40" cy="-96" r="5"/></g>
+    <g class="armL"><path d="M-46 -40 Q-62 -14 -50 -4" stroke="#2F7A2B" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M-46 -40 Q-62 -14 -50 -4" stroke="#7FD76A" stroke-width="8" fill="none" stroke-linecap="round"/></g>
+    <g class="armR"><path d="M46 -40 Q62 -14 50 -4" stroke="#2F7A2B" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M46 -40 Q62 -14 50 -4" stroke="#7FD76A" stroke-width="8" fill="none" stroke-linecap="round"/></g>
+    <ellipse class="sac" cx="0" cy="-58" rx="30" ry="0" fill="#E9FFD6" stroke="#2F7A2B" stroke-width="3" opacity=".95"/>
+    <circle cx="-40" cy="-114" r="31" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="5"/><circle cx="40" cy="-114" r="31" fill="url(#gFrogB)" stroke="#2F7A2B" stroke-width="5"/>
+    ${eye(p + "L", -40, -116, 21, 22, "#6CCB5A", "#2F7A2B")}${eye(p + "R", 40, -116, 21, 22, "#6CCB5A", "#2F7A2B")}
+    <ellipse cx="-54" cy="-74" rx="13" ry="8" fill="#FF8FAB" opacity=".7"/><ellipse cx="54" cy="-74" rx="13" ry="8" fill="#FF8FAB" opacity=".7"/>
+    <path class="mHappy" d="M-44 -80 Q0 -48 44 -80" stroke="#1F4D1C" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <g class="mOpen" opacity="0"><path d="M-44 -82 Q0 -86 44 -82 Q0 -28 -44 -82Z" fill="#8C2F45" stroke="#1F4D1C" stroke-width="4.5" stroke-linejoin="round"/><ellipse cx="0" cy="-58" rx="16" ry="8" fill="#FF8FA3"/></g><g class="hatC"></g></g>`;   // kiraz şapkası bu bölümde yok
+  // Ördek: orijin ayak altı orta, sola bakar. Gruplar: .legL .legR .body .wing .head .beakTop .beakBot .pup .lid .shd
+  const DUCKC = { body: "url(#gDuckB)", ol: "#C98512", skin: "#FFDB4D" };
+  const duck = (p = "dk", baby = false) => { const g = baby ? "url(#gDuckK)" : DUCKC.body, skin = baby ? "#FFEC8A" : DUCKC.skin, ol = DUCKC.ol;
+    const leg = (cls, x) => `<g class="${cls}" data-x="${x}"><path d="M${x} -40 L${x} -10" stroke="#E07B0C" stroke-width="9" stroke-linecap="round"/><path d="M${x - 24} 0 Q${x - 14} -16 ${x} -12 Q${x + 10} -16 ${x + 16} 0Z" fill="#FF9F1C" stroke="#C25F05" stroke-width="3.5" stroke-linejoin="round"/></g>`;
+    return `${shadow(80)}${leg("legR", 14)}<g class="body">
+    <path d="M60 -96 Q96 -112 92 -80 Q86 -60 70 -66Z" fill="${g}" stroke="${ol}" stroke-width="4.5" stroke-linejoin="round"/>
+    <ellipse cx="10" cy="-78" rx="76" ry="56" fill="${g}" stroke="${ol}" stroke-width="5"/>
+    <ellipse cx="-4" cy="-62" rx="46" ry="28" fill="#FFF6C8" opacity=".7"/>
+    <g class="wing"><path d="M6 -100 Q58 -112 74 -80 Q62 -54 18 -64 Q4 -80 6 -100Z" fill="${g}" stroke="${ol}" stroke-width="4" stroke-linejoin="round"/><path d="M30 -70 q10 6 20 0 M24 -82 q12 6 26 0" stroke="${ol}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></g></g>
+    ${leg("legL", -18)}
+    <g class="head"><circle cx="-40" cy="-150" r="${baby ? 50 : 44}" fill="${g}" stroke="${ol}" stroke-width="5"/>
+      <path d="M-44 ${baby ? -198 : -192} q-6 -18 4 -24 q2 12 6 20 q4 -14 14 -14 q-4 12 -8 20Z" fill="${g}" stroke="${ol}" stroke-width="3.5" stroke-linejoin="round"/>
+      ${eye(p + "E", -52, -158, 13, 16, skin, ol, 0.6)}<ellipse cx="-30" cy="-136" rx="11" ry="7" fill="#FF8FAB" opacity=".7"/>
+      <path class="beakBot" d="M-78 -138 Q-108 -136 -114 -130 Q-98 -120 -76 -128Z" fill="#F07F0C" stroke="#C25F05" stroke-width="3.5" stroke-linejoin="round"/>
+      <path class="beakTop" d="M-78 -150 Q-110 -152 -118 -140 Q-104 -132 -76 -138Z" fill="url(#gBeak)" stroke="#C25F05" stroke-width="3.5" stroke-linejoin="round"/></g>`; };
+  // Fare: orijin alt orta, sağa bakar. Gruplar: .tail .body .arms .head .earL .earR .mHappy .mOpen .pup .lid .shd
+  const mouse = (p = "ms") => `${shadow(60)}
+    <path class="tail" d="M-30 -14 Q-80 -10 -84 -50 Q-86 -80 -60 -80" stroke="#E9A3B8" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <g class="body"><ellipse cx="-14" cy="-6" rx="16" ry="9" fill="#F7B3C8" stroke="#6E648A" stroke-width="3"/><ellipse cx="22" cy="-6" rx="16" ry="9" fill="#F7B3C8" stroke="#6E648A" stroke-width="3"/>
+      <path d="M-40 -14 Q-46 -80 4 -86 Q50 -82 44 -14 Q2 0 -40 -14Z" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5" stroke-linejoin="round"/>
+      <ellipse cx="4" cy="-38" rx="24" ry="22" fill="#FBF7FF"/>
+      <g class="arms"><path d="M-24 -56 Q-14 -40 -4 -46" stroke="#6E648A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M-24 -56 Q-14 -40 -4 -46" stroke="#E4DDF0" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M30 -56 Q22 -40 12 -46" stroke="#6E648A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M30 -56 Q22 -40 12 -46" stroke="#E4DDF0" stroke-width="6" fill="none" stroke-linecap="round"/></g></g>
+    <g class="head"><g class="earL"><circle cx="-34" cy="-152" r="30" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5"/><circle cx="-34" cy="-152" r="18" fill="#F7B3C8"/></g>
+      <g class="earR"><circle cx="40" cy="-150" r="30" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5"/><circle cx="40" cy="-150" r="18" fill="#F7B3C8"/></g>
+      <ellipse cx="4" cy="-112" rx="46" ry="40" fill="url(#gMouse)" stroke="#6E648A" stroke-width="4.5"/>
+      ${eye(p + "L", -12, -118, 10, 13, "#DCD4EA", "#6E648A", 0.62)}${eye(p + "R", 22, -118, 10, 13, "#DCD4EA", "#6E648A", 0.62)}
+      <ellipse cx="-22" cy="-96" rx="8" ry="5" fill="#FF8FAB" opacity=".7"/><ellipse cx="36" cy="-96" rx="8" ry="5" fill="#FF8FAB" opacity=".7"/>
+      <circle cx="10" cy="-100" r="7" fill="#FF7FA0" stroke="#6E648A" stroke-width="2.5"/>
+      <path d="M-4 -100 L-34 -104 M-4 -96 L-32 -92 M24 -100 L54 -104 M24 -96 L52 -92" stroke="#6E648A" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      <path class="mHappy" d="M0 -90 Q10 -82 20 -90" stroke="#4A3F63" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path class="mOpen" d="M0 -91 Q10 -92 20 -91 Q10 -70 0 -91Z" fill="#8C2F45" stroke="#4A3F63" stroke-width="3" opacity="0"/></g>`;
+  const lily = (s = 1) => `<g transform="scale(${s})"><ellipse cx="0" cy="0" rx="90" ry="26" fill="#4FAE48" stroke="#2E7D32" stroke-width="4"/><path d="M0 0 L60 -20 L66 4Z" fill="#7FD3F5"/>
+    <g transform="translate(-50 -10)"><circle r="12" fill="#FF8FB1"/><circle r="5" fill="#FFD84D"/></g></g>`;
+  const rock = (w, h, c = "#A8A29E") => `<ellipse cx="0" cy="0" rx="${w}" ry="${h}" fill="${c}" stroke="#6B6560" stroke-width="4"/><ellipse cx="${-w * 0.3}" cy="${-h * 0.35}" rx="${w * 0.3}" ry="${h * 0.2}" fill="#fff" opacity=".25"/>`;
+
+  // ── yiyecekler ──
+  // Fıstık (kabuklu): orijin merkez, ~70×36
+  const peanut = (s = 1) => `<g transform="scale(${s})"><path d="M-34 -2 C-36 -20 -18 -22 -10 -14 C-4 -8 4 -8 10 -14 C18 -22 36 -20 34 -2 C36 16 18 22 10 14 C4 8 -4 8 -10 14 C-18 22 -36 18 -34 -2Z" fill="#E8C07A" stroke="#8A5A2B" stroke-width="4" stroke-linejoin="round"/>
+    <g fill="#C99A55"><circle cx="-24" cy="-4" r="2.6"/><circle cx="-18" cy="6" r="2.6"/><circle cx="-14" cy="-8" r="2.4"/><circle cx="20" cy="-6" r="2.6"/><circle cx="24" cy="5" r="2.6"/><circle cx="14" cy="4" r="2.4"/></g>
+    <path d="M-28 -10 Q-22 -16 -14 -12" stroke="#FFF3D6" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/></g>`;
+  // kiraz çifti: orijin sap tepesi
+  function cherries(s = 1) { return `<g transform="scale(${s})"><path d="M0 0 Q-6 18 -16 34 M0 0 Q8 20 16 32" stroke="#4E8A2E" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M0 0 Q12 -10 22 -4 Q12 2 0 0Z" fill="#6CCB5A" stroke="#3E7D25" stroke-width="2.5"/>
+    <circle cx="-17" cy="44" r="14" fill="#E5304A" stroke="#8E1328" stroke-width="3.5"/><circle cx="17" cy="42" r="14" fill="#E5304A" stroke="#8E1328" stroke-width="3.5"/>
+    <circle cx="-21" cy="39" r="4" fill="#fff" opacity=".7"/><circle cx="13" cy="37" r="4" fill="#fff" opacity=".7"/></g>`; }
+  const cherry = (s = 1) => `<g transform="scale(${s})"><path d="M0 -26 Q4 -14 0 -12" stroke="#4E8A2E" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="0" cy="0" r="14" fill="#E5304A" stroke="#8E1328" stroke-width="3.5"/><circle cx="-4" cy="-5" r="4" fill="#fff" opacity=".7"/></g>`;
+  // mısır koçanı (yatay): taneler .kr id'li (prefix_r_c), orijin merkez
+  const corn = (pre, rows = 3, cols = 7, s = 1) => { let k = "";
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) k += `<ellipse id="${pre}_${r}_${c}" cx="${-84 + c * 28}" cy="${-26 + r * 26}" rx="12" ry="11" fill="#FFD23D" stroke="#D99A0A" stroke-width="2.5"/>`;
+    return `<g transform="scale(${s})"><path d="M-110 -40 Q-170 -70 -190 -10 Q-150 -30 -116 -16Z" fill="#7CC35A" stroke="#3E7D25" stroke-width="4" stroke-linejoin="round"/><path d="M-110 40 Q-176 70 -196 4 Q-150 30 -114 18Z" fill="#6AB34A" stroke="#3E7D25" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="-104" y="-44" width="196" height="88" rx="44" fill="#F2C14E" stroke="#B9800A" stroke-width="4"/>${k}</g>`; };
+  // dik mısır bitkisi (tarla)
+  const cornPlant = (h = 1) => `<g transform="scale(${h})"><path d="M0 0 L0 -230" stroke="#5E9E3A" stroke-width="10" stroke-linecap="round"/>
+    <path d="M0 -60 Q-60 -110 -90 -60" stroke="#6AB34A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M0 -110 Q60 -170 96 -120" stroke="#6AB34A" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M0 -170 Q-50 -220 -80 -190" stroke="#7CC35A" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <g transform="translate(10 -150) rotate(-20)"><rect x="-14" y="-40" width="28" height="70" rx="14" fill="#FFD23D" stroke="#B9800A" stroke-width="3.5"/><path d="M-14 20 Q0 50 14 20" fill="#7CC35A" stroke="#3E7D25" stroke-width="3"/></g>
+    <path d="M0 -230 l-10 -26 M0 -230 l8 -28 M0 -230 l18 -18" stroke="#E0B040" stroke-width="5" stroke-linecap="round"/></g>`;
+  const kernel = () => `<ellipse rx="12" ry="11" fill="#FFD23D" stroke="#D99A0A" stroke-width="2.5"/><ellipse cx="-3" cy="-4" rx="3" ry="2" fill="#fff" opacity=".7"/>`;
+
+  // piknik ortası: içi dolu büyük tabak (yazısız)
+  const bowl = () => `<ellipse cx="0" cy="10" rx="170" ry="62" fill="#C9D6E8"/><ellipse cx="0" cy="0" rx="170" ry="62" fill="#fff" stroke="#E5484D" stroke-width="6"/><ellipse cx="0" cy="0" rx="128" ry="44" fill="none" stroke="#FFC9CC" stroke-width="6"/>
+    ${[[-70, -6, 0.9, -20], [-30, 10, 0.9, 30], [10, -8, 0.85, -40], [-50, -26, 0.8, 10]].map(([x, y, sc, r]) => `<g transform="translate(${x} ${y}) rotate(${r})">${peanut(sc)}</g>`).join("")}
+    <g transform="translate(40 -56)">${cherries(0.9)}</g><g transform="translate(90 -46)">${cherries(0.8)}</g><g transform="translate(70 8) rotate(-10)">${corn("bw", 2, 4, 0.36)}</g>`;
+  // ── mutfak ──
+  const jar = (fill = 1, s = 1, lid = "#E5484D") => `<g transform="scale(${s})"><rect x="-62" y="-170" width="124" height="166" rx="30" fill="rgba(200,235,255,.55)" stroke="#7FB2D9" stroke-width="5"/>
+    <clipPath id="cj${Math.round(s * 100)}${Math.round(fill * 10)}"><rect x="-58" y="-166" width="116" height="158" rx="26"/></clipPath>
+    <g clip-path="url(#cj${Math.round(s * 100)}${Math.round(fill * 10)})">${fill > 0 ? Array.from({ length: 14 }, (_, i) => `<g transform="translate(${-36 + (i % 3) * 36 + (Math.floor(i / 3) % 2) * 16} ${-26 - Math.floor(i / 3) * 30}) rotate(${(i * 47) % 90 - 45}) scale(.62)">${peanut()}</g>`).filter((_, i) => i < 14 * fill).join("") : ""}</g>
+    <rect x="-70" y="-196" width="140" height="34" rx="12" fill="${lid}" stroke="${INK}" stroke-width="4"/><rect x="-40" y="-120" width="80" height="44" rx="10" fill="#FFF4DC" stroke="#B5763A" stroke-width="3"/>
+    <text x="0" y="-90" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="24" fill="#B5763A">FISTIK</text>
+    <path d="M-44 -150 Q-48 -90 -40 -30" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".6"/></g>`;
+  const cupboard = () => `<rect x="-230" y="-560" width="460" height="560" rx="18" fill="#C98A4E" stroke="#7A4A22" stroke-width="6"/>
+    <rect x="-210" y="-540" width="420" height="520" rx="10" fill="#8E5A2E"/>
+    <g id="cupIn">${[-400, -220].map((y) => `<rect x="-206" y="${y}" width="412" height="14" fill="#B5763A"/>`).join("")}
+      ${[-150, -50, 50, 150].map((x, i) => `<g transform="translate(${x} -406)">${jar(1, 0.62, ["#E5484D", "#3D9BFF", "#3FBF6F", "#FFC23D"][i])}</g>`).join("")}
+      ${[-150, -50, 50, 150].map((x, i) => `<g transform="translate(${x} -226)">${jar(1, 0.62, ["#A66BFF", "#FF7A3D", "#E5484D", "#3D9BFF"][i])}</g>`).join("")}
+      ${[-140, -40, 60, 150].map((x, i) => `<g transform="translate(${x} -40)">${jar(1, 0.55, ["#3FBF6F", "#FFC23D", "#A66BFF", "#FF7A3D"][i])}</g>`).join("")}</g>
+    <g id="cupL"><rect x="-212" y="-542" width="212" height="524" rx="10" fill="#E0A465" stroke="#7A4A22" stroke-width="6"/><rect x="-180" y="-500" width="148" height="200" rx="12" fill="none" stroke="#B5763A" stroke-width="6"/><rect x="-180" y="-260" width="148" height="200" rx="12" fill="none" stroke="#B5763A" stroke-width="6"/><circle cx="-26" cy="-280" r="12" fill="#FFC23D" stroke="#7A4A22" stroke-width="4"/></g>
+    <g id="cupR"><rect x="0" y="-542" width="212" height="524" rx="10" fill="#E0A465" stroke="#7A4A22" stroke-width="6"/><rect x="32" y="-500" width="148" height="200" rx="12" fill="none" stroke="#B5763A" stroke-width="6"/><rect x="32" y="-260" width="148" height="200" rx="12" fill="none" stroke="#B5763A" stroke-width="6"/><circle cx="26" cy="-280" r="12" fill="#FFC23D" stroke="#7A4A22" stroke-width="4"/></g>`;
+  const kTable = () => `<rect x="-300" y="-30" width="600" height="40" rx="14" fill="#E0A465" stroke="#7A4A22" stroke-width="6"/><rect x="-270" y="6" width="28" height="210" rx="10" fill="#C98A4E" stroke="#7A4A22" stroke-width="5"/><rect x="242" y="6" width="28" height="210" rx="10" fill="#C98A4E" stroke="#7A4A22" stroke-width="5"/>
+    <path d="M-300 -10 H300" stroke="#FF5A5F" stroke-width="10" stroke-dasharray="26 26"/>`;
+  const kWindow = () => `<rect x="-200" y="-170" width="400" height="300" rx="20" fill="#9BD8FF" stroke="#fff" stroke-width="16"/><circle cx="110" cy="-80" r="40" fill="#FFD84D"/><path d="M-200 60 Q-100 10 0 50 T200 40 V130 H-200Z" fill="#8CCB6E"/>
+    <path d="M0 -170 V130 M-200 -20 H200" stroke="#fff" stroke-width="12"/>
+    <path d="M-236 -196 Q-170 -40 -230 150 L-150 150 Q-190 -30 -150 -196Z" fill="#FF8FAB" stroke="#E2577A" stroke-width="4"/><path d="M236 -196 Q170 -40 230 150 L150 150 Q190 -30 150 -196Z" fill="#FF8FAB" stroke="#E2577A" stroke-width="4"/>
+    <rect x="-250" y="-210" width="500" height="26" rx="13" fill="#B5763A"/>`;
+  const pot = (c) => `<path d="M-40 0 L-34 -60 L34 -60 L40 0Z" fill="${c}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/><path d="M-44 -60 H44" stroke="${INK}" stroke-width="8" stroke-linecap="round"/>`;
+
+  // ── dere + kiraz ağacı ──
+  const cherryTree = () => { let ch = ""; const P = [[-250, -470], [-170, -560], [-60, -620], [60, -600], [170, -540], [250, -450], [-200, -380], [-90, -470], [30, -500], [140, -430], [-20, -380], [210, -360], [-280, -330], [90, -330], [-140, -300]];
+    P.forEach(([x, y], i) => (ch += `<g class="tc" transform="translate(${x} ${y}) rotate(${(i * 23) % 40 - 20})">${cherries(1)}</g>`));
+    return `<path d="M-30 0 Q-24 -180 -40 -300 L40 -300 Q24 -180 30 0Z" fill="#A0703F" stroke="#6E4A27" stroke-width="5"/>
+      <path d="M0 -260 Q-90 -320 -170 -330 M10 -280 Q100 -330 180 -340" stroke="#8B5A2B" stroke-width="22" fill="none" stroke-linecap="round"/>
+      ${[[-200, -420, 150], [0, -520, 190], [200, -420, 150], [-110, -360, 120], [120, -350, 120]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#7CC35A" stroke="#4F9F45" stroke-width="6"/>`).join("")}
+      ${Array.from({ length: 22 }, (_, i) => `<g transform="translate(${-260 + (i * 97) % 520} ${-620 + (i * 61) % 300})"><circle r="9" fill="#FFC9D9"/><circle r="4" fill="#FF8FB1"/></g>`).join("")}${ch}`; };
+  const branchLow = () => `<path d="M0 0 Q-160 30 -320 90" stroke="#8B5A2B" stroke-width="18" fill="none" stroke-linecap="round"/>${[[-60, 12], [-120, 26], [-180, 42], [-240, 60], [-300, 80]].map(([x, y], i) => `<g id="bc${i}" transform="translate(${x} ${y})">${cherry(1)}</g><path d="M${x - 10} ${y - 20} q-20 -20 -6 -34 q18 8 6 34z" fill="#7CC35A" stroke="#3E7D25" stroke-width="2.5"/>`).join("")}`;
+
+  // ── tarla ──
+  const scarecrow = () => `<path d="M0 0 V-300" stroke="#8B5A2B" stroke-width="16"/><g id="scArm"><path d="M-150 -220 H150" stroke="#8B5A2B" stroke-width="14" stroke-linecap="round"/>
+      <path d="M-120 -250 L120 -250 L100 -130 L-100 -130Z" fill="#3D9BFF" stroke="${INK}" stroke-width="4"/><rect x="-24" y="-250" width="48" height="120" fill="#FF5A5F"/>
+      <path d="M150 -220 l20 -14 M150 -220 l24 0 M150 -220 l18 14" stroke="#E0B040" stroke-width="6" stroke-linecap="round"/></g>
+    <circle cx="0" cy="-300" r="50" fill="#F5D9A8" stroke="${INK}" stroke-width="4"/><circle cx="-16" cy="-306" r="6" fill="${INK}"/><circle cx="16" cy="-306" r="6" fill="${INK}"/><path d="M-20 -284 Q0 -268 20 -284" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <ellipse cx="-30" cy="-288" rx="9" ry="5" fill="#FF8FAB" opacity=".7"/><ellipse cx="30" cy="-288" rx="9" ry="5" fill="#FF8FAB" opacity=".7"/>
+    <g id="scHat"><ellipse cx="0" cy="-338" rx="90" ry="18" fill="#E0B040" stroke="#8A6A1A" stroke-width="4"/><path d="M-46 -340 Q-40 -400 0 -400 Q40 -400 46 -340Z" fill="#E0B040" stroke="#8A6A1A" stroke-width="4"/><rect x="-46" y="-356" width="92" height="12" fill="#FF5A5F"/></g>`;
+  const basket = () => `<path d="M-120 0 Q-130 -60 -110 -80 H110 Q130 -60 120 0 Q0 30 -120 0Z" fill="#D9A05B" stroke="#8A5A2B" stroke-width="5"/>`;
+
+  // ── piknik ──
+  const cushion = (c) => `<ellipse cx="0" cy="0" rx="90" ry="30" fill="${c}" stroke="${INK}" stroke-width="4"/><ellipse cx="0" cy="-8" rx="70" ry="18" fill="#fff" opacity=".25"/>`;
+
+
+  // ── ARI (yeni kahraman): orijin gövde ortası, sağa bakar. Gruplar: .wingB .wingF .body .pollen .head .antL .antR .mHappy .mOpen .pup .lid .stripe
+  const BOL = "#3B2A1F";
+  const bee = (p = "be") => `<clipPath id="${p}Bc"><ellipse cx="-16" cy="8" rx="74" ry="56"/></clipPath>
+    <g class="wingB"><path d="M-20 -40 C-60 -150 40 -170 30 -50Z" fill="url(#gWing)" stroke="#7FB8E0" stroke-width="4"/><path d="M-8 -60 Q0 -110 18 -120" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/></g>
+    <g class="legs" stroke="${BOL}" stroke-width="7" stroke-linecap="round" fill="none"><path d="M-40 52 q-6 22 -18 26"/><path d="M-10 60 q-2 22 -12 30"/><path d="M20 56 q2 20 -6 30"/></g>
+    <g class="body"><ellipse cx="-16" cy="8" rx="74" ry="56" fill="url(#gBee)" stroke="${BOL}" stroke-width="6"/>
+      <g clip-path="url(#${p}Bc)" class="stripe"><path d="M-60 -60 Q-44 8 -60 76 L-40 76 Q-24 8 -40 -60Z" fill="${BOL}"/><path d="M-22 -60 Q-6 8 -22 76 L-2 76 Q14 8 -2 -60Z" fill="${BOL}"/></g>
+      <ellipse cx="-30" cy="-22" rx="26" ry="10" fill="#fff" opacity=".55" transform="rotate(-18 -30 -22)"/>
+      <path d="M-92 6 L-112 12 L-92 20Z" fill="${BOL}" stroke="${BOL}" stroke-width="4" stroke-linejoin="round"/>
+      <g class="pollen" opacity="0">${Array.from({ length: 16 }, (_, i) => `<circle cx="${(-70 + (i * 37) % 150).toFixed(0)}" cy="${(-38 + (i * 23) % 90).toFixed(0)}" r="${5 + (i % 3) * 2}" fill="#FFE45C" stroke="#E0A800" stroke-width="2"/>`).join("")}</g></g>
+    <g class="head"><g class="antL"><path d="M50 -50 Q36 -96 14 -108" stroke="${BOL}" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="14" cy="-108" r="11" fill="${BOL}"/><circle cx="11" cy="-111" r="3.5" fill="#fff" opacity=".7"/></g>
+      <g class="antR"><path d="M70 -46 Q78 -96 100 -106" stroke="${BOL}" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="100" cy="-106" r="11" fill="${BOL}"/><circle cx="97" cy="-109" r="3.5" fill="#fff" opacity=".7"/></g>
+      <circle cx="62" cy="-6" r="52" fill="url(#gBee)" stroke="${BOL}" stroke-width="6"/>
+      ${eye(p + "L", 46, -14, 15, 19, "#FFD43B", BOL, 0.6)}${eye(p + "R", 84, -14, 15, 19, "#FFD43B", BOL, 0.6)}
+      <ellipse cx="34" cy="14" rx="11" ry="7" fill="#FF8FAB" opacity=".75"/><ellipse cx="100" cy="12" rx="10" ry="7" fill="#FF8FAB" opacity=".75"/>
+      <path class="mHappy" d="M54 16 Q66 28 78 16" stroke="${BOL}" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <g class="mOpen" opacity="0"><path d="M54 14 Q66 14 78 14 Q66 40 54 14Z" fill="#8C2F45" stroke="${BOL}" stroke-width="4" stroke-linejoin="round"/></g></g>
+    <g class="wingF"><path d="M0 -40 C-10 -150 100 -150 50 -42Z" fill="url(#gWing)" stroke="#7FB8E0" stroke-width="4"/><path d="M20 -62 Q34 -104 56 -112" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/></g>`;
+  const beeMini = (c = "url(#gBee)") => `<path class="mw" d="M-6 -12 C-14 -44 18 -46 10 -12Z" fill="url(#gWing)" stroke="#7FB8E0" stroke-width="2.5"/>
+    <ellipse cx="-4" cy="2" rx="22" ry="16" fill="${c}" stroke="${BOL}" stroke-width="3.5"/><path d="M-14 -12 v28 M-4 -14 v32" stroke="${BOL}" stroke-width="5"/>
+    <circle cx="18" cy="-2" r="14" fill="${c}" stroke="${BOL}" stroke-width="3.5"/><circle cx="21" cy="-4" r="3.5" fill="${BOL}"/><path d="M16 4 q4 4 8 0" stroke="${BOL}" stroke-width="2.5" fill="none"/>`;
+  // ── bahçe ──
+  const stem = (h, c = "#4E9E3A") => `<path d="M0 0 Q-12 ${-h * 0.5} 0 ${-h}" stroke="#2F6B22" stroke-width="16" fill="none" stroke-linecap="round"/><path d="M0 0 Q-12 ${-h * 0.5} 0 ${-h}" stroke="${c}" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M-4 ${-h * 0.35} Q-70 ${-h * 0.45} -96 ${-h * 0.3} Q-60 ${-h * 0.22} -4 ${-h * 0.3}Z" fill="#6CC75A" stroke="#2F6B22" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M-2 ${-h * 0.55} Q60 ${-h * 0.66} 90 ${-h * 0.52} Q56 ${-h * 0.44} -2 ${-h * 0.5}Z" fill="#7CD066" stroke="#2F6B22" stroke-width="4" stroke-linejoin="round"/>`;
+  // gelincik: orijin sap dibi; çiçek başı .head (h yüksekliğinde)
+  const poppy = (h = 420, s = 1) => `<g transform="scale(${s})">${stem(h)}<g class="head" transform="translate(0 ${-h})">
+    ${[0, 72, 144, 216, 288].map((a) => `<path d="M0 0 C-70 -30 -90 -150 0 -160 C90 -150 70 -30 0 0Z" fill="url(#gPoppy)" stroke="#9E1422" stroke-width="5" transform="rotate(${a}) scale(.9)"/>`).join("")}
+    ${[36, 108, 180, 252, 324].map((a) => `<path d="M0 -40 Q-14 -90 0 -120" stroke="#FFB0A4" stroke-width="6" fill="none" opacity=".55" stroke-linecap="round" transform="rotate(${a})"/>`).join("")}
+    <circle r="40" fill="#2B2D42" stroke="#111" stroke-width="4"/>${Array.from({ length: 12 }, (_, i) => `<circle cx="${(30 * Math.cos(i * 0.52)).toFixed(1)}" cy="${(30 * Math.sin(i * 0.52)).toFixed(1)}" r="5" fill="#FFD84D"/>`).join("")}
+    <circle r="14" fill="#5A4A7A"/></g></g>`;
+  // ayçiçeği (yüzlü): orijin sap dibi; .head içinde .face .mouthO
+  const sunflower = (p, h = 460, s = 1) => `<g transform="scale(${s})">${stem(h, "#5DAE3F")}<g class="head" transform="translate(0 ${-h})">
+    ${Array.from({ length: 22 }, (_, i) => `<path d="M0 -90 C-20 -120 -16 -170 0 -186 C16 -170 20 -120 0 -90Z" fill="url(#gSunP)" stroke="#D98B00" stroke-width="4" transform="rotate(${(i * 360 / 22).toFixed(1)})"/>`).join("")}
+    <circle r="96" fill="url(#gSunC)" stroke="#4A2A0E" stroke-width="5"/>
+    ${Array.from({ length: 30 }, (_, i) => { const r = 20 + (i % 5) * 15, a = i * 2.39; return `<circle cx="${(r * Math.cos(a)).toFixed(1)}" cy="${(r * Math.sin(a)).toFixed(1)}" r="3.5" fill="#4A2A0E" opacity=".5"/>`; }).join("")}
+    <g class="face"><path class="eyeC" d="M-44 -16 Q-30 -30 -16 -16" stroke="#2B1A0A" stroke-width="7" fill="none" stroke-linecap="round"/><path class="eyeC" d="M16 -16 Q30 -30 44 -16" stroke="#2B1A0A" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <ellipse cx="-54" cy="16" rx="14" ry="9" fill="#FF8F6B" opacity=".75"/><ellipse cx="54" cy="16" rx="14" ry="9" fill="#FF8F6B" opacity=".75"/>
+      <path class="mHappy" d="M-26 18 Q0 46 26 18" stroke="#2B1A0A" stroke-width="7" fill="none" stroke-linecap="round"/></g></g></g>`;
+  // lavanta sapı
+  const lavender = (h = 200) => `<path d="M0 0 Q4 ${-h * 0.5} 0 ${-h}" stroke="#5E9E5A" stroke-width="6" fill="none"/>${Array.from({ length: 9 }, (_, i) => `<ellipse cx="${i % 2 ? 6 : -6}" cy="${-h + i * 13}" rx="9" ry="12" fill="${i % 3 ? "#9B6BE0" : "#B48CF0"}" stroke="#6B3FB8" stroke-width="2"/>`).join("")}`;
+  // büyük mor çiçek (iniş)
+  const purple = (h = 380, s = 1) => `<g transform="scale(${s})">${stem(h)}<g class="head" transform="translate(0 ${-h})">
+    ${Array.from({ length: 10 }, (_, i) => `<ellipse cx="0" cy="-74" rx="34" ry="70" fill="url(#gPurp)" stroke="#5A2DA8" stroke-width="4.5" transform="rotate(${i * 36})"/>`).join("")}
+    <circle r="44" fill="#FFD84D" stroke="#D99A0A" stroke-width="5"/>${Array.from({ length: 10 }, (_, i) => `<circle cx="${(24 * Math.cos(i * 0.63)).toFixed(1)}" cy="${(24 * Math.sin(i * 0.63)).toFixed(1)}" r="4" fill="#E0A800"/>`).join("")}</g></g>`;
+  // kelebek
+  const butterfly = (c1 = "#FFC21A", c2 = "#FF7A3D") => `<g class="wl"><path d="M0 0 C-70 -90 -110 -10 -60 20 C-90 50 -40 80 0 10Z" fill="${c1}" stroke="${BOL}" stroke-width="4"/><circle cx="-56" cy="-24" r="12" fill="${c2}"/></g>
+    <g class="wr"><path d="M0 0 C70 -90 110 -10 60 20 C90 50 40 80 0 10Z" fill="${c1}" stroke="${BOL}" stroke-width="4"/><circle cx="56" cy="-24" r="12" fill="${c2}"/></g>
+    <ellipse rx="9" ry="34" fill="${BOL}"/><path d="M-4 -30 q-14 -24 -24 -26 M4 -30 q14 -24 24 -26" stroke="${BOL}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  // altıgen yolu
+  const hexPath = (r) => { let d = ""; for (let i = 0; i < 6; i++) { const a = Math.PI / 6 + i * Math.PI / 3; d += (i ? "L" : "M") + (r * Math.cos(a)).toFixed(1) + " " + (r * Math.sin(a)).toFixed(1); } return d + "Z"; };
+  // kovan (ağaçta asılı): orijin asılma noktası
+  const hive = () => `<path d="M0 0 V30" stroke="#6E4A27" stroke-width="10"/>
+    <path d="M-120 140 C-150 40 -70 24 0 24 C70 24 150 40 120 140 C150 200 100 260 0 262 C-100 260 -150 200 -120 140Z" fill="url(#gHive)" stroke="#9A5B10" stroke-width="7"/>
+    ${[70, 110, 150, 190, 228].map((y, i) => `<path d="M${-122 + (i === 4 ? 30 : 0)} ${y} Q0 ${y + 18} ${122 - (i === 4 ? 30 : 0)} ${y}" stroke="#C47A12" stroke-width="7" fill="none" opacity=".7"/>`).join("")}
+    <path d="${hexPath(34)}" transform="translate(0 160)" fill="#5A3A10" stroke="#9A5B10" stroke-width="6"/>
+    <ellipse cx="-60" cy="80" rx="26" ry="14" fill="#fff" opacity=".45" transform="rotate(-25 -60 80)"/>
+    <path class="drip" d="M-30 258 q0 30 10 30 q10 0 10 -30Z" fill="url(#gHoney)" stroke="#C47A12" stroke-width="3"/>`;
+  // ağaç
+  const oak = () => `<path d="M-60 0 Q-50 -220 -80 -420 L80 -420 Q50 -220 60 0Z" fill="#A0703F" stroke="#6E4A27" stroke-width="7"/>
+    <path d="M10 -360 Q160 -420 300 -430" stroke="#8B5A2B" stroke-width="40" fill="none" stroke-linecap="round"/><path d="M10 -360 Q160 -420 300 -430" stroke="#A0703F" stroke-width="26" fill="none" stroke-linecap="round"/>
+    ${[[-220, -560, 210], [0, -680, 250], [230, -580, 210], [-120, -440, 160], [140, -440, 160]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#6CC75A" stroke="#3F8A35" stroke-width="7"/>`).join("")}
+    ${[[-200, -620], [40, -760], [220, -640], [-60, -520]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="70" ry="34" fill="#9BE07A" opacity=".55"/>`).join("")}`;
+  const honeyPot = () => `<path d="M-120 -170 Q-170 -80 -110 0 L110 0 Q170 -80 120 -170Z" fill="#E0A465" stroke="#7A4A22" stroke-width="7"/>
+    <ellipse cx="0" cy="-170" rx="122" ry="30" fill="url(#gHoney)" stroke="#7A4A22" stroke-width="7"/><path d="M-140 -160 Q0 -120 140 -160" stroke="#FF6B4A" stroke-width="14" fill="none"/>
+    <text x="0" y="-60" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="52" fill="#7A4A22">BAL</text><ellipse cx="-70" cy="-110" rx="18" ry="34" fill="#fff" opacity=".35"/>`;
+  const spoon = () => `<path d="M0 0 L0 -90" stroke="#B5763A" stroke-width="10" stroke-linecap="round"/><ellipse cx="0" cy="-104" rx="20" ry="16" fill="#E0A465" stroke="#7A4A22" stroke-width="4"/><ellipse class="sh" cx="0" cy="-106" rx="13" ry="9" fill="url(#gHoney)" opacity="0"/>`;
+  const honeyDrop = (s = 1) => `<g transform="scale(${s})"><path d="M0 -26 C10 -10 18 0 18 10 C18 22 9 28 0 28 C-9 28 -18 22 -18 10 C-18 0 -10 -10 0 -26Z" fill="url(#gHoney)" stroke="#C47A12" stroke-width="3.5"/><ellipse cx="-6" cy="6" rx="4" ry="7" fill="#fff" opacity=".7"/></g>`;
+
+
+  // ════════════════ Bölüm 8 · Uçağı Kaldırsana ════════════════
+  const KR = "#7A4A22";                                         // kraft kontur
+  const defs8 = () => `<defs>
+    <linearGradient id="gKraft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EBBB80"/><stop offset=".55" stop-color="#DDA466"/><stop offset="1" stop-color="#C98A4E"/></linearGradient>
+    <linearGradient id="gKraftIn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B9773F"/><stop offset="1" stop-color="#8E5A2E"/></linearGradient>
+    <linearGradient id="gWingK" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3CC95"/><stop offset="1" stop-color="#DDA466"/></linearGradient>
+    <linearGradient id="gCan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8EEF5"/><stop offset=".5" stop-color="#C5D0DC"/><stop offset="1" stop-color="#9AA8B8"/></linearGradient>
+    <linearGradient id="gBucket" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FF7A7E"/><stop offset=".5" stop-color="#FF5A5F"/><stop offset="1" stop-color="#D93A40"/></linearGradient>
+    <radialGradient id="gDrone" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#DCE6F2"/><stop offset="1" stop-color="#AEBED2"/></radialGradient>
+    <radialGradient id="gBird" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#9AD8FF"/><stop offset="1" stop-color="#3D9BFF"/></radialGradient>
+    <radialGradient id="gFog" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".92"/><stop offset=".7" stop-color="#F2F8FF" stop-opacity=".85"/><stop offset="1" stop-color="#E4F0FF" stop-opacity=".55"/></radialGradient></defs>`;
+  const star5 = (r = 20, c = "#FFD43B", ol = "#E0A800") => { let d = ""; for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * 0.45 : r; d += (i ? "L" : "M") + (rr * Math.cos(a)).toFixed(1) + " " + (rr * Math.sin(a)).toFixed(1); }
+    return `<path d="${d}Z" fill="${c}" stroke="${ol}" stroke-width="${(r * 0.16).toFixed(1)}" stroke-linejoin="round"/>`; };
+  // ay-yıldız (beyaz) — orijin merkez, r: hilal yarıçapı
+  const crescent = (r = 30) => `<circle r="${r}" fill="#fff"/><circle cx="${r * 0.25}" r="${r * 0.8}" fill="#E30A17"/><g transform="translate(${r * 0.95} 0) rotate(-18)">${star5(r * 0.42, "#fff", "#fff")}</g>`;
+  const flag = (w = 130) => { const h = w * 0.66; return `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="${w * 0.08}" fill="#E30A17" stroke="#9E0710" stroke-width="4"/><g transform="translate(${-w * 0.08} 0)">${crescent(h * 0.3)}</g>`; };
+  const button = (c, r = 56) => `<circle r="${r}" fill="${c}" stroke="${INK}" stroke-width="6"/><circle r="${r * 0.72}" fill="none" stroke="#fff" stroke-width="5" opacity=".45"/>
+    ${[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([a, b]) => `<circle cx="${a * r * 0.24}" cy="${b * r * 0.24}" r="${r * 0.12}" fill="${INK}" opacity=".75"/>`).join("")}<ellipse cx="${-r * 0.4}" cy="${-r * 0.45}" rx="${r * 0.2}" ry="${r * 0.11}" fill="#fff" opacity=".6" transform="rotate(-35 ${-r * 0.4} ${-r * 0.45})"/>`;
+  const tapeStrip = (w, h = 34) => `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="3" fill="#B98546" opacity=".92"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h * 0.3}" fill="#E2B477" opacity=".7"/>
+    <path d="M${-w / 2} ${-h / 2} l6 ${h / 4} l-6 ${h / 4} l6 ${h / 4} l-6 ${h / 4}" fill="none" stroke="#8A5A2B" stroke-width="2"/><path d="M${w / 2} ${-h / 2} l-6 ${h / 4} l6 ${h / 4} l-6 ${h / 4} l6 ${h / 4}" fill="none" stroke="#8A5A2B" stroke-width="2"/>`;
+  // ── canlanan karton uçak (yan görünüş, sağa bakar; orijin = gövde altının zemindeki izdüşümü) ──
+  // arka katman (karakterlerin arkası): kutunun iç duvarı + arka kapak
+  const planeBack = () => `<g class="pb"><path d="M-330 -330 L-318 -392 L250 -392 L262 -330Z" fill="url(#gKraftIn)" stroke="${KR}" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M-300 -378 H230" stroke="#6E431F" stroke-width="4" opacity=".5"/>
+</g>`;
+  // ön katman: kuyruk, gövde yan yüzü, yüz, burun, pervane, kanat, tekerlekler, ışıklar, bant
+  const planeFront = (p = "pl") => `<g class="pf">
+    <g class="tail"><path d="M-300 -330 L-372 -540 L-300 -540 L-210 -330Z" fill="url(#gKraft)" stroke="${KR}" stroke-width="7" stroke-linejoin="round"/>
+      <path class="ribbon" d="M-372 -536 q-60 10 -110 -6" stroke="#FF5A5F" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M-330 -470 L-300 -470" stroke="${KR}" stroke-width="4" opacity=".5"/></g>
+    <g class="wingFar"><path d="M-110 -330 L120 -330 L60 -392 L-150 -392Z" fill="url(#gWingK)" stroke="${KR}" stroke-width="6" stroke-linejoin="round" opacity="0"/></g>
+    <rect x="-340" y="-340" width="612" height="232" rx="28" fill="url(#gKraft)" stroke="${KR}" stroke-width="8"/>
+    <path d="M-322 -312 H250" stroke="#fff" stroke-width="5" opacity=".35" stroke-linecap="round"/>
+    <path d="M-150 -340 V-110 M60 -340 V-110" stroke="${KR}" stroke-width="3" opacity=".28"/>
+    <g class="tape"><g transform="translate(-230 -225) rotate(-62)">${tapeStrip(270)}</g><g transform="translate(-60 -225) rotate(-62)">${tapeStrip(270)}</g></g>
+    <g class="lights">${Array.from({ length: 7 }, (_, i) => `<g transform="translate(${-290 + i * 72} -136)"><circle r="16" fill="#5A4A3A" stroke="${KR}" stroke-width="4"/>
+      <circle class="lt" id="${p}lt${i}" r="14" fill="${["#FF5A5F", "#FF9F1C", "#FFD43B", "#3FBF6F", "#3D9BFF", "#7A6CFF", "#FF7FC8"][i]}" opacity="0"/><circle cx="-4" cy="-5" r="4" fill="#fff" opacity=".7"/></g>`).join("")}</g>
+    <g class="face">${eye(p + "eL", 118, -262, 31, 36, "#DDA466", KR, 0.56)}${eye(p + "eR", 196, -262, 31, 36, "#DDA466", KR, 0.56)}
+      <ellipse cx="88" cy="-200" rx="20" ry="11" fill="#FF8FAB" opacity=".75"/><ellipse cx="232" cy="-200" rx="18" ry="11" fill="#FF8FAB" opacity=".75"/>
+      <path class="pMouth" d="M126 -196 Q158 -170 190 -196" stroke="${INK}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="brow" opacity="0"><path d="M96 -312 L140 -300 M218 -312 L174 -300" stroke="${INK}" stroke-width="7" stroke-linecap="round"/></g></g>
+    <g class="nose"><rect x="262" y="-318" width="78" height="186" rx="22" fill="url(#gCan)" stroke="#5E6A78" stroke-width="6"/>
+      ${[-280, -250, -220, -190, -160].map((y) => `<path d="M266 ${y} H336" stroke="#8C99AA" stroke-width="4"/>`).join("")}
+      <g class="dent" opacity="0"><path d="M300 -300 l14 18 l-10 14 l16 16 l-12 14" stroke="#5E6A78" stroke-width="5" fill="none" stroke-linejoin="round"/></g>
+      <g class="patch" opacity="0" transform="translate(301 -226)"><g transform="rotate(40)">${tapeStrip(150, 30)}</g><g transform="rotate(-40)">${tapeStrip(150, 30)}</g></g></g>
+    <g class="prop" transform="translate(356 -225)"><g class="blades">${[0, 120, 240].map((a) => `<path d="M-14 -8 C-26 -70 -10 -112 0 -112 C10 -112 26 -70 14 -8Z" fill="#FFD43B" stroke="#C98A00" stroke-width="5" stroke-linejoin="round" transform="rotate(${a})"/>`).join("")}</g>
+      <circle r="24" fill="#FF5A5F" stroke="${INK}" stroke-width="5"/><circle cx="-7" cy="-7" r="7" fill="#fff" opacity=".7"/></g>
+    <g class="wing"><path d="M-150 -214 L150 -214 L82 -92 L-244 -92 Q-262 -92 -254 -108Z" fill="url(#gWingK)" stroke="${KR}" stroke-width="7" stroke-linejoin="round"/>
+      <g opacity=".95">${[0, 1, 2, 3].map((i) => `<path d="M${-252 + i * 18} -96 L${-232 + i * 18} -96 L${-204 + i * 18} -${i % 2 ? 150 : 150} Z" fill="${i % 2 ? "#fff" : "#FF5A5F"}" opacity="0"/>`).join("")}</g>
+      <path d="M-244 -92 L-210 -150 L-186 -150 L-218 -92Z M-198 -92 L-164 -150 L-140 -150 L-172 -92Z" fill="#FF5A5F" stroke="${KR}" stroke-width="3"/>
+      <g class="wflag" transform="translate(-20 -152)">${flag(118)}</g></g>
+    <g class="struts" stroke="${KR}" stroke-width="12" stroke-linecap="round"><path d="M-176 -112 L-196 -60"/><path d="M118 -112 L140 -60"/></g>
+    <g class="wheelB" transform="translate(-196 -58)">${button("#FF5A5F", 58)}</g>
+    <g class="wheelF" transform="translate(140 -58)">${button("#3D9BFF", 58)}</g></g>`;
+  // takoz (tahta, gözlü — tavşan gibi zıplar): orijin alt orta
+  const chock = () => `<path d="M-46 0 L-30 -56 L30 -56 L46 0Z" fill="#C98A4E" stroke="${KR}" stroke-width="5" stroke-linejoin="round"/><path d="M-24 -40 H24 M-34 -20 H34" stroke="#8A5A2B" stroke-width="3" opacity=".6"/>
+    <circle cx="-12" cy="-34" r="5" fill="${INK}"/><circle cx="12" cy="-34" r="5" fill="${INK}"/><path d="M-26 -56 q-8 -26 4 -28 q8 4 2 28Z M26 -56 q8 -26 -4 -28 q-8 4 -2 28Z" fill="#C98A4E" stroke="${KR}" stroke-width="4"/>`;
+  // uçan göz (İHA): orijin merkez; .props dönüyor, .flash patlar; üstünde mini arı pilot
+  const drone = (p = "dr") => `<g class="arms" stroke="#5E6A78" stroke-width="10" stroke-linecap="round"><path d="M-40 -20 L-110 -50 M40 -20 L110 -50"/></g>
+    ${[-110, 110].map((x) => `<g transform="translate(${x} -58)"><rect x="-6" y="-14" width="12" height="16" rx="4" fill="#5E6A78"/><g class="rot"><ellipse rx="52" ry="9" fill="#BFE6FF" stroke="#5E6A78" stroke-width="4" opacity=".9"/></g></g>`).join("")}
+    <ellipse cx="0" cy="0" rx="86" ry="64" fill="url(#gDrone)" stroke="#4A5568" stroke-width="7"/>
+    ${eye(p + "E", 0, 2, 40, 40, "#DCE6F2", "#4A5568", 0.58)}
+    <circle class="flash" cx="0" cy="2" r="44" fill="#fff" opacity="0"/>
+    <path d="M-60 40 q-10 30 -20 34 M60 40 q10 30 20 34" stroke="#4A5568" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <g transform="translate(-6 -66) scale(.42)">${bee(p + "b")}</g>`;
+  // kova roket: orijin alt orta; tepede ördek yavrusu + külah şapka (.hatR), .balloons kuyrukta
+  const rocket = (p = "rk") => `<g class="balloons">${[["#FF5A5F", -40, 120], ["#FFD43B", 0, 150], ["#3D9BFF", 40, 116], ["#3FBF6F", -14, 190]].map(([c, x, y], i) => `<g class="bl" data-i="${i}"><path d="M0 0 Q${x * 0.5} ${y * 0.5} ${x} ${y - 30}" stroke="#7A6C5D" stroke-width="3" fill="none"/>
+      <ellipse cx="${x}" cy="${y}" rx="26" ry="32" fill="${c}" stroke="${INK}" stroke-width="4"/><ellipse cx="${x - 9}" cy="${y - 12}" rx="6" ry="9" fill="#fff" opacity=".55"/></g>`).join("")}</g>
+    <path d="M-80 0 L-110 30 L-60 10Z M80 0 L110 30 L60 10Z" fill="#3D9BFF" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M-70 0 L-52 -170 L52 -170 L70 0Z" fill="url(#gBucket)" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M-66 -40 H66 M-58 -130 H58" stroke="#fff" stroke-width="8" opacity=".55"/><path d="M-52 -170 Q0 -230 52 -170" stroke="#6E7A88" stroke-width="7" fill="none"/>
+    <g class="pilot" transform="translate(20 -150) scale(.55)">${duck(p + "d", true)}</g>
+    <g class="hatR" transform="translate(-2 -250)"><path d="M-30 0 L0 -70 L30 0Z" fill="#FFD43B" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/><path d="M-22 -18 L18 -32 M-12 -42 L10 -50" stroke="#FF5A5F" stroke-width="7"/><circle cy="-72" r="10" fill="#FF5A5F" stroke="${INK}" stroke-width="3"/></g>
+    <g class="flame" transform="translate(0 6)"><path d="M-30 0 Q0 80 30 0Z" fill="#FFB547" stroke="#E07B0C" stroke-width="4"/><path d="M-14 0 Q0 40 14 0Z" fill="#FFF3B0"/></g>`;
+  const paperPlane = () => `<path d="M60 0 L-50 -26 L-26 0 L-50 24Z" fill="#fff" stroke="#7FA0C8" stroke-width="4" stroke-linejoin="round"/><path d="M60 0 L-26 0 L-36 14Z" fill="#DCE8F7" stroke="#7FA0C8" stroke-width="3" stroke-linejoin="round"/>`;
+  const bird = (c = "url(#gBird)") => `<g class="bw2"><path d="M-6 -10 Q-30 -46 -54 -26 Q-34 -16 -10 2Z" fill="#7FC4FF" stroke="#2C6FBF" stroke-width="3.5" stroke-linejoin="round"/></g>
+    <ellipse cx="0" cy="0" rx="36" ry="28" fill="${c}" stroke="#2C6FBF" stroke-width="4"/><ellipse cx="4" cy="8" rx="20" ry="13" fill="#E8F6FF"/>
+    <circle cx="16" cy="-8" r="6" fill="${INK}"/><circle cx="18" cy="-10" r="2" fill="#fff"/><path d="M32 -4 L50 2 L32 8Z" fill="#FF9F1C" stroke="#C25F05" stroke-width="3" stroke-linejoin="round"/>
+    <g class="bw"><path d="M-6 -6 Q-36 -40 -60 -14 Q-36 -4 -8 6Z" fill="#9AD8FF" stroke="#2C6FBF" stroke-width="3.5" stroke-linejoin="round"/></g><path d="M-34 4 L-52 0 L-46 14Z" fill="#3D9BFF" stroke="#2C6FBF" stroke-width="3"/>`;
+  const windsock = () => `<path d="M0 0 V-260" stroke="#8C99AA" stroke-width="10" stroke-linecap="round"/><g class="sock" transform="translate(0 -250)"><path d="M0 -26 L150 -14 L150 14 L0 26Z" fill="#FF7A3D" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M50 -22 L50 22 M100 -18 L100 18" stroke="#fff" stroke-width="18"/></g>`;
+  const rwLight = (id) => `<rect x="-5" y="-30" width="10" height="30" fill="#8C99AA"/><circle cy="-36" r="15" fill="#6B5A48" stroke="${INK}" stroke-width="3.5"/><circle id="${id}" cy="-36" r="13" fill="#FFB547" opacity="0"/>`;
+  const house = (c, roof, w = 120, h = 90) => `<rect x="${-w / 2}" y="${-h}" width="${w}" height="${h}" fill="${c}" stroke="${INK}" stroke-width="4"/><path d="M${-w / 2 - 12} ${-h} L0 ${-h - w * 0.5} L${w / 2 + 12} ${-h}Z" fill="${roof}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="${-w * 0.3}" y="${-h * 0.62}" width="${w * 0.22}" height="${h * 0.28}" fill="#BFE9FF" stroke="${INK}" stroke-width="3"/><rect x="${w * 0.08}" y="${-h * 0.5}" width="${w * 0.2}" height="${h * 0.5}" fill="#8E5A2E" stroke="${INK}" stroke-width="3"/>`;
+  const hay = () => `<rect x="-130" y="-120" width="260" height="120" rx="30" fill="#F2C14E" stroke="#B9800A" stroke-width="6"/>${[-80, -30, 20, 70].map((x) => `<path d="M${x} -110 q8 50 0 100" stroke="#D9A33A" stroke-width="5" fill="none"/>`).join("")}
+    <path d="M-130 -70 H130" stroke="#C0392B" stroke-width="9"/>`;
+  const clothesline = () => `<path d="M-300 0 V-330 M300 0 V-330" stroke="#8B5A2B" stroke-width="14" stroke-linecap="round"/><path d="M-300 -320 Q0 -270 300 -320" stroke="#fff" stroke-width="5" fill="none"/>
+    <path d="M-220 -306 h70 v80 h-70z" fill="#FF8FAB" stroke="${INK}" stroke-width="4"/><path d="M130 -302 l70 0 l10 60 l-28 -10 l-14 40 l-14 -40 l-28 10z" fill="#7FC4FF" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>`;
+  const tapeRoll = (s = 1) => `<g transform="scale(${s})"><circle r="44" fill="#C98A4E" stroke="${KR}" stroke-width="6"/><circle r="22" fill="#FFF4DC" stroke="${KR}" stroke-width="5"/><path d="M40 10 L90 40 L84 52 L36 22Z" fill="#B98546" stroke="${KR}" stroke-width="3"/></g>`;
+  const pegboard = () => { let h = ""; for (let r = 0; r < 9; r++) for (let c = 0; c < 22; c++) h += `<circle cx="${-990 + c * 92}" cy="${-640 + r * 70}" r="6" fill="#9C6A38" opacity=".55"/>`; return h; };
+  const hammer = () => `<rect x="-8" y="0" width="16" height="130" rx="6" fill="#C98A4E" stroke="${KR}" stroke-width="4"/><rect x="-46" y="-10" width="92" height="34" rx="8" fill="#8C99AA" stroke="#4A5568" stroke-width="5"/>`;
+  const wrench = () => `<rect x="-10" y="0" width="20" height="140" rx="10" fill="#B8C4D0" stroke="#4A5568" stroke-width="5"/><path d="M-30 0 a32 32 0 1 1 60 0 l-14 0 l0 -22 l-32 0 l0 22z" fill="#B8C4D0" stroke="#4A5568" stroke-width="5"/>`;
+  const saw = () => `<path d="M0 0 L200 -10 L200 30 L0 40Z" fill="#DCE6F2" stroke="#4A5568" stroke-width="4"/><path d="M0 40 ${Array.from({ length: 10 }, (_, i) => `L${10 + i * 19} 48 L${20 + i * 19} 38`).join(" ")}" fill="none" stroke="#4A5568" stroke-width="3"/><rect x="-60" y="-6" width="64" height="52" rx="16" fill="#FF7A3D" stroke="${INK}" stroke-width="5"/>`;
+  const bench = () => `<rect x="-420" y="-26" width="840" height="40" rx="10" fill="#B9773F" stroke="${KR}" stroke-width="6"/><rect x="-390" y="12" width="34" height="200" fill="#9C6A38" stroke="${KR}" stroke-width="5"/><rect x="356" y="12" width="34" height="200" fill="#9C6A38" stroke="${KR}" stroke-width="5"/>`;
+  const wheelSteer = () => `<circle r="30" fill="none" stroke="#4A5568" stroke-width="9"/><path d="M-28 0 H28 M0 -28 V0" stroke="#4A5568" stroke-width="6"/><circle r="8" fill="#FF5A5F" stroke="#4A5568" stroke-width="3"/>`;
+
+  return { defs, shadow, heart, eye, frog, duck, mouse, lily, rock, cherries, bee, beeMini, poppy, sunflower, lavender, purple, butterfly, hexPath, hive, oak, honeyPot, spoon, honeyDrop, BOL,
+    defs8, star5, crescent, flag, button, tapeStrip, planeBack, planeFront, chock, drone, rocket, paperPlane, bird, windsock, rwLight, house, hay, clothesline, tapeRoll, pegboard, hammer, wrench, saw, bench, wheelSteer };
+})();
+
+(function () {
+  window.__timelines = window.__timelines || {};
+  const $ = (s) => document.querySelector(s);
+  const NS = "http://www.w3.org/2000/svg";
+  const D = 134.74, TAU = Math.PI * 2;
+  const TC = ["#3D9BFF", "#FF5A5F", "#FFC23D", "#3FBF6F", "#A66BFF", "#FF7A3D"];
+  const OL = "#4C76B5";
+  const INK = "#2B2D42";
+  const C = window.CAST;
+  const LINES = [{"tag": "g.1", "who": "lead", "words": [["Haydi", 8.62], ["Fıstık,", 9.119], ["kalksana,", 9.619]], "end": 10.52}, {"tag": "g.2", "who": "lead", "words": [["Bir", 10.6], ["hayal", 10.885], ["kursana,", 11.456]], "end": 12.46}, {"tag": "g.3", "who": "lead", "words": [["Kulakla", 12.54], ["uçulmaz", 13.147], ["ki,", 13.754]], "end": 14.08}, {"tag": "g.4", "who": "lead", "words": [["Bir", 14.48], ["uçak", 14.768], ["yapsana!", 15.345]], "end": 16.36}, {"tag": "k1.1", "who": "lead", "words": [["Kutuyu", 16.42], ["alsana,", 17.248]], "end": 18.22}, {"tag": "k1.2", "who": "lead", "words": [["Kanadı", 18.38], ["taksana,", 19.217]], "end": 20.2}, {"tag": "k1.3", "who": "lead", "words": [["Tekerlek", 20.26], ["mi", 21.18], ["eksik?", 21.487]], "end": 22.26}, {"tag": "k1.4", "who": "lead", "words": [["Düğmeden", 22.26], ["taksana!", 22.913]], "end": 23.68}, {"tag": "k1.5", "who": "lead", "words": [["Pervane", 24.28], ["koysana,", 24.988]], "end": 25.82}, {"tag": "k1.6", "who": "lead", "words": [["Hortumla", 26.2], ["üflesene,", 26.784]], "end": 27.68}, {"tag": "k1.7", "who": "lead", "words": [["Pırt", 27.94], ["pırt", 28.195], ["pırt", 28.449], ["diyerek,", 28.704]], "end": 29.6}, {"tag": "k1.8", "who": "lead", "words": [["Motoru", 29.96], ["çalıştırsana!", 30.415]], "end": 31.28}, {"tag": "n1.1", "who": "kids", "words": [["Takozu", 31.85], ["kaldırsana!", 32.461]], "end": 33.4}, {"tag": "n1.2", "who": "kids", "words": [["Motoru", 33.76], ["çalıştırsana!", 34.222]], "end": 35.1}, {"tag": "n1.3", "who": "kids", "words": [["Pist", 35.54], ["seni", 35.807], ["bekliyor,", 36.34]], "end": 37.28}, {"tag": "n1.4", "who": "kids", "words": [["Uçağı", 37.54], ["kaldırsana!", 38.053]], "end": 38.84}, {"tag": "n1.5", "who": "kids", "words": [["İHA", 39.4], ["yapsana!", 39.989]], "end": 41}, {"tag": "n1.6", "who": "kids", "words": [["Roket", 41.2], ["yapsana!", 41.818]], "end": 42.88}, {"tag": "n1.7", "who": "kids", "words": [["Bulutlara,", 43.2], ["göklere,", 44.052]], "end": 44.82}, {"tag": "n1.8", "who": "kids", "words": [["Fıstık,", 44.98], ["uçsana!", 45.355]], "end": 46}, {"tag": "k2.1", "who": "lead", "words": [["Bir,", 46.96], ["iki,", 47.199], ["üç!", 47.678]], "end": 48}, {"tag": "k2.2", "who": "lead", "words": [["Vın", 48.74], ["vın,", 49.126], ["güm!", 49.513]], "end": 50}, {"tag": "k2.3", "who": "lead", "words": [["Uçak", 50.64], ["düştü", 51.14], ["mü?", 51.641]], "end": 52}, {"tag": "k2.4", "who": "lead", "words": [["Olmadı", 52.74], ["mı?", 53.609]], "end": 54}, {"tag": "k2.5", "who": "lead", "words": [["Bir", 54.56], ["daha,", 54.903], ["bir", 55.59], ["daha,", 55.934], ["bir", 56.621], ["daha!", 56.964]], "end": 57.92}, {"tag": "k2.6", "who": "lead", "words": [["Vidayı", 58.05], ["sıksana,", 58.832]], "end": 59.75}, {"tag": "k2.7", "who": "lead", "words": [["Kanadı", 60.14], ["düzeltsene,", 60.708]], "end": 61.58}, {"tag": "k2.8", "who": "lead", "words": [["Arkadaşlar", 62.56], ["yardıma,", 63.096]], "end": 63.58}, {"tag": "k2.9", "who": "lead", "words": [["Hep", 64.04], ["beraber", 64.208], ["itsene!", 64.713]], "end": 65.32}, {"tag": "k2.10", "who": "lead", "words": [["Çalışınca", 65.7], ["sonunda,", 66.646]], "end": 67.5}, {"tag": "k2.11", "who": "lead", "words": [["Olduuu", 67.86], ["diye", 68.464], ["bağırsana!", 68.765]], "end": 69.5}, {"tag": "n2.1", "who": "kids", "words": [["Takozu", 69.78], ["kaldırsana!", 70.214]], "end": 70.88}, {"tag": "n2.2", "who": "kids", "words": [["Motoru", 71.5], ["çalıştırsana!", 71.935]], "end": 72.76}, {"tag": "n2.3", "who": "kids", "words": [["Pist", 73.42], ["seni", 73.662], ["bekliyor,", 74.147]], "end": 75}, {"tag": "n2.4", "who": "kids", "words": [["Uçağı", 75.24], ["kaldırsana!", 75.729]], "end": 76.48}, {"tag": "n2.5", "who": "kids", "words": [["İHA", 77.08], ["yapsana!", 77.735]], "end": 78.86}, {"tag": "n2.6", "who": "kids", "words": [["Roket", 78.9], ["yapsana!", 79.555]], "end": 80.68}, {"tag": "n2.7", "who": "kids", "words": [["Bulutlara,", 80.88], ["göklere,", 81.732]], "end": 82.5}, {"tag": "n2.8", "who": "kids", "words": [["Fıstık,", 82.64], ["uçsana!", 83.14]], "end": 84}, {"tag": "b.1", "who": "call", "words": [["Takozu", 84.76], ["kaldırsana!", 85.202]], "end": 85.88}, {"tag": "b.2", "who": "call", "words": [["Motoru", 86.52], ["çalıştırsana!", 86.975]], "end": 87.84}, {"tag": "b.3", "who": "call", "words": [["Kanadı", 88.62], ["taksana!", 89.246]], "end": 89.98}, {"tag": "b.4", "who": "call", "words": [["Uçağı", 90.1], ["uçursana!", 90.829]], "end": 91.95}, {"tag": "b.5", "who": "call", "words": [["İHA'yı", 92.06], ["yapsana!", 92.897]], "end": 93.88}, {"tag": "b.6", "who": "call", "words": [["Roketi", 94.12], ["yapsana!", 94.819]], "end": 95.64}, {"tag": "b.7", "who": "lead", "words": [["En", 95.92], ["iyisini?", 96.178]], "end": 97.32}, {"tag": "b.8", "who": "kids", "words": [["SEN", 97.78], ["YAPSANA!", 97.969]], "end": 98.6}, {"tag": "f.1", "who": "all", "words": [["Takozu", 99.74], ["kaldırsana!", 100.197]], "end": 100.9}, {"tag": "f.2", "who": "all", "words": [["Motoru", 101.46], ["çalıştırsana!", 101.881]], "end": 102.68}, {"tag": "f.3", "who": "all", "words": [["İHA", 103.28], ["yapsana!", 103.906]], "end": 104.98}, {"tag": "f.4", "who": "all", "words": [["Uçak", 105.12], ["yapsana!", 105.687]], "end": 106.66}, {"tag": "f.5", "who": "all", "words": [["Oyna,", 106.94], ["öğren,", 107.375], ["dene,", 107.811]], "end": 108.36}, {"tag": "f.6", "who": "all", "words": [["Hayalini", 108.68], ["başlatsana!", 109.48]], "end": 110.42}, {"tag": "f.7", "who": "all", "words": [["Türkiye'nin", 110.98], ["çocukları,", 111.716]], "end": 112.58}, {"tag": "f.8", "who": "all", "words": [["En", 112.58], ["iyisini", 112.771], ["yapsana!", 113.534]], "end": 114.24}, {"tag": "s.1q", "who": "lead", "words": [["Ee,", 115.0], ["şimdi", 115.388], ["ne", 115.777], ["yapıyoruz?", 115.971]], "end": 116.9}, {"tag": "s.1a", "who": "kids", "words": [["UÇUYORUUUZ!", 116.95]], "end": 117.6}, {"tag": "s.2q", "who": "lead", "words": [["Kim", 117.65], ["yapacak?", 117.915]], "end": 118.8}, {"tag": "s.2a", "who": "kids", "words": [["BİİİZ!", 118.9]], "end": 120.1}, {"tag": "s.3", "who": "all", "words": [["Hep", 120.25], ["birlikte", 120.416], ["en", 120.915], ["iyisini", 121.082], ["biz", 121.747], ["yaparız!", 121.913]], "end": 122.6}];
+  const BEATS = [0.209, 0.673, 1.138, 1.602, 2.067, 2.531, 3.019, 3.506, 3.994, 4.481, 4.969, 5.457, 5.944, 6.432, 6.92, 7.407, 7.895, 8.382, 8.893, 9.381, 9.845, 10.333, 10.82, 11.308, 11.796, 12.283, 12.771, 13.235, 13.723, 14.211, 14.698, 15.186, 15.673, 16.161, 16.649, 17.113, 17.601, 18.088, 18.576, 19.04, 19.528, 20.016, 20.503, 20.991, 21.455, 21.943, 22.384, 22.825, 23.266, 23.708, 24.149, 24.59, 25.054, 25.519, 26.006, 26.471, 26.958, 27.423, 27.887, 28.375, 28.839, 29.327, 29.791, 30.256, 30.72, 31.208, 31.626, 32.044, 32.461, 32.903, 33.367, 33.831, 34.319, 34.783, 35.248, 35.736, 36.2, 36.664, 37.152, 37.616, 38.104, 38.568, 39.033, 39.52, 39.985, 40.449, 40.937, 41.401, 41.889, 42.353, 42.818, 43.305, 43.77, 44.234, 44.722, 45.186, 45.65, 46.138, 46.602, 47.09, 47.578, 48.042, 48.506, 48.971, 49.435, 49.9, 50.387, 50.852, 51.316, 51.78, 52.268, 52.733, 53.22, 53.685, 54.149, 54.637, 55.101, 55.565, 56.053, 56.517, 57.005, 57.469, 57.934, 58.398, 58.886, 59.35, 59.815, 60.279, 60.767, 61.231, 61.719, 62.183, 62.647, 63.112, 63.576, 64.064, 64.528, 64.993, 65.48, 65.945, 66.409, 66.873, 67.361, 67.825, 68.313, 68.778, 69.242, 69.706, 70.171, 70.658, 71.123, 71.587, 72.052, 72.539, 73.004, 73.468, 73.932, 74.397, 74.884, 75.349, 75.813, 76.278, 76.742, 77.23, 77.694, 78.158, 78.623, 79.087, 79.552, 80.039, 80.504, 80.968, 81.432, 81.897, 82.361, 82.826, 83.244, 83.661, 84.079, 84.497, 84.939, 85.403, 85.867, 86.355, 86.819, 87.284, 87.748, 88.213, 88.677, 89.141, 89.606, 90.093, 90.558, 91.022, 91.487, 91.951, 92.415, 92.903, 93.367, 93.832, 94.296, 94.761, 95.225, 95.689, 96.154, 96.618, 97.083, 97.547, 98.011, 98.453, 98.847, 99.289, 99.706, 100.148, 100.589, 101.053, 101.518, 101.982, 102.446, 102.911, 103.375, 103.84, 104.304, 104.768, 105.233, 105.697, 106.162, 106.626, 107.09, 107.578, 108.042, 108.507, 108.971, 109.436, 109.9, 110.364, 110.829, 111.293, 111.758, 112.222, 112.686, 113.151, 113.615, 114.08, 114.544, 115.008, 115.473, 115.937, 116.402, 116.866, 117.33, 117.795, 118.259, 118.724, 119.188, 119.652, 120.117, 120.581, 121.046, 121.51, 121.974, 122.439, 122.903, 123.368, 123.832, 124.296, 124.761, 125.225, 125.69, 126.154, 126.618, 127.083, 127.547, 128.012, 128.476, 128.94, 129.382, 129.846, 130.334, 130.891, 131.448, 131.913, 132.377, 132.841, 133.306, 133.77];
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const smooth = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
+  const easeOut = (x) => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
+  const easeIn = (x) => Math.pow(clamp(x, 0, 1), 3);
+  const outBack = (x, s = 1.7) => { x = clamp(x, 0, 1); return 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const pIn = (t, t0, d) => clamp((t - t0) / d, 0, 1);
+  const bump = (t, t0, d) => { const u = (t - t0) / d; return u > 0 && u < 1 ? Math.sin(Math.PI * u) : 0; };
+
+  function leg(c) { return `<path d="M-38 -30 L38 -30 L38 74 Q38 104 0 104 Q-38 104 -38 74 Z" fill="${c}"/><path d="M-38 -6 L-38 74 Q-38 104 0 104 Q38 104 38 74 L38 -6" fill="none" stroke="${OL}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+      <g fill="#EEF5FD" stroke="${OL}" stroke-width="2"><ellipse cx="-20" cy="96" rx="9" ry="6"/><ellipse cx="0" cy="99" rx="9" ry="6"/><ellipse cx="20" cy="96" rx="9" ry="6"/></g>`; }
+  function ear() { return `<path d="M222 168 C128 92 26 160 44 278 C60 374 160 386 222 322 Z" fill="url(#gEar)" stroke="${OL}" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M205 196 C140 146 76 192 88 272 C100 336 164 344 205 302 Z" fill="#F7B3C8"/>`; }
+
+  // ───────────────────────── Fıstık rig (SVG) ─────────────────────────
+  $("#char").innerHTML = `
+  <svg viewBox="0 0 600 640">
+    <defs>
+      <radialGradient id="gHead" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#C4E1FD"/><stop offset=".6" stop-color="#A3CAF2"/><stop offset="1" stop-color="#85B1E6"/></radialGradient>
+      <radialGradient id="gBody" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#B5D6F8"/><stop offset="1" stop-color="#7FA9DE"/></radialGradient>
+      <radialGradient id="gEar" cx="60%" cy="40%" r="80%"><stop offset="0" stop-color="#A6CBF2"/><stop offset="1" stop-color="#7DA6DC"/></radialGradient>
+      <linearGradient id="gTrunk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A2C8F1"/><stop offset="1" stop-color="#7AA6DD"/></linearGradient>
+      <linearGradient id="gHat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD966"/><stop offset="1" stop-color="#FFB627"/></linearGradient>
+      <clipPath id="cEyeL"><ellipse cx="248" cy="246" rx="34" ry="41"/></clipPath>
+      <clipPath id="cEyeR"><ellipse cx="352" cy="246" rx="34" ry="41"/></clipPath>
+      <clipPath id="cHat"><path d="M156 196 C160 60 440 60 444 196 Z"/></clipPath>
+    </defs>
+    <g id="rig">
+      <g id="tail"><path d="M432 470 Q482 452 494 492" stroke="${OL}" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M432 470 Q482 452 494 492" stroke="#8DB6E8" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M486 488 q8 22 -2 30 q16 -4 18 -24 z" fill="#5E86C2" stroke="${OL}" stroke-width="3"/></g>
+      <g id="legBL">${leg("#86AEE2")}</g><g id="legBR">${leg("#86AEE2")}</g>
+      <g id="earL">${ear()}</g><g id="earR">${ear()}</g>
+      <ellipse cx="300" cy="462" rx="146" ry="116" fill="url(#gBody)" stroke="${OL}" stroke-width="5"/>
+      <g id="legFL">${leg("#8DB4E6")}</g><g id="legFR">${leg("#8DB4E6")}</g>
+      <ellipse cx="300" cy="482" rx="92" ry="66" fill="#D3E7FA"/>
+      <g id="head">
+        <ellipse cx="300" cy="236" rx="152" ry="141" fill="url(#gHead)" stroke="${OL}" stroke-width="5"/>
+        <g id="hat">
+          <path d="M156 196 C160 60 440 60 444 196 Q300 170 156 196Z" fill="url(#gHat)" stroke="#D9861A" stroke-width="5"/>
+          <g clip-path="url(#cHat)" opacity=".9"><path d="M150 120 Q300 92 450 120" stroke="#FF8A3D" stroke-width="16" fill="none"/><path d="M150 152 Q300 126 450 152" stroke="#FF8A3D" stroke-width="16" fill="none"/></g>
+          <path d="M150 194 Q300 160 450 194 L452 218 Q300 186 148 218Z" fill="#FF9F1C" stroke="#D9861A" stroke-width="5" stroke-linejoin="round"/>
+          <g id="pom"><circle cx="300" cy="74" r="30" fill="#FF6B4A" stroke="#C94A2E" stroke-width="5"/><circle cx="290" cy="64" r="9" fill="#FF9F86"/></g>
+        </g>
+        <ellipse cx="203" cy="304" rx="27" ry="16" fill="#FF8FAB" opacity=".7"/><ellipse cx="397" cy="304" rx="27" ry="16" fill="#FF8FAB" opacity=".7"/>
+        <g id="eyes">
+          <ellipse cx="248" cy="246" rx="34" ry="41" fill="#fff" stroke="#2B2D42" stroke-width="3.5"/>
+          <ellipse cx="352" cy="246" rx="34" ry="41" fill="#fff" stroke="#2B2D42" stroke-width="3.5"/>
+          <g id="pupils">
+            <circle cx="254" cy="254" r="24" fill="#2B2D42"/><circle cx="358" cy="254" r="24" fill="#2B2D42"/>
+            <circle cx="263" cy="243" r="8.5" fill="#fff"/><circle cx="367" cy="243" r="8.5" fill="#fff"/>
+            <circle cx="248" cy="265" r="3.8" fill="#fff"/><circle cx="352" cy="265" r="3.8" fill="#fff"/>
+          </g>
+          <g clip-path="url(#cEyeL)"><rect id="lidL" x="210" y="200" width="80" height="0" fill="#9EC6F0"/></g>
+          <g clip-path="url(#cEyeR)"><rect id="lidR" x="314" y="200" width="80" height="0" fill="#9EC6F0"/></g>
+        </g>
+        <clipPath id="cMouth"><path id="mouthClip" d=""/></clipPath><path id="mouth" d="" fill="#8C2F45" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+        <g clip-path="url(#cMouth)"><ellipse id="tongue" cx="252" cy="350" rx="16" ry="0" fill="#FF8FA3"/></g>
+        <g id="trunk"><path id="trunkShadow" fill="rgba(40,70,130,.22)" transform="translate(7 9)"/><path id="trunkFill" fill="url(#gTrunk)"/><path id="trunkLine" fill="none" stroke="${OL}" stroke-width="5" stroke-linejoin="round"/>
+          <path id="trunkWr" fill="none" stroke="#6F9AD3" stroke-width="4" stroke-linecap="round"/><ellipse id="nostril" rx="12" ry="7" fill="#6F9AD3"/></g>
+      </g>
+    </g>
+  </svg>`;
+  const E = (id) => document.getElementById(id);
+  const el = { rig: E("rig"), tail: E("tail"), earL: E("earL"), earR: E("earR"), head: E("head"), pom: E("pom"), pupils: E("pupils"),
+    lidL: E("lidL"), lidR: E("lidR"), mouth: E("mouth"), mclip: E("mouthClip"), tongue: E("tongue"), tf: E("trunkFill"), ts: E("trunkShadow"), tl: E("trunkLine"), tw: E("trunkWr"), nos: E("nostril"),
+    legs: [E("legFL"), E("legFR"), E("legBL"), E("legBR")] };
+  const LEGP = [[250, 518, 0], [350, 518, Math.PI], [218, 500, Math.PI], [382, 500, 0]];  // pivot x,y, phase
+
+  // trunk geometry: base at TB, TN segments, direction A + C·f²
+  const TB = [300, 298], TN = 9, TL = 22;
+  function trunkGeom(A, C, TLx = TL) {
+    const P = [[TB[0], TB[1]]], ANG = [];
+    for (let i = 0; i < TN; i++) { const f = i / (TN - 1), a = (A + C * f * f) * Math.PI / 180; ANG.push(a);
+      const p = P[P.length - 1]; P.push([p[0] + TLx * Math.cos(a), p[1] + TLx * Math.sin(a)]); }
+    ANG.push(ANG[ANG.length - 1]);
+    return { P, ANG };
+  }
+  function drawTrunk(A, C, Lx) {
+    const { P, ANG } = trunkGeom(A, C, Lx), Lp = [], Rp = [];
+    P.forEach((p, i) => { const w = (60 - 26 * i / TN) / 2, a = ANG[i], nx = -Math.sin(a), ny = Math.cos(a);
+      Lp.push([p[0] + nx * w, p[1] + ny * w]); Rp.push([p[0] - nx * w, p[1] - ny * w]); });
+    const f = (q) => q[0].toFixed(1) + " " + q[1].toFixed(1), wt = (60 - 26) / 2;
+    const side = "M" + Lp.map(f).join(" L") + ` A${wt} ${wt} 0 0 0 ` + f(Rp[TN]) + " L" + Rp.slice(0, TN).reverse().map(f).join(" L");
+    el.tf.setAttribute("d", side + " Z"); el.tl.setAttribute("d", side); el.ts.setAttribute("d", side + " Z");
+    let wr = ""; [3, 4, 5].forEach((i) => { const a = Lp[i], b = Rp[i], m = P[i];
+      const ax = m[0] + (a[0] - m[0]) * 0.55, ay = m[1] + (a[1] - m[1]) * 0.55, bx = m[0] + (b[0] - m[0]) * 0.55, by = m[1] + (b[1] - m[1]) * 0.55;
+      wr += `M${ax.toFixed(1)} ${ay.toFixed(1)} Q${(m[0] + Math.cos(ANG[i]) * 5).toFixed(1)} ${(m[1] + Math.sin(ANG[i]) * 5).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)} `; });
+    el.tw.setAttribute("d", wr);
+    const tp = P[TN], ta = ANG[TN], nx = tp[0] + Math.cos(ta) * 4, ny = tp[1] + Math.sin(ta) * 4;
+    el.nos.setAttribute("cx", nx.toFixed(1)); el.nos.setAttribute("cy", ny.toFixed(1));
+    el.nos.setAttribute("transform", `rotate(${(ta * 180 / Math.PI + 90).toFixed(1)} ${nx.toFixed(1)} ${ny.toFixed(1)})`);
+  }
+  const tipLocal = (A, C, Lx) => trunkGeom(A, C, Lx).P[TN];
+
+
+  // ───────────────────────── tempo + lyric helpers ─────────────────────────
+  function beatPos(t) {
+    const n = BEATS.length;
+    if (t <= BEATS[0]) return (t - BEATS[0]) / (BEATS[1] - BEATS[0]);
+    if (t >= BEATS[n - 1]) return n - 1 + (t - BEATS[n - 1]) / (BEATS[n - 1] - BEATS[n - 2]);
+    let lo = 0, hi = n - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (BEATS[m] <= t) lo = m; else hi = m; }
+    return lo + (t - BEATS[lo]) / (BEATS[hi] - BEATS[lo]);
+  }
+  const BEAT = (BEATS[BEATS.length - 1] - BEATS[0]) / (BEATS.length - 1);
+  const beatsIn = (a, b) => BEATS.filter((x) => x >= a && x <= b);
+  const LT = {}; LINES.forEach((L, i) => (LT[L.tag] = i));
+  const ts = (tag) => LINES[LT[tag]].words[0][1];
+  const te = (tag) => LINES[LT[tag]].end;
+  const words = (tag) => LINES[LT[tag]].words;
+  const wt = (tag, i) => { const w = words(tag); return w[i < 0 ? w.length + i : i][1]; };
+  const norm = (w) => w.replace("İ", "i").replace("I", "ı").toLowerCase().replace(/[^a-zçğıöşü]/g, "");
+  const SOUND = { "pırt": "pirt", "vın": "vin", "güm": "gum", "olduuu": "oldu" };
+  const SCOL = { pirt: "#FF7A3D", vin: "#3D9BFF", gum: "#E5484D", oldu: "#3FBF6F" };
+
+  // ───────────────────────── key times + scenes ─────────────────────────
+  const T = { shop: 16.4, run: 31.3, sky: 76.9, sun: 99.65, land: 122.7,
+    hatOff: wt("k1.7", 2) + 0.05, crash: wt("k2.2", 2), poke: 66.4, lift: ts("n2.4"), heart0: ts("f.5"), heart1: te("f.6"), roll: ts("f.7"), loop: ts("s.1a"), fog: wt("b.8", 0) + 0.45 };
+  const scene = (t) => t < T.shop ? 0 : t < T.run ? 1 : t < T.sky ? 2 : t < T.sun ? 3 : t < T.land ? 4 : 5;
+  const SETS = ["setGarden", "setShop", "setRun", "setSky", "setSun", "setGarden"];
+  const GROUND = [1010, 1040, 1060, 0, 0, 1040];
+
+  const mk = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+  const cloud = (x, y, s, c = "#fff", id = "") => `<g ${id ? `id="${id}"` : ""} transform="translate(${x} ${y}) scale(${s})" fill="${c}"><circle cx="80" cy="80" r="50"/><circle cx="150" cy="58" r="62"/><circle cx="222" cy="82" r="46"/><rect x="60" y="80" width="190" height="50" rx="25"/></g>`;
+  const sunFace = (id, c1 = "#FFD84D", c2 = "#F5B921") => `<g id="${id}"><g class="rays" fill="${c1}">${Array.from({ length: 12 }, (_, i) => `<rect x="-7" y="-118" width="14" height="42" rx="7" transform="rotate(${i * 30})"/>`).join("")}</g>
+      <circle r="70" fill="${c1}" stroke="${c2}" stroke-width="6"/><g class="eyeL"><ellipse cx="-20" cy="-8" rx="7" ry="9" fill="#9A5B1E"/></g><g class="eyeR"><ellipse cx="20" cy="-8" rx="7" ry="9" fill="#9A5B1E"/></g>
+      <ellipse cx="-36" cy="12" rx="12" ry="7" fill="#FF9F7A" opacity=".75"/><ellipse cx="36" cy="12" rx="12" ry="7" fill="#FF9F7A" opacity=".75"/><path d="M-18 14 Q0 32 18 14" stroke="#9A5B1E" stroke-width="6" fill="none" stroke-linecap="round"/></g>`;
+  const tuft = (x, y, c = "#4FAE48") => `<path d="M${x - 18} ${y} q7 -30 11 0 q5 -38 11 0 q7 -28 14 0z" fill="${c}"/>`;
+  const groundSet = (top, c1, c2) => `<path d="M-300 ${top} Q500 ${top - 40} 1000 ${top - 10} T2220 ${top} V1600 H-300Z" fill="${c1}"/><path d="M-300 ${top + 120} Q600 ${top + 90} 1200 ${top + 110} T2220 ${top + 105} V1600 H-300Z" fill="${c2}"/>`;
+  const sky = (id, a, b, c, y0 = -400) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient></defs><rect x="-400" y="${y0}" width="2720" height="${1700 - y0}" fill="url(#${id})"/>`;
+  const flowers = (list) => list.map(([x, y, c]) => `<g transform="translate(${x} ${y})"><path d="M0 0 V-46" stroke="#3E8A32" stroke-width="6"/>${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-60" rx="10" ry="15" fill="${c}" stroke="#fff" stroke-width="2" transform="rotate(${a} 0 -46)"/>`).join("")}<circle cy="-46" r="8" fill="#FFD43B"/></g>`).join("");
+  const fence = (y, x0 = -200, n = 24, c = "#FFF4DC") => `<path d="M${x0} ${y - 60} H${x0 + n * 100} M${x0} ${y - 20} H${x0 + n * 100}" stroke="${c}" stroke-width="12"/>${Array.from({ length: n }, (_, i) => `<path d="M${x0 + i * 100} ${y} V${y - 90} l14 -16 l14 16 V${y}Z" fill="${c}" stroke="#C9B48E" stroke-width="3"/>`).join("")}`;
+
+  // ── SET 0/5 · garden (start + landing) ──
+  const TREE = { x: 1640, y: 1012 }, BOX = { x: 1240, y: 1015 }, POND = { x: 1660, y: 1100 }, HAY = { x: 330, y: 1060 }, LINE = { x: 1180, y: 1010 };
+  E("setGarden").innerHTML = sky("gSkG", "#6EC3FF", "#B9E6FF", "#F2FBFF", -1200) + `<defs><linearGradient id="gEve" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF9F7A"/><stop offset=".55" stop-color="#FFC98A"/><stop offset="1" stop-color="#FFF1D2"/></linearGradient></defs><rect id="eveTint" x="-400" y="-1200" width="2720" height="2900" fill="url(#gEve)" opacity="0"/>
+    <g id="clG">${cloud(140, 120, 0.8) + cloud(900, 60, 0.6) + cloud(1400, 180, 0.5)}</g><g transform="translate(560 220)">${sunFace("sunG")}</g>
+    <path d="M-300 790 Q300 700 900 760 T2220 740 V1600 H-300Z" fill="#CFEFB4"/>
+    ${[[120, 820, "#FF8FAB", "#E2577A"], [520, 790, "#FFD43B", "#E0A800"], [1420, 800, "#7FC4FF", "#3D7DD8"]].map(([x, y, c, r]) => `<g transform="translate(${x} ${y}) scale(.7)">${C.house(c, r === "#E0A800" ? "#FF7A3D" : "#FF5A5F", 140, 100)}</g>`).join("")}
+    ${fence(900)}${groundSet(940, "#8FD46E", "#79C25A")}
+    ${[60, 220, 900, 1880, 1980, 360, 1100].map((x, i) => tuft(x, 990 + (i % 3) * 40)).join("")}
+    ${flowers([[110, 1000, "#FF5A5F"], [190, 1030, "#FFD43B"], [1880, 1010, "#A66BFF"], [980, 1050, "#FF8FAB"]])}
+    <g transform="translate(${TREE.x} ${TREE.y})">${C.oak()}</g>
+    <g id="bigBox" transform="translate(${BOX.x} ${BOX.y})"><path d="M-150 -40 L-170 -130 L-60 -130 L-40 -40Z" fill="url(#gKraft)" stroke="#7A4A22" stroke-width="6"/><path d="M150 -40 L176 -128 L70 -128 L40 -40Z" fill="url(#gKraft)" stroke="#7A4A22" stroke-width="6"/>
+      <rect x="-150" y="-40" width="300" height="40" fill="#6E431F"/><rect x="-160" y="-30" width="320" height="200" rx="10" fill="url(#gKraft)" stroke="#7A4A22" stroke-width="7" transform="translate(0 0)"/><path d="M-60 -30 V170" stroke="#B98546" stroke-width="40" opacity=".9"/></g>
+    <g id="landProps" opacity="0"><g transform="translate(${HAY.x} ${HAY.y})">${C.hay()}</g>
+      <ellipse cx="${POND.x}" cy="${POND.y}" rx="230" ry="56" fill="#5CC2F0" stroke="#3A9AD0" stroke-width="7"/><ellipse cx="${POND.x - 50}" cy="${POND.y - 10}" rx="120" ry="18" fill="#B9EAFF" opacity=".6"/>
+      <g transform="translate(${LINE.x} ${LINE.y})">${C.clothesline()}</g></g>`;
+
+  // ── SET 1 · workshop (kraft colour event) ──
+  E("setShop").innerHTML = `<rect x="-400" y="-400" width="2720" height="2100" fill="#E2AE72"/><rect x="-400" y="-400" width="2720" height="1250" fill="#D9A066"/>
+    <g transform="translate(960 760)">${C.pegboard()}</g>
+    <g transform="translate(330 170) rotate(-8)">${C.hammer()}</g><g transform="translate(520 150) rotate(6)">${C.wrench()}</g><g transform="translate(1320 200) rotate(-4)">${C.saw()}</g>
+    <g transform="translate(1660 210)">${C.tapeRoll(1.1)}</g><g transform="translate(1780 260)">${C.tapeRoll(0.8)}</g>
+    <g transform="translate(220 420)"><rect x="-120" y="-90" width="240" height="180" rx="16" fill="#9BD8FF" stroke="#fff" stroke-width="14"/><path d="M0 -90 V90 M-120 0 H120" stroke="#fff" stroke-width="10"/><circle cx="60" cy="-40" r="24" fill="#FFD84D"/></g>
+    <g transform="translate(1500 860)">${C.bench()}</g>
+    <path d="M-400 960 H2320 V1700 H-400Z" fill="#C98A4E"/>${Array.from({ length: 14 }, (_, i) => `<path d="M${-300 + i * 180} 960 L${-420 + i * 200} 1500" stroke="#B5763A" stroke-width="5"/>`).join("")}
+    <path d="M-400 960 H2320" stroke="#7A4A22" stroke-width="10"/>`;
+
+  // ── SET 2 · grass runway (grey + orange lights colour event) ──
+  const RWY = 1100;
+  E("setRun").innerHTML = sky("gSkR", "#5DB8FF", "#A8DEFF", "#F2FBFF", -1600) + `<g id="clR">${cloud(160, 140, 0.8) + cloud(1000, 40, 0.65) + cloud(1500, 210, 0.5) + cloud(500, -500, 0.9) + cloud(1300, -800, 1.0) + cloud(200, -1100, 0.8)}</g>
+    <path d="M-300 820 Q200 690 700 780 T1500 760 T2220 780 V1600 H-300Z" fill="#B7E39A"/><path d="M-300 880 Q400 820 900 870 T2220 860 V1600 H-300Z" fill="#9AD67C"/>
+    ${fence(950, -200, 26, "#FFFFFF")}${groundSet(985, "#8FD46E", "#7BC55C")}
+    <path d="M-400 ${RWY - 70} L2320 ${RWY - 70} L2320 ${RWY + 70} L-400 ${RWY + 70}Z" fill="#9CA3AF" stroke="#6B7280" stroke-width="6"/>
+    <path d="M-400 ${RWY} H2320" stroke="#fff" stroke-width="12" stroke-dasharray="70 60"/>
+    ${Array.from({ length: 13 }, (_, i) => `<g transform="translate(${-80 + i * 170} ${RWY - 78})">${C.rwLight("rl" + i)}</g><g transform="translate(${-80 + i * 170} ${RWY + 104})">${C.rwLight("rm" + i)}</g>`).join("")}
+    <g id="sockG" transform="translate(1800 960)">${C.windsock()}</g>`;
+
+  // ── SET 3 · sky (blue colour event) ──
+  E("setSky").innerHTML = sky("gSkS", "#3FA4FF", "#8FD0FF", "#E6F6FF", -400) + `<g id="town">${Array.from({ length: 16 }, (_, i) => `<g transform="translate(${-200 + i * 150} ${1240 + (i % 3) * 14}) scale(.5)">${C.house(TC[i % 6], ["#FF5A5F", "#FF7A3D", "#3D9BFF"][i % 3], 120, 90)}</g>`).join("")}<path d="M-400 1250 H2320 V1700 H-400Z" fill="#8FD46E"/></g>
+    <g id="clS1">${Array.from({ length: 8 }, (_, i) => cloud(i * 420 - 200, 120 + (i * 137) % 600, 0.9 + (i % 3) * 0.3, "#fff")).join("")}</g>
+    <g id="clS2" opacity=".85">${Array.from({ length: 6 }, (_, i) => cloud(i * 560 - 100, 900 + (i * 91) % 200, 1.4, "#F4FAFF")).join("")}</g>`;
+
+  // ── SET 4 · above the clouds at sunset (pink/orange colour event) ──
+  const SUNC = { x: 960, y: 470 };
+  E("setSun").innerHTML = sky("gSkU", "#7A6CFF", "#FF8FAB", "#FFC27A", -400) + `<g transform="translate(${SUNC.x} ${SUNC.y}) scale(1.5)">${sunFace("sunU", "#FFE08A", "#FFB547")}</g>
+    <g id="clU1" opacity=".9">${Array.from({ length: 7 }, (_, i) => cloud(i * 380 - 200, 140 + (i * 113) % 300, 0.7, "#FFE3EC")).join("")}</g>
+    <g id="clU2">${Array.from({ length: 12 }, (_, i) => cloud(i * 230 - 300, 960 + (i % 3) * 50, 1.6, i % 2 ? "#FFF0F4" : "#FFE0EA")).join("")}<path d="M-400 1080 H2320 V1700 H-400Z" fill="#FFE8EF"/></g>`;
+
+  // ───────────────────────── actors ─────────────────────────
+  E("planeBackG").innerHTML = C.planeBack();
+  const SEATS = { mouse: [-40, -300, 0.9], frog: [-140, -305, 0.8], duck: [-250, -300, 0.75] };
+  E("inPlane").innerHTML = "";
+  E("actors").innerHTML = `${C.defs()}${C.defs8()}
+    <g id="planeFrontG">${C.planeFront("pl")}</g>
+    <g id="steer" opacity="0">${C.wheelSteer()}</g>
+    <g id="wheelRoll" opacity="0"><g class="wr">${C.button("#FF5A5F", 58)}</g></g>
+    <g id="outPlane">
+      <g id="frogPos"><g id="frog">${C.frog("fr")}</g></g>
+      <g id="mousePos"><g id="mouse">${C.mouse("ms")}<g class="spiral" opacity="0">${[-12, 22].map((x) => `<path d="M${x} -118 m-8 0 a8 8 0 1 1 8 8 a12 12 0 1 1 -12 -12" stroke="#4A3F63" stroke-width="3" fill="#fff"/>`).join("")}</g></g></g>
+      <g id="duckPos"><g id="duck">${C.duck("dk")}</g></g>
+      <g id="ducklingPos"><g id="duckling">${C.duck("dl", true)}</g></g></g>
+    <g id="wheelDrop" opacity="0">${C.button("#3D9BFF", 58)}</g>
+    <g id="chocks">${[0, 1].map((i) => `<g id="ch${i}" opacity="0">${C.chock()}</g>`).join("")}</g>
+    <g id="droneG" opacity="0">${C.drone("dr")}</g>
+    <g id="photo" opacity="0"><rect x="-60" y="-70" width="120" height="140" rx="8" fill="#fff" stroke="#9AA8B8" stroke-width="4"/><rect x="-48" y="-58" width="96" height="92" fill="#BFE6FF"/>
+      <circle cx="0" cy="-12" r="34" fill="#A3CAF2" stroke="${OL}" stroke-width="4"/><path d="M-34 -24 C-30 -60 30 -60 34 -24 Q0 -30 -34 -24Z" fill="#FFD966" stroke="#D9861A" stroke-width="3"/><circle cx="-12" cy="-8" r="9" fill="#fff" stroke="${INK}" stroke-width="2.5"/><circle cx="12" cy="-8" r="9" fill="#fff" stroke="${INK}" stroke-width="2.5"/><circle cx="-12" cy="-8" r="3" fill="${INK}"/><circle cx="12" cy="-8" r="3" fill="${INK}"/><ellipse cx="0" cy="12" rx="6" ry="8" fill="#8C2F45"/></g>
+    <g id="rocketG" opacity="0">${C.rocket("rk")}</g>
+    <g id="paperG" opacity="0">${C.paperPlane()}</g>
+    <g id="birds">${[0, 1, 2].map((i) => `<g id="bd${i}" opacity="0">${C.bird()}</g>`).join("")}</g>
+    <g id="flyHat" opacity="0"></g>
+    <g id="flyPom" opacity="0"><circle r="30" fill="#FF6B4A" stroke="#C94A2E" stroke-width="5"/><circle cx="-10" cy="-10" r="9" fill="#FF9F86"/></g>
+    <path id="tongue8" fill="none" stroke="#FF6F91" stroke-width="15" stroke-linecap="round" opacity="0"/>
+    <g id="stars">${Array.from({ length: 5 }, (_, i) => `<g id="st${i}" opacity="0">${C.star5(22)}</g>`).join("")}</g>
+    <g id="blanket" opacity="0">${[0, 1, 2].map((i) => `<g id="bk${i}">${C.tapeStrip(560, 70)}</g>`).join("")}</g>
+    <g id="notes">${Array.from({ length: 9 }, (_, i) => `<g id="nt${i}" opacity="0"><path d="M0 0 V-40 L22 -46 V-8" stroke="#FF7A3D" stroke-width="6" fill="none"/><ellipse cx="-6" cy="2" rx="10" ry="8" fill="#FF7A3D"/><ellipse cx="16" cy="-6" rx="10" ry="8" fill="#FF7A3D"/></g>`).join("")}</g>
+    <g id="hearts">${Array.from({ length: 12 }, (_, i) => `<g id="ht${i}" opacity="0">${C.heart(0.8)}</g>`).join("")}</g>`;
+  E("fxSvg").innerHTML = `<g id="spark">${Array.from({ length: 14 }, (_, i) => `<path id="sk${i}" d="M0 -16 L4 -4 L16 0 L4 4 L0 16 L-4 4 L-16 0 L-4 -4Z" fill="#FFF3B0" stroke="#F5A800" stroke-width="2.5" opacity="0"/>`).join("")}</g>
+    <g id="dust">${Array.from({ length: 12 }, (_, i) => `<circle id="du${i}" r="20" fill="#fff" stroke="#E6DCCB" stroke-width="3" opacity="0"/>`).join("")}</g>
+    <g id="puffs">${Array.from({ length: 12 }, (_, i) => `<circle id="pu${i}" r="20" fill="#F2F4F8" stroke="#B8C4D0" stroke-width="4" opacity="0"/>`).join("")}</g>
+    <g id="strain">${Array.from({ length: 6 }, (_, i) => `<path id="sn${i}" d="M0 0 l18 -10" stroke="${INK}" stroke-width="5" stroke-linecap="round" opacity="0"/>`).join("")}</g>`;
+
+  // ── screen-space overlays ──
+  E("speed").innerHTML = Array.from({ length: 14 }, (_, i) => `<rect id="sl${i}" x="0" y="${60 + i * 72}" width="${300 + (i * 97) % 500}" height="${8 + (i % 3) * 4}" rx="6" fill="#fff" opacity="0"/>`).join("");
+  E("boxMask").innerHTML = `<defs><mask id="bmM"><rect width="1920" height="1080" fill="#fff"/><rect id="bmHole" x="660" y="340" width="600" height="400" rx="30" fill="#000"/></mask></defs><rect width="1920" height="1080" fill="#5A3A1A" mask="url(#bmM)" id="bmR" opacity="0"/>`;
+  E("cloudWipe").innerHTML = `<g id="cwG" opacity="0">${Array.from({ length: 7 }, (_, i) => cloud(-200 + i * 300, -100 + (i % 3) * 300, 3.2, i % 2 ? "#fff" : "#F2F8FF")).join("")}</g>`;
+  E("fog").innerHTML = `<rect width="1920" height="1080" fill="url(#gFog)"/><g opacity=".5">${Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 197) % 1920}" cy="${(i * 331) % 1080}" r="${6 + (i % 4) * 4}" fill="#fff"/>`).join("")}</g>
+    <path id="fogHeart" d="M960 700 C700 520 640 380 760 300 C860 240 940 300 960 380 C980 300 1060 240 1160 300 C1280 380 1220 520 960 700Z" fill="none" stroke="#FF6B8A" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2400" stroke-dashoffset="2400"/>`;
+  E("lensWheel").innerHTML = `<g id="lwG" opacity="0">${C.button("#FF5A5F", 58)}</g>`;
+  E("tapeClose").innerHTML = `<g id="tcL"><rect x="-1100" y="380" width="1100" height="320" fill="#C98A4E"/><rect x="-1100" y="380" width="1100" height="90" fill="#E2B477" opacity=".6"/><path d="M-1100 380 H0 M-1100 700 H0" stroke="#8A5A2B" stroke-width="6"/></g>
+    <g id="tcR"><rect x="1920" y="380" width="1100" height="320" fill="#C98A4E"/><rect x="1920" y="380" width="1100" height="90" fill="#E2B477" opacity=".6"/><path d="M1920 380 H3020 M1920 700 H3020" stroke="#8A5A2B" stroke-width="6"/></g>
+    <g id="tcHeart" opacity="0" transform="translate(960 540)">${C.heart(4)}</g>`;
+
+  // pools
+  const pool = (host, n, cls, id, extra) => { for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "abs " + cls; d.id = id + i; d.style.opacity = 0; d.style.left = "0px"; d.style.top = "0px"; if (extra) extra(d, i); E(host).appendChild(d); } };
+  pool("confBox", 150, "conf", "cf", (d, i) => { d.style.background = ["#FFC21A", "#FF5A5F", "#A66BFF", "#3FBF6F", "#3D9BFF"][i % 5]; });
+
+  // ───────────────────────── lyrics ─────────────────────────
+  LINES.forEach((L, li) => { const d = document.createElement("div"); d.className = "line"; d.id = "ln" + li;
+    L.words.forEach((w, wi) => { const s = document.createElement("span"); s.id = `w${li}_${wi}`; s.textContent = w[0]; d.appendChild(s); }); E("lyric").appendChild(d); });
+
+  // ───────────────────────── animated state ─────────────────────────
+  const POSE = { rest: [88, -140, 22], trumpet: [25, -110, 28], kick: [18, -112, 29.5], up: [45, -150, 28], flyup: [40, -170, 31], reach: [10, 60, 25], back: [150, 60, 24], blow: [-8, -40, 28] };
+  const R = { A: POSE.rest[0], C: POSE.rest[1], L: POSE.rest[2], mouth: 0, blink: 0, lookX: 0, lookY: 0, earAmp: 1, flap: 0, walk: 0, sway: 0, tilt: 0, bob: 1, dance: 0, jy: 0, rot: 0, sq: 0 };
+  const CAM = { x: 960, y: 600, s: 1.0, r: 0 };
+  const ENV = { glow: 0, flash: 0, burst: 0, up: 0, speed: 0, fog: 0 };
+  // plane state: parts (0..1), face, motion extras
+  const PL = { wing: 0, wheels: 0, prop: 0, eye: 0, smile: 0, open: 0, look: 0, sad: 0, dent: 0, patch: 0, bent: 0, jy: 0, rot: 0, roll: 0, flag: 0, lights: 0, lightAll: 0, sleep: 0 };
+  const AN = { frogOpen: 0, duckOpen: 0, dlOpen: 0, msOpen: 0, party: 0, cheer: 0 };
+  const EV = { conf: [], hearts: [], dust: [], dustRev: [], spark: [], puff: [], notes: [] };
+  let VIEW = { s: 1, cx: 960, cy: 540 };
+  const W2S = (x, y) => [960 + (x - VIEW.cx) * VIEW.s, 540 + (y - VIEW.cy) * VIEW.s];
+
+  // ───────────────────────── the plane's path (pure function of t) ─────────────────────────
+  // keyframes [t, x, y, rot]: x,y = ground point under the fuselage (scene space)
+  const PK = [
+    [16.4, 960, 1040, 0], [31.29, 960, 1040, 0],
+    [31.3, 560, RWY + 10, 0], [37.5, 560, RWY + 10, 0], [39.2, 840, RWY + 10, 0], [48.7, 840, RWY + 10, 0], [49.65, 1150, RWY - 70, -12], [49.82, 1230, RWY + 10, 16], [56.5, 1230, RWY + 10, 16], [57.9, 1230, RWY + 10, 0], [66.45, 1230, RWY + 10, 0], [66.95, 1430, RWY + 10, 0], [69.5, 1430, RWY + 10, 0],
+    [69.55, 520, RWY + 10, 0], [73.4, 520, RWY + 10, 0], [75.3, 1150, RWY + 10, 0], [76.89, 1900, 380, -16],
+    [76.9, 860, 850, 0], [84.6, 860, 850, 0], [98.6, 860, 850, 0], [99.64, 860, 850, 0],
+    [99.65, 860, 760, 0], [106.8, 900, 760, 0], [110.6, 900, 760, 0], [114.6, 960, 800, 0], [122.69, 960, 800, 0],
+    [122.7, -320, 640, 14], [123.95, 520, 1040, 0], [126.6, 900, 1040, 0], [134.8, 900, 1040, 0],
+  ];
+  const SAME = (p, q) => Math.abs(p[1] - q[1]) < 1 && Math.abs(p[2] - q[2]) < 1;
+  const PTAN = PK.map((k, i) => { if (i === 0 || i === PK.length - 1) return [0, 0]; const p = PK[i - 1], n = PK[i + 1];
+    if (SAME(k, p) || SAME(k, n) || scene(p[0] + 0.001) !== scene(k[0] + 0.001) || scene(k[0] + 0.001) !== scene(n[0] - 0.001) || n[0] - k[0] < 0.1 || k[0] - p[0] < 0.1) return [0, 0];
+    return [0.8 * (n[1] - p[1]) / (n[0] - p[0]), 0.8 * (n[2] - p[2]) / (n[0] - p[0])]; });
+  function pkAt(t) { let i = 0; while (i < PK.length - 2 && PK[i + 1][0] <= t) i++;
+    const a = PK[i], b = PK[i + 1], h = b[0] - a[0], u = clamp((t - a[0]) / h, 0, 1), u2 = u * u, u3 = u2 * u;
+    const h00 = 2 * u3 - 3 * u2 + 1, h10 = u3 - 2 * u2 + u, h01 = -2 * u3 + 3 * u2, h11 = u3 - u2;
+    return [h00 * a[1] + h10 * h * PTAN[i][0] + h01 * b[1] + h11 * h * PTAN[i + 1][0], h00 * a[2] + h10 * h * PTAN[i][1] + h01 * b[2] + h11 * h * PTAN[i + 1][1], lerp(a[3], b[3], smooth(0, 1, u))]; }
+  // sunset formation: three slots, the plane / drone / rocket swap on f.2 and f.3
+  const SLOT = [[960, 900], [380, 560], [1540, 640]];
+  const slotOf = (who, t) => { const k = t < ts("f.2") ? 0 : t < ts("f.3") ? 1 : 2, base = { plane: 0, drone: 1, rocket: 2 }[who], i = (base + k) % 3;
+    const j = (base + Math.max(0, k - 1)) % 3, tk = k === 0 ? -9 : k === 1 ? ts("f.2") : ts("f.3"), e = smooth(tk, tk + 0.9, t);
+    return k === 0 ? SLOT[base] : [lerp(SLOT[j][0], SLOT[i][0], e), lerp(SLOT[j][1], SLOT[i][1], e)]; };
+  const heartPt = (u) => { const th = u * TAU, x = 16 * Math.pow(Math.sin(th), 3), y = -(13 * Math.cos(th) - 5 * Math.cos(2 * th) - 2 * Math.cos(3 * th) - Math.cos(4 * th)); return [SUNC.x + x * 21, SUNC.y + 40 + y * 21]; };
+  function planePos(t) {
+    const sc = scene(t); let [x, y, rot] = pkAt(t), s = [0, 1.0, 0.82, 0.78, 0.8, 0.8][sc], sy = 1, vis = sc !== 0;
+    if (sc === 1) y += 108 * s * (1 - PL.wheels);                                       // no wheels yet: the box sits on its belly
+    if (sc === 3) { y += 18 * Math.sin(t * 2.2); rot += 3 * Math.sin(t * 1.7);
+      if (t > ts("n2.7") - 0.2 && t < te("n2.8")) { const u = (t - ts("n2.7") + 0.2); y += 120 * Math.sin(u * 3.4) * smooth(ts("n2.7") - 0.2, ts("n2.7") + 0.4, t) * (1 - smooth(te("n2.8") - 0.6, te("n2.8"), t)); rot += -10 * Math.cos(u * 3.4); } }
+    if (sc === 4) { const [sx, syy] = slotOf("plane", t); x = sx; y = syy + 14 * Math.sin(t * 2.0); rot = 2 * Math.sin(t * 1.5);
+      const h0 = T.heart0, h1 = T.heart1; if (t > h0 && t < h1 + 0.6) { const u = pIn(t, h0, h1 - h0), e = smooth(h0, h0 + 0.5, t) * (1 - smooth(h1, h1 + 0.6, t)), [hx, hy] = heartPt(0.5 + u);
+        const [hx2, hy2] = heartPt(0.5 + u + 0.004); x = lerp(x, hx, e); y = lerp(y, hy, e); s = lerp(s, 0.42, e); rot = lerp(rot, Math.atan2(hy2 - hy, hx2 - hx) * 180 / Math.PI, e * 0.35); }
+      if (t > 114.6) { x = lerp(x, 960, smooth(114.6, 115.4, t)); y = lerp(y, 800, smooth(114.6, 115.4, t)); } }
+    if (sc === 5) { const b = [[123.95, 0.55, 150], [124.85, 0.5, 90], [125.65, 0.45, 50]]; b.forEach(([t0, d, h]) => { y -= h * bump(t, t0, d); }); }
+    if (sc === 2 && t > 75.3) s = lerp(s, 0.7, smooth(75.3, 76.9, t));
+    rot += PL.rot; y -= PL.jy * s;
+    sy = Math.cos(PL.roll * TAU);
+    return { x, y, s, rot, sy: Math.abs(sy) < 0.06 ? (sy < 0 ? -0.06 : 0.06) : sy, vis }; }
+  // propeller: rate keyframes [t, deg/s] → angle = exact integral (pure function of t, seek-safe)
+  const [P1, P2, P3] = words("k1.7").slice(0, 3).map((w) => w[1]);
+  const RATE = [[0, 0], [ts("k1.6") + 0.1, 0], [ts("k1.6") + 0.6, 90], [P1 - 0.02, 90], [P1 + 0.06, 700], [P1 + 0.4, 160], [P2 - 0.02, 160], [P2 + 0.06, 800], [P2 + 0.4, 220],
+    [P3 - 0.02, 220], [P3 + 0.06, 900], [P3 + 0.4, 1100], [ts("k1.8"), 1100], [ts("k1.8") + 1.4, 2600], [T.run, 2600], [T.run + 0.01, 300], [T.run + 2, 600], [ts("n1.2"), 600], [ts("n1.2") + 1.6, 2700],
+    [T.crash, 2700], [T.crash + 0.4, 0], [66.0, 0], [66.5, 900], [69.5, 900], [69.6, 1500], [ts("n2.2"), 1500], [ts("n2.2") + 1.2, 3200], [T.land, 3200], [T.land + 0.01, 2000], [129.8, 0], [D + 1, 0]];
+  const RCUM = [0]; for (let i = 1; i < RATE.length; i++) RCUM.push(RCUM[i - 1] + (RATE[i][0] - RATE[i - 1][0]) * (RATE[i][1] + RATE[i - 1][1]) / 2);
+  function spinAt(t) { let i = 0; while (i < RATE.length - 2 && RATE[i + 1][0] <= t) i++; const [a, ra] = RATE[i], [b, rb] = RATE[i + 1], d = clamp(t - a, 0, b - a), r = ra + (rb - ra) * d / (b - a);
+    return (RCUM[i] + d * (ra + r) / 2) % 360; }
+  const PIV = [0, -300];                                                                  // the plane turns around the middle of the box
+  function P2S(lx, ly, p) { const a = p.rot * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a), px = PIV[0] * p.s, py = PIV[1] * p.s * p.sy;
+    const dx = lx * p.s - px, dy = ly * p.s * p.sy - py; return [p.x + px + dx * ca - dy * sa, p.y + py + dx * sa + dy * ca]; }
+  const planeTf = (p) => `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) translate(${(PIV[0] * p.s).toFixed(1)} ${(PIV[1] * p.s * p.sy).toFixed(1)}) rotate(${p.rot.toFixed(2)}) translate(${(-PIV[0] * p.s).toFixed(1)} ${(-PIV[1] * p.s * p.sy).toFixed(1)}) scale(${p.s.toFixed(4)} ${(p.s * p.sy).toFixed(4)})`;
+
+  // ───────────────────────── Fıstık ─────────────────────────
+  const FSEAT = [110, -193], FS = 0.58;
+  function fistikPos(t) { const sc = scene(t);
+    if (sc === 0) { const g = GROUND[0], x = 760; return { x, y: g, s: 0.62, rot: 0, sy: 1, vis: true, free: true }; }
+    const p = planePos(t), [x, y] = P2S(FSEAT[0], FSEAT[1], p); return { x, y, s: FS * p.s, rot: p.rot, sy: p.sy, vis: !(sc === 1 && t < T.shop + 0.15), free: false }; }
+  const tipScene = (t) => { const p = fistikPos(t), q = tipLocal(R.A, R.C, R.L), a = p.rot * Math.PI / 180, dx = (q[0] - 300) * p.s, dy = (q[1] - 620) * p.s * p.sy;
+    return [p.x + dx * Math.cos(a) - dy * Math.sin(a), p.y + dx * Math.sin(a) + dy * Math.cos(a) + R.jy]; };
+  const headScene = (t) => { const p = fistikPos(t), a = p.rot * Math.PI / 180, dx = 0, dy = (236 - 620) * p.s * p.sy; return [p.x - dy * Math.sin(a), p.y + dy * Math.cos(a) + R.jy]; };
+  const pomScene = (t) => { const p = fistikPos(t), a = p.rot * Math.PI / 180, dy = (74 - 620) * p.s * p.sy; return [p.x - dy * Math.sin(a), p.y + dy * Math.cos(a) + R.jy]; };
+
+  // ───────────────────────── friends: seat / free / hidden (pure functions of t) ─────────────────────────
+  const hop = (t, t0, d, A, B, h = 160) => { const u = pIn(t, t0, d), e = smooth(0, 1, u); return { x: lerp(A.x, B.x, e), y: lerp(A.y, B.y, e) - h * Math.sin(Math.PI * u), s: lerp(A.s, B.s, e), r: lerp(A.r || 0, B.r || 0, e) }; };
+  const seatScene = (k, t) => { const p = planePos(t), [sx, sy0, ss] = SEATS[k], [x, y] = P2S(sx, sy0, p); return { x, y, s: ss * p.s, r: p.rot, sy: p.sy }; };
+  // free positions per scene
+  const FREE = {
+    0: { mouse: { x: 1010, y: 1020, s: 0.8 } },
+    1: { mouse: { x: 520, y: 1045, s: 0.85 }, frog: { x: 1420, y: 1045, s: 0.85 }, duck: { x: 1580, y: 1050, s: 0.8 }, duckling: { x: 1700, y: 1050, s: 0.7 } },
+    2: { mouse: { x: 260, y: RWY + 30, s: 0.72 }, frog: { x: 1420, y: RWY + 30, s: 0.72 }, duck: { x: 1580, y: RWY + 34, s: 0.7 }, duckling: { x: 1760, y: RWY + 34, s: 0.62 } },
+  };
+  const CRASH = { mouse: { x: 1530, y: RWY + 40, s: 0.72, r: 82 }, frog: { x: 1680, y: RWY + 40, s: 0.72, r: 86 }, duck: { x: 1830, y: RWY + 44, s: 0.7, r: 84 } };
+  const PUSH = { mouse: { x: 930, y: RWY + 30, s: 0.72, r: 18 }, frog: { x: 810, y: RWY + 30, s: 0.72, r: 18 }, duck: { x: 690, y: RWY + 34, s: 0.7, r: 16, fx: -1 } };
+  function friendPos(k, t) {
+    const sc = scene(t), hide = { mode: "hide" };
+    if (sc === 0) { if (k !== "mouse") return hide; const f = FREE[0].mouse, tb = ts("g.3") + 0.25;              // blown onto the tree, slides down like a leaf, throws the paper plane
+      if (t < tb) return { mode: "free", ...f };
+      if (t < tb + 0.5) return { mode: "free", ...hop(t, tb, 0.5, f, { x: TREE.x - 70, y: 700, s: 0.8, r: -20 }, 60), splat: 1 };
+      if (t < tb + 0.9) return { mode: "free", x: TREE.x - 70, y: 700, s: 0.8, r: -20, splat: 1 };
+      const u = pIn(t, tb + 0.9, 1.4); return { mode: "free", x: TREE.x - 70 - 120 * Math.sin(u * 7) * (1 - u), y: lerp(700, 1020, u), s: 0.8, r: lerp(-20, 0, u) + 25 * Math.sin(u * 7) * (1 - u) }; }
+    if (sc === 1) { const f = FREE[1][k];
+      if (k === "mouse") { const r0 = ts("k1.3"), r1 = ts("k1.4") + 0.05;                                    // hamster wheel
+        if (t > r0 && t < r1 + 1.0) return { mode: "hide" };
+        if (t >= r1 + 1.0 && t < r1 + 2.0) return { mode: "free", ...hop(t, r1 + 1.0, 0.5, { x: 650, y: 1045, s: 0.85 }, f, 120), dizzy: 1 };
+        return { mode: "free", ...f, dizzy: t > r1 + 1.0 && t < r1 + 2.6 ? 1 : 0 }; }
+      if (k === "frog") { const t0 = T.hatOff + 1.0; if (t > t0 && t < t0 + 0.8) { const u = pIn(t, t0, 0.8); return { mode: "free", x: f.x, y: f.y - 220 * Math.sin(Math.PI * u), s: f.s, r: 0 }; } }
+      return { mode: "free", ...f }; }
+    if (sc === 2) { const f = FREE[2][k];
+      if (k === "duckling") { // rides the rocket at n1.6, then clings to the tail (late), claps after the crash
+        const tr = ts("n1.6"), tl = ts("k2.1") + 1.25;
+        if (t > tr - 0.4 && t < tr + 2.65) return { mode: "hide" };
+        if (t >= tr + 2.65 && t < tl) return { mode: "free", x: 1600, y: RWY + 30, s: 0.62 };
+        if (t >= tl && t < tl + 0.5) { const p = planePos(t), [tx, ty] = P2S(-330, -520, p); return { mode: "free", ...hop(t, tl, 0.5, { x: 1600, y: RWY + 30, s: 0.62 }, { x: tx, y: ty + 60, s: 0.55 * p.s / 0.82, r: -20 }, 200) }; }
+        if (t >= tl + 0.5 && t < T.poke - 0.9) { const p = planePos(t), [tx, ty] = P2S(-330, -520, p); return { mode: "free", x: tx - 10, y: ty + 70, s: 0.55, r: -20 + p.rot, clap: t > T.crash + 0.4 && t < T.crash + 2.4 }; }
+        if (t >= T.poke - 0.9 && t < 69.5) { const P0 = { x: 500, y: RWY + 34, s: 0.6 }; return { mode: "free", ...hop(t, T.poke - 0.9, 0.6, { x: 460, y: RWY - 200, s: 0.55 }, P0, 100) }; }
+        if (t >= 69.5) return t < 70.4 ? { mode: "free", ...hop(t, 69.8, 0.6, { x: 300, y: RWY + 34, s: 0.62 }, { x: 1700, y: RWY - 200, s: 0.62 }, 260) } : hide;
+        return { mode: "free", ...f }; }
+      const order = { mouse: 0, frog: 1, duck: 2 }[k], tj = wt("k2.1", order), seat = seatScene(k, t);
+      if (t < tj) return { mode: "free", ...f };
+      if (t < tj + 0.42) return { mode: "free", ...hop(t, tj, 0.42, f, seat, 180) };
+      if (t < T.crash) return { mode: "seat" };
+      const C0 = CRASH[k], tc = T.crash + 0.02;
+      if (t < tc + 0.5) { const p0 = seatScene(k, tc); return { mode: "free", ...hop(t, tc, 0.5, p0, C0, 140) }; }
+      const up = { frog: wt("k2.5", 0), duck: wt("k2.5", 2), mouse: wt("k2.5", 4) }[k];
+      if (t < up) return { mode: "free", ...C0 };
+      const stand = { x: C0.x, y: C0.y, s: C0.s, r: 0 };
+      if (t < up + 0.4) return { mode: "free", ...hop(t, up, 0.4, C0, stand, 90), cheer: 1 };
+      // repair jobs
+      if (k === "frog" && t > ts("k2.6") - 0.6 && t < ts("k2.8")) { const p = planePos(t), [nx] = P2S(300, 0, p), at = { x: nx + 120, y: RWY + 30, s: 0.72, r: 0 };
+        const go = hop(t, ts("k2.6") - 0.6, 0.5, stand, at, 60), sp = t > wt("k2.6", 0) + 0.25 && t < wt("k2.6", 1) + 0.35 ? (t - wt("k2.6", 0) - 0.25) * 900 : 0;
+        return { mode: "free", ...(t < ts("k2.6") - 0.1 ? go : at), spin: sp }; }
+      if (k === "duck" && t > ts("k2.7") - 0.5 && t < ts("k2.8") + 0.2) { const p = planePos(t), [wx] = P2S(-120, 0, p); return { mode: "free", ...hop(t, ts("k2.7") - 0.5, 0.45, stand, { x: wx - 40, y: RWY + 34, s: 0.7, r: 0 }, 50) }; }
+      const P0 = PUSH[k], tp = ts("k2.9") - 0.5;
+      if (t >= tp && t < T.poke + 0.15) return { mode: "free", ...(t < tp + 0.5 ? hop(t, tp, 0.5, stand, P0, 60) : P0), push: t > tp + 0.5 };
+      if (t >= T.poke + 0.15 && t < 69.5) { const flat = { x: P0.x + 60, y: P0.y, s: P0.s, r: 80 }; if (t < T.poke + 0.5) return { mode: "free", ...hop(t, T.poke + 0.15, 0.35, P0, flat, 30) };
+        const up2 = te("k2.10") + 0.2; if (t < up2) return { mode: "free", ...flat }; return { mode: "free", ...hop(t, up2, 0.4, flat, { ...flat, r: 0 }, 80), cheer: 1 }; }
+      if (t >= 69.5 && t < 69.8) return { mode: "free", x: 300 + order * 120, y: RWY + 30, s: 0.72 };
+      if (t >= 69.8) { const tj2 = 69.8 + order * 0.25; if (t < tj2) return { mode: "free", x: 300 + order * 120, y: RWY + 30, s: 0.72 };
+        if (t < tj2 + 0.45) return { mode: "free", ...hop(t, tj2, 0.45, { x: 300 + order * 120, y: RWY + 30, s: 0.72 }, seatScene(k, t), 200) }; return { mode: "seat" }; }
+      return { mode: "free", ...stand }; }
+    if (sc === 3 || sc === 4) { if (k === "duckling") return hide; return { mode: "seat" }; }
+    if (sc === 5) { if (k === "duckling") return hide;
+      const tb = { mouse: 123.95, frog: 124.85, duck: 125.65 }[k], dest = { mouse: { x: HAY.x, y: HAY.y - 110, s: 0.8, r: 0 }, frog: { x: POND.x, y: POND.y + 10, s: 0.8, r: 0 }, duck: { x: LINE.x + 60, y: LINE.y - 210, s: 0.75, r: 0 } }[k];
+      if (t < tb) return { mode: "seat" };
+      if (t < tb + 0.8) return { mode: "free", ...hop(t, tb, 0.8, seatScene(k, tb), dest, 320), spin: (t - tb) * 700 };
+      return { mode: "free", ...dest, hang: k === "duck", splash: k === "frog" ? t - tb - 0.8 : -1 }; }
+    return hide; }
+
+  // ── drone, rocket, chocks, paper plane, birds ──
+  function dronePos(t) { const sc = scene(t);
+    if (sc === 2 && t > ts("n1.5") - 0.3 && t < ts("n1.7") + 0.5) { const u = smooth(ts("n1.5") - 0.3, ts("n1.5") + 0.6, t), out = smooth(ts("n1.7"), ts("n1.7") + 0.5, t);
+      return { x: lerp(2100, 1240, u) + out * 900, y: lerp(150, 420, u) + 14 * Math.sin(t * 3) - out * 300, s: 0.85, vis: true }; }
+    if (sc === 3 && t > ts("n2.5") - 0.4) { const u = smooth(ts("n2.5") - 0.4, ts("n2.5") + 0.6, t); return { x: lerp(2100, 1400, u) + 20 * Math.sin(t * 1.3), y: lerp(100, 300, u) + 18 * Math.sin(t * 2.4), s: 0.7, vis: true }; }
+    if (sc === 4) { const [x, y] = slotOf("drone", t); return { x, y: y + 16 * Math.sin(t * 2.6 + 1), s: 0.62, vis: (t < T.heart0 || t > T.heart1 + 0.4) && t < 114.4 }; }
+    return { vis: false }; }
+  function rocketPos(t) { const sc = scene(t);
+    if (sc === 2 && t > ts("n1.6") - 0.6 && t < ts("n1.6") + 2.65) { const t0 = ts("n1.6") + 0.2, up = easeOut(pIn(t, t0, 0.9)) * (1 - smooth(t0 + 1.4, t0 + 2.4, t)), wob = 5 * Math.sin(t * 9) * (up > 0.05 ? 1 : 0);
+      return { x: 1600, y: RWY + 30 - 640 * up, s: 0.8, r: wob, vis: true, fire: up > 0.02 && up < 0.99 }; }
+    if (sc === 2 && t >= 69.8 && t < T.sky) return { x: 1700, y: RWY + 30 - 900 * easeIn(pIn(t, 70.4, 1.4)), s: 0.8, r: 0, vis: true, fire: t > 70.4 };
+    if (sc === 3 && t > ts("n2.6") - 0.5) { const u = smooth(ts("n2.6") - 0.5, ts("n2.6") + 0.5, t); return { x: 400 + 10 * Math.sin(t * 1.1), y: lerp(1500, 1010, u) + 16 * Math.sin(t * 2.1), s: 0.62, r: 4 * Math.sin(t * 2), vis: true, fire: true }; }
+    if (sc === 4) { const [x, y] = slotOf("rocket", t); return { x, y: y + 18 * Math.sin(t * 2.3 + 2) + 120, s: 0.55, r: 3 * Math.sin(t * 2), vis: (t < T.heart0 || t > T.heart1 + 0.4) && t < 114.4, fire: true }; }
+    return { vis: false }; }
+
+  // eyes / mouths (shared)
+  const blinkAmt = (t, seed) => { const ph = ((t + seed * 1.37) % 3.9 + 3.9) % 3.9; return ph < 0.16 ? Math.sin(Math.PI * ph / 0.16) : 0; };
+  function eyes(root, t, seed, lx = 0, ly = 0, extra = 0) { const b = Math.max(blinkAmt(t, seed), extra);
+    root.querySelectorAll(".lid").forEach((l) => { const top = +l.dataset.top; l.setAttribute("transform", `translate(0 ${top}) scale(1 ${b.toFixed(3)}) translate(0 ${-top})`); });
+    root.querySelectorAll(".pup").forEach((p2) => p2.setAttribute("transform", `translate(${lx.toFixed(1)} ${ly.toFixed(1)})`)); }
+  const talk = (root, o) => { const h = root.querySelector(".mHappy"), m = root.querySelector(".mOpen"); if (h) h.setAttribute("opacity", (1 - o).toFixed(2)); if (m) m.setAttribute("opacity", o.toFixed(2)); };
+  const place = (node, parentId) => { if (node.parentNode.id !== parentId) E(parentId).appendChild(node); };
+
+  function render(t) {
+    const bp = beatPos(t), beatPh = TAU * bp, sc = scene(t);
+    // ── camera ──
+    const s = Math.max(1, CAM.s), hx = 960 / s, hy = 540 / s;
+    const cx = Math.min(1920 - hx + 160, Math.max(hx - 160, CAM.x)), cy = Math.min(1300 - hy, Math.max(hy - 120 - ENV.up, CAM.y));
+    VIEW = { s, cx, cy };
+    E("cam").style.transform = `translate(960px, 540px) rotate(${CAM.r.toFixed(2)}deg) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)}px, ${(-cy).toFixed(1)}px)`;
+    SETS.forEach((id, i) => { if (i === 5) return; E(id).style.display = i === sc || (sc === 5 && i === 0) ? "block" : "none"; });
+    E("eveTint").setAttribute("opacity", sc === 5 ? 1 : 0); E("landProps").setAttribute("opacity", sc === 5 ? 1 : 0); E("bigBox").setAttribute("opacity", sc === 0 ? 1 : 0);
+
+    // ── the plane ──
+    const pp = planePos(t);
+    ["planeBackG", "planeFrontG"].forEach((id) => { E(id).setAttribute("opacity", pp.vis ? 1 : 0); if (pp.vis) E(id).setAttribute("transform", planeTf(pp)); });
+    E("pShadow").setAttribute("opacity", pp.vis && (sc === 1 || sc === 2 || sc === 5) ? 1 : 0);
+    if (pp.vis) { const pf = E("planeFrontG"), g = GROUND[sc] || pp.y, lift = clamp((g - pp.y) / 500, 0, 1);
+      E("pShadow").setAttribute("cx", (pp.x + 40 * pp.s).toFixed(1)); E("pShadow").setAttribute("cy", (g + 4).toFixed(1)); E("pShadow").setAttribute("rx", (340 * pp.s * (1 - 0.6 * lift)).toFixed(1)); E("pShadow").setAttribute("ry", (40 * pp.s * (1 - 0.6 * lift)).toFixed(1));
+      const wingIn = PL.wing, wf = pf.querySelector(".wing");
+      wf.setAttribute("opacity", wingIn > 0.01 ? 1 : 0); wf.setAttribute("transform", `translate(${(-700 * (1 - easeOut(wingIn))).toFixed(1)} 0) rotate(${(PL.bent * 16 + 7 * Math.sin(t * 18) * bump(t, ts("k1.2") + 0.6, 0.9)).toFixed(2)} -150 -214)`);
+      pf.querySelector(".wflag").setAttribute("transform", `translate(-20 -152) scale(${(1 + 0.9 * PL.flag).toFixed(3)})`);
+      const wh = PL.wheels; ["wheelB", "wheelF"].forEach((c, i) => { const n = pf.querySelector("." + c), base = i ? [140, -58] : [-196, -58], roll = (pp.x / (58 * pp.s)) * 180 / Math.PI;
+        const gone = i === 0 && t > 127.0 ? 1 : 0; n.setAttribute("opacity", wh > 0.01 && !gone ? 1 : 0); n.setAttribute("transform", `translate(${base[0]} ${base[1]}) rotate(${roll.toFixed(1)})`); });
+      pf.querySelector(".struts").setAttribute("opacity", wh > 0.5 ? 1 : 0);
+      const pr = pf.querySelector(".prop"), nose = pf.querySelector(".nose"), pin = PL.prop; pr.setAttribute("opacity", pin > 0.01 ? 1 : 0); nose.setAttribute("opacity", pin > 0.01 ? 1 : 0);
+      pr.setAttribute("transform", `translate(356 ${(-225 - 300 * (1 - outBack(pin, 2))).toFixed(1)}) rotate(${spinAt(t).toFixed(1)})`);
+      nose.setAttribute("transform", `translate(0 ${(-300 * (1 - outBack(pin, 2))).toFixed(1)})`);
+      pf.querySelector(".dent").setAttribute("opacity", PL.dent * (1 - PL.patch)); pf.querySelector(".patch").setAttribute("opacity", PL.patch);
+      pf.querySelector(".patch").setAttribute("transform", `translate(301 -226) scale(${(0.6 + 0.4 * outBack(PL.patch, 3)).toFixed(3)})`);
+      pf.querySelector(".tail").querySelector(".ribbon").setAttribute("d", `M-372 -536 q-60 ${(14 * Math.sin(t * 9)).toFixed(1)} -110 ${(-6 + 18 * Math.sin(t * 7 + 1)).toFixed(1)}`);
+      // face: eyes open with every part; sad after the crash; asleep at the end
+      const fc = pf.querySelector(".face"), op = clamp(PL.eye, 0, 1), sl = PL.sleep, lid = clamp(Math.max(1 - op, sl, blinkAmt(t, 6.1)), 0, 1);
+      fc.querySelectorAll(".lid").forEach((l) => { const top = +l.dataset.top; l.setAttribute("transform", `translate(0 ${top}) scale(1 ${lid.toFixed(3)}) translate(0 ${-top})`); });
+      fc.querySelectorAll(".pup").forEach((p2) => p2.setAttribute("transform", `translate(${(4 + 8 * PL.look).toFixed(1)} ${(6 * PL.sad).toFixed(1)}) scale(1)`));
+      const sm = PL.smile - 1.4 * PL.sad, mo = PL.open, my = -196;
+      fc.querySelector(".pMouth").setAttribute("d", mo > 0.05 ? `M126 ${my} Q158 ${my - 6} 190 ${my} Q158 ${(my + 60 * mo).toFixed(1)} 126 ${my}Z` : `M126 ${my} Q158 ${(my + 26 * sm).toFixed(1)} 190 ${my}`);
+      fc.querySelector(".pMouth").setAttribute("fill", mo > 0.05 ? "#8C2F45" : "none");
+      fc.querySelector(".brow").setAttribute("opacity", PL.sad.toFixed(2));
+      for (let i = 0; i < 7; i++) { const on = Math.max(PL.lightAll * (0.6 + 0.4 * Math.sin(t * 14 + i)), i < PL.lights ? 1 : 0, sc === 2 && t > ts("n1.3") && t < ts("n1.4") ? (Math.floor(bp) % 7 === i ? 1 : 0.2) : 0);
+        E("pllt" + i).setAttribute("opacity", on.toFixed(2)); } }
+    // steering wheel (cockpit only)
+    { const g = E("steer"), on = (sc === 3 && t > ts("b.1") - 1) || sc === 4; g.setAttribute("opacity", on ? 1 : 0); if (on) { const [x, y] = P2S(232, -366, pp); g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(pp.rot + 20).toFixed(1)}) scale(${(pp.s * 1.1).toFixed(3)} ${(pp.s * 1.1 * pp.sy).toFixed(3)})`); } }
+
+    // ── Fıstık rig ──
+    const fp = fistikPos(t);
+    E("charWrap").style.display = fp.vis ? "block" : "none"; E("fShadow").setAttribute("opacity", fp.vis && fp.free ? 1 : 0);
+    if (fp.vis) {
+      const bob = R.bob * (9 + 10 * R.dance) * (1 - Math.cos(beatPh)) / 2;
+      el.rig.setAttribute("transform", `translate(0 ${(-bob).toFixed(2)})`);
+      const ea = R.earAmp * 6 * Math.sin(beatPh) + R.flap * 34 * Math.sin(t * 24);
+      el.earL.setAttribute("transform", `rotate(${(-ea).toFixed(2)} 222 230)`);
+      el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-ea).toFixed(2)} 222 230)`);
+      el.tail.setAttribute("transform", `rotate(${(14 * Math.sin(beatPh / 2)).toFixed(2)} 432 470)`);
+      el.pom.setAttribute("transform", `rotate(${(10 * Math.sin(beatPh - 0.8)).toFixed(2)} 300 100)`);
+      const tilt = R.tilt + (R.sway + R.dance) * 7 * Math.sin(beatPh / 2) + 2 * Math.sin(TAU * t / (BEAT * 8));
+      el.head.setAttribute("transform", `rotate(${tilt.toFixed(2)} 300 360)`);
+      el.legs.forEach((g, i) => { const [px, py, ph] = LEGP[i], a = R.walk * 20 * Math.sin(beatPh + ph), lift = R.walk * 8 * Math.max(0, Math.sin(beatPh + ph));
+        g.setAttribute("transform", `translate(${px} ${(py - lift).toFixed(2)}) rotate(${a.toFixed(2)})`); });
+      el.pupils.setAttribute("transform", `translate(${R.lookX.toFixed(1)} ${R.lookY.toFixed(1)})`);
+      const lid = clamp(Math.max(R.blink, blinkAmt(t, 0.3)), 0, 1) * 92; el.lidL.setAttribute("height", lid.toFixed(1)); el.lidR.setAttribute("height", lid.toFixed(1));
+      const m = Math.max(0, R.mouth), my = 334, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * m).toFixed(1)} 224 ${my} Z`;
+      el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", m > 0.04 ? "#8C2F45" : "none");
+      el.tongue.setAttribute("ry", (m > 0.15 ? 12 * m : 0).toFixed(1)); el.tongue.setAttribute("cy", (my + 6 + 24 * m).toFixed(1));
+      drawTrunk(R.A + 3 * Math.sin(t * 2.3), R.C, R.L);
+      const hatGone = sc === 1 && t > T.hatOff && t < T.hatOff + 2.2; E("hat").style.opacity = hatGone ? 0 : 1;
+      const pomGone = sc === 1 && t > T.hatOff && t < T.hatOff + 2.45; E("pom").style.opacity = pomGone ? 0 : 1;
+      if (fp.free) { const sh = E("fShadow"), lift = clamp(-R.jy / 300, 0, 1); sh.setAttribute("cx", fp.x.toFixed(1)); sh.setAttribute("cy", (fp.y + 4).toFixed(1)); sh.setAttribute("rx", (170 * fp.s * (1 - 0.5 * lift)).toFixed(1)); sh.setAttribute("ry", (34 * fp.s * (1 - 0.5 * lift)).toFixed(1)); }
+      const sq = R.sq;
+      E("charWrap").style.transform = `translate(${fp.x.toFixed(1)}px, ${(fp.y + R.jy).toFixed(1)}px) rotate(${(fp.rot + R.rot).toFixed(2)}deg) scale(${(fp.s * (1 + 0.14 * sq)).toFixed(4)}, ${(fp.s * fp.sy * (1 - 0.18 * sq)).toFixed(4)}) translate(-300px, -620px)`; }
+
+    // ── sets: ambient motion ──
+    if (sc === 0 || sc === 5) { E("clG").setAttribute("transform", `translate(${((t * 10) % 300).toFixed(1)} 0)`); E("sunG").querySelector(".rays").setAttribute("transform", `rotate(${(t * 12).toFixed(1)})`); }
+    if (sc === 2) { E("clR").setAttribute("transform", `translate(${(-(t * 14) % 400).toFixed(1)} 0)`); E("sockG").querySelector(".sock").setAttribute("transform", `translate(0 -250) rotate(${(6 * Math.sin(t * 2.3)).toFixed(1)}) scale(1 ${(0.9 + 0.1 * Math.sin(t * 7)).toFixed(3)})`);
+      for (let i = 0; i < 13; i++) { const chase = t > ts("n1.3") && t < ts("n1.4") + 0.6 || t > ts("n2.3") && t < ts("n2.4") + 0.6, k = Math.floor(bp * 2) % 13, on = chase ? (i === k || i === (k + 1) % 13 ? 1 : 0.15) : (t > ts("n1.1") ? 0.55 + 0.45 * Math.max(0, Math.sin(beatPh + i)) : 0);
+        E("rl" + i).setAttribute("opacity", on.toFixed(2)); E("rm" + i).setAttribute("opacity", on.toFixed(2)); } }
+    if (sc === 3) { const v = 260; E("clS1").setAttribute("transform", `translate(${(-((t * v) % 1680)).toFixed(1)} 0)`); E("clS2").setAttribute("transform", `translate(${(-((t * v * 1.6) % 1120)).toFixed(1)} 0)`);
+      E("town").setAttribute("transform", `translate(${(-((t * 90) % 300)).toFixed(1)} ${(400 * smooth(T.sky, T.sky + 3, t)).toFixed(1)})`); }
+    if (sc === 4) { E("clU1").setAttribute("transform", `translate(${(-((t * 60) % 760)).toFixed(1)} 0)`); E("clU2").setAttribute("transform", `translate(${(-((t * 180) % 460)).toFixed(1)} 0)`);
+      E("sunU").querySelector(".rays").setAttribute("transform", `rotate(${(t * 10).toFixed(1)})`); const wk = bump(t, te("f.6") - 0.6, 0.5); E("sunU").querySelector(".eyeR").setAttribute("transform", `translate(20 -8) scale(1 ${(1 - 0.9 * wk).toFixed(3)}) translate(-20 8)`); }
+
+    // ── friends ──
+    const drawFriend = (k) => { const g = E(k + "Pos"), d = E(k), f = friendPos(k, t);
+      if (f.mode === "hide") { g.setAttribute("opacity", 0); return f; } g.setAttribute("opacity", 1);
+      if (f.mode === "seat") { place(g, "inPlane"); const [sx, sy0, ss] = SEATS[k]; const pb = AN.party * 14 * Math.abs(Math.sin(beatPh / 2 + sx)) + AN.cheer * 46 * Math.abs(Math.sin(t * 12 + sx * 0.05));
+        g.setAttribute("transform", `${planeTf(pp)} translate(${sx} ${(sy0 - pb).toFixed(1)}) scale(${ss})`); }
+      else { place(g, "outPlane"); g.setAttribute("transform", `translate(${f.x.toFixed(1)} ${f.y.toFixed(1)}) rotate(${((f.r || 0) + (f.spin || 0)).toFixed(1)}) scale(${(f.s * (f.fx || 1)).toFixed(3)} ${f.s.toFixed(3)})`); }
+      return f; };
+    { const f = drawFriend("frog"); if (f.mode !== "hide") { const fr = E("frog"), body = fr.querySelector(".body"), breath = 0.012 * Math.sin(t * 2.6), ch = (f.cheer || AN.cheer) ? 14 * Math.abs(Math.sin(t * 10)) : 0;
+        body.setAttribute("transform", `translate(0 ${(-ch).toFixed(1)}) scale(${(1 + breath).toFixed(3)} ${(1 - breath).toFixed(3)})`);
+        talk(fr, AN.frogOpen); fr.querySelector(".armL").setAttribute("transform", `rotate(${(f.push ? 70 : (f.cheer ? 60 * Math.abs(Math.sin(t * 10)) : 0)).toFixed(1)} -46 -40)`);
+        fr.querySelector(".armR").setAttribute("transform", `rotate(${(-AN.party * 30 * Math.abs(Math.sin(beatPh / 2))).toFixed(1)} 46 -40)`); eyes(fr, t, 1, -4, -3, f.push ? 0.6 : 0); } }
+    const duckDraw = (k, open, seed) => { const f = drawFriend(k); if (f.mode === "hide") return; const d = E(k);
+      const body = d.querySelector(".body"), head = d.querySelector(".head"), breath = 0.012 * Math.sin(t * 2.4 + seed), ch = (f.cheer || f.clap) ? 10 * Math.abs(Math.sin(t * 11)) : 0;
+      body.setAttribute("transform", `translate(0 ${(-ch).toFixed(1)}) scale(${(1 + breath).toFixed(3)} ${(1 - breath).toFixed(3)})`);
+      head.setAttribute("transform", `translate(0 ${(-ch + 3 * Math.sin(beatPh) * (0.4 + AN.party)).toFixed(1)}) rotate(${(f.hang ? 10 * Math.sin(t * 3) : 0).toFixed(1)} -40 -150)`);
+      d.querySelector(".beakTop").setAttribute("transform", `rotate(${(14 * open).toFixed(1)} -78 -144)`); d.querySelector(".beakBot").setAttribute("transform", `rotate(${(-18 * open).toFixed(1)} -78 -132)`);
+      const wingA = f.clap ? 40 * Math.abs(Math.sin(t * 14)) : f.hang ? -70 : f.push ? -40 : (f.cheer ? 40 * Math.abs(Math.sin(t * 10)) : AN.party * 22 * Math.sin(beatPh));
+      d.querySelector(".wing").setAttribute("transform", `rotate(${wingA.toFixed(1)} 10 -96)`); eyes(d, t, seed, -2, 0, f.push ? 0.6 : 0); };
+    duckDraw("duck", AN.duckOpen, 2); duckDraw("duckling", AN.dlOpen, 3.3);
+    { const f = drawFriend("mouse"); if (f.mode !== "hide") { const mo = E("mouse"), breath = 0.015 * Math.sin(t * 3);
+        mo.querySelector(".body").setAttribute("transform", `scale(${(1 + breath + (f.splat ? 0.2 : 0)).toFixed(3)} ${(1 - breath - (f.splat ? 0.2 : 0)).toFixed(3)})`);
+        mo.querySelector(".head").setAttribute("transform", `rotate(${(4 * Math.sin(beatPh / 2) + (f.dizzy ? 10 * Math.sin(t * 9) : 0)).toFixed(2)} 4 -80)`);
+        mo.querySelector(".earL").setAttribute("transform", `rotate(${(6 * Math.sin(t * 5)).toFixed(1)} -34 -130)`); mo.querySelector(".earR").setAttribute("transform", `rotate(${(-6 * Math.sin(t * 5 + 1)).toFixed(1)} 40 -128)`);
+        mo.querySelector(".tail").setAttribute("transform", `rotate(${(12 * Math.sin(t * 3.5)).toFixed(1)} -30 -14)`);
+        mo.querySelector(".spiral").setAttribute("opacity", f.dizzy ? 1 : 0); mo.querySelector(".spiral").setAttribute("transform", `rotate(${(t * 400).toFixed(0)} 5 -118)`);
+        talk(mo, AN.msOpen); eyes(mo, t, 4.1, 2, 0, f.splat || f.push ? 0.7 : 0); } }
+    // hamster wheel (mouse inside the red button) + the blue button dropping in
+    { const g = E("wheelRoll"), r0 = ts("k1.3"), r1 = ts("k1.4") + 0.05, on = sc === 1 && t > r0 && t < r1 + 1.0; g.setAttribute("opacity", on ? 1 : 0);
+      if (on) { const p = planePos(t), [bx, by] = P2S(-196, -58, { ...p, y: p.y }), u = smooth(r0, r1, t), x = lerp(-150, bx, u), y = lerp(1040 - 58, by, u), rot = (x / 58) * 180 / Math.PI + (t > r1 ? (t - r1) * 900 : 0);
+        g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${p.s})`); g.querySelector(".wr").setAttribute("transform", `rotate(${rot.toFixed(1)})`);
+        const mg = E("mousePos"); place(mg, "outPlane"); mg.setAttribute("opacity", 1); mg.setAttribute("transform", `translate(${x.toFixed(1)} ${(y + 40 - 6 * Math.abs(Math.sin(t * 22))).toFixed(1)}) scale(0.42)`);
+        E("mouse").querySelector(".spiral").setAttribute("opacity", 0); }
+      const wd = E("wheelDrop"), d0 = r1 + 0.15, don = sc === 1 && t > d0 && t < d0 + 0.6; wd.setAttribute("opacity", don ? 1 : 0);
+      if (don) { const p = planePos(t), [fx, fy] = P2S(140, -58, p), u = pIn(t, d0, 0.6); wd.setAttribute("transform", `translate(${fx.toFixed(1)} ${(fy - 700 * (1 - easeIn(u))).toFixed(1)}) scale(${p.s})`); } }
+    // chocks hop away like bunnies
+    for (let i = 0; i < 2; i++) { const g = E("ch" + i), on = sc === 2 && t < ts("n1.1") + 1.8; g.setAttribute("opacity", on ? 1 : 0); if (!on) continue;
+      const p = planePos(t), [wx, wy] = P2S(i ? 140 : -196, 0, p), t0 = ts("n1.1") + 0.15 + i * 0.25, u = pIn(t, t0, 1.4), dir = i ? 1 : -1, hops = u * 3, hh = Math.abs(Math.sin(Math.PI * hops)) * 70 * (u > 0 ? 1 : 0);
+      g.setAttribute("transform", `translate(${(wx + (i ? 74 : -74) * p.s + dir * 900 * u).toFixed(1)} ${(RWY + 18 - hh).toFixed(1)}) scale(${(p.s * 1.1 * dir).toFixed(3)} ${(p.s * 1.1).toFixed(3)})`); }
+    // drone (eye) + flash + falling photo
+    { const d = dronePos(t), g = E("droneG"); g.setAttribute("opacity", d.vis ? 1 : 0);
+      if (d.vis) { g.setAttribute("transform", `translate(${d.x.toFixed(1)} ${d.y.toFixed(1)}) rotate(${(4 * Math.sin(t * 2)).toFixed(1)}) scale(${d.s})`);
+        g.querySelectorAll(".rot").forEach((r, i) => r.setAttribute("transform", `scale(${Math.abs(Math.cos(t * 30 + i)).toFixed(3)} 1)`));
+        const fl = Math.max(bump(t, wt("n1.5", 1), 0.3), bump(t, wt("n2.5", 1), 0.3)); g.querySelector(".flash").setAttribute("opacity", fl.toFixed(2));
+        const dd = g.querySelector("#droneG > g:last-of-type"); eyes(g, t, 8, -12, 6, 0); }
+      const ph = E("photo"), f0 = sc === 2 ? wt("n1.5", 1) + 0.1 : wt("n2.5", 1) + 0.1, u = (t - f0) / 1.6, on = (sc === 2 || sc === 3) && u > 0 && u < 1 && d.vis !== undefined; ph.setAttribute("opacity", on ? 1 : 0);
+      if (on) { const d2 = dronePos(f0); ph.setAttribute("transform", `translate(${(d2.x - 140 * u + 30 * Math.sin(u * 9)).toFixed(1)} ${(d2.y + 80 + 520 * u).toFixed(1)}) rotate(${(20 * Math.sin(u * 7)).toFixed(1)}) scale(${(0.9 * outBack(Math.min(1, u * 4), 2)).toFixed(3)})`); } }
+    // rocket (bucket + balloons + duckling with a cone hat)
+    { const r = rocketPos(t), g = E("rocketG"); g.setAttribute("opacity", r.vis ? 1 : 0);
+      if (r.vis) { g.setAttribute("transform", `translate(${r.x.toFixed(1)} ${r.y.toFixed(1)}) rotate(${(r.r || 0).toFixed(1)}) scale(${r.s})`);
+        g.querySelector(".flame").setAttribute("opacity", r.fire ? 1 : 0); g.querySelector(".flame").setAttribute("transform", `translate(0 6) scale(1 ${(0.8 + 0.3 * Math.sin(t * 30)).toFixed(3)})`);
+        g.querySelectorAll(".bl").forEach((b, i) => b.setAttribute("transform", `rotate(${(8 * Math.sin(t * 3 + i)).toFixed(1)})`));
+        const tip = Math.max(bump(t, ts("n1.6") + 1.0, 1.0), sc === 3 ? bump(t, wt("n2.6", 1), 1.0) : 0); g.querySelector(".hatR").setAttribute("transform", `translate(-2 ${(-250 - 70 * tip).toFixed(1)}) rotate(${(-30 * tip).toFixed(1)})`);
+        eyes(g.querySelector(".pilot"), t, 9, -2, 0); } }
+    // paper plane: mouse throws it (g.4) → bonk on Fıstık's forehead → Fıstık throws it into the box
+    { const g = E("paperG"), t0 = ts("g.4") - 0.2, hit = t0 + 0.55, back = hit + 0.35, inBox = back + 0.75; let on = false, x = 0, y = 0, r = 0, s2 = 1;
+      if (sc === 0 && t > t0 && t < inBox) { on = true; const [hx, hy] = headScene(t);
+        if (t < hit) { const u = pIn(t, t0, hit - t0); x = lerp(TREE.x - 120, hx + 40, u); y = lerp(1000, hy - 10, u) - 120 * Math.sin(Math.PI * u); r = 180 + 20 * Math.sin(u * 6); }
+        else if (t < back) { x = hx + 50; y = hy - 10 + 30 * pIn(t, hit, 0.3); r = 160; }
+        else { const u = pIn(t, back, inBox - back); x = lerp(hx + 60, BOX.x, u); y = lerp(hy - 30, BOX.y - 60, u) - 180 * Math.sin(Math.PI * u); r = 15 * Math.sin(u * 5); s2 = 1 - 0.5 * u; } }
+      if (sc === 5 && t > 132.0) { on = true; const u = smooth(132.0, 132.9, t), p = planePos(t), [nx, ny] = P2S(300, -330, p); x = lerp(-100, nx, u); y = lerp(500, ny - 20, u) - 80 * Math.sin(Math.PI * u); r = -10 + 10 * u; s2 = 1.1; }
+      g.setAttribute("opacity", on ? 1 : 0); if (on) g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r.toFixed(1)}) scale(${s2.toFixed(3)})`); }
+    // birds: two pass by at the start; one lands on the pompom in the sky and pecks
+    for (let i = 0; i < 3; i++) { const g = E("bd" + i); let on = false, x = 0, y = 0, f = 1, s2 = 0.9, flap = 1;
+      if (sc === 0 && i < 2 && t > 2.4 + i * 0.4 && t < 7.2) { on = true; const u = pIn(t, 2.4 + i * 0.4, 4.6), [hx, hy] = headScene(t); x = lerp(-150, 2100, u); y = hy - 200 - i * 70 + 40 * Math.sin(u * 8);
+        if (u > 0.3 && u < 0.5) { x = lerp(-150, 2100, 0.3) + (x - lerp(-150, 2100, 0.3)) * 0.3; } }
+      if (sc === 3 && i === 2 && t > ts("n2.7") - 0.4 && t < ts("b.1") - 0.2) { on = true; const land = ts("n2.7") + 0.3, peck0 = land + 0.2, flee = wt("n2.8", 1) + 0.15, [px, py] = pomScene(t);
+        if (t < land) { const u = pIn(t, ts("n2.7") - 0.4, 0.7); x = lerp(px + 500, px + 10, u); y = lerp(py - 300, py - 40, u); }
+        else if (t < flee) { x = px + 10; y = py - 40 - 10 * Math.abs(Math.sin((t - peck0) * 14)) * (t > peck0 ? 1 : 0); flap = 0; f = -1; }
+        else { const u = pIn(t, flee, 0.9); x = px + 10 + 700 * u; y = py - 40 - 500 * u; } s2 = 0.75; }
+      g.setAttribute("opacity", on ? 1 : 0); if (on) { g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(s2 * f).toFixed(2)} ${s2})`); const w = flap ? 30 * Math.sin(t * 26 + i) : -10;
+        g.querySelector(".bw").setAttribute("transform", `rotate(${w.toFixed(1)} -6 -6)`); g.querySelector(".bw2").setAttribute("transform", `rotate(${(-w * 0.8).toFixed(1)} -6 -6)`); } }
+    // hat sucked into the propeller → pinwheel → pompom flies → frog's tongue catches it → back on the head
+    { const g = E("flyHat"), pm = E("flyPom"), t0 = T.hatOff, on = sc === 1 && t > t0 && t < t0 + 2.2; g.setAttribute("opacity", on ? 1 : 0);
+      const p = planePos(t), [ax, ay] = P2S(356, -225, p), [hx, hy] = headScene(t);
+      if (on) { const toProp = pIn(t, t0, 0.35), back = pIn(t, t0 + 1.6, 0.6); let x = lerp(hx, ax + 30, easeIn(toProp)), y = lerp(hy - 90, ay, easeIn(toProp)), r = 0, sc2 = 0.5 * p.s;
+        if (toProp >= 1) { r = (t - t0 - 0.35) * 1600 * (1 - back); }
+        if (back > 0) { x = lerp(ax + 30, hx, easeOut(back)); y = lerp(ay, hy - 90, easeOut(back)) - 200 * Math.sin(Math.PI * back); }
+        g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r.toFixed(1)}) scale(${sc2.toFixed(3)}) translate(-300 -150)`); }
+      const fpos = friendPos("frog", t), catchT = t0 + 1.25, pon = sc === 1 && t > t0 + 0.9 && t < t0 + 2.45; pm.setAttribute("opacity", pon ? 1 : 0);
+      if (pon) { let x, y; if (t < catchT) { const u = pIn(t, t0 + 0.9, catchT - t0 - 0.9); x = lerp(ax + 30, fpos.x - 40, u); y = lerp(ay, 560, u) - 240 * Math.sin(Math.PI * u * 0.7); }
+        else if (t < t0 + 2.0) { const fm = [FREE[1].frog.x, FREE[1].frog.y - 66 * FREE[1].frog.s], u = pIn(t, catchT, 0.25); x = lerp(fpos.x - 40, fm[0], u); y = lerp(560, fm[1], u); }
+        else { const u = pIn(t, t0 + 2.0, 0.45), [px, py] = pomScene(t); x = lerp(FREE[1].frog.x, px, u); y = lerp(FREE[1].frog.y - 60, py, u) - 260 * Math.sin(Math.PI * u); }
+        pm.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(0.5 * p.s / 0.5 * 0.55).toFixed(3)})`); }
+      const tg = E("tongue8"), tu = (t - (catchT - 0.25)) / 0.5; if (sc === 1 && tu > 0 && tu < 1) { const fx = FREE[1].frog.x, fy = FREE[1].frog.y - 66 * FREE[1].frog.s - (fpos.y - FREE[1].frog.y), e = tu < 0.5 ? easeOut(tu / 0.5) : 1 - easeIn((tu - 0.5) / 0.5);
+        tg.setAttribute("opacity", 1); tg.setAttribute("d", `M${fx} ${fy} Q${fx - 60} ${fy - 140} ${lerp(fx, fpos.x - 40, e).toFixed(1)} ${lerp(fy, 560, e).toFixed(1)}`); }
+      else if (sc === 2 && t > wt("k2.6", 0) && t < wt("k2.6", 1) + 0.6) { const f2 = friendPos("frog", t), [nx, ny] = P2S(301, -226, pp), u = pIn(t, wt("k2.6", 0), 0.25), mx = f2.x, my2 = f2.y - 66 * f2.s;
+        tg.setAttribute("opacity", 1); tg.setAttribute("d", `M${mx} ${my2} Q${lerp(mx, nx, 0.5)} ${my2 - 40} ${lerp(mx, nx, u).toFixed(1)} ${lerp(my2, ny, u).toFixed(1)}`); }
+      else tg.setAttribute("opacity", 0); }
+    // dizzy stars around Fıstık after the crash
+    for (let i = 0; i < 5; i++) { const g = E("st" + i), on = sc === 2 && t > T.crash + 0.2 && t < wt("k2.5", 4); g.setAttribute("opacity", on ? 1 : 0); if (!on) continue;
+      const [hx, hy] = headScene(t), a = t * 4 + i * TAU / 5; g.setAttribute("transform", `translate(${(hx + 120 * Math.cos(a)).toFixed(1)} ${(hy - 120 + 36 * Math.sin(a)).toFixed(1)}) scale(${(0.8 + 0.2 * Math.sin(t * 6 + i)).toFixed(2)})`); }
+    // tape blanket over the sleeping plane
+    { const g = E("blanket"), on = sc === 5 && t > 130.8; g.setAttribute("opacity", on ? 1 : 0);
+      if (on) [0, 1, 2].forEach((i) => { const [x, y] = P2S(-150 + i * 8, -290 + i * 52, pp), u = outBack(pIn(t, 130.8 + i * 0.35, 0.35), 2); E("bk" + i).setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(-4 + i * 4).toFixed(1)}) scale(${(pp.s * 0.62 * u).toFixed(3)} ${(pp.s * u).toFixed(3)})`); E("bk" + i).setAttribute("opacity", u > 0.02 ? 1 : 0); }); }
+    // tape trail (motif): ribbon behind the tail in the sky; the heart in the sunset
+    { const tp = E("trailTape"), tp2 = E("trailTape2"); let d = "";
+      if (sc === 3) { const pts = []; for (let k = 0; k < 26; k++) { const tt = t - k * 0.06; if (scene(tt) !== 3) break; const q = planePos(tt), [x, y] = P2S(-480, -536, q); pts.push(`${(x - k * 0.06 * 260).toFixed(1)} ${(y + 10 * Math.sin(tt * 9)).toFixed(1)}`); } if (pts.length > 1) d = "M" + pts.join(" L"); }
+      if (sc === 4 && t > T.heart0) { const u = pIn(t, T.heart0, T.heart1 - T.heart0), pts = []; for (let k = 0; k <= 80; k++) { const v = k / 80; if (v > u) break; const [x, y] = heartPt(0.5 + v); pts.push(`${x.toFixed(1)} ${y.toFixed(1)}`); } if (pts.length > 1) d = "M" + pts.join(" L"); }
+      const o = sc === 3 ? 1 : sc === 4 ? 1 - pIn(t, ts("f.8") + 0.6, 1.0) : 0; tp.setAttribute("d", d); tp2.setAttribute("d", d); tp.setAttribute("opacity", d ? o : 0); tp2.setAttribute("opacity", d ? o * 0.8 : 0); }
+
+    drawParticles(t, sc);
+
+    // ── screen-space overlays ──
+    { const u = pIn(t, 15.95, 0.45), out = pIn(t, T.shop, 0.5), on = t > 15.95 && t < T.shop + 0.5; E("bmR").setAttribute("opacity", on ? 1 : 0);
+      if (on) { const k = t < T.shop ? 1 - smooth(0, 1, u) : easeOut(out), w = lerp(0, 2400, k), h = lerp(0, 1500, k); E("bmHole").setAttribute("x", (960 - w / 2).toFixed(1)); E("bmHole").setAttribute("y", (540 - h / 2).toFixed(1)); E("bmHole").setAttribute("width", w.toFixed(1)); E("bmHole").setAttribute("height", h.toFixed(1)); } }
+    { const t0 = T.sky - 0.6, u = pIn(t, t0, 1.3), on = u > 0 && u < 1, g = E("cwG"); g.setAttribute("opacity", on ? 1 : 0); if (on) g.setAttribute("transform", `translate(${lerp(2200, -2600, u).toFixed(1)} 0)`); }
+    { const f = E("fog"), on = ENV.fog; f.style.opacity = on.toFixed(3); E("fogHeart").setAttribute("stroke-dashoffset", (2400 * (1 - smooth(T.fog + 0.25, T.fog + 1.0, t))).toFixed(0)); }
+    { const g = E("lwG"), t0 = 127.2, t1 = 128.3, on = sc === 5 && t > t0 && t < t1 + 0.7; g.setAttribute("opacity", on ? 1 : 0);
+      if (on) { const u = pIn(t, t0, t1 - t0), [wx, wy] = W2S(...P2S(-196, -58, pp)), back = pIn(t, t1, 0.7), sc2 = lerp(pp.s * VIEW.s, 7.5, easeIn(u)) * (1 - 0.3 * bump(t, t1, 0.25)) * (1 - back * 0.8);
+        g.setAttribute("transform", `translate(${lerp(wx, 980, easeIn(u)).toFixed(1)} ${(lerp(wy, 600, easeIn(u)) + 900 * easeIn(back)).toFixed(1)}) rotate(${(t * 500).toFixed(0)}) scale(${sc2.toFixed(3)})`); } }
+    { const t0 = 133.3, u = smooth(t0, t0 + 0.8, t); E("tcL").setAttribute("transform", `translate(${(1100 + 960 * u - 1100 * (1 - u) * 0 + (u - 1) * 1100).toFixed(1)} 0)`); E("tcR").setAttribute("transform", `translate(${(-960 * u).toFixed(1)} 0)`);
+      E("tcL").setAttribute("transform", `translate(${(1060 * u).toFixed(1)} 0)`); E("tcR").setAttribute("transform", `translate(${(-1060 * u).toFixed(1)} 0)`);
+      const hh = outBack(pIn(t, t0 + 0.85, 0.4), 2.5); E("tcHeart").setAttribute("opacity", hh > 0.02 ? 1 : 0); E("tcHeart").setAttribute("transform", `translate(960 540) scale(${(4 * hh).toFixed(3)})`); }
+    { for (let i = 0; i < 14; i++) { const r = E("sl" + i), o = ENV.speed; r.setAttribute("opacity", (o * (0.5 + 0.5 * Math.sin(t * 20 + i))).toFixed(2)); r.setAttribute("x", ((2200 - ((t * 3400 + i * 397) % 2600))).toFixed(1)); } }
+    E("glow").style.opacity = (ENV.glow * 0.8).toFixed(3);
+    E("flash").style.opacity = ENV.flash.toFixed(3);
+    E("burst").style.opacity = ENV.burst.toFixed(3); E("burst").style.transform = `scale(${(1 + 0.4 * ENV.burst).toFixed(3)})`;
+  }
+
+  // ───────────────────────── particles: pure functions of t ─────────────────────────
+  const confetti = (t, x, y) => EV.conf.push([t, x, y]);
+  const dust = (t, x, y) => EV.dust.push([t, x, y]);
+  const dustRev = (t, x, y) => EV.dustRev.push([t, x, y]);
+  const spark = (t, x, y) => EV.spark.push([t, x, y]);
+  const puff = (t, who = "nose") => EV.puff.push([t, who]);
+  const notes = (t) => EV.notes.push(t);
+  const SND = [];
+  function drawParticles(t, sc) {
+    let ci = 0, ui = 0, si = 0, pi = 0, ni = 0;
+    EV.conf.forEach(([t0, ox, oy]) => { const u = t - t0; if (u < 0 || u > 1.8) return;
+      for (let q = 0; q < 50 && ci < 150; q++, ci++) { const a = -Math.PI / 2 + (q / 50 - 0.5) * 2.8, v = 700 + (q % 7) * 90, cc = E("cf" + ci);
+        cc.style.transform = `translate(${(ox + Math.cos(a) * v * u).toFixed(1)}px, ${(oy + Math.sin(a) * v * u + 760 * u * u).toFixed(1)}px) rotate(${(u * 500 + q * 37).toFixed(0)}deg)`;
+        cc.style.opacity = (u < 1.3 ? 1 : 1 - (u - 1.3) / 0.5).toFixed(3); } });
+    for (; ci < 150; ci++) E("cf" + ci).style.opacity = 0;
+    const dustOne = (t0, x, y, rev) => { const u0 = t - t0; if (u0 < 0 || u0 > 0.9) return; const u = rev ? 0.9 - u0 : u0;
+      for (let q = 0; q < 12 && ui < 12; q++, ui++) { const d = E("du" + ui), a = Math.PI * (q / 11), r = 60 + 220 * easeOut(u / 0.9);
+        d.setAttribute("cx", (x + Math.cos(a) * r * (q % 2 ? 1 : -1)).toFixed(1)); d.setAttribute("cy", (y - 20 - 50 * u).toFixed(1)); d.setAttribute("r", (24 + 30 * u).toFixed(1)); d.setAttribute("opacity", (0.9 * (1 - u / 0.9)).toFixed(2)); } };
+    EV.dust.forEach(([t0, x, y]) => dustOne(t0, x, y, false)); EV.dustRev.forEach(([t0, x, y]) => dustOne(t0, x, y, true));
+    for (; ui < 12; ui++) E("du" + ui).setAttribute("opacity", 0);
+    EV.spark.forEach(([t0, x, y]) => { const u = t - t0; if (u < 0 || u > 0.9) return;
+      for (let q = 0; q < 7 && si < 14; q++, si++) { const d = E("sk" + si), a = q * TAU / 7 + t0, r = 40 + 130 * easeOut(u / 0.9);
+        d.setAttribute("opacity", (1 - u / 0.9).toFixed(2)); d.setAttribute("transform", `translate(${(x + Math.cos(a) * r).toFixed(1)} ${(y + Math.sin(a) * r).toFixed(1)}) rotate(${(u * 200).toFixed(0)}) scale(${(1.2 - u).toFixed(2)})`); } });
+    for (; si < 14; si++) E("sk" + si).setAttribute("opacity", 0);
+    const pp = planePos(t);
+    EV.puff.forEach(([t0, who]) => { const u = t - t0; if (u < 0 || u > 1.2 || pi >= 12) return; const [x, y] = who === "trunk" ? tipScene(t0) : P2S(330, -170, planePos(t0));
+      for (let q = 0; q < 3 && pi < 12; q++, pi++) { const d = E("pu" + pi), k = clamp((u - q * 0.12) / 1.0, 0, 1);
+        d.setAttribute("cx", (x - 40 - 160 * k - q * 20).toFixed(1)); d.setAttribute("cy", (y - 20 - 120 * k + q * 14).toFixed(1)); d.setAttribute("r", (18 + 40 * k).toFixed(1)); d.setAttribute("opacity", (k > 0 && k < 1 ? 0.95 * (1 - k) : 0).toFixed(2)); } });
+    for (; pi < 12; pi++) E("pu" + pi).setAttribute("opacity", 0);
+    EV.notes.forEach((t0) => { const u = t - t0; if (u < 0 || u > 1.3) return; const [x, y] = tipScene(t0);
+      for (let q = 0; q < 3 && ni < 9; q++, ni++) { const g = E("nt" + ni), k = clamp((u - q * 0.1) / 1.1, 0, 1);
+        g.setAttribute("opacity", k > 0 && k < 1 ? (1 - k * k).toFixed(2) : 0); g.setAttribute("transform", `translate(${(x + 40 + 160 * k + q * 30).toFixed(1)} ${(y - 40 - 140 * k + 30 * Math.sin(k * 6 + q)).toFixed(1)}) rotate(${(20 * Math.sin(k * 5 + q)).toFixed(1)}) scale(${(0.8 + 0.4 * k).toFixed(2)})`); } });
+    for (; ni < 9; ni++) E("nt" + ni).setAttribute("opacity", 0);
+    { let hi = 0; EV.hearts.forEach(([t0, fn]) => { const u = t - t0; if (u < 0 || u > 1.3) return; const [x, y] = fn(t);
+        for (let q = 0; q < 3 && hi < 12; q++, hi++) { const g = E("ht" + hi), k = clamp((u - q * 0.12) / 1.1, 0, 1);
+          g.setAttribute("opacity", k > 0 && k < 1 ? (k < 0.75 ? 1 : (1 - k) / 0.25).toFixed(2) : 0);
+          g.setAttribute("transform", `translate(${(x + (q - 1) * 46 + 14 * Math.sin(k * 7 + q)).toFixed(1)} ${(y - 30 - 150 * k).toFixed(1)}) scale(${(0.5 + 0.6 * outBack(Math.min(1, k * 3), 2.5)).toFixed(3)})`); } });
+      for (; hi < 12; hi++) E("ht" + hi).setAttribute("opacity", 0); }
+    { let ki = 0; for (const t0 of [ts("k2.9") + 0.4]) { const on = sc === 2 && t > t0 && t < T.poke; if (!on) continue; ["mouse", "frog", "duck"].forEach((k) => { const f = friendPos(k, t); for (let q = 0; q < 2 && ki < 6; q++, ki++) { const g = E("sn" + ki); g.setAttribute("opacity", Math.sin(t * 20 + q) > 0 ? 1 : 0); g.setAttribute("transform", `translate(${(f.x + 50 + q * 14).toFixed(1)} ${(f.y - 150 * f.s - q * 26).toFixed(1)}) rotate(${-20 + q * 30})`); } }); }
+      for (; ki < 6; ki++) E("sn" + ki).setAttribute("opacity", 0); }
+    SND.forEach((s, i) => { const u = t - s.t, d = E("sd" + i);
+      if (u < 0 || u > 0.62) { d.style.opacity = 0; return; }
+      const [x0, y0] = s.at(s.t), e1 = Math.min(1, u / 0.14), sc2 = 0.25 + 0.75 * (1 - Math.pow(1 - e1, 3)) * (1 + 0.15 * Math.sin(Math.PI * e1)) + (u > 0.42 ? (u - 0.42) * 1.5 : 0);
+      d.style.transform = `translate(${x0.toFixed(1)}px, ${(y0 - 30 * u).toFixed(1)}px) rotate(${(s.r + (1 - e1) * -20).toFixed(1)}deg) scale(${sc2.toFixed(3)})`;
+      d.style.opacity = (u > 0.42 ? 1 - (u - 0.42) / 0.2 : 1).toFixed(2); });
+  }
+  // sound words: near the trunk (pırt), the plane (vın / güm), everyone (olduuu)
+  LINES.forEach((L) => { let k = 0; L.words.forEach(([w, t]) => { const n = norm(w); if (!(n in SOUND)) return; const j = k++ % 3, kind = SOUND[n];
+    const at = (tt) => { const [x, y] = kind === "pirt" ? tipScene(tt) : kind === "oldu" ? [960, 300] : P2S(260, -420, planePos(tt)); return [clamp(x + [-180, 60, -60][j], 60, 1600), clamp(y + [-160, -230, -300][j], 230, 880)]; };
+    SND.push({ txt: w.replace(/[^\p{L}]/gu, "").toLocaleUpperCase("tr") + "!", t, at, r: [-9, 7, -3][j], c: SCOL[kind] }); }); });
+  E("sndBox").innerHTML = SND.map((s, i) => `<div class="abs snd" id="sd${i}" style="opacity:0;color:${s.c}">${s.txt}</div>`).join("");
+
+  // ───────────────────────── timeline ─────────────────────────
+  gsap.defaults({ lazy: false });
+  const tl = gsap.timeline({ paused: true });
+  const pose = (name, t, d = 0.3, ease = "back.out(1.8)") => tl.to(R, { A: POSE[name][0], C: POSE[name][1], L: POSE[name][2], duration: d, ease }, t);
+  const shake = (t, a = 10) => tl.fromTo("#shake", { y: 0, x: 0 }, { keyframes: [{ y: a, x: -a * 0.4, duration: 0.04 }, { y: -a * 0.6, x: a * 0.3, duration: 0.05 }, { y: a * 0.3, x: 0, duration: 0.05 }, { y: 0, x: 0, duration: 0.06 }], immediateRender: false }, t);
+  const cam = (t, c, d = 1.2, ease = "power2.inOut") => tl.to(CAM, { ...c, duration: d, ease }, t);
+  const cut = (t, c) => tl.set(CAM, c, t);
+  const set = (o, v, t) => tl.set(o, v, t);
+  const to = (o, v, t, d = 0.3, ease = "power2.out") => tl.to(o, { ...v, duration: d, ease }, t);
+  const OPEN = { fistik: [R, "mouth", 0.9], frog: [AN, "frogOpen", 1], duck: [AN, "duckOpen", 1], duckling: [AN, "dlOpen", 1], mouse: [AN, "msOpen", 1], plane: [PL, "open", 1] };
+
+  // lyric pills
+  LINES.forEach((L, li) => { const st = L.words[0][1] - 0.35, nx = LINES[li + 1], en = nx && nx.words[0][1] - L.end < 3 ? Math.min(nx.words[0][1] - 0.35, L.end + 0.9) : L.end + 0.6;
+    tl.fromTo("#ln" + li, { opacity: 0, y: -24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.22, ease: "back.out(2)", immediateRender: false }, st);
+    L.words.forEach((w, wi) => { const snd = norm(w[0]) in SOUND || (L.who === "call" && wi === L.words.length - 1) || L.who === "kids" && /^[A-ZÇĞİÖŞÜ]+!?$/.test(w[0]);
+      tl.to(`#w${li}_${wi}`, { color: snd ? "#E5484D" : "#2B2D42", scale: snd ? 1.28 : 1.14, duration: 0.08, ease: "power2.out" }, w[1]); tl.to(`#w${li}_${wi}`, { scale: 1, duration: 0.18 }, w[1] + 0.1); });
+    tl.to("#ln" + li, { opacity: 0, y: -16, duration: 0.18, ease: "power1.in" }, en - 0.18); });
+  // lip-sync: lead = Fıstık, kids = friends, all = everyone, call = Fıstık asks, friends answer the last word
+  const FR = ["frog", "duck", "duckling", "mouse"];
+  LINES.forEach((L) => L.words.forEach((w, wi) => { const nxt = (L.words[wi + 1] || [0, w[1] + 0.6])[1], hold = clamp(nxt - w[1] - 0.12, 0.08, 0.26);
+    const last = wi === L.words.length - 1, who = L.who === "lead" ? ["fistik"] : L.who === "kids" ? FR : L.who === "all" ? ["fistik", ...FR] : last ? FR : ["fistik"];
+    who.forEach((h) => { const [o, p, v] = OPEN[h]; tl.to(o, { [p]: v, duration: 0.06 }, w[1]); tl.to(o, { [p]: h === "fistik" ? 0.06 : 0, duration: 0.1 }, w[1] + hold); }); }));
+  for (let t = 3.2; t < D - 2; t += 4.1) { tl.to(R, { blink: 1, duration: 0.07, ease: "none" }, t); tl.to(R, { blink: 0, duration: 0.09, ease: "none" }, t + 0.1); }
+
+  // ── R1 · garden: Fıstık flaps his ears, hovers, birds stare, "puf" sits down ──
+  cut(0, { s: 1.0, x: 980, y: 640 }); cam(1.0, { s: 1.18, x: 860, y: 640 }, 3.0, "sine.inOut");
+  to(R, { flap: 1, earAmp: 2, lookY: -14 }, 2.0, 0.3); pose("flyup", 2.0, 0.4);
+  tl.to(R, { jy: -110, duration: 1.6, ease: "sine.inOut" }, 2.4); tl.to(R, { rot: 5, duration: 0.3, yoyo: true, repeat: 5, ease: "sine.inOut" }, 2.5); set(R, { rot: 0 }, 4.3);
+  to(R, { lookX: -16 }, 3.6, 0.3); to(R, { lookX: 16 }, 4.6, 0.3);
+  to(R, { flap: 0 }, 5.6, 0.15); tl.to(R, { jy: 0, duration: 0.35, ease: "power2.in" }, 5.75); tl.to(R, { sq: 1, duration: 0.07 }, 6.1); tl.to(R, { sq: 0, duration: 0.25, ease: "back.out(3)" }, 6.18);
+  shake(6.1, 8); dust(6.1, 760, 1010); pose("rest", 6.2, 0.4); to(R, { lookX: 0, lookY: 8, tilt: -6 }, 6.3, 0.3); to(R, { tilt: 0, lookY: 0 }, 7.6, 0.4);
+  // ── R2 · intro: up, dream, ear-wind blows the MOUSE away, paper plane bonk, into the box ──
+  cam(8.4, { s: 1.08, x: 1060, y: 640 }, 1.2);
+  tl.to(R, { jy: -60, duration: 0.2, ease: "power2.out" }, ts("g.1")); tl.to(R, { jy: 0, duration: 0.25, ease: "power2.in" }, ts("g.1") + 0.2); pose("up", ts("g.1"), 0.3);
+  to(R, { lookY: -18, lookX: 6 }, ts("g.2"), 0.4); to(R, { dance: 0.3 }, ts("g.2"), 0.4);
+  to(R, { flap: 1, earAmp: 2 }, ts("g.3"), 0.2); to(R, { flap: 0, earAmp: 1 }, ts("g.3") + 1.4, 0.2); to(R, { lookX: 18, lookY: 0 }, ts("g.3") + 0.3, 0.3);
+  to(ENV, { speed: 0.7 }, ts("g.3") + 0.1, 0.2); to(ENV, { speed: 0 }, ts("g.3") + 0.9, 0.3);
+  { const hit = ts("g.4") - 0.2 + 0.55; tl.to(R, { tilt: -14, lookX: -10, blink: 1, duration: 0.06 }, hit); tl.to(R, { tilt: 0, blink: 0, duration: 0.3 }, hit + 0.2); shake(hit, 5); spark(hit, 820, 700);
+    pose("kick", hit + 0.3, 0.12); pose("rest", hit + 0.6, 0.3); to(R, { lookX: 18 }, hit + 0.4, 0.2); }
+  cam(15.6, { s: 2.6, x: BOX.x, y: BOX.y - 60 }, 0.6, "expo.in");
+  // ── R3 · workshop: the box wakes up; parts arrive; hamster button; the blue button drops ──
+  cut(T.shop, { s: 1.32, x: 980, y: 780 }); set(PL, { wing: 0, wheels: 0, prop: 0, eye: 0, smile: 0 }, T.shop); set(R, { lookX: 0, lookY: 0, dance: 0, jy: 80, sq: 0 }, T.shop);
+  tl.to(R, { jy: 0, duration: 0.45, ease: "back.out(2)" }, T.shop + 0.15); pose("up", T.shop + 0.2, 0.3);
+  to(PL, { eye: 0.45 }, ts("k1.1") + 0.6, 0.4); to(PL, { smile: 0.2 }, ts("k1.1") + 0.9, 0.3);
+  to(PL, { wing: 1 }, ts("k1.2") - 0.1, 0.55, "power3.out"); to(PL, { eye: 0.7, smile: 0.5 }, ts("k1.2") + 0.5, 0.3);
+  to(PL, { look: -1 }, ts("k1.3"), 0.3); to(PL, { wheels: 1 }, ts("k1.4") + 0.05, 0.25, "back.out(2)"); to(PL, { look: 0, eye: 0.8, smile: 0.7 }, ts("k1.4") + 0.4, 0.3);
+  shake(ts("k1.4") + 0.1, 6); shake(ts("k1.4") + 0.75, 6);
+  to(PL, { prop: 1 }, ts("k1.5") + 0.05, 0.5, "none"); shake(ts("k1.5") + 0.5, 6); to(PL, { eye: 0.9 }, ts("k1.5") + 0.6, 0.3);
+  pose("blow", ts("k1.6"), 0.3); [0, 0.5, 1.0].forEach((d) => puff(ts("k1.6") + 0.2 + d, "trunk"));
+  words("k1.7").slice(0, 3).forEach(([w, t], i) => { pose("kick", t - 0.04, 0.08); pose("trumpet", t + 0.1, 0.12); notes(t); puff(t + 0.1); shake(t, 4); });
+  tl.to(R, { lookY: -18, blink: 0, duration: 0.2 }, T.hatOff + 0.1);
+  { const m = ts("k1.8"); [0, 0.3, 0.6, 0.9].forEach((d) => puff(m + d)); to(PL, { eye: 1, smile: 1 }, m + 0.2, 0.3); to(PL, { open: 1 }, m + 0.7, 0.1); to(PL, { open: 0 }, te("k1.8") + 0.1, 0.2);
+    pose("up", m, 0.3); to(R, { lookY: 0 }, m, 0.3); }
+  tl.to(CAM, { x: 2400, duration: 0.35, ease: "expo.in" }, T.run - 0.35); to(ENV, { speed: 1 }, T.run - 0.35, 0.2); to(ENV, { speed: 0 }, T.run + 0.1, 0.3);
+  // ── R5 · runway: chocks hop away, lights chase, taxi; eye-drone flash; bucket rocket ──
+  cut(T.run, { s: 1.0, x: 900, y: 720 });
+  cam(ts("n1.1"), { s: 1.25, x: 600, y: 800 }, 0.6, "expo.out"); to(PL, { look: 1 }, ts("n1.1") + 0.2, 0.3);
+  { const m = ts("n1.2"); [0, 0.25, 0.5].forEach((d) => puff(m + d)); shake(m + 0.2, 4); to(PL, { look: 0 }, m, 0.3); }
+  cam(ts("n1.3"), { s: 1.0, x: 980, y: 760 }, 1.4, "power3.inOut");
+  cam(ts("n1.5") - 0.2, { s: 1.0, x: 1080, y: 640 }, 0.6); tl.to(R, { blink: 1, duration: 0.05 }, wt("n1.5", 1)); tl.to(R, { blink: 0, lookX: 16, lookY: -12, duration: 0.2 }, wt("n1.5", 1) + 0.15);
+  cam(ts("n1.6"), { s: 1.0, x: 1200, y: 600 }, 0.8); beatsIn(ts("n1.7"), ts("n1.8")).forEach((b) => tl.to(PL, { jy: 26, duration: 0.12, yoyo: true, repeat: 1, ease: "power2.out" }, b));
+  tl.to(PL, { jy: 110, duration: 0.5, ease: "power2.out" }, ts("n1.8")); tl.to(PL, { jy: 0, duration: 0.45, ease: "bounce.out" }, te("n1.8") + 0.1); to(PL, { open: 1 }, ts("n1.8"), 0.1); to(PL, { open: 0 }, te("n1.8"), 0.2);
+  cam(te("n1.8"), { s: 1.0, x: 800, y: 720 }, 0.8);
+  // ── R7 · 1-2-3 friends jump in, vın vın (slow), GÜM ──
+  cam(ts("k2.2"), { s: 1.12, x: 1000, y: 760 }, 0.9, "sine.inOut"); to(PL, { open: 1 }, ts("k2.2"), 0.1);
+  set(PL, { open: 0 }, T.crash); shake(T.crash + 0.05, 22); { const p = planePos(T.crash + 0.2), [nx, ny] = P2S(330, -100, p); dust(T.crash + 0.05, nx, ny); }
+  set(PL, { dent: 1, bent: 1, sad: 0.6, eye: 0.6, smile: 0 }, T.crash + 0.05); tl.to(R, { lookY: 10, blink: 0.5, duration: 0.1 }, T.crash + 0.05);
+  cam(T.crash, { s: 1.35, x: 1300, y: 860 }, 0.12, "expo.out");
+  cam(te("k2.3") - 0.3, { s: 1.12, x: 1250, y: 780 }, 1.0);
+  to(PL, { sad: 1, eye: 0.5 }, ts("k2.4"), 0.4);
+  // ── R8 · bir daha ×3: friends pop up; the dust rewinds; hope ──
+  { const w5 = words("k2.5"); [0, 2, 4].forEach((i) => shake(w5[i][1], 4)); { const p = planePos(T.crash + 0.3), [nx, ny] = P2S(330, -100, p); dustRev(w5[4][1] + 0.1, nx, ny); }
+    to(PL, { sad: 0.3, eye: 0.8, look: -0.6 }, w5[2][1], 0.3); to(PL, { sad: 0, smile: 0.4 }, w5[4][1], 0.4); tl.to(R, { lookY: 0, blink: 0, duration: 0.2 }, w5[4][1]); }
+  // ── R9 · repair: frog's tongue on the screw (spins!), duck straightens the wing, tape patch ──
+  cam(ts("k2.6") - 0.3, { s: 1.3, x: 1500, y: 820 }, 0.6);
+  cam(ts("k2.7") - 0.2, { s: 1.25, x: 1100, y: 840 }, 0.6); to(PL, { bent: 0 }, ts("k2.7") + 0.3, 0.8, "back.out(2)");
+  cam(ts("k2.8") - 0.2, { s: 1.4, x: 1420, y: 800 }, 0.5); to(PL, { patch: 1 }, ts("k2.8") + 0.2, 0.3); to(PL, { smile: 0.9, eye: 1 }, ts("k2.8") + 0.6, 0.3);
+  // ── R10 · push, nothing; the duckling pokes; OLDUUU ──
+  cam(ts("k2.9") - 0.2, { s: 1.0, x: 980, y: 760 }, 0.6); to(PL, { look: -1 }, ts("k2.9"), 0.3);
+  beatsIn(ts("k2.9") + 0.4, T.poke - 0.1).forEach((b) => tl.to(PL, { rot: -1.2, duration: 0.1, yoyo: true, repeat: 1 }, b));
+  shake(T.poke + 0.05, 10); to(PL, { look: 1, open: 1 }, T.poke, 0.1); to(PL, { open: 0 }, T.poke + 0.5, 0.2);
+  to(AN, { cheer: 1 }, ts("k2.11"), 0.2); to(AN, { cheer: 0 }, te("k2.11") + 0.3, 0.3); tl.to(R, { jy: -40, duration: 0.2, yoyo: true, repeat: 3 }, ts("k2.11"));
+  { const t0 = te("k2.11") - 0.3; to(ENV, { flash: 1 }, t0, 0.25, "power2.in"); to(ENV, { flash: 0 }, 69.6, 0.35); }
+  // ── R11 · nakarat 2: everyone in, engine, lights, TAKE-OFF (crane up) → cloud wipe ──
+  cut(69.55, { s: 1.0, x: 820, y: 760 }); set(PL, { look: 0, smile: 1, eye: 1 }, 69.55);
+ [0, 0.3, 0.6].forEach((d) => puff(ts("n2.2") + d));
+  cam(ts("n2.3"), { s: 1.0, x: 1000, y: 740 }, 1.6, "sine.inOut");
+  cam(T.lift, { s: 0.9, x: 1300, y: -200 }, 1.7, "power2.in"); to(ENV, { up: 1400 }, T.lift, 0.1); to(PL, { open: 1 }, T.lift, 0.1); to(PL, { open: 0 }, T.lift + 1.0, 0.2);
+  // ── R12 · sky: drone, rocket, slalom, bird pecks the pompom → pırt ──
+  cut(T.sky, { s: 1.0, x: 960, y: 600 }); set(ENV, { up: 0 }, T.sky);
+  { const fl = wt("n2.8", 1) + 0.15; tl.to(R, { lookY: -18, duration: 0.2 }, ts("n2.7") + 0.4); pose("kick", fl - 0.05, 0.08); pose("trumpet", fl + 0.08, 0.12); notes(fl); shake(fl, 5); pose("up", fl + 0.7, 0.3); to(R, { lookY: 0 }, fl + 0.4, 0.3); }
+  // ── R13 · bridge: ping-pong. Q = Fıstık (left, trunk megaphone); "-SANA!" = friends jump (right); a light per answer ──
+  { const qa = ["b.1", "b.2", "b.3", "b.4", "b.5", "b.6"], FCAM = (t) => { const [x, y] = headScene(t); return { s: 2.45, x: x + 30, y: y + 70 }; }, KCAM = (t) => { const p = planePos(t), [x, y] = P2S(-140, -400, p); return { s: 2.2, x: x - 20, y: y + 40 }; };
+    qa.forEach((tag, i) => { const q0 = ts(tag), a0 = wt(tag, -1); cut(q0 - 0.05, FCAM(q0)); pose("trumpet", q0 - 0.05, 0.15); to(R, { lookX: 14 }, q0, 0.2);
+      cut(a0, KCAM(a0)); to(AN, { cheer: 1 }, a0, 0.05); to(AN, { cheer: 0 }, a0 + 0.55, 0.1); set(PL, { lights: i + 1 }, a0); to(ENV, { glow: 1 }, a0, 0.05); to(ENV, { glow: 0 }, a0 + 0.4, 0.2); shake(a0, 6); });
+    const q7 = ts("b.7"); cut(q7 - 0.05, { s: 1.5, x: 960, y: 560 }); pose("up", q7, 0.3); to(R, { lookX: 0, lookY: 4 }, q7, 0.2); set(PL, { lights: 7 }, q7); to(PL, { lightAll: 1 }, q7 + 0.3, 0.2);
+    const a8 = ts("b.8"); cam(a8, { s: 2.3, x: headScene(a8)[0] + 80, y: headScene(a8)[1] + 60 }, 0.45, "expo.out"); pose("reach", a8, 0.2); to(AN, { cheer: 1 }, a8, 0.05);
+    pose("kick", T.fog - 0.05, 0.08); pose("trumpet", T.fog + 0.08, 0.12); notes(T.fog); to(ENV, { fog: 1 }, T.fog, 0.3); to(AN, { cheer: 0 }, T.fog + 0.4, 0.2); }
+  // ── R15 · sunset colour burst; formation swaps; tape heart; the sun winks; barrel roll shows the flag ──
+  to(ENV, { burst: 1 }, T.sun - 0.3, 0.25, "power2.in"); set(ENV, { fog: 0 }, T.sun); to(ENV, { burst: 0 }, T.sun + 0.05, 0.6);
+  cut(T.sun, { s: 1.0, x: 960, y: 600 }); set(PL, { lightAll: 0, lights: 7 }, T.sun); set(R, { lookX: 0, lookY: 0, dance: 0.5 }, T.sun);
+  to(AN, { party: 0.6 }, T.sun, 0.4); pose("up", T.sun, 0.3);
+  cam(T.heart0 - 0.3, { s: 1.0, x: 960, y: 560 }, 0.8);
+  tl.to(PL, { roll: 1, duration: 1.3, ease: "power2.inOut" }, T.roll); to(PL, { flag: 1 }, T.roll + 0.3, 0.4, "back.out(2)"); to(PL, { flag: 0 }, te("f.8"), 0.4);
+  [T.roll + 0.5, T.roll + 0.9].forEach((t) => { const p = planePos(T.roll + 0.65), [x, y] = P2S(-20, -152, p); spark(t, x, y); });
+  { const t8 = ts("f.8"); confetti(t8 + 0.2, 960, 300); confetti(t8 + 0.35, 560, 380); confetti(t8 + 0.5, 1360, 380); shake(t8 + 0.2, 6); to(AN, { party: 1 }, t8, 0.3); }
+  // ── R17 · cockpit: who? WE! (loop-the-loop, everybody upside down) ──
+  { const c = (t) => { const p = planePos(t), [x, y] = P2S(60, -400, p); return { s: 2.0, x, y: y + 30 }; }; cam(114.4, c(115.3), 0.9, "power2.inOut");
+    to(AN, { party: 0 }, 115.0, 0.3); set(R, { dance: 0 }, 115.0); pose("rest", ts("s.1q") + 0.2, 0.3); to(R, { lookX: -16 }, ts("s.1q") + 0.6, 0.2); to(R, { lookX: 0 }, ts("s.1q") + 1.4, 0.2);
+    tl.to(PL, { rot: -360, duration: 1.0, ease: "power2.inOut" }, T.loop - 0.1); set(PL, { rot: 0 }, T.loop + 0.95); to(AN, { cheer: 1 }, T.loop, 0.05); to(AN, { cheer: 0 }, T.loop + 0.8, 0.2);
+    pose("back", ts("s.2q"), 0.3); to(R, { lookX: -18 }, ts("s.2q"), 0.2);
+    pose("up", ts("s.2a"), 0.2); to(R, { lookX: 0, lookY: 6 }, ts("s.2a"), 0.2); to(AN, { cheer: 1 }, ts("s.2a"), 0.05); shake(ts("s.2a"), 12); to(AN, { cheer: 0 }, ts("s.2a") + 1.0, 0.2);
+    to(AN, { party: 1 }, ts("s.3"), 0.3); confetti(ts("s.3") + 0.3, 960, 260); confetti(ts("s.3") + 0.6, 600, 320); confetti(ts("s.3") + 0.9, 1320, 320);
+    cam(te("s.3") - 0.6, { s: 1.0, x: 960, y: 600 }, 0.7); }
+  // ── R18 · landing: three bounces fling the friends; a button rolls to the lens (tık!); last pırt; the plane sleeps under a tape blanket ──
+  cut(T.land, { s: 1.0, x: 900, y: 690 }); set(PL, { lights: 0, lightAll: 0 }, T.land); set(AN, { party: 0 }, T.land); set(R, { lookX: 0, lookY: 0 }, T.land);
+  [123.95, 124.85, 125.65].forEach((t, i) => { shake(t + 0.02, 10 - i * 2); const p = planePos(t), [x, y] = P2S(-30, 0, p); dust(t + 0.02, x, 1040); tl.to(R, { jy: -50 + i * 10, duration: 0.15, yoyo: true, repeat: 1 }, t); });
+  to(PL, { look: -1 }, 127.0, 0.2); shake(128.3, 14); to(PL, { look: 0 }, 128.6, 0.3);
+  cam(128.6, { s: 1.25, x: 940, y: 760 }, 1.2);
+  pose("kick", 128.95, 0.08); pose("trumpet", 129.08, 0.12); notes(129.0); pose("rest", 129.9, 0.5);
+  to(PL, { sleep: 1, smile: 0.5 }, 129.7, 1.0, "sine.inOut"); tl.to(R, { lookY: 10, duration: 0.4 }, 130.0);
+  EV.hearts.push([131.9, (t) => P2S(160, -420, planePos(t))]); EV.hearts.push([133.0, (t) => headScene(t)]);
+  cam(132.3, { s: 1.4, x: 1060, y: 760 }, 0.8);
+
+  window.__fistik = { R, render, POSE, CAM, AN, ENV, T, PL, planePos };
+  const master = gsap.timeline({ paused: true });
+  const clock = { _t: 0 };
+  Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+  tl.paused(false); master.add(tl, 0);
+  master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+  window.addEventListener("hf-seek", (e) => render(e && e.detail ? e.detail.time : master.time()));
+  // flying hat copy (the rig's hat without the pompom)
+  E("flyHat").innerHTML = `<svg x="0" y="0" width="600" height="300" viewBox="0 0 600 300" overflow="visible">${E("hat").innerHTML.replace(/ id="[^"]*"/g, "").replace(/<g><circle cx="300" cy="74"[\s\S]*?<\/g>/, "")}</svg>`;
+  E("flyHat").querySelectorAll("circle").forEach((c) => { if (c.getAttribute("cx") === "300" || c.getAttribute("cx") === "290") c.remove(); });
+  render(0);
+  window.__timelines["main"] = master;
+})();
+    </script>
+  </body>
+</html>
