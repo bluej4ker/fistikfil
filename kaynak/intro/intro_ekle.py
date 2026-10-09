@@ -97,6 +97,7 @@ def main():
 
     cmd = ["ffmpeg", "-v", "error", "-stats", "-y", *inputs, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
            "-c:v", "libx264", "-crf", a.crf, "-tune", "animation", "-preset", a.preset, "-pix_fmt", "yuv420p",
+           "-profile:v", "high", "-level", "5.1",  # 4K'da x264 Level 6.0 seçiyor; Apple donanım çözücüsü onu çözemiyor (yeşil bloklar)
            "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", a.out]
     subprocess.run(cmd, check=True)
     print("tamam:", a.out)
