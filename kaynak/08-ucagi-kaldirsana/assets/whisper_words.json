@@ -1,0 +1,1167 @@
+{
+ "text": " HAYGİ SISDIK KALKSANA, BİR HAYAL KURSANA, KULAKLA UÇULMASKİ BİR UÇAK YAPSANA, KUTUYU ALSANA, KANA DU TAKSANA, TİKELLİK MI EKSİK DÜMEDEN TAKSANA Pervane koysana, hortunla üflesene Pıt pıt pıt diyerek Motoru çalıştır sana Takılık kaldır sana Motoru çalıştır sana Pist seni bekliyor Uçak kaldır sana İha yapsana Roke yapsana Bulutlara göklere Fıstık uç sana Bir, iki, üç Vın, vın, güm Uçak düştümü Olmadı mı? Bir daha, bir daha Bir daha Bir dahi sık sana Kanadı düzeltse ne Ay, arkadaşlar yardım ay Hep beraber itse ne Çalışınca sonunda Oldu diye barır sana Takuzu kaldır sana Motoru çalıştır sana Pis beni bekliyor Uçar kaldır sana İhaa yapsana Roket yapsana Bulutlara göklere Hıstık mı sana Takuzu kaldır sana Motoru çalıştır sana Kanadı tak sana Uçur uçur sana İhay yapsana Roketi yapsana En iyisini Sen yap da Takuzu kaldır sana Motoru çalıştır sana İhay yapsana, uçağa yap sana Oynam öğren, dene Hayalini başlatsana Türkiye'nin çocukları en iyisini yapsana Eee şimdi ne yapıyoruz? Şimdi yapacağız Hep birlikte en iyisini biz yapıyoruzesi.",
+ "chunks": [
+  {
+   "text": " HAYGİ",
+   "timestamp": [
+    8.62,
+    9.12
+   ]
+  },
+  {
+   "text": " SISDIK",
+   "timestamp": [
+    9.12,
+    9.68
+   ]
+  },
+  {
+   "text": " KALKSANA,",
+   "timestamp": [
+    9.68,
+    10.52
+   ]
+  },
+  {
+   "text": " BİR",
+   "timestamp": [
+    10.6,
+    10.9
+   ]
+  },
+  {
+   "text": " HAYAL",
+   "timestamp": [
+    10.9,
+    11.56
+   ]
+  },
+  {
+   "text": " KURSANA,",
+   "timestamp": [
+    11.56,
+    12.46
+   ]
+  },
+  {
+   "text": " KULAKLA",
+   "timestamp": [
+    12.54,
+    13.38
+   ]
+  },
+  {
+   "text": " UÇULMASKİ",
+   "timestamp": [
+    13.38,
+    14.08
+   ]
+  },
+  {
+   "text": " BİR",
+   "timestamp": [
+    14.48,
+    14.76
+   ]
+  },
+  {
+   "text": " UÇAK",
+   "timestamp": [
+    14.76,
+    15.42
+   ]
+  },
+  {
+   "text": " YAPSANA,",
+   "timestamp": [
+    15.42,
+    16.36
+   ]
+  },
+  {
+   "text": " KUTUYU",
+   "timestamp": [
+    16.42,
+    17.48
+   ]
+  },
+  {
+   "text": " ALSANA,",
+   "timestamp": [
+    17.48,
+    18.22
+   ]
+  },
+  {
+   "text": " KANA",
+   "timestamp": [
+    18.38,
+    18.92
+   ]
+  },
+  {
+   "text": " DU",
+   "timestamp": [
+    18.92,
+    19.3
+   ]
+  },
+  {
+   "text": " TAKSANA,",
+   "timestamp": [
+    19.3,
+    20.2
+   ]
+  },
+  {
+   "text": " TİKELLİK",
+   "timestamp": [
+    20.26,
+    21.04
+   ]
+  },
+  {
+   "text": " MI",
+   "timestamp": [
+    21.04,
+    21.36
+   ]
+  },
+  {
+   "text": " EKSİK",
+   "timestamp": [
+    21.36,
+    22.26
+   ]
+  },
+  {
+   "text": " DÜMEDEN",
+   "timestamp": [
+    22.26,
+    23.18
+   ]
+  },
+  {
+   "text": " TAKSANA",
+   "timestamp": [
+    23.18,
+    23.68
+   ]
+  },
+  {
+   "text": " Pervane",
+   "timestamp": [
+    24.28,
+    25.16
+   ]
+  },
+  {
+   "text": " koysana,",
+   "timestamp": [
+    25.16,
+    25.82
+   ]
+  },
+  {
+   "text": " hortunla",
+   "timestamp": [
+    26.2,
+    26.84
+   ]
+  },
+  {
+   "text": " üflesene",
+   "timestamp": [
+    26.84,
+    27.68
+   ]
+  },
+  {
+   "text": " Pıt",
+   "timestamp": [
+    27.94,
+    28.44
+   ]
+  },
+  {
+   "text": " pıt",
+   "timestamp": [
+    28.44,
+    28.88
+   ]
+  },
+  {
+   "text": " pıt",
+   "timestamp": [
+    28.88,
+    29.2
+   ]
+  },
+  {
+   "text": " diyerek",
+   "timestamp": [
+    29.2,
+    29.6
+   ]
+  },
+  {
+   "text": " Motoru",
+   "timestamp": [
+    29.96,
+    30.42
+   ]
+  },
+  {
+   "text": " çalıştır",
+   "timestamp": [
+    30.42,
+    31.28
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    31.28,
+    31.46
+   ]
+  },
+  {
+   "text": " Takılık",
+   "timestamp": [
+    31.98,
+    32.56
+   ]
+  },
+  {
+   "text": " kaldır",
+   "timestamp": [
+    32.56,
+    33.14
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    33.14,
+    33.44
+   ]
+  },
+  {
+   "text": " Motoru",
+   "timestamp": [
+    33.76,
+    34.26
+   ]
+  },
+  {
+   "text": " çalıştır",
+   "timestamp": [
+    34.26,
+    35.1
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    35.1,
+    35.3
+   ]
+  },
+  {
+   "text": " Pist",
+   "timestamp": [
+    35.54,
+    36.18
+   ]
+  },
+  {
+   "text": " seni",
+   "timestamp": [
+    36.18,
+    36.58
+   ]
+  },
+  {
+   "text": " bekliyor",
+   "timestamp": [
+    36.58,
+    37.28
+   ]
+  },
+  {
+   "text": " Uçak",
+   "timestamp": [
+    37.54,
+    38.28
+   ]
+  },
+  {
+   "text": " kaldır",
+   "timestamp": [
+    38.28,
+    38.84
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    38.84,
+    39.12
+   ]
+  },
+  {
+   "text": " İha",
+   "timestamp": [
+    39.4,
+    40.22
+   ]
+  },
+  {
+   "text": " yapsana",
+   "timestamp": [
+    40.22,
+    41
+   ]
+  },
+  {
+   "text": " Roke",
+   "timestamp": [
+    41.2,
+    42.14
+   ]
+  },
+  {
+   "text": " yapsana",
+   "timestamp": [
+    42.14,
+    42.88
+   ]
+  },
+  {
+   "text": " Bulutlara",
+   "timestamp": [
+    43.2,
+    44.08
+   ]
+  },
+  {
+   "text": " göklere",
+   "timestamp": [
+    44.08,
+    44.82
+   ]
+  },
+  {
+   "text": " Fıstık",
+   "timestamp": [
+    44.98,
+    45.46
+   ]
+  },
+  {
+   "text": " uç",
+   "timestamp": [
+    45.46,
+    45.88
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    45.88,
+    46
+   ]
+  },
+  {
+   "text": " Bir,",
+   "timestamp": [
+    46.96,
+    47.12
+   ]
+  },
+  {
+   "text": " iki,",
+   "timestamp": [
+    47.48,
+    47.66
+   ]
+  },
+  {
+   "text": " üç",
+   "timestamp": [
+    47.92,
+    48
+   ]
+  },
+  {
+   "text": " Vın,",
+   "timestamp": [
+    48.74,
+    49.24
+   ]
+  },
+  {
+   "text": " vın,",
+   "timestamp": [
+    49.24,
+    49.68
+   ]
+  },
+  {
+   "text": " güm",
+   "timestamp": [
+    49.68,
+    50
+   ]
+  },
+  {
+   "text": " Uçak",
+   "timestamp": [
+    50.64,
+    51.18
+   ]
+  },
+  {
+   "text": " düştümü",
+   "timestamp": [
+    51.18,
+    52
+   ]
+  },
+  {
+   "text": " Olmadı",
+   "timestamp": [
+    52.74,
+    53.52
+   ]
+  },
+  {
+   "text": " mı?",
+   "timestamp": [
+    53.52,
+    54
+   ]
+  },
+  {
+   "text": " Bir",
+   "timestamp": [
+    54.56,
+    54.86
+   ]
+  },
+  {
+   "text": " daha,",
+   "timestamp": [
+    54.86,
+    55.26
+   ]
+  },
+  {
+   "text": " bir",
+   "timestamp": [
+    55.44,
+    55.84
+   ]
+  },
+  {
+   "text": " daha",
+   "timestamp": [
+    55.84,
+    56
+   ]
+  },
+  {
+   "text": " Bir",
+   "timestamp": [
+    56.54,
+    56.96
+   ]
+  },
+  {
+   "text": " daha",
+   "timestamp": [
+    56.96,
+    57.92
+   ]
+  },
+  {
+   "text": " Bir",
+   "timestamp": [
+    58.28,
+    58.62
+   ]
+  },
+  {
+   "text": " dahi",
+   "timestamp": [
+    58.62,
+    59.2
+   ]
+  },
+  {
+   "text": " sık",
+   "timestamp": [
+    59.2,
+    59.62
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    59.62,
+    59.96
+   ]
+  },
+  {
+   "text": " Kanadı",
+   "timestamp": [
+    60.14,
+    60.54
+   ]
+  },
+  {
+   "text": " düzeltse",
+   "timestamp": [
+    60.54,
+    61.58
+   ]
+  },
+  {
+   "text": " ne",
+   "timestamp": [
+    61.58,
+    61.92
+   ]
+  },
+  {
+   "text": " Ay,",
+   "timestamp": [
+    62.06,
+    62.56
+   ]
+  },
+  {
+   "text": " arkadaşlar",
+   "timestamp": [
+    62.56,
+    63.2
+   ]
+  },
+  {
+   "text": " yardım",
+   "timestamp": [
+    63.2,
+    63.58
+   ]
+  },
+  {
+   "text": " ay",
+   "timestamp": [
+    63.58,
+    64
+   ]
+  },
+  {
+   "text": " Hep",
+   "timestamp": [
+    64.04,
+    64.46
+   ]
+  },
+  {
+   "text": " beraber",
+   "timestamp": [
+    64.46,
+    64.96
+   ]
+  },
+  {
+   "text": " itse",
+   "timestamp": [
+    64.96,
+    65.32
+   ]
+  },
+  {
+   "text": " ne",
+   "timestamp": [
+    65.32,
+    65.5
+   ]
+  },
+  {
+   "text": " Çalışınca",
+   "timestamp": [
+    65.7,
+    66.76
+   ]
+  },
+  {
+   "text": " sonunda",
+   "timestamp": [
+    66.76,
+    67.5
+   ]
+  },
+  {
+   "text": " Oldu",
+   "timestamp": [
+    67.86,
+    68.38
+   ]
+  },
+  {
+   "text": " diye",
+   "timestamp": [
+    68.38,
+    68.62
+   ]
+  },
+  {
+   "text": " barır",
+   "timestamp": [
+    68.62,
+    68.98
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    68.98,
+    69.5
+   ]
+  },
+  {
+   "text": " Takuzu",
+   "timestamp": [
+    69.78,
+    70.3
+   ]
+  },
+  {
+   "text": " kaldır",
+   "timestamp": [
+    70.3,
+    70.88
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    70.88,
+    71
+   ]
+  },
+  {
+   "text": " Motoru",
+   "timestamp": [
+    71.5,
+    71.96
+   ]
+  },
+  {
+   "text": " çalıştır",
+   "timestamp": [
+    71.96,
+    72.76
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    72.76,
+    73
+   ]
+  },
+  {
+   "text": " Pis",
+   "timestamp": [
+    73.42,
+    73.94
+   ]
+  },
+  {
+   "text": " beni",
+   "timestamp": [
+    73.94,
+    74.28
+   ]
+  },
+  {
+   "text": " bekliyor",
+   "timestamp": [
+    74.28,
+    75
+   ]
+  },
+  {
+   "text": " Uçar",
+   "timestamp": [
+    75.24,
+    75.94
+   ]
+  },
+  {
+   "text": " kaldır",
+   "timestamp": [
+    75.94,
+    76.48
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    76.48,
+    76.92
+   ]
+  },
+  {
+   "text": " İhaa",
+   "timestamp": [
+    77.08,
+    77.94
+   ]
+  },
+  {
+   "text": " yapsana",
+   "timestamp": [
+    77.94,
+    78.86
+   ]
+  },
+  {
+   "text": " Roket",
+   "timestamp": [
+    78.9,
+    79.82
+   ]
+  },
+  {
+   "text": " yapsana",
+   "timestamp": [
+    79.82,
+    80.68
+   ]
+  },
+  {
+   "text": " Bulutlara",
+   "timestamp": [
+    80.88,
+    81.72
+   ]
+  },
+  {
+   "text": " göklere",
+   "timestamp": [
+    81.72,
+    82.5
+   ]
+  },
+  {
+   "text": " Hıstık",
+   "timestamp": [
+    82.64,
+    83.08
+   ]
+  },
+  {
+   "text": " mı",
+   "timestamp": [
+    83.08,
+    83.44
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    83.44,
+    84
+   ]
+  },
+  {
+   "text": " Takuzu",
+   "timestamp": [
+    84.76,
+    85.34
+   ]
+  },
+  {
+   "text": " kaldır",
+   "timestamp": [
+    85.32,
+    85.88
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    85.88,
+    86
+   ]
+  },
+  {
+   "text": " Motoru",
+   "timestamp": [
+    86.52,
+    86.98
+   ]
+  },
+  {
+   "text": " çalıştır",
+   "timestamp": [
+    86.98,
+    87.84
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    87.84,
+    88
+   ]
+  },
+  {
+   "text": " Kanadı",
+   "timestamp": [
+    88.62,
+    89.22
+   ]
+  },
+  {
+   "text": " tak",
+   "timestamp": [
+    89.22,
+    89.6
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    89.6,
+    89.98
+   ]
+  },
+  {
+   "text": " Uçur",
+   "timestamp": [
+    90.12,
+    90.88
+   ]
+  },
+  {
+   "text": " uçur",
+   "timestamp": [
+    90.88,
+    91.54
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    91.54,
+    91.9
+   ]
+  },
+  {
+   "text": " İhay",
+   "timestamp": [
+    92.06,
+    92.94
+   ]
+  },
+  {
+   "text": " yapsana",
+   "timestamp": [
+    92.94,
+    93.88
+   ]
+  },
+  {
+   "text": " Roketi",
+   "timestamp": [
+    94.12,
+    94.82
+   ]
+  },
+  {
+   "text": " yapsana",
+   "timestamp": [
+    94.82,
+    95.64
+   ]
+  },
+  {
+   "text": " En",
+   "timestamp": [
+    95.92,
+    96.18
+   ]
+  },
+  {
+   "text": " iyisini",
+   "timestamp": [
+    96.18,
+    97.32
+   ]
+  },
+  {
+   "text": " Sen",
+   "timestamp": [
+    97.78,
+    98.26
+   ]
+  },
+  {
+   "text": " yap",
+   "timestamp": [
+    98.26,
+    98.6
+   ]
+  },
+  {
+   "text": " da",
+   "timestamp": [
+    98.6,
+    99.16
+   ]
+  },
+  {
+   "text": " Takuzu",
+   "timestamp": [
+    99.74,
+    100.26
+   ]
+  },
+  {
+   "text": " kaldır",
+   "timestamp": [
+    100.26,
+    100.9
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    100.9,
+    101.26
+   ]
+  },
+  {
+   "text": " Motoru",
+   "timestamp": [
+    101.46,
+    101.92
+   ]
+  },
+  {
+   "text": " çalıştır",
+   "timestamp": [
+    101.92,
+    102.68
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    102.68,
+    103.1
+   ]
+  },
+  {
+   "text": " İhay",
+   "timestamp": [
+    103.28,
+    104.14
+   ]
+  },
+  {
+   "text": " yapsana,",
+   "timestamp": [
+    104.14,
+    104.98
+   ]
+  },
+  {
+   "text": " uçağa",
+   "timestamp": [
+    105.12,
+    105.88
+   ]
+  },
+  {
+   "text": " yap",
+   "timestamp": [
+    105.88,
+    106.46
+   ]
+  },
+  {
+   "text": " sana",
+   "timestamp": [
+    106.46,
+    106.66
+   ]
+  },
+  {
+   "text": " Oynam",
+   "timestamp": [
+    106.94,
+    107.64
+   ]
+  },
+  {
+   "text": " öğren,",
+   "timestamp": [
+    107.64,
+    108.02
+   ]
+  },
+  {
+   "text": " dene",
+   "timestamp": [
+    108.1,
+    108.36
+   ]
+  },
+  {
+   "text": " Hayalini",
+   "timestamp": [
+    108.68,
+    109.54
+   ]
+  },
+  {
+   "text": " başlatsana",
+   "timestamp": [
+    109.54,
+    110.42
+   ]
+  },
+  {
+   "text": " Türkiye",
+   "timestamp": [
+    110.98,
+    111.3
+   ]
+  },
+  {
+   "text": "'nin",
+   "timestamp": [
+    111.3,
+    111.62
+   ]
+  },
+  {
+   "text": " çocukları",
+   "timestamp": [
+    111.62,
+    112.58
+   ]
+  },
+  {
+   "text": " en",
+   "timestamp": [
+    112.58,
+    112.74
+   ]
+  },
+  {
+   "text": " iyisini",
+   "timestamp": [
+    112.74,
+    113.44
+   ]
+  },
+  {
+   "text": " yapsana",
+   "timestamp": [
+    113.44,
+    114.24
+   ]
+  },
+  {
+   "text": " Eee",
+   "timestamp": [
+    115.08,
+    115.98
+   ]
+  },
+  {
+   "text": " şimdi",
+   "timestamp": [
+    115.98,
+    116.3
+   ]
+  },
+  {
+   "text": " ne",
+   "timestamp": [
+    116.3,
+    116.6
+   ]
+  },
+  {
+   "text": " yapıyoruz?",
+   "timestamp": [
+    116.6,
+    117.34
+   ]
+  },
+  {
+   "text": " Şimdi",
+   "timestamp": [
+    117.76,
+    118.24
+   ]
+  },
+  {
+   "text": " yapacağız",
+   "timestamp": [
+    118.24,
+    119.42
+   ]
+  },
+  {
+   "text": " Hep",
+   "timestamp": [
+    120.28,
+    120.52
+   ]
+  },
+  {
+   "text": " birlikte",
+   "timestamp": [
+    120.52,
+    120.94
+   ]
+  },
+  {
+   "text": " en",
+   "timestamp": [
+    120.94,
+    121.14
+   ]
+  },
+  {
+   "text": " iyisini",
+   "timestamp": [
+    121.14,
+    121.6
+   ]
+  },
+  {
+   "text": " biz",
+   "timestamp": [
+    121.6,
+    121.98
+   ]
+  },
+  {
+   "text": " yapıyoruzesi.",
+   "timestamp": [
+    121.98,
+    123.66
+   ]
+  }
+ ]
+}
