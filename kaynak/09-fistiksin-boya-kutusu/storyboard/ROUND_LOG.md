@@ -9,7 +9,7 @@ Zamanlar video dosyası zamanıdır (bölüm zamanı = dosya − 5,6 sn). ±1 pu
 | 1 | v4 | 7/10 | 6/10 | 3:02 |
 | 2 | v5 | 6,5/10 | 6/10 | 3:02 |
 | 3 | v6 | 7/10 | 6,5/10 | 3:02 |
-| 4 | v7 | | | 3:02 |
+| 4 | v7 | 7/10 | 6,5/10 | 3:02 |
 
 ## Tur 0 → tur 1 (v4)
 
@@ -86,3 +86,17 @@ Dört turdur hiç gitmeyen iki şikâyet yapısal olarak ele alındı:
 | A+B: "her yer renk renk doldu" görünmüyor | Pass 1'de her nakaratta çayırda o rengin 5 çiçeği açar; şarkı sonunda çayır 30 renkli çiçekle dolu |
 | A+B: renk anında nesne küçük | Pass 1 ve pass 2 nesneleri 1,22× |
 | B: gece çamurlu mor | Gece katmanı lacivert, multiply karışım |
+
+### Tur 4 sonucu ve durma kuralı
+
+Puanlar 7 / 6,5 (tur 3 ile aynı). Tur 3 (+0,5 / +0,5) ve tur 4 (0 / 0) üst üste ≥ 1 artış getirmedi → durma kuralı işledi.
+
+Tur 4'ün kazanımı: çocuk gözü ilk kez "ikinci geçiş yeni hissettiriyor" dedi. Ama hareket yönetmeni kıtaları t ile t+80 sn yan yana koyup kadrajın birebir örtüştüğünü gösterdi: kamera Fıstık'ı izlediği için büyük yaprakta da aynı plan dizisi oluşuyor.
+
+Ajanların tur 4'te hâlâ istediği (bir sonraki tur yapılırsa):
+- Pass 2'de her kıtaya farklı bir boyama yöntemi (karalama, damga, sprey, yırt-yapıştır) ve en az iki kıtada farklı kamera (tepeden, nesnenin gözünden).
+- Pass 1'de dünya ilk "pırt"ta bir kerede renklenmesin; her kıta dünyanın bir parçasını boyasın (muz → güneş, balık → gök, kurbağa → çimen…), gökkuşağında tamamlansın.
+- Final: kararan gece yerine Fıstık'ın defteri kapatması, kapağın kanal kapanışına dönüşmesi; kimse kenarda kesilmesin.
+- Gökkuşağında her nesne kendi bandına zıplasın; renk anında her nesneye kurbağa yakın planı gibi yaklaşma.
+- Çiçekler ve şeritler hâlâ okunmuyor (A çiçekleri öneri olarak yazdı) → çok daha büyük.
+- Hazır: v8'de gerçek 180° sayfa çevirme (arka yüz görünür, açık defter gibi solda yatar) — incelenmedi.
