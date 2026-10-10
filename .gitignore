@@ -7,6 +7,7 @@
 05 - Fıstık Fil Fıstık Yer/fistik-yer-4k.mp4
 06 - Arı Vız Vız/ari-viz-viz-4k.mp4
 08 - Uçağı Kaldırsana/ucagi-kaldirsana-4k.mp4
+09 - Pırt Pırt Boya Döktüm/pirt-pirt-boya-4k.mp4
 
 # ── Ara çıktılar (kaynak/** altındaki render, ses, log) ───────────────────────
 renders/
@@ -31,12 +32,6 @@ kaynak/intro/*/assets/gsap.min.js
 __pycache__/
 node_modules/
 .references/
-09 - Pırt Pırt Boya Döktüm/pirt-pirt-boya-4k.mp4
-09 - Pırt Pırt Boya Döktüm v2/pirt-v2-4k.mp4
-09 - Pırt Pırt Boya Döktüm v3/pirt-v3-4k.mp4
-kaynak/09-fistiksin-boya-kutusu/v2/assets/song2x.m4a
-kaynak/09-fistiksin-boya-kutusu/assets/song2x_mix.m4a
-kaynak/09-fistiksin-boya-kutusu/assets/song2x.m4a
 .venv/
-09 - Pırt Pırt Boya Döktüm v6/pirt-v6-4k.mp4
-09 - Pırt Pırt Boya Döktüm v9/pirt-v9-4k.mp4
+kaynak/09-fistiksin-boya-kutusu/assets/song2x.m4a
+kaynak/09-fistiksin-boya-kutusu/assets/song2x_mix.m4a
