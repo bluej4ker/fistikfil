@@ -10,6 +10,7 @@ Zamanlar video dosyası zamanıdır (bölüm zamanı = dosya − 5,6 sn). ±1 pu
 | 2 | v5 | 6,5/10 | 6/10 | 3:02 |
 | 3 | v6 | 7/10 | 6,5/10 | 3:02 |
 | 4 | v7 | 7/10 | 6,5/10 | 3:02 |
+| 5 | v9 | 7,5/10 | 7/10 | 3:02 |
 
 ## Tur 0 → tur 1 (v4)
 
@@ -111,3 +112,11 @@ Ajanların tur 4'te hâlâ istediği (bir sonraki tur yapılırsa):
 | A+B: final karanlık, durgun, kenarda kesik nesneler | Gece kaldırıldı. Fıstık el sallar (nesneler kadraj içinde) → bütün yaprak → sayfa masaya küçülür → turuncu kapak kapanır → kamera kapaktaki "Fıstık Fil · Boyama Defterim" logosuna ilerler → beyaz parlama → kanalın turuncu kapanışı |
 | B: gökkuşağı durgun | Raftaki nesneler sırayla kendi renk bantlarına zıplar |
 | A: çiçekler görünmüyor | Çiçekler ~1,5× büyük, yapraklı |
+
+### Tur 5 sonucu — son tur
+
+Puanlar 7,5 / 7: döngünün en yüksek puanları (tur 0'a göre +1,5 / +1). Ama tur 4 (0 / 0) ve tur 5 (+0,5 / +0,5) üst üste ≥ 1 artış getirmedi → durma kuralı işledi; tur 6 yapılmadı. Teslim: v9.
+
+- A (çocuk): dünyanın parça parça boyanması, sayfa çevirme ve "Boyama Defterim" kapanışı en iyi çalışanlar; ikinci geçiş "yeni hissettiriyor". Kalan: ikinci müzik arasında kalemin ne yaptığı belli değil, ikinci geçişte "hop hop" ve sayfa boşluğu, MAVİ/hip-hop.
+- B (hareket): "hareket hiçbir yerde ölmüyor, 8 sn'lik durgun plan yok". Sayfa çevirmenin videoda 2 karede geçtiğini yakaladı → **render hatası**: `scale()` z eksenini küçültmüyordu, sayfanın kenarı kameraya çarpıp kayboluyordu (önizleme karelerinde görünmüyordu). Düzeltme: `scale3d`, perspektif 3600, çevirme sonrası donuk bekleme 0,4 → 0,1 sn. Teslim edilen v9 bu düzeltmeyi içerir (yeniden incelenmedi).
+- Bir sonraki iş yapılırsa (iki ajanın ortak isteği): ikinci geçişte de her kıtada sayfanın bir bölgesi boyansın; ikinci geçişin finali birincininki kadar güçlü olsun; kalem gag'inin bir amacı ve sonu olsun.

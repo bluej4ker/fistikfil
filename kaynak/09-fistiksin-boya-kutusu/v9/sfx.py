@@ -78,7 +78,7 @@ def main():
     place(b, bell(NOTE(91), 0.8), 46.0, 0.2)
     sparkle(72.9, b, (1568, 2093, 2637, 3136), 0.1, 0.16)
     # the page turn
-    place(b, whoosh(0.9), 79.7, 0.35); place(b, wood(700, 0.05), 80.45, 0.2); place(b, page_flip(1.1), 80.65, 0.8); place(b, wood(300, 0.1), 81.75, 0.3); place(b, whoosh(0.8), 82.15, 0.25)
+    place(b, whoosh(0.9), 79.7, 0.35); place(b, wood(700, 0.05), 80.45, 0.2); place(b, page_flip(1.3), 80.65, 0.8); place(b, wood(300, 0.1), 81.95, 0.3); place(b, whoosh(0.8), 82.05, 0.25)
     # pass 2: the pencil draws the sun and Fıstık, then the crayon
     place(b, scribble(0.9, 6), 83.0, 0.25); place(b, scribble(1.0, 11), 84.0, 0.3); place(b, scribble(0.5, 5), 85.0, 0.2)
     place(b, boing(200, 520, 0.3), 85.5, 0.3); place(b, boing(220, 500, 0.3), 85.95, 0.25); place(b, boing(240, 540, 0.3), 86.4, 0.25)

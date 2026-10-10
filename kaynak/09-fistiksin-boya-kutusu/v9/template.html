@@ -13,7 +13,7 @@
       .clip { position: absolute; inset: 0; }
       .abs { position: absolute; }
       .full { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
-      #stage { left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 960px 540px; perspective: 2600px; perspective-origin: 960px 540px; }
+      #stage { left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 960px 540px; perspective: 3600px; perspective-origin: 960px 540px; }
       #cover { left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 960px 540px; transform-style: preserve-3d; display: none; }
       #coverOut, #coverIn { left: 0; top: 0; width: 1920px; height: 1080px; backface-visibility: hidden; border-radius: 22px; overflow: hidden; }
       #coverOut { background: linear-gradient(160deg, #FFB547 0%, #FF8A3D 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -97,7 +97,7 @@
 
   // ───────── structure ─────────
   // pass 1 (paint-can meadow) → page turn on the table → pass 2 (sketchbook); pass-2 song is cut after the applause
-  const PULL0 = 79.7, PULL1 = 80.4, LIFT0 = 80.4, TURN0 = 80.65, TURN1 = 81.75, PUSH0 = 82.15, PUSH1 = 82.9;   // a real 180° turn: the back of the old page lies on the left like an open book
+  const PULL0 = 79.7, PULL1 = 80.4, LIFT0 = 80.4, TURN0 = 80.65, TURN1 = 81.95, PUSH0 = 82.05, PUSH1 = 82.95;   // a real 180° turn: the back of the old page lies on the left like an open book
   const T_SWAP = TURN1;                      // the old page has turned away; the sketch page underneath is identical to pass 2's first frame
   const VS = [0, 2, 4, 6, 8, 10];
   const LN = (k, p, j = 0) => LINES[(p === 1 ? 0 : 14) + VS[k] + j];
@@ -321,7 +321,7 @@
     const out = smooth(PULL0, PULL1, t), back = smooth(PUSH0, PUSH1, t), k = Math.max(out * (1 - back), smooth(CLOSE0 + 0.5, CLOSE0 + 1.4, t));
     const lift = bump(t, LIFT0, 0.5) * (t < TURN0 + 0.2 ? 1 : 0);
     let ang = 0;
-    if (t > TURN0 && t < TURN1) { const u = (t - TURN0) / (TURN1 - TURN0), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2; ang = -180 * e; }
+    if (t > TURN0 && t < TURN1) { const u = (t - TURN0) / (TURN1 - TURN0), e = 0.85 * u + 0.15 * (u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2); ang = -180 * e; }   // near-constant speed: the visible front half lasts ~0.65 s
     return { s: lerp(1, 0.6, k), rot: -3 * k, ang: ang - 12 * lift, k, lift, turning: t > TURN0 - 0.3 && t < TURN1 + 0.02, leaf: t >= TURN1 && t < PUSH1 };
   }
 
@@ -330,14 +330,14 @@
   function render(t) {
     const P = t < T_SWAP ? 1 : 2;
     const pg = pageAt(t);
-    $("#flip").style.transform = `rotate(${f3(pg.rot)}deg) scale(${f3(pg.s)}) translateY(${f1(-20 * pg.lift)}px) translateX(-960px) rotateY(${f3(pg.ang)}deg) translateX(960px)`;
+    $("#flip").style.transform = `rotate(${f3(pg.rot)}deg) scale3d(${f3(pg.s)}, ${f3(pg.s)}, ${f3(pg.s)}) translateY(${f1(-20 * pg.lift)}px) translateX(-960px) rotateY(${f3(pg.ang)}deg) translateX(960px)`;
     PAGE.style.boxShadow = pg.k > 0.01 ? `0 0 0 ${f1(16 / pg.s)}px #fff, 0 ${f1(30 + 30 * pg.lift)}px 60px rgba(0,0,0,${f3(0.35 * pg.k)})` : "none";
     $("#pageBack").style.boxShadow = PAGE.style.boxShadow;
     $("#pageBack").style.filter = `brightness(${f3(0.75 + 0.25 * Math.abs(Math.cos(pg.ang * Math.PI / 180)))})`;
     $("#leftLeaf").style.display = pg.leaf ? "block" : "none";
     const cov = $("#cover"), cu = clamp((t - COVER0) / 1.1, 0, 1), cang = -180 * (1 - (cu < 0.5 ? 2 * cu * cu : 1 - Math.pow(-2 * cu + 2, 2) / 2));
     cov.style.display = t > CLOSE0 + 0.5 ? "block" : "none";
-    cov.style.transform = `rotate(${f3(pg.rot)}deg) scale(${f3(pg.s)}) translateX(-960px) rotateY(${f3(cang)}deg) translateX(960px)`;
+    cov.style.transform = `rotate(${f3(pg.rot)}deg) scale3d(${f3(pg.s)}, ${f3(pg.s)}, ${f3(pg.s)}) translateX(-960px) rotateY(${f3(cang)}deg) translateX(960px)`;
     $("#coverOut").style.boxShadow = $("#coverIn").style.boxShadow = `0 ${f1(30 + 40 * bump(t, COVER0 + 0.9, 0.4))}px 60px rgba(0,0,0,.35)`;
     const z = smooth(ZOOM0 + 0.2, END - 0.3, t);
     $("#stage").style.transform = `scale(${f3(1 + 0.9 * z)})`;

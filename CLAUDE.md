@@ -40,7 +40,7 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 6 | Arı Vız Vız · Renkleri ve Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | ~2:11 (açılış+kapanış dahil) | Hazır, yüklenmedi |
 | 7 | Anneannem ve Dedem | — | — | Suno promptu hazır, şarkı bekleniyor |
 | 8 | Uçağı Kaldırsana · Hayal Kur, Dene, Başar · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır (v2, Fable incelemesi sonrası 4K), yüklenmedi |
-| 9 | Pırt Pırt Boya Döktüm · Renkleri Öğreniyoruz (taslak başlık) | — | 3:02 (açılış+kapanış dahil) | v6 4K hazır (`09 - Pırt Pırt Boya Döktüm v6/`), kullanıcı onayı bekliyor; kapak + YouTube metni yok |
+| 9 | Pırt Pırt Boya Döktüm · Renkleri Öğreniyoruz (taslak başlık) | — | 3:02 (açılış+kapanış dahil) | v9 4K hazır (`09 - Pırt Pırt Boya Döktüm v9/`, 5 inceleme turunun sonu), kapak + YouTube metni yok |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S3–S8 | Reels 3–4 (Küçük Kurbağa), 5–6 (Fıstık Yer), 7–8 (Arı Vız Vız) | — | ~0:30 | Hazır, `Reels/` + `Reels/reels-metin.txt` |
@@ -77,7 +77,7 @@ FistikFil/
     ├── 06-ari-viz-viz/           ← aynı düzen (§7.6)
     ├── 07-anneannem-dedem/       ← suno-prompt.txt (güncel), gemini-prompt.txt (eski v1)
     ├── 08-ucagi-kaldirsana/      ← aynı düzen + suno-prompt.txt, tek-prompt.txt (§7.7)
-    ├── 09-fistiksin-boya-kutusu/ ← v6/(template, sfx), build_v6.py, v2/(lines2x.json, art.js), storyboard/(STORYBOARD-v6.md, ROUND_LOG.md) (§7.8)
+    ├── 09-fistiksin-boya-kutusu/ ← v9/(template, sfx), build_v9.py (güncel), v2/(lines2x.json, art.js), storyboard/(STORYBOARD-v6.md, ROUND_LOG.md) (§7.8)
     ├── intro/                    ← açılış/kapanış/abone bandı: src/(intro.html, abone.html), build.py, make_jingle.py, render.sh, intro_ekle.py (§6.6)
     ├── reels/                    ← make_reel.py, make_cover.py, r1…r6b.json, reel_lines_v1.json
     └── marka/                    ← extract.py, make.py (profil+banner), thumb.py, poses.json, _thumb.html
@@ -430,7 +430,8 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - **İki dünya, tek değişim anı (`T_SWAP`):** 1. geçiş gri çayır → boya kovası; 2. geçiş defter sayfası (kalem çizer, Fıstık hortumundaki pastel boyayla tarar). Geçiş: kamera geri çekilir, çayır masadaki bir resimmiş; sayfa 3B menteşeyle döner (`#under` altında Fıstık'ın gri eskizi, spiral halkalar), eskiz kendini boyar.
 - **Kıta düzeni:** nesne her kıtada gelir → boyanır (renk kelimesinde nabız + o renkte halka, küçük renk yazısı yanında) → rafa (1. geçiş, solda iki kat) / bantla sayfaya (2. geçiş) uçar. Fıstık'ın ponponu kıtanın rengini alır. Kamera dili kıtaya göre değişir (eğik, dolduran, vinç, sıkı ikili).
 - **Gag'ler:** trompetle kova devirme, kova şapka, gözlüklü balık hip-hop, gri kurbağa saklambaç, havuç topraktan çıkar; 2. geçişte muzun yanlış renge boyanıp silinmesi, üzüm damgası, balık kâğıttan kopup yüzer, kalem kaçar → Fıstık kovalar → bereye sıkıştırır. Final: el sallama yakın planı + beyaz parlama (bölüm içi veda kartı yok; kanal kapanışı veda ediyor).
-- **İnceleme döngüsü (kullanıcı istedi):** her turda iki bağımsız ajan (çocuk gözü = Fable, hareket yönetmeni), aynı talimat, önceki raporları görmeden. Puanlar: v3 6/6 → v4 7/6 → v5 6,5/6 → v6 7/6,5. Ayrıntı ve tur tur değişiklikler: `storyboard/ROUND_LOG.md`. **Ders:** ajanlar sessiz izliyor ve 2–4 kare/sn örnekliyor; küçük, kenarda ya da geniş planda kalan gag "yok" sayılıyor (iki kez var olan gag'i öneri olarak yazdılar). Gag'i kamerayla çerçevele, büyüt, renk anında yakın planda kal.
+- **v9 (güncel teslim):** pass 1'de dünya parça parça boyanır (kaza çimi, her nakaratta fırça boyası çiçek/güneş/gök/ağaç/dağ/rafa uçar), nesneler gökkuşağı bantlarına zıplar; pass 2 3840×2160'lık büyük yaprakta istasyon istasyon, her kıta farklı yöntem (pastel tarama, yanlış renk + silgi, sprey, mühür, tane tane, kesik kâğıt), iki kıtada aynalı plan; gerçek 180° sayfa çevirme; final: sayfa masaya küçülür, turuncu "Boyama Defterim" kapağı kapanır, logoya zoom → beyaz parlama. Build: `build_v9.py`.
+- **İnceleme döngüsü (kullanıcı istedi):** her turda iki bağımsız ajan (çocuk gözü = Fable, hareket yönetmeni), aynı talimat, önceki raporları görmeden. Puanlar: v3 6/6 → v4 7/6 → v5 6,5/6 → v6 7/6,5 → v7 7/6,5 → v9 7,5/7. Kullanıcı "10/10 olana kadar" dedi; durma kuralı (iki tur üst üste ≥ 1 artış yok) iki kez işledi, v9'da bırakıldı. Yapısal değişiklikler (dünyanın parça parça boyanması, büyük yaprak, kıta başına yöntem) kadraj ayarlarından daha çok puan getirdi. Ayrıntı ve tur tur değişiklikler: `storyboard/ROUND_LOG.md`. **Ders:** ajanlar sessiz izliyor ve 2–4 kare/sn örnekliyor; küçük, kenarda ya da geniş planda kalan gag "yok" sayılıyor (iki kez var olan gag'i öneri olarak yazdılar). Gag'i kamerayla çerçevele, büyüt, renk anında yakın planda kal.
 - **Açık eleştiriler (v6):** 2. geçiş kalıbı hâlâ tanıdık; müzik aralarında ve gökkuşağı sonrası birkaç saniyelik durgunluk; sayfa çevirme 180° kıvrılmıyor (sadece 0→−90°); denetimde 6 uyarı (kalemle giriş 3 kez üst üste, bazı 15 sn'lik sürprizsiz aralıklar).
 
 ---
@@ -571,6 +572,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 | Klonlanmış SVG karakter dolgusuz/sadece çizgi; bacaklar sol üstte | `innerHTML` kopyası aynı id'leri taşıyor, `url(#gHead)` gizli kopyadaki gradyana bağlanıyor; ayrıca rig `render` öncesi pozsuz | Kopyada `id="u_…"` + `url(#u_…)` ile yeniden adlandır; klonlamadan önce trunk, bacak, ayna kulak ve ağzı pozla |
 | Ekranda bir satır 10 sn takılı kalıyor | Gemini/Suno gömülü altyazısında tam 10,000 sn süreli satır yer tutucudur | Komşu satırların süresini kullan (Bölüm 9'da 3,67 sn) |
 | Final dosyada ses −14 LUFS | HyperFrames render sesi ~4 dB kısıyor; intro_ekle normalize etmiyor | Finalde `-c:v copy -af loudnorm=I=-11:TP=-1.5:LRA=9` |
+| 3B sayfa çevirme videoda 2 karede geçip kayboluyor (önizleme karelerinde normal) | `scale()` z eksenini küçültmüyor; dönen sayfanın kenarı kameraya çarpıyor; ayrıca `power2.inOut` görünür ön yarıyı sıkıştırıyor | `scale3d(s,s,s)`, perspektif ≥ 3600, neredeyse sabit hızlı dönüş; asıl render'dan 10 kare/sn şeritle doğrula |
 | Kamera olayları arasında sıçrama | "En güçlü olay kazanır" seçimi | Olayları ağırlıkla karıştır (`camAt` Bölüm 9) |
 | Denetim temiz ama video "slayt gibi" | Defter fikirleri ekrana yansımadı; aynı geniş plan 30+ sn kaldı | Ekran kapıları E1–E4; render'a `breakdown.py` ile kontak sayfası + ritim ölçümü |
 
@@ -593,7 +595,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [x] Küçük Kurbağa: şarkı geldi, video + kapak + YouTube metni hazırlandı (`04 - Küçük Kurbağa/`). Yükleme kullanıcıda.
 - [x] Bölüm 5 "Fıstık Fil Fıstık Yer" (tekerleme, paylaşma): video + kapak + YouTube metni `05 - Fıstık Fil Fıstık Yer/`. Yükleme kullanıcıda.
 - [x] Bölüm 6 "Arı Vız Vız": video + kapak + YouTube metni `06 - Arı Vız Vız/`. Yükleme kullanıcıda.
-- [ ] Bölüm 9 "Pırt Pırt Boya Döktüm" v6: kullanıcı onayı; sonra kapak, YouTube metni, eski `09 - …` (v1, v2, v3) teslim klasörlerinin ve `kaynak/09b-cocugun-resim-defteri` taslağının temizliği (sormadan silme).
+- [ ] Bölüm 9 "Pırt Pırt Boya Döktüm" v9: kullanıcı izlesin; sonra kapak, YouTube metni, eski `09 - …` (v1, v2, v3, v6) teslim klasörlerinin ve `kaynak/09b-cocugun-resim-defteri` taslağının temizliği (sormadan silme). Balık dizesi ("hip-hop, rap") yeniden söyletilirse sözler + render güncellenir.
 - [ ] Bölüm 4, 5, 8 4K dosyaları H.264 Level 6.0 (Mac'te yeşil blok): Level 5.1 ile yeniden kodla (render gerekmez).
 - [ ] Bölüm 7 "Anneannem ve Dedem": Suno promptu hazır (`kaynak/07-anneannem-dedem/suno-prompt.txt`), şarkı bekleniyor.
 - [x] Bölüm 8 "Uçağı Kaldırsana": kompozisyon, kapak, YouTube metni (`08 - Uçağı Kaldırsana/`); v2 4K final (Fable incelemesi sonrası). Yükleme kullanıcıda.
