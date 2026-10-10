@@ -13,7 +13,7 @@
    "head"
   ],
   [
-   20.8,
+   21.2,
    "wheelRoll"
   ],
   [
@@ -46,5 +46,8 @@
   ".snd"
  ],
  "fxMinY": 70,
- "audioOffset": 5.6
+ "audioOffset": 5.6,
+ "cuts": [
+  21.2
+ ]
 }

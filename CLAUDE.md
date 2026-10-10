@@ -480,6 +480,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   - `fxPull: ["#fxSvg text"]` / `[".snd"]`: ses ve renk kelimeleri (PIRT!, KIRMIZI, SARI…) dikey kadrajın kenarında kesiliyordu. Bunlar her karede ölçülüp kadrajın içine yeniden çizilir. Üst üste binenler alt alta dizilir. `fxMinY` kelimelerin en üst y'sidir: kanca yazısının altında kalsın diye Bölüm 9'da 340, Bölüm 8'de 70.
   - `subTop`: altyazının üst konumu (varsayılan 770). Bölüm 9'da karakterler alçakta durduğu için 770'teki altyazı Fıstık'ın yüzünü kapatıyordu, 222'ye alındı.
   - `audioOffset`: ses kaynağı final video ise 5,6 (açılış) verilir.
+  - `cuts: [t]`: kadraj o anda yumuşak kaymaz, keser. Kadraj sahnedeki hızlı bir kamera kaymasını yumuşak takip ederken bir sonraki hedefe erken kayıp boş duvarda kalıyordu (Reels 9, 20,5 sn). Hedefi kaymadan sonraki ana koy, oraya `cuts` ekle.
   - Yerelde `CHROME=<chromium_headless_shell-1243 yolu>` ortam değişkeni ile çalıştır. Bölüm 8 klasörüne önce `ortak/gsap` ve `ortak/fonts` kopyalanmalı.
   - Son kart son 2,2 sn'yi kaplar. Önemli an (ör. balığın maviye boyanması) o süreye düşüyorsa `end`'i uzat.
 - `make_cover.py comp t out l1 l2 c1 c2 dx [hedef]`: 1080×1920 kapak (sahne kırpması + iki satırlık başlık + "YENİ!" + logo). `HIDE="#fxSvg text{display:none!important}"` ile efekt yazıları gizlenir; başlık Fıstık'ın yüzüne binmesin diye Fıstık'ın alçakta durduğu kareyi seç.

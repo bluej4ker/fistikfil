@@ -4,7 +4,7 @@ Config keys: comp, start, end, audio (mp3/m4a/mp4), lines (list-of-lists or Vide
   bias [[t, dx]...], out, optional: gsap (local path to route CDN GSAP to), track [[t, "elementId" | x_px]...], hide ["#sel", ...],
   smooth (crop follow speed), css (extra CSS for this reel), hookHide ["#sel", ...] (hidden while the hook text is on screen),
   fxPull ["#fxSvg text", ".snd", ...] (sound/colour words: redrawn inside the crop so they are never cut at its edge; fxMinY keeps them under the hook),
-  subTop (karaoke line top in CSS px; default 770 — move it up when the characters stand low), audioOffset (s)
+  cuts [t, ...] (scene camera cuts: crop smoothing restarts there), subTop (karaoke line top in CSS px; default 770 — move it up when the characters stand low), audioOffset (s)
 Seeks the composition frame by frame (DPR 2), follows Fıstık with a smoothed vertical crop,
 draws hook text + karaoke subtitles + end card inside the crop, then muxes the song segment."""
 import asyncio, json, sys, os, subprocess, math
@@ -103,8 +103,11 @@ async def main():
                 if t <= b2: k = (t - a) / (b2 - a); k = k * k * (3 - 2 * k); return va + (vb - va) * k
             return bias[-1][1]
         sm = xs[:]; a = cfg.get("smooth", 0.06)                   # smoothing both ways so the crop glides (higher = follows faster subjects)
-        for i in range(1, N): sm[i] = sm[i - 1] + a * (sm[i] - sm[i - 1])
-        for i in range(N - 2, -1, -1): sm[i] = sm[i + 1] + a * (sm[i] - sm[i + 1])
+        cut = set(int(round((c - T0) * FPS)) for c in cfg.get("cuts", []))   # camera cuts in the scene: the crop cuts too, never glides across
+        for i in range(1, N):
+            if i not in cut: sm[i] = sm[i - 1] + a * (sm[i] - sm[i - 1])
+        for i in range(N - 2, -1, -1):
+            if i + 1 not in cut: sm[i] = sm[i + 1] + a * (sm[i] - sm[i + 1])
         centers = [min(1920 - CW / 2, max(CW / 2, sm[i] + bias_at(T0 + i / FPS))) for i in range(N)]
         # pass 2: render (frames already on disk are kept, so a restart resumes)
         for f in range(N):
