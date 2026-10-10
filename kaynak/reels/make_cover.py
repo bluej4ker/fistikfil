@@ -5,7 +5,7 @@ import os
 comp, t, out, l1, l2, c1, c2, dx = sys.argv[1], float(sys.argv[2]), sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], float(sys.argv[8])
 TARGET = sys.argv[9] if len(sys.argv) > 9 else "head"           # element the crop centres on
 GSAP = os.environ.get("GSAP")                                   # set only when the composition loads GSAP from a CDN
-CHROME = "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"
+CHROME = os.environ.get("CHROME") or "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"   # yerelde: CHROME=<kurulu chrome-headless-shell>
 CW = 607.5
 async def main():
     async with async_playwright() as p:

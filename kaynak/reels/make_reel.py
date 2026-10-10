@@ -2,7 +2,9 @@
 usage: python make_reel.py <config.json>
 Config keys: comp, start, end, audio (mp3/m4a/mp4), lines (list-of-lists or Video-3/4 dict format), hook, hookSecs,
   bias [[t, dx]...], out, optional: gsap (local path to route CDN GSAP to), track [[t, "elementId" | x_px]...], hide ["#sel", ...],
-  smooth (crop follow speed), css (extra CSS for this reel), hookHide ["#sel", ...] (hidden while the hook text is on screen)
+  smooth (crop follow speed), css (extra CSS for this reel), hookHide ["#sel", ...] (hidden while the hook text is on screen),
+  fxPull ["#fxSvg text", ".snd", ...] (sound/colour words: redrawn inside the crop so they are never cut at its edge; fxMinY keeps them under the hook),
+  subTop (karaoke line top in CSS px; default 770 — move it up when the characters stand low), audioOffset (s)
 Seeks the composition frame by frame (DPR 2), follows Fıstık with a smoothed vertical crop,
 draws hook text + karaoke subtitles + end card inside the crop, then muxes the song segment."""
 import asyncio, json, sys, os, subprocess, math
@@ -16,7 +18,7 @@ CW = 607.5                     # crop width in CSS px (9:16 of 1080)
 OUT = cfg["out"]; FR = OUT + "_frames"; os.makedirs(FR, exist_ok=True)
 LINES = [L["words"] if isinstance(L, dict) else L for L in json.load(open(cfg["lines"], encoding="utf-8"))]
 GSAP = cfg.get("gsap")
-CHROME = "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"
+CHROME = os.environ.get("CHROME") or "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"   # yerelde: CHROME=<kurulu chrome-headless-shell>
 TRACK = cfg.get("track", [[T0, "head"]])                       # which element the vertical crop follows, by time
 def track_at(t):
     cur = TRACK[0][1]
@@ -34,12 +36,15 @@ OVERLAY_CSS = """
    -webkit-text-stroke:9px #2B2D42; paint-order:stroke fill; text-shadow:0 5px 0 rgba(0,0,0,.25); }
 #reelOv .rsub b { color:#FFD84D; font-weight:800; }
 #reelOv .rsub i { font-style:normal; }
+#reelOv .fxw { position:absolute; white-space:nowrap; font-weight:800; line-height:1; -webkit-text-stroke:10px #fff; paint-order:stroke fill; text-shadow:0 6px 0 rgba(0,0,0,.18); }
 #reelOv .end { position:absolute; inset:0; background:rgba(20,40,80,.55); display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; }
 #reelOv .end .t { font-size:64px; line-height:1.05; text-align:center; color:#fff; -webkit-text-stroke:10px #2B2D42; paint-order:stroke fill; }
 #reelOv .end .c { margin-top:26px; background:#FF3B5C; color:#fff; font-size:38px; border-radius:40px; padding:10px 34px 2px; border:5px solid #fff; }
 #lyric, #bug, #title, #end, #vignette { display:none !important; }
 """ + "".join(f"{sel} {{ display:none !important; }}\n" for sel in cfg.get("hide", [])) + cfg.get("css", "")
 HOOKHIDE = cfg.get("hookHide", [])
+if "subTop" in cfg: OVERLAY_CSS += f"#reelOv .rsub {{ top:{cfg['subTop']}px; }}\n"
+FXPULL = cfg.get("fxPull", []); FXMINY = cfg.get("fxMinY", 300)
 
 def line_at(t):
     cur = None
@@ -64,7 +69,7 @@ async def main():
             await pg.wait_for_function("!!(window.__timelines && window.__timelines.main)")
             await pg.add_style_tag(content=OVERLAY_CSS)
             await pg.evaluate("""(h) => { const o = document.createElement('div'); o.id = 'reelOv';
-                o.innerHTML = `<div class="logo"><span><b style="color:#3D9BFF">Fıstık</b> <b style="color:#FF7A3D">Fil</b></span></div><div class="hook">${h}</div><div class="rsub"></div>
+                o.innerHTML = `<div class="logo"><span><b style="color:#3D9BFF">Fıstık</b> <b style="color:#FF7A3D">Fil</b></span></div><div class="hook">${h}</div><div class="rsub"></div><div class="fxl"></div>
                   <div class="end"><div class="t">${'Şarkının tamamı<br/>kanalda!'}</div><div class="c">▶ Fıstık Fil</div></div>`;
                 document.getElementById('root').appendChild(o); }""", cfg["hook"])
             await pg.wait_for_timeout(800)                       # fonts (document.fonts.ready can hang in headless)
@@ -83,7 +88,11 @@ async def main():
         for f in range(N):
             t = T0 + f / FPS; tg = track_at(t)
             if isinstance(tg, (int, float)): x = float(tg)
-            else: x = await safe(lambda pg: pg.evaluate(f"""() => {{ window.__timelines.main.seek({t:.4f}); const r = document.getElementById('{tg}').getBoundingClientRect(); return r.left + r.width / 2; }}"""))
+            else: x = await safe(lambda pg: pg.evaluate(f"""() => {{ window.__timelines.main.seek({t:.4f});   // "a+b": centre of the union of a and b (missing/empty ones skipped, then #head)
+                let l = 1e9, r = -1e9; for (const id of '{tg}'.split('+')) {{ const e = document.getElementById(id); if (!e) continue;
+                  const b = e.getBoundingClientRect(); if (b.width < 2) continue; l = Math.min(l, b.left); r = Math.max(r, b.right); }}
+                if (r < l) {{ const b = document.getElementById('head').getBoundingClientRect(); l = b.left; r = b.right; }}
+                return (l + r) / 2; }}"""))
             xs.append(x)
             if f % 150 == 0: print("track", f, "/", N, flush=True)
         bias = cfg.get("bias", [])                            # [[t, dx], ...] extra pan toward the action
@@ -106,11 +115,25 @@ async def main():
             endo = max(0.0, min(1.0, (t - (T1 - 2.2)) / 0.35))
             hooko = 1.0 if t - T0 < cfg.get("hookSecs", 4.0) else max(0.0, 1 - (t - T0 - cfg.get("hookSecs", 4.0)) / 0.4)
             async def shot(pg):
-                await pg.evaluate("""([t, left, html, endo, hooko, hh]) => { window.__timelines.main.seek(t);
+                await pg.evaluate("""([t, left, html, endo, hooko, hh, fx, minY]) => { window.__timelines.main.seek(t);
                     const o = document.getElementById('reelOv'); o.style.left = left + 'px';
                     o.querySelector(".rsub").innerHTML = html; o.querySelector(".rsub").style.opacity = endo > 0.5 ? 0 : 1;
                     o.querySelector('.end').style.opacity = endo; o.querySelector('.hook').style.opacity = hooko;
-                    for (const sel of hh) document.querySelectorAll(sel).forEach((n) => n.style.visibility = hooko > 0.02 ? 'hidden' : ''); }""", [t, left, html, endo, hooko, HOOKHIDE])
+                    for (const sel of hh) document.querySelectorAll(sel).forEach((n) => n.style.visibility = hooko > 0.02 ? 'hidden' : '');
+                    const fxl = o.querySelector('.fxl'); fxl.innerHTML = ''; const placed = [];
+                    for (const sel of fx) document.querySelectorAll(sel).forEach((e) => {     // a word cut by the crop edge is useless: redraw it inside
+                      e.style.visibility = ''; const txt = e.textContent.trim(); if (txt.length < 2 || e.closest('#lyric')) return;
+                      const r = e.getBoundingClientRect(); if (r.width < 5) return;
+                      let op = 1; for (let n = e; n && n.nodeType == 1; n = n.parentElement) { const cs = getComputedStyle(n); op *= parseFloat(cs.opacity); if (cs.display == 'none') op = 0; }
+                      e.style.visibility = 'hidden'; if (op < 0.03) return;
+                      const cs = getComputedStyle(e); const col = e instanceof SVGElement ? cs.fill : cs.color;
+                      const fs = Math.min(r.height * 0.95, 96), d = document.createElement('div'); d.className = 'fxw'; d.textContent = txt;
+                      d.style.cssText = `font-size:${fs}px;color:${col};opacity:${op}`; fxl.appendChild(d);
+                      const w = Math.min(d.getBoundingClientRect().width, 560); if (w >= 560) d.style.fontSize = (fs * 560 / d.getBoundingClientRect().width) + 'px';
+                      const cx = Math.min(Math.max(r.left + r.width / 2 - left, w / 2 + 22), 607.5 - w / 2 - 22);
+                      let y = Math.min(Math.max(r.top, minY), 640); const h = d.getBoundingClientRect().height;
+                      for (const b of placed) if (Math.abs(b[0] - cx) < (b[1] + w) / 2 && Math.abs(b[2] - y) < h * 0.9) y = b[2] + h * 0.9;   // two words clamped onto each other: stack them
+                      placed.push([cx, w, y]); d.style.left = (cx - w / 2) + 'px'; d.style.top = y + 'px'; }); }""", [t, left, html, endo, hooko, HOOKHIDE, FXPULL, FXMINY])
                 await pg.screenshot(path=path, clip={"x": left, "y": 0, "width": CW, "height": 1080})
             await safe(shot)
             if f % 150 == 0: print("frame", f, "/", N, flush=True)
@@ -119,7 +142,7 @@ async def main():
 asyncio.run(main())
 fade = T1 - T0 - 0.8
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", str(FPS), "-i", f"{FR}/f%05d.png",
-    "-ss", str(T0), "-t", str(T1 - T0), "-i", cfg["audio"],
+    "-ss", str(T0 + cfg.get("audioOffset", 0)), "-t", str(T1 - T0), "-i", cfg["audio"],   # audioOffset: e.g. 5.6 when the audio is the final video (opening first)
     "-map", "0:v:0", "-map", "1:a:0",                      # the audio source may be a video (e.g. 4K render): never take its picture
     "-vf", "scale=1080:1920:flags=lanczos,setsar=1,format=yuv420p", "-af", f"afade=t=in:d=0.25,afade=t=out:st={fade:.2f}:d=0.8",
     "-c:v", "libx264", "-crf", "18", "-preset", "slow", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", OUT + ".mp4"], check=True)

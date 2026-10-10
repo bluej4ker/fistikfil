@@ -1,0 +1,46 @@
+{
+ "comp": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/09-fistiksin-boya-kutusu/index.html",
+ "start": 77.0,
+ "end": 110.8,
+ "audio": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/09-fistiksin-boya-kutusu/assets/song2x_mix.m4a",
+ "lines": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/09-fistiksin-boya-kutusu/lines.json",
+ "hook": "Sayfayı çevir,<br/>Fıstık'ı boya!",
+ "hookSecs": 4.0,
+ "smooth": 0.12,
+ "track": [
+  [
+   77.0,
+   "head"
+  ],
+  [
+   89.8,
+   "o_apple"
+  ],
+  [
+   92.4,
+   "head"
+  ],
+  [
+   97.5,
+   "o_banana"
+  ],
+  [
+   100.5,
+   "head"
+  ],
+  [
+   104.5,
+   "head+spraycan"
+  ],
+  [
+   105.8,
+   "o_fish"
+  ]
+ ],
+ "out": "/Users/anil/Projects/max-digital-projects/FistikFil/Claude outputs/reels/reels-12-boyama-defteri",
+ "fxPull": [
+  "#fxSvg text"
+ ],
+ "subTop": 222,
+ "fxMinY": 340
+}

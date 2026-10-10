@@ -1,0 +1,34 @@
+{
+ "comp": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/08-ucagi-kaldirsana/index.html",
+ "start": 47.0,
+ "end": 79.0,
+ "audio": "/Users/anil/Projects/max-digital-projects/FistikFil/08 - Uçağı Kaldırsana/ucagi-kaldirsana-4k.mp4",
+ "lines": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/08-ucagi-kaldirsana/lines.json",
+ "hook": "Uçak düştü!<br/>Bir daha dene!",
+ "hookSecs": 4.0,
+ "smooth": 0.12,
+ "track": [
+  [
+   47.0,
+   "head"
+  ],
+  [
+   58.3,
+   "frog"
+  ],
+  [
+   60.1,
+   "head+duck"
+  ],
+  [
+   62.6,
+   "head"
+  ]
+ ],
+ "out": "/Users/anil/Projects/max-digital-projects/FistikFil/Claude outputs/reels/reels-10-bir-daha",
+ "fxPull": [
+  ".snd"
+ ],
+ "fxMinY": 70,
+ "audioOffset": 5.6
+}

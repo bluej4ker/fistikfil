@@ -1,0 +1,58 @@
+{
+ "comp": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/09-fistiksin-boya-kutusu/index.html",
+ "start": 1.5,
+ "end": 32.0,
+ "audio": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/09-fistiksin-boya-kutusu/assets/song2x_mix.m4a",
+ "lines": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/09-fistiksin-boya-kutusu/lines.json",
+ "hook": "Dünya gri!<br/>Pırt pırt boya!",
+ "hookSecs": 4.0,
+ "smooth": 0.12,
+ "track": [
+  [
+   1.5,
+   1050
+  ],
+  [
+   3.0,
+   "head+canW"
+  ],
+  [
+   10.2,
+   "o_apple"
+  ],
+  [
+   12.4,
+   "head"
+  ],
+  [
+   16.4,
+   "head+canW"
+  ],
+  [
+   18.4,
+   "o_banana"
+  ],
+  [
+   20.5,
+   "head"
+  ],
+  [
+   24.5,
+   "head+canW"
+  ],
+  [
+   26.5,
+   "o_fish"
+  ],
+  [
+   28.6,
+   "head"
+  ]
+ ],
+ "out": "/Users/anil/Projects/max-digital-projects/FistikFil/Claude outputs/reels/reels-11-gri-dunya",
+ "fxPull": [
+  "#fxSvg text"
+ ],
+ "subTop": 222,
+ "fxMinY": 340
+}

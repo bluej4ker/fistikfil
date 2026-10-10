@@ -44,6 +44,7 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S3–S8 | Reels 3–4 (Küçük Kurbağa), 5–6 (Fıstık Yer), 7–8 (Arı Vız Vız) | — | ~0:30 | Hazır, `Reels/` + `Reels/reels-metin.txt` |
+| S9–S12 | Reels 9–10 (Uçağı Kaldırsana: uçak yapımı, "bir daha"), 11–12 (Pırt Pırt Boya: gri dünya, boyama defteri) | — | 0:29–0:34 | Hazır, `Reels/` + `Reels/reels-metin.txt` (Ekim 2026) |
 | KY | Kayıp Yıldız · 3 Reels (kullanıcının kendi ürettiği, `codex/kayip-yildiz-reels` dalından) | — | ~0:25 | Hazır, `Reels/04 - Kayıp Yıldız/` (kaynak kodu repoda yok) |
 
 ---
@@ -80,7 +81,7 @@ FistikFil/
     ├── 08-ucagi-kaldirsana/      ← aynı düzen + suno-prompt.txt, tek-prompt.txt (§7.7)
     ├── 09-fistiksin-boya-kutusu/ ← build.py, kapak.py, lines.json (iki geçiş), src/(template, rig_part, art, sfx), storyboard/(STORYBOARD.md, ROUND_LOG.md) (§7.8)
     ├── intro/                    ← açılış/kapanış/abone bandı: src/(intro.html, abone.html), build.py, make_jingle.py, render.sh, intro_ekle.py (§6.6)
-    ├── reels/                    ← make_reel.py, make_cover.py, r1…r6b.json, reel_lines_v1.json
+    ├── reels/                    ← make_reel.py, make_cover.py, r1…r6b.json, r8a/r8b/r9a/r9b.json (Reels 9–12), reel_lines_v1.json
     └── marka/                    ← extract.py, make.py (profil+banner), thumb.py, poses.json, _thumb.html
 ```
 
@@ -474,6 +475,14 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   - Sınıf adı `.rsub` olmalı: `.sub` kompozisyondaki turuncu hap sınıfıyla çakışıyordu.
   - Sonunda ffmpeg ile ilgili şarkı parçası fade in/out ile eklenir.
 - Ek ayarlar: `smooth` (kadraj takip hızı), `css` (reels'e özel CSS, ör. `#hapsu{scale:.6}`), `hookHide` (kanca yazısı ekrandayken gizlenecek seçiciler, ör. `#sndBox`). Yazı/efekt kadraja sığmıyorsa sayfada `getBoundingClientRect` ile ölç, `bias`'ı ölçüme göre ver.
+- **Reels 9–12 eklentileri (Ekim 2026):**
+  - `track` değeri `"head+o_apple"` gibi `+` ile birleşik olabilir: kadraj ikisinin birleşik kutusunun ortasına gider. İkisi 607 px'e sığmıyorsa birleştirme; söz satırına göre sırayla nesneye ve Fıstık'a kaydır (ör. "elma kırmızı oldu" → `o_apple`, "Hop hop" → `head`).
+  - `fxPull: ["#fxSvg text"]` / `[".snd"]`: ses ve renk kelimeleri (PIRT!, KIRMIZI, SARI…) dikey kadrajın kenarında kesiliyordu. Bunlar her karede ölçülüp kadrajın içine yeniden çizilir. Üst üste binenler alt alta dizilir. `fxMinY` kelimelerin en üst y'sidir: kanca yazısının altında kalsın diye Bölüm 9'da 340, Bölüm 8'de 70.
+  - `subTop`: altyazının üst konumu (varsayılan 770). Bölüm 9'da karakterler alçakta durduğu için 770'teki altyazı Fıstık'ın yüzünü kapatıyordu, 222'ye alındı.
+  - `audioOffset`: ses kaynağı final video ise 5,6 (açılış) verilir.
+  - Yerelde `CHROME=<chromium_headless_shell-1243 yolu>` ortam değişkeni ile çalıştır. Bölüm 8 klasörüne önce `ortak/gsap` ve `ortak/fonts` kopyalanmalı.
+  - Son kart son 2,2 sn'yi kaplar. Önemli an (ör. balığın maviye boyanması) o süreye düşüyorsa `end`'i uzat.
+- `make_cover.py comp t out l1 l2 c1 c2 dx [hedef]`: `HIDE="#fxSvg text{display:none!important}"` ile efekt yazıları gizlenir.
 - `make_cover.py comp t out l1 l2 c1 c2 dx`: 1080×1920 kapak (sahne kırpması + iki satırlık başlık + "YENİ!" + logo).
 - **Örnek ayarlar:**
   - r1: Güm Güm 21.0–51.8 s.
@@ -601,7 +610,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [ ] Bölüm 4, 5, 8 4K dosyaları H.264 Level 6.0 (Mac'te yeşil blok): Level 5.1 ile yeniden kodla (render gerekmez).
 - [ ] Bölüm 7 "Anneannem ve Dedem": Suno promptu hazır (`kaynak/07-anneannem-dedem/suno-prompt.txt`), şarkı bekleniyor.
 - [x] Bölüm 8 "Uçağı Kaldırsana": kompozisyon, kapak, YouTube metni (`08 - Uçağı Kaldırsana/`); v2 4K final (Fable incelemesi sonrası). Yükleme kullanıcıda.
-- [ ] Bölüm 8 Reels (öneri: pırt pırt bere gag'i; güm + "bir daha" tamiri).
+- [x] Bölüm 8 ve 9 Reels: `Reels/reels-9…12` + kapaklar + metinler (Ekim 2026). Yükleme kullanıcıda.
 - [ ] Küçük Kurbağa v3: plan hazır (`storyboard/STORYBOARD-v3.md`, 45 plan, geçmişe karşı denetim temiz). Sırada kullanıcı onayı, ardından eskiz sayfası ve referans videolar.
 - [ ] Kullanıcının kişisel YouTube kanalı: konu/niş bekleniyor (saas-motion-kit ile yapım günlüğü, ürün tanıtımı ve veri görselleştirme fikirleri önerildi).
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).

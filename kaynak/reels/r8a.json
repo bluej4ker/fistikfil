@@ -1,0 +1,50 @@
+{
+ "comp": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/08-ucagi-kaldirsana/index.html",
+ "start": 16.5,
+ "end": 45.5,
+ "audio": "/Users/anil/Projects/max-digital-projects/FistikFil/08 - Uçağı Kaldırsana/ucagi-kaldirsana-4k.mp4",
+ "lines": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/08-ucagi-kaldirsana/lines.json",
+ "hook": "Fıstık<br/>uçak yapıyor!",
+ "hookSecs": 4.0,
+ "smooth": 0.12,
+ "track": [
+  [
+   16.5,
+   "head"
+  ],
+  [
+   20.8,
+   "wheelRoll"
+  ],
+  [
+   23.6,
+   "head"
+  ],
+  [
+   27.8,
+   "head+flyHat"
+  ],
+  [
+   30.6,
+   "head"
+  ],
+  [
+   39.2,
+   "head+droneG"
+  ],
+  [
+   41.4,
+   "rocketG"
+  ],
+  [
+   42.8,
+   "head"
+  ]
+ ],
+ "out": "/Users/anil/Projects/max-digital-projects/FistikFil/Claude outputs/reels/reels-9-ucak-yapiyor",
+ "fxPull": [
+  ".snd"
+ ],
+ "fxMinY": 70,
+ "audioOffset": 5.6
+}
