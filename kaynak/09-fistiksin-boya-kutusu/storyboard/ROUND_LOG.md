@@ -7,7 +7,8 @@ Zamanlar video dosyası zamanıdır (bölüm zamanı = dosya − 5,6 sn). ±1 pu
 |---|---|---|---|---|
 | 0 | v3 | 6/10 | 6/10 | 3:20 |
 | 1 | v4 | 7/10 | 6/10 | 3:02 |
-| 2 | v5 | | | 3:02 |
+| 2 | v5 | 6,5/10 | 6/10 | 3:02 |
+| 3 | v6 | | | 3:02 |
 
 ## Tur 0 → tur 1 (v4)
 
@@ -57,3 +58,18 @@ Tek ajan:
 | A: defter yakın planında Fıstık kenarda kesik | Kalem yakın planı Fıstık + nesneyi birlikte kapsar (×1,42); tarayıcıda 0,25 sn'de bir bbox ölçümü: kesik kare yok |
 | A: kalp anlamsız | Kaldırıldı (yerine kalem kovalamacası) |
 | A: rafta nesneler çok küçük | Raf ölçeği 0,42 → 0,55 |
+
+## Tur 2 → tur 3 (v6)
+
+Teşhis: tur 2'de eklenenlerin çoğu ekranda okunmuyordu (A, zaten var olan "kalem bereye saplanır" gag'ini öneri olarak yazdı). Ajanlar sessiz izliyor ve 2–4 kare/sn örnekliyor; küçük, kenarda ya da geniş planda kalan gag yok sayılıyor. Bu tur yeni mekanizma değil, kadraj ve zamanlama.
+
+| Sorun | v6 değişikliği |
+|---|---|
+| A: renk adı söylenince kamera genişe kaçıyor (kod hatası: ikili plan renk kelimesinden önce bitiyordu) | İkili plan renk kelimesi + 1 sn'ye kadar sürer; nesne kelimede atar, etrafında o renkte halka; yazı küçüldü (105 px), nesnenin yanında |
+| A+B: nakaratın ("hop hop fırça sürdüm") oyuncusu yok | Pass 1: Fıstık hortumdaki fırçayı sallar, boya şeridi fırçadan gökyüzüne uçar. Pass 2: pastel boyayla ayaklarının çevresine renkli halı karalar |
+| A+B: kıtalar aynı kalıp | Kamera dili kıtaya göre: pass 1 muz eğik kadraj, kurbağa nesne ekranı doldurur (Fıstık kadraj dışında) → geri çekilme, havuç vinç; pass 2 elma sıkı ikili plan (Fıstık kalemi izler), balık eğik kadraj, üzüm vinç |
+| A+B: pass-2 arası boş/küçük | Kalem kovalamacası kamerayla takip edilir (Fıstık + kalem ortası, ×1,25), kalem 1,6× büyür; kurbağa saklambacı kadraj içine (x≈1620, 1,15×), kamera ona döner |
+| B: sayfa çevirme 0,27 sn okunuyor, alttaki sayfa farklı boyda | Sadece okunan yarı (0 → −90°) 0,9 sn'de power2.in; alttaki sayfaya aynı beyaz kenar + gölge; masada eskiz 0,5 sn tutulur; kendini boyama ve zıplamalar yakın planda |
+| B: lacivert geceden sarı kapanışa sert kesme; kart iki kez veda | Bölüm içi kart kaldırıldı; Fıstık'ın el salladığı yakın plan → beyaz parlama (açılışın beyaz geçişinin aynası) |
+| A+B (2 tur): abone bandı Fıstık'ın girişini örter | Fıstık sağdan girer, bandın altından geçmez |
+| MAVİ / "hip-hop, rap" | Dokunulmadı: söz sorunu, çözümü dizeyi yeniden söyletmek |
