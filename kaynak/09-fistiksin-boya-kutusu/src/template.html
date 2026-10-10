@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Pırt Pırt Boya Döktüm · Fıstık Fil</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #FFF4DC; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Baloo 2", sans-serif; font-weight: 800; color: #2B2D42; background: #BFE6FF; }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      .full { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+      #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      #shake { position: absolute; inset: 0; }
+      #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 0 0; }
+      #char { position: absolute; inset: 0; overflow: visible; transform-origin: 300px 620px; }
+      #char svg { width: 600px; height: 640px; overflow: visible; }
+      #bug { left: 40px; top: 36px; padding: 6px 26px 0; border-radius: 30px; background: rgba(255,255,255,.95); font-size: 36px; color: #3D7DD8; z-index: 60; box-shadow: 0 4px 0 rgba(0,0,0,.1); }
+      #bug b { color: #F59E1B; }
+      #lyric { left: 0; right: 0; top: 880px; height: 90px; display: flex; justify-content: center; z-index: 60; }
+      .line { opacity: 0; position: absolute; top: 0; padding: 4px 30px 0; border-radius: 40px; background: rgba(255,255,255,.92); font-size: 46px; line-height: 66px; white-space: nowrap; color: #8A93A6; box-shadow: 0 4px 0 rgba(0,0,0,.08); border: 3px solid #FFD43B; }
+      .line span { display: inline-block; margin: 0 7px; transition: none; }
+      .line span.on { color: #FF5A5F; }
+      #end { left: 0; top: 0; width: 1920px; height: 1080px; opacity: 0; z-index: 55; display: flex; align-items: center; justify-content: center; }
+      #end .sign { padding: 30px 60px 34px; text-align: center; background: #FFF4DC; border: 12px solid #D9891A; border-radius: 40px; box-shadow: 0 14px 0 rgba(60,30,0,.25); font-size: 104px; color: #3D9BFF; }
+      #flash { inset: 0; background: #fff; opacity: 0; z-index: 48; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="/*DUR*/" data-width="1920" data-height="1080">
+      <audio id="song" src="assets/song.m4a" data-start="0" data-duration="/*DUR*/" data-volume="1"></audio>
+      <section id="world" class="clip" data-start="0" data-duration="/*DUR*/" data-track-index="0" data-layout-allow-overflow>
+        <div id="cam" data-layout-allow-overflow>
+          <div id="shake" data-layout-allow-overflow>
+            <svg id="bgSvg" class="full" viewBox="0 0 1920 1080"></svg>
+            <svg id="objSvg" class="full" viewBox="0 0 1920 1080"></svg>
+            <div id="charWrap" class="abs"><div id="char"></div></div>
+            <svg id="fxSvg" class="full" viewBox="0 0 1920 1080"></svg>
+            <svg id="tranSvg" class="full" viewBox="0 0 1920 1080"></svg>
+          </div>
+        </div>
+        <div id="flash" class="abs"></div>
+        <div id="bug" class="abs">Fıstık <b>Fil</b></div>
+        <div id="lyric" class="abs"></div>
+        <div id="end" class="abs"><div class="sign">Hoşça kalın çocuklar!</div></div>
+      </section>
+    </div>
+
+    <script>
+(function () {
+  window.__timelines = window.__timelines || {};
+  const $ = (s) => document.querySelector(s);
+  const D = /*DUR*/, TAU = Math.PI * 2, OL = "#4C76B5", INK = "#2B2D42";
+  const LINES = /*LINES*/;
+  const BEATS = /*BEATS*/;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const smooth = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
+  const pIn = (t, t0, d) => clamp((t - t0) / d, 0, 1);
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const BEAT = 60 / 118;
+  const beatPh = (t) => (t / BEAT) * TAU;
+  const NS = "http://www.w3.org/2000/svg";
+
+  // ───────── fixed moments ─────────
+  const POUR = [4.25, 8.3, 16.36, 24.5, 48.67, 56.73, 64.79, 72.85];        // pırt moments (paint pours)
+  const SING = LINES.map((L) => [L.words[0][1] - 0.2, L.end + 0.4]);
+  const isSinging = (t) => SING.some(([a, b]) => t >= a && t <= b);
+  const COLOR_AT = { apple: 8.3, banana: 16.36, fish: 24.5, frog: 48.67, grapes: 56.73, carrot: 64.79 };
+  const CAM_KEYS = [                                 // [t, x, y, scale]
+    [0, 960, 540, 1.0], [4.0, 560, 560, 1.05], [8.0, 720, 600, 1.1], [16.0, 830, 620, 1.1], [24.0, 960, 620, 1.1],
+    [40.0, 960, 540, 1.0], [48.0, 1080, 600, 1.1], [56.0, 1080, 560, 1.1], [64.0, 940, 600, 1.1], [64.6, 940, 600, 1.5], [65.8, 960, 540, 1.0], [72.0, 960, 540, 1.0], [80.0, 960, 540, 1.0]];
+  function camAt(t) {
+    let i = 0; while (i < CAM_KEYS.length - 2 && CAM_KEYS[i + 1][0] <= t) i++;
+    const a = CAM_KEYS[i], b = CAM_KEYS[i + 1], k = smooth(a[0], b[0], t);
+    return { x: lerp(a[1], b[1], k), y: lerp(a[2], b[2], k), s: lerp(a[3], b[3], k) };
+  }
+
+  // ───────── Fıstık rig (from episode 6) ─────────
+/*RIG*/
+  const REST = [88, -140, 22], TRUMPET = [25, -110, 28];
+  // ───────── stage art (pure SVG strings) ─────────
+  const bgSvg = E("bgSvg");
+  bgSvg.innerHTML = `
+    <defs><linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FD3FF"/><stop offset="1" stop-color="#D8F3FF"/></linearGradient></defs>
+    <rect width="1920" height="1080" fill="url(#gSky)"/>
+    <circle cx="1650" cy="170" r="90" fill="#FFE27A" stroke="${OL}" stroke-width="6" opacity="0"/>
+    <path d="M0 720 Q480 620 960 700 T1920 690 V1080 H0Z" fill="#9BDB7A" stroke="${OL}" stroke-width="5"/>
+    <path d="M0 800 Q600 740 1200 800 T1920 790 V1080 H0Z" fill="#6FC05A" stroke="${OL}" stroke-width="5"/>
+    <g id="cloud1" fill="#fff" stroke="${OL}" stroke-width="4"><ellipse cx="380" cy="230" rx="110" ry="50"/><ellipse cx="300" cy="240" rx="60" ry="40"/><ellipse cx="460" cy="240" rx="70" ry="42"/></g>`;
+
+  const objSvg = E("objSvg");
+  const APPLE = (c) => `<path d="M0 -70 C-70 -100 -120 -40 -110 20 C-100 90 -50 120 0 100 C50 120 100 90 110 20 C120 -40 70 -100 0 -70Z" fill="${c}" stroke="${OL}" stroke-width="6"/><path d="M0 -70 Q4 -105 30 -120" stroke="#6B4A2B" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M20 -100 Q60 -140 90 -110 Q60 -80 20 -100Z" fill="#5BBE57" stroke="${OL}" stroke-width="5"/><ellipse cx="-50" cy="-10" rx="16" ry="10" fill="#fff" opacity=".6"/>`;
+  const BANANA = (c) => `<path d="M-120 -40 Q-40 120 110 -20 Q80 60 -80 90 Q-130 40 -120 -40Z" fill="${c}" stroke="${OL}" stroke-width="6" stroke-linejoin="round"/><path d="M-115 -30 Q-40 90 95 -15" stroke="#FFF2B0" stroke-width="8" fill="none" opacity=".8"/><path d="M104 -24 L124 -34" stroke="#6B4A2B" stroke-width="10" stroke-linecap="round"/>`;
+  const FISH = (c) => `<g class="fishBody"><path d="M-70 0 L-120 -40 Q-105 0 -120 40Z" fill="${c}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/><ellipse cx="0" cy="0" rx="90" ry="58" fill="${c}" stroke="${INK}" stroke-width="5"/><path d="M-10 -50 Q-20 0 -10 50" stroke="#fff" stroke-width="9" fill="none" opacity=".5" stroke-linecap="round"/><ellipse cx="40" cy="-14" rx="17" ry="20" fill="#fff" stroke="${INK}" stroke-width="3.5"/><circle cx="46" cy="-12" r="9" fill="${INK}"/><path d="M52 22 Q64 32 74 18" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
+  const FROG = (c) => `<ellipse cx="0" cy="0" rx="110" ry="70" fill="${c}" stroke="${INK}" stroke-width="6"/><circle cx="-60" cy="-70" r="34" fill="${c}" stroke="${INK}" stroke-width="6"/><circle cx="60" cy="-70" r="34" fill="${c}" stroke="${INK}" stroke-width="6"/><circle cx="-60" cy="-74" r="16" fill="#fff"/><circle cx="60" cy="-74" r="16" fill="#fff"/><circle cx="-56" cy="-72" r="7" fill="${INK}"/><circle cx="64" cy="-72" r="7" fill="${INK}"/><path d="M-50 20 Q0 60 50 20" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+  const GRAPES = (c) => { let s = `<path d="M0 -150 Q10 -190 60 -200" stroke="#6B4A2B" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+    [[-40, -60], [40, -60], [0, -20], [-70, 20], [-20, 40], [40, 30], [0, 90], [-40, 110], [40, 110]].forEach(([x, y]) => { s += `<circle cx="${x}" cy="${y}" r="38" fill="${c}" stroke="${OL}" stroke-width="5"/><circle cx="${x - 12}" cy="${y - 12}" r="9" fill="#fff" opacity=".5"/>`; });
+    return s; };
+  const CARROT = (c) => `<path d="M-60 -20 L60 -20 L0 170 Z" fill="${c}" stroke="${OL}" stroke-width="6" stroke-linejoin="round"/><path d="M-30 20 L-10 30 M20 60 L40 66 M-10 110 L10 116" stroke="#C25A0A" stroke-width="6" stroke-linecap="round"/><path d="M0 -20 Q-30 -90 -70 -100 Q-40 -60 0 -20Z M0 -20 Q10 -100 30 -130 Q30 -70 0 -20Z M0 -20 Q50 -80 90 -80 Q50 -40 0 -20Z" fill="#5BBE57" stroke="${OL}" stroke-width="5"/>`;
+  const SUN = (c) => { let r = ""; for (let i = 0; i < 12; i++) { const a = i * TAU / 12; r += `<line x1="${(Math.cos(a) * 100).toFixed(1)}" y1="${(Math.sin(a) * 100).toFixed(1)}" x2="${(Math.cos(a) * 140).toFixed(1)}" y2="${(Math.sin(a) * 140).toFixed(1)}" stroke="${c}" stroke-width="14" stroke-linecap="round"/>`; }
+    return `${r}<circle r="90" fill="${c}" stroke="${OL}" stroke-width="6"/><g class="sunEyes"><circle cx="-30" cy="-20" r="10" fill="${INK}"/><circle cx="30" cy="-20" r="10" fill="${INK}"/></g><path d="M-30 20 Q0 48 30 20" stroke="${INK}" stroke-width="7" fill="none" stroke-linecap="round"/>`; };
+
+  // [id, x, y, scale, art, colour, colourStart, grayCss]
+  const OBJ = [
+    ["apple", 900, 760, 1.0, APPLE, "#FF5A5F", COLOR_AT.apple],
+    ["banana", 1130, 780, 1.0, BANANA, "#FFC23D", COLOR_AT.banana],
+    ["sun", 1640, 180, 1.0, SUN, "#FFC23D", COLOR_AT.banana],
+    ["fish", 1400, 880, 1.0, FISH, "#3D9BFF", COLOR_AT.fish],
+    ["frog", 1640, 880, 1.0, FROG, "#3FBF6F", COLOR_AT.frog],
+    ["grapes", 1640, 560, 1.0, GRAPES, "#A66BFF", COLOR_AT.grapes],
+    ["carrot", 1350, 650, 1.0, CARROT, "#FF7A3D", COLOR_AT.carrot],
+  ];
+  const RAINBOW_COLS = ["#FF5A5F", "#FF9F1C", "#FFD43B", "#3FBF6F", "#3D9BFF", "#4C76B5", "#A66BFF"];
+  const RAINBOW = RAINBOW_COLS.map((c, i) => { const r = 640 - i * 22; return `<path d="M${960 - r} 1000 A${r} ${r} 0 0 1 ${960 + r} 1000" fill="none" stroke="${c}" stroke-width="20" stroke-linecap="round"/>`; }).join("");
+  objSvg.innerHTML = `<g id="rainbow" opacity="0">${RAINBOW}</g><g id="can"></g>` + OBJ.map(([id, x, y, s, art, c]) => `<g id="o_${id}" transform="translate(${x} ${y}) scale(${s})">${art(c)}</g>`).join("");
+  const POUR_AT = [[330, 830], [900, 620], [1130, 640], [1400, 720], [1640, 740], [1640, 440], [1350, 520], [960, 300]];
+  const OBJ_EL = Object.fromEntries(OBJ.map(([id]) => [id, E("o_" + id)]));
+  const fishBody = OBJ_EL.fish.querySelector(".fishBody");
+
+  // paint can (tips at the first pour)
+  const CAN = (tilt) => `<g transform="translate(330 930) rotate(${tilt.toFixed(2)})"><path d="M-70 -90 L70 -90 L60 90 L-60 90 Z" fill="#FFFFFF" stroke="${OL}" stroke-width="6" stroke-linejoin="round"/><path d="M-66 -40 L66 -40 L62 10 L-62 10 Z" fill="#FF5A5F"/><path d="M-70 -90 Q0 -130 70 -90" fill="none" stroke="${OL}" stroke-width="8"/><path d="M-60 -92 L-60 -110 Q0 -150 60 -110 L60 -92" fill="none" stroke="${OL}" stroke-width="8" stroke-linecap="round"/></g>`;
+
+  // ───────── Fıstık placement ─────────
+  function fistikPos(t) {
+    let x = 520, y = 1000, s = 0.7, dance = 0;
+    if (t > 40.5 && t < 48.6) { x = 960; s = 0.9; dance = 1; }
+    if (t >= 72.85 && t < 80) { x = 960; s = 0.95; dance = 1; }
+    if (t >= 80) { x = 960; s = 0.85; }
+    return { x, y, s, dance };
+  }
+
+  // ───────── lyrics ─────────
+  const lyricEl = E("lyric");
+  let lastLine = -1;
+  function lyricAt(t) {
+    const i = LINES.findIndex((L) => t >= L.words[0][1] - 0.25 && t <= L.end + 0.6);
+    if (i !== lastLine) {
+      lastLine = i;
+      lyricEl.innerHTML = i < 0 ? "" : `<div class="line" style="opacity:1;left:50%;transform:translateX(-50%)">${LINES[i].words.map(([w]) => `<span>${w}</span>`).join("")}</div>`;
+    }
+    if (i < 0) return;
+    const sp = lyricEl.querySelectorAll("span");
+    LINES[i].words.forEach(([, wt], k) => { if (sp[k]) sp[k].className = t >= wt ? "on" : ""; });
+  }
+
+  // ───────── paint pours (pure) ─────────
+  const fxSvg = E("fxSvg");
+  function pourAt(t) {
+    let out = "";
+    POUR.forEach((t0, k) => {
+      const u = t - t0; if (u < 0 || u > 1.2) return;
+      const col = ["#FF5A5F", "#FFC23D", "#3D9BFF", "#3FBF6F", "#A66BFF", "#FF7A3D", "#FF5A5F", "#FFC23D"][k];
+      const [x, y] = POUR_AT[k];
+      const r = 40 + 260 * smooth(0, 0.5, u), op = 1 - smooth(0.5, 1.2, u);
+      out += `<circle cx="${x}" cy="${y}" r="${r.toFixed(1)}" fill="${col}" opacity="${(op * 0.85).toFixed(3)}"/>`;
+    });
+    return out;
+  }
+
+  // ───────── transitions and surprises (pure) ─────────
+  const tranSvg = E("tranSvg");
+  function transAt(t) {
+    let o = "", mk = 0;
+    const splash = (t0, col, x, y) => { const u = t - t0; if (u < 0 || u > 1.1) return;
+      o += `<circle cx="${x}" cy="${y}" r="${(2600 * smooth(0, 0.7, u)).toFixed(1)}" fill="${col}" opacity="${(0.9 * (1 - smooth(0.7, 1.1, u))).toFixed(3)}"/>`; };
+    const iris = (t0, d) => { const u = t - t0; if (u < 0 || u > 2 * d + 0.1) return; mk++;
+      const r = u < d ? 1500 * (1 - smooth(0, d, u)) : u < d + 0.1 ? 0 : 1500 * smooth(0, d, u - d - 0.1);
+      o += `<mask id="mi${mk}"><rect width="1920" height="1080" fill="#fff"/><circle cx="960" cy="540" r="${r.toFixed(1)}" fill="#000"/></mask><rect width="1920" height="1080" fill="${INK}" mask="url(#mi${mk})"/>`; };
+    const drip = (t0, col) => { const u = t - t0; if (u < 0 || u > 1.6) return;
+      o += `<rect x="920" y="${(-320 + 1500 * smooth(0, 0.9, u)).toFixed(1)}" width="80" height="320" rx="40" fill="${col}" stroke="${OL}" stroke-width="5"/>`; };
+    const ribbon = (t0) => { const u = t - t0; if (u < 0 || u > 1.2) return;
+      o += `<rect x="${(-1920 + 3840 * smooth(0, 0.6, u)).toFixed(1)}" y="470" width="1920" height="200" fill="#3D9BFF" opacity="${(1 - smooth(0.8, 1.2, u)).toFixed(3)}"/>`; };
+    const stripes = (t0) => { const u = t - t0; if (u < 0 || u > 1.2) return; const k = smooth(0, 0.6, u), op = 1 - smooth(0.8, 1.2, u);
+      RAINBOW_COLS.forEach((c, i) => { o += `<rect x="${(-1920 + 1920 * k + i * 6).toFixed(1)}" y="${i * 154}" width="1920" height="154" fill="${c}" opacity="${op.toFixed(3)}"/>`; }); };
+    const curtain = (t0) => { const u = t - t0; if (u < 0 || u > 0.6) return;
+      o += `<rect x="0" y="${(-1080 * smooth(0, 0.6, u)).toFixed(1)}" width="1920" height="1080" fill="#FFF4DC"/>`; };
+    splash(16.36, "#FFC23D", 1130, 640);
+    splash(8.3, "#FF5A5F", 900, 620);
+    iris(3.9, 0.45);
+    drip(8.3, "#FF5A5F");
+    iris(24.5, 0.4);
+    ribbon(32.5);
+    curtain(48.4);
+    drip(56.7, "#A66BFF");
+    stripes(72.85);
+    iris(95.9, 0.35);
+    drip(87.9, "#3FBF6F");
+    tranSvg.innerHTML = o;
+    return (t0, a) => { const u = t - t0; return u < 0 || u > 0.45 ? [0, 0] : [a * (1 - u / 0.45) * Math.sin(u * 90), a * (1 - u / 0.45) * Math.cos(u * 70)]; };
+  }
+
+  // ───────── render(t): pure function of time ─────────
+  const CAM = E("cam");
+  function render(t) {
+    const c = camAt(t);
+    const s = Math.max(1, c.s), hx = 960 / s, hy = 540 / s;
+    const cx = Math.min(1920 - hx, Math.max(hx, c.x)), cy = Math.min(1080 - hy, Math.max(hy, c.y));
+    CAM.style.transform = `translate(960px, 540px) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)}px, ${(-cy).toFixed(1)}px)`;
+
+    const gray = 1 - smooth(4.0, 8.0, t);
+    bgSvg.style.filter = `grayscale(${gray.toFixed(3)})`;
+    OBJ.forEach(([id, , , , , , c0]) => { const k = 1 - smooth(c0, c0 + 0.6, t); OBJ_EL[id].style.filter = `grayscale(${k.toFixed(3)})`; OBJ_EL[id].style.opacity = t < c0 - 0.5 ? 0.55 : 1; });
+    const sw = t >= COLOR_AT.fish && t < COLOR_AT.frog ? Math.sin(t * 9) * 8 : 0;
+    fishBody.setAttribute("transform", `translate(0 ${(Math.sin(t * 6) * (t >= COLOR_AT.fish && t < COLOR_AT.frog ? 16 : 4)).toFixed(2)}) rotate(${sw.toFixed(2)})`);
+    OBJ_EL.frog.setAttribute("transform", `translate(1640 ${(880 - 26 * Math.max(0, Math.sin(beatPh(t) / 2)) ** 2).toFixed(2)}) scale(1)`);
+
+    E("can").innerHTML = CAN(-80 * smooth(4.2, 4.8, t));
+    const rb = smooth(72.85, 76.5, t);
+    E("rainbow").setAttribute("transform", `translate(960 1000) scale(${(0.3 + 0.7 * rb).toFixed(3)}) translate(-960 -1000)`);
+    E("rainbow").setAttribute("opacity", rb.toFixed(3));
+    fxSvg.innerHTML = pourAt(t);
+    const shakeAt = transAt(t);
+    const [sx, sy] = shakeAt(40.5, 14);
+    E("shake").style.transform = `translate(${sx.toFixed(1)}px, ${sy.toFixed(1)}px)`;
+    const wink = t > 20.4 && t < 20.8 ? 1 - 0.85 * Math.sin((t - 20.4) / 0.4 * Math.PI) : 1;
+    OBJ_EL.sun.querySelector(".sunEyes").setAttribute("transform", `translate(0 0) scale(1 ${wink.toFixed(3)})`);
+    const jump = t > 32.5 && t < 33.6 ? 260 * Math.sin((t - 32.5) / 1.1 * Math.PI) : 0;
+    OBJ_EL.fish.setAttribute("transform", `translate(1400 ${(880 - jump).toFixed(1)}) scale(1)`);
+    const wob = t > 56.7 && t < 58.2 ? 12 * Math.sin((t - 56.7) * 14) * (1 - smooth(57.2, 58.2, t)) : 0;
+    OBJ_EL.grapes.setAttribute("transform", `translate(1640 560) rotate(${wob.toFixed(2)})`);
+    const flash = E("flash"); flash.style.opacity = (t > 72.85 && t < 73.1 ? 0.6 : 0).toFixed(2);
+
+    // Fıstık
+    const fp = fistikPos(t);
+    E("charWrap").style.display = "block";
+    const bob = (9 + 10 * fp.dance) * (1 - Math.cos(beatPh(t))) / 2;
+    el.rig.setAttribute("transform", `translate(0 ${(-bob).toFixed(2)})`);
+    const ea = 6 * Math.sin(beatPh(t)) + (fp.dance ? 6 * Math.sin(beatPh(t) * 2) : 0);
+    el.earL.setAttribute("transform", `rotate(${(-ea).toFixed(2)} 222 230)`);
+    el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-ea).toFixed(2)} 222 230)`);
+    el.tail.setAttribute("transform", `rotate(${(14 * Math.sin(beatPh(t) / 2)).toFixed(2)} 432 470)`);
+    el.pom.setAttribute("transform", `rotate(${(10 * Math.sin(beatPh(t) - 0.8)).toFixed(2)} 300 100)`);
+    const tilt = (fp.dance ? 7 : 0) * Math.sin(beatPh(t) / 2) + 2 * Math.sin(TAU * t / (BEAT * 8));
+    el.head.setAttribute("transform", `rotate(${tilt.toFixed(2)} 300 360)`);
+    el.legs.forEach((g, i) => { const [px, py, ph] = LEGP[i], a = (fp.dance ? 18 : 0) * Math.sin(beatPh(t) + ph);
+      g.setAttribute("transform", `translate(${px} ${py}) rotate(${a.toFixed(2)})`); });
+    const blink = (t % 4.1) < 0.14 || (t > 44.7 && t < 45.1) ? 1 : 0, sleep = t >= 80 ? 1 : 0;
+    const lid = clamp(Math.max(blink, sleep), 0, 1) * 92;
+    el.lidL.setAttribute("height", lid.toFixed(1)); el.lidR.setAttribute("height", lid.toFixed(1));
+    el.pupils.setAttribute("transform", `translate(${(fp.dance ? 6 : 0).toFixed(1)} ${(-4 * Math.sin(t * 1.3)).toFixed(1)})`);
+    const sing = isSinging(t) && t < 80 ? 0.5 + 0.5 * Math.sin(t * 22) : 0;
+    const m = Math.max(0, sing, sleep ? 0.9 : 0), my = 334;
+    const md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * m).toFixed(1)} 224 ${my} Z`;
+    el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", m > 0.04 ? "#8C2F45" : "none");
+    el.tongue.setAttribute("ry", (m > 0.15 ? 12 * m : 0).toFixed(1)); el.tongue.setAttribute("cy", (my + 6 + 24 * m).toFixed(1));
+    const trumpetU = POUR.map((p) => 1 - smooth(0, 0.35, Math.abs(t - p))).reduce((a, b) => Math.max(a, b), 0);
+    const A = lerp(REST[0], TRUMPET[0], trumpetU), C = lerp(REST[1], TRUMPET[1], trumpetU), L = lerp(REST[2], TRUMPET[2], trumpetU);
+    drawTrunk(A + 3 * Math.sin(t * 2.3), C, L);
+    E("charWrap").style.transform = `translate(${(fp.x - 300 * fp.s).toFixed(1)}px, ${(fp.y - 620 * fp.s).toFixed(1)}px) scale(${fp.s})`;
+
+    lyricAt(t);
+    E("end").style.opacity = smooth(100, 104, t).toFixed(3);
+  }
+
+  // ───────── seek-safe timeline (see CLAUDE.md §6.3) ─────────
+  gsap.defaults({ lazy: false });
+  const master = gsap.timeline({ paused: true });
+  const clock = { _t: 0 };
+  Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+  master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+  window.addEventListener("hf-seek", (e) => render(e?.detail ? e.detail.time : master.time()));
+  render(0);
+  window.__timelines["main"] = master;
+})();
+    </script>
+  </body>
+</html>
