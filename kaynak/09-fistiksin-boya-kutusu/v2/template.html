@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Pırt Pırt Boya Döktüm · Fıstık Fil</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #BFE6FF; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Baloo 2", sans-serif; font-weight: 800; color: #2B2D42; background: #BFE6FF; }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      .full { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+      #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      #shake { position: absolute; inset: 0; }
+      #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 0 0; }
+      #char { position: absolute; inset: 0; overflow: visible; transform-origin: 300px 620px; }
+      #char svg { width: 600px; height: 640px; overflow: visible; }
+      #bug { left: 40px; top: 36px; padding: 6px 26px 0; border-radius: 30px; background: rgba(255,255,255,.95); font-size: 36px; color: #3D7DD8; z-index: 60; box-shadow: 0 4px 0 rgba(0,0,0,.1); }
+      #bug b { color: #F59E1B; }
+      #lyric { left: 0; right: 0; top: 880px; height: 90px; display: flex; justify-content: center; z-index: 60; }
+      .line { position: absolute; top: 0; padding: 4px 30px 0; border-radius: 40px; background: rgba(255,255,255,.92); font-size: 46px; line-height: 66px; white-space: nowrap; color: #8A93A6; box-shadow: 0 4px 0 rgba(0,0,0,.08); border: 3px solid #FFD43B; }
+      .line span { display: inline-block; margin: 0 7px; transform-origin: 50% 80%; }
+      .line span.on { color: #FF5A5F; }
+      .line span.hot { color: #FF5A5F; transform: scale(1.14); }
+      #end { left: 0; top: 0; width: 1920px; height: 1080px; opacity: 0; z-index: 55; display: flex; align-items: center; justify-content: center; }
+      #end .sign { padding: 30px 60px 34px; text-align: center; background: #FFF4DC; border: 12px solid #D9891A; border-radius: 40px; box-shadow: 0 14px 0 rgba(60,30,0,.25); font-size: 104px; color: #3D9BFF; }
+      #flash { inset: 0; background: #fff; opacity: 0; z-index: 48; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="/*DUR*/" data-width="1920" data-height="1080">
+      <audio id="song" src="assets/song2x_mix.m4a" data-start="0" data-duration="/*DUR*/" data-volume="1"></audio>
+      <section id="world" class="clip" data-start="0" data-duration="/*DUR*/" data-track-index="0" data-layout-allow-overflow>
+        <div id="cam" data-layout-allow-overflow>
+          <div id="shake" data-layout-allow-overflow>
+            <svg id="p1Bg" class="full" viewBox="0 0 1920 1080"></svg>
+            <svg id="p2Bg" class="full" viewBox="0 0 1920 1080"></svg>
+            <svg id="objSvg" class="full" viewBox="0 0 1920 1080"></svg>
+            <div id="charWrap" class="abs"><div id="char"></div></div>
+            <svg id="fxSvg" class="full" viewBox="0 0 1920 1080"></svg>
+            <svg id="tranSvg" class="full" viewBox="0 0 1920 1080"></svg>
+          </div>
+        </div>
+        <div id="flash" class="abs"></div>
+        <div id="bug" class="abs">Fıstık <b>Fil</b></div>
+        <div id="lyric" class="abs"></div>
+        <div id="end" class="abs"><div class="sign">Hoşça kalın çocuklar!</div></div>
+      </section>
+    </div>
+
+    <script>
+(function () {
+  window.__timelines = window.__timelines || {};
+  const $ = (s) => document.querySelector(s);
+  const D = /*DUR*/, TAU = Math.PI * 2, OL = "#4C76B5", INK = "#2B2D42", PEN = "#5B5B70";
+  const LINES = /*LINES*/;
+  const BEATS = /*BEATS*/;
+  const BEAT = 60 / 118;
+  const PASS2 = 80;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const smooth = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const outBack = (x, s = 1.7) => { x = clamp(x, 0, 1); return 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2); };
+  const beatPh = (t) => (t / BEAT) * TAU;
+  const isSinging = (t) => LINES.some((L) => t >= L.words[0][1] - 0.2 && t <= L.end + 0.4);
+  const pen = (s) => s.replace(/<(path|circle|ellipse|line|rect)\b/g, '<$1 pathLength="1" class="pen"');
+
+  // ───────── lyric index: pass 1 lines 0–13, pass 2 lines 14–27 ─────────
+  const VERSE_START = [0, 2, 4, 6, 8, 10, 12];         // first line of each verse (pass 1)
+  const v = (k, pass) => LINES[(pass === 1 ? 0 : 14) + VERSE_START[k]].words[0][1];   // verse start time
+  const vb = (k, pass) => LINES[(pass === 1 ? 0 : 14) + VERSE_START[k] + 1].words[0][1]; // brush (2nd line)
+  const STATIONS = [["apple", 860, 760], ["banana", 1080, 790], ["fish", 1300, 880], ["frog", 1560, 880], ["grapes", 1690, 560], ["carrot", 1420, 640]];
+
+  // ───────── fixed moments ─────────
+  const CAM1 = [[0, 960, 540, 1.0], [4.0, 600, 540, 1.05], [8.0, 730, 600, 1.08], [24.0, 960, 580, 1.05], [40.0, 960, 540, 1.0], [56.0, 1100, 600, 1.06], [72.0, 960, 540, 1.0]];
+  const CAM2 = [[80, 960, 540, 1.0], [120, 900, 560, 1.03], [150, 1000, 540, 1.0], [170, 960, 540, 1.04], [188, 960, 540, 1.0]];
+  function camAt(t) {
+    const K = t < PASS2 ? CAM1 : CAM2;
+    let i = 0; while (i < K.length - 2 && K[i + 1][0] <= t) i++;
+    const a = K[i], b = K[i + 1], k = smooth(a[0], b[0], t);
+    return { x: lerp(a[1], b[1], k), y: lerp(a[2], b[2], k), s: lerp(a[3], b[3], k) };
+  }
+
+  // ───────── Fıstık rig (episode 9 rig) ─────────
+/*RIG*/
+  const REST = [88, -140, 22], TRUMPET = [25, -110, 28], REACH = [10, 60, 25], POUR = [70, -20, 30];
+
+  // ───────── art ─────────
+/*ART*/
+
+  // ───────── backgrounds ─────────
+  const p1Bg = $("#p1Bg"), p2Bg = $("#p2Bg");
+  p1Bg.innerHTML = `
+    <defs>
+      <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FD3FF"/><stop offset="1" stop-color="#D8F3FF"/></linearGradient>
+      <clipPath id="cBrush"><rect id="cBrushR" x="0" y="0" width="0" height="1080"/></clipPath>
+    </defs>
+    <g id="p1Grey">
+      <rect width="1920" height="1080" fill="#CFCFCF"/>
+      <path d="M0 720 Q480 620 960 700 T1920 690 V1080 H0Z" fill="#B8B8B8" stroke="#8C8C8C" stroke-width="5"/>
+      <path d="M0 800 Q600 740 1200 800 T1920 790 V1080 H0Z" fill="#A6A6A6" stroke="#8C8C8C" stroke-width="5"/>
+    </g>
+    <g id="p1Color">
+      <rect width="1920" height="1080" fill="url(#gSky)"/>
+      <path d="M0 720 Q480 620 960 700 T1920 690 V1080 H0Z" fill="#9BDB7A" stroke="${OL}" stroke-width="5"/>
+      <path d="M0 800 Q600 740 1200 800 T1920 790 V1080 H0Z" fill="#6FC05A" stroke="${OL}" stroke-width="5"/>
+    </g>
+    <g id="bands"></g>
+    <g id="cloud1" fill="#fff" stroke="${OL}" stroke-width="4"><g id="cloudDrift"><ellipse cx="380" cy="230" rx="110" ry="50"/><ellipse cx="300" cy="240" rx="60" ry="40"/><ellipse cx="460" cy="240" rx="70" ry="42"/></g></g>`;
+
+  const RAIN = ["#FF5A5F", "#FF9F1C", "#FFD43B", "#3FBF6F", "#3D9BFF", "#4C76B5", "#A66BFF"];
+  const BAND_Y = [30, 100, 170, 240, 310, 380];
+
+  p2Bg.innerHTML = `
+    <rect width="1920" height="1080" fill="#FFF8E7"/>
+    <g id="ruleDrift" stroke="#BFD9F2" stroke-width="2" opacity=".8">${Array.from({ length: 18 }, (_, i) => `<line x1="0" y1="${60 + i * 60}" x2="1920" y2="${60 + i * 60}"/>`).join("")}</g>
+    <rect x="30" y="30" width="1860" height="1020" rx="28" fill="none" stroke="#E3B778" stroke-width="10"/>`;
+
+  // ───────── objects ─────────
+  const objSvg = $("#objSvg");
+  const OBJ_ART = { apple: APPLE, banana: BANANA, fish: FISH, frog: FROG, grapes: GRAPES, carrot: CARROT, sun: SUN };
+  const OBJ_COL = { apple: "#FF5A5F", banana: "#FFC23D", fish: "#3D9BFF", frog: "#3FBF6F", grapes: "#A66BFF", carrot: "#FF7A3D", sun: "#FFC23D" };
+  const POS = Object.fromEntries(STATIONS.map(([id, x, y]) => [id, { x, y }]));
+  POS.sun = { x: 1640, y: 180 };
+  let defs = "";
+  let body = "";
+  Object.keys(OBJ_ART).forEach((id) => {
+    const p = POS[id] || POS.sun;
+    defs += `<clipPath id="cp_${id}"><rect id="cpr_${id}" x="-400" y="-400" width="0" height="800"/></clipPath><clipPath id="cc_${id}"><circle id="ccr_${id}" cx="0" cy="0" r="0"/></clipPath>`;
+    body += `<g id="o_${id}" transform="translate(${p.x} ${p.y})">
+      <g id="g1_${id}">${OBJ_ART[id]("#BDBDBD")}</g>
+      <g id="g2_${id}" clip-path="url(#cp_${id})"><g>${OBJ_ART[id](OBJ_COL[id])}</g></g>
+      <g id="pn_${id}" opacity="0">${pen(OBJ_ART[id]("#FFFFFF"))}</g>
+    </g>`;
+  });
+  objSvg.innerHTML = `<defs>${defs}</defs><g id="rainbow" opacity="0"></g><g id="can"></g><g id="scribble"></g><g id="pour"></g>` + body;
+  const rainbowG = $("#rainbow");
+  rainbowG.innerHTML = RAIN.map((c, i) => { const r = 640 - i * 22; return `<path d="M${960 - r} 1000 A${r} ${r} 0 0 1 ${960 + r} 1000" fill="none" stroke="${c}" stroke-width="20" stroke-linecap="round"/>`; }).join("");
+
+  const CAN = (tilt) => `<g transform="translate(0 0) rotate(${tilt.toFixed(2)})"><path d="M-70 -90 L70 -90 L60 90 L-60 90 Z" fill="#FFFFFF" stroke="${OL}" stroke-width="6" stroke-linejoin="round"/><path d="M-66 -40 L66 -40 L62 10 L-62 10 Z" fill="#FF5A5F"/><path d="M-70 -90 Q0 -130 70 -90" fill="none" stroke="${OL}" stroke-width="8"/></g>`;
+
+  // ───────── transitions ─────────
+  const tranSvg = $("#tranSvg");
+  const fxSvg = $("#fxSvg");
+
+  // ───────── Fıstık placement ─────────
+  function fistik(t) {
+    if (t < PASS2) {
+      // station index for the current verse
+      let k = -1;
+      for (let i = 0; i < 6; i++) if (t >= v(i, 1) - 0.8) k = i;
+      if (t < v(0, 1) - 0.8) return { x: 520, y: 1000, s: 0.7, dance: 0, pose: "rest", k: -1 };
+      if (k === -1) k = 0;
+      const sx = POS[STATIONS[k][0]].x;
+      const tk = v(k, 1), walk = smooth(tk - 0.8, tk - 0.2, t);
+      const prev = k > 0 ? POS[STATIONS[k - 1][0]].x - 330 : 520;
+      const xk = sx - 330;
+      const brk = t > v(2, 1) + 6.9 && t < v(3, 1) - 0.5 ? 1 : 0;
+      return { x: lerp(prev, xk, walk), y: 1000, s: 0.7, dance: brk, pose: "pour", k, walk };
+    }
+    // pass 2: Fıstık stands on the page, points at the drawing
+    if (t > 176) return { x: 960, y: 1000, s: 0.9, dance: 0, pose: "sleep", k: -1 };
+    if (t > 152.5 && t < 162) return { x: 960, y: 1000, s: 0.95, dance: 1, pose: "rest", k: -1 };
+    return { x: 380, y: 1000, s: 0.8, dance: 0, pose: "reach", k: -1 };
+  }
+
+  // ───────── lyrics ─────────
+  const lyricEl = $("#lyric");
+  let lastLine = -1;
+  function lyricAt(t) {
+    const i = LINES.findIndex((L) => t >= L.words[0][1] - 0.25 && t <= L.end + 0.6);
+    if (i !== lastLine) {
+      lastLine = i;
+      lyricEl.innerHTML = i < 0 ? "" : `<div class="line" style="left:50%;transform:translateX(-50%)">${LINES[i].words.map(([w]) => `<span>${w}</span>`).join("")}</div>`;
+    }
+    if (i < 0) return;
+    const sp = lyricEl.querySelectorAll("span");
+    LINES[i].words.forEach(([w, wt], k) => {
+      const sound = /^(pırt|pırt|hop|hey|güm)/i.test(w);
+      const on = t >= wt; const hot = on && t < wt + 0.22 && sound;
+      if (sp[k]) sp[k].className = (on ? "on" : "") + (hot ? " hot" : "");
+    });
+  }
+
+  // ───────── render(t): pure function of time ─────────
+  const CAM = $("#cam");
+  function render(t) {
+    const c = camAt(t);
+    const s = Math.max(1, c.s), hx = 960 / s, hy = 540 / s;
+    const cx = clamp(c.x + 46 * Math.sin(t * 0.45) + 18 * Math.sin(t * 1.1), hx, 1920 - hx), cy = clamp(c.y + 14 * Math.sin(t * 0.62), hy, 1080 - hy);
+    let punch = 0;
+    LINES.forEach((L) => { const u = t - L.words[0][1]; if (u > 0 && u < 0.9) punch = Math.max(punch, 0.07 * (1 - smooth(0, 0.9, u))); });
+    const pulse = 1 + punch + 0.02 * (1 - Math.cos(beatPh(t))) / 2 + 0.01 * Math.sin(t * 0.7);
+    CAM.style.transform = `translate(960px, 540px) scale(${(s * pulse).toFixed(4)}) translate(${(-cx).toFixed(1)}px, ${(-cy).toFixed(1)}px)`;
+
+    const p1 = t < PASS2 + 0.6;
+    const drift = $("#cloudDrift"); if (drift) drift.setAttribute("transform", `translate(${(((t * 24) % 2300) - 380).toFixed(1)} ${(6 * Math.sin(t * 0.9)).toFixed(1)})`);
+    const rules = $("#ruleDrift"); if (rules) rules.setAttribute("transform", `translate(0 ${((t * 9) % 60).toFixed(2)})`);
+    const bobA = (k) => 6 * (1 - Math.cos(beatPh(t) + k)) / 2;
+    STATIONS.forEach(([id, x, y], k) => {
+      if (id === "fish" && p1) return;
+      if (id === "grapes" && p1) return;
+      $(`#o_${id}`).setAttribute("transform", `translate(${x} ${(y - bobA(k)).toFixed(2)})`);
+    });
+    $("#o_sun").setAttribute("transform", `translate(1640 ${(180 - 8 * (1 - Math.cos(beatPh(t) * 0.5)) / 2).toFixed(2)})`);
+    $("#p1Bg").style.opacity = p1 ? 1 : 0;
+    $("#p2Bg").style.opacity = t > PASS2 - 0.6 ? 1 : 0;
+    const gray = 1 - smooth(4.0, 8.0, t);
+    $("#p1Color").style.opacity = 1 - gray;
+    $("#p1Color").style.filter = "none";
+
+    // brush bands in the sky (pass 1), one per verse
+    let bands = "";
+    for (let k = 0; k < 6; k++) { const w = 1920 * smooth(vb(k, 1), vb(k, 1) + 2.0, t); if (w <= 0) continue;
+      bands += `<rect x="0" y="${BAND_Y[k]}" width="${w.toFixed(1)}" height="62" fill="${RAIN[[0, 3, 6, 2, 4, 1][k]]}" opacity=".85"/>`; }
+    $("#bands").innerHTML = bands;
+
+    // objects: pass 1 colour reveal by pour, pass 2 pencil then crayon
+    if (p1) {
+      const sunC = smooth(8.0, 9.0, t);
+      $("#g1_sun").style.opacity = 1 - sunC;
+      $("#cpr_sun").setAttribute("x", "-500"); $("#cpr_sun").setAttribute("width", "1000");
+      $("#g2_sun").style.opacity = 1; $("#g2_sun").setAttribute("clip-path", sunC > 0 ? "url(#cp_sun)" : "url(#cc_sun)");
+      $("#ccr_sun").setAttribute("r", "0");
+      const wink = t > 20.4 && t < 20.8 ? 1 - 0.85 * Math.sin((t - 20.4) / 0.4 * Math.PI) : 1;
+      $("#o_sun").querySelector("g.sunEyes") && $("#o_sun").querySelector("g.sunEyes").setAttribute("transform", `scale(1 ${wink.toFixed(3)})`);
+      for (let k = 0; k < 6; k++) {
+        const [id] = STATIONS[k], tk = v(k, 1);
+        const r = 300 * smooth(tk + 0.5, tk + 1.5, t);
+        const ccr = $(`#ccr_${id}`); ccr.setAttribute("r", r.toFixed(1)); ccr.setAttribute("cx", "0"); ccr.setAttribute("cy", "0");
+        $(`#g2_${id}`).setAttribute("clip-path", `url(#cp_${id})`);
+        $(`#cpr_${id}`).setAttribute("width", "0");
+        $(`#g1_${id}`).style.filter = "grayscale(1)";
+        $(`#g1_${id}`).style.opacity = t < tk - 0.6 ? 0.45 : 0.9;
+        $(`#pn_${id}`).setAttribute("opacity", 0);
+        $(`#g2_${id}`).style.opacity = 1;
+        $(`#g2_${id}`).setAttribute("clip-path", `url(#cc_${id})`);
+      }
+      // sun is grey until its wink, then warm
+    } else {
+      for (let k = 0; k < 6; k++) {
+        const [id] = STATIONS[k], tk = v(k, 2);
+        const pq = smooth(tk, tk + 0.9, t), fq = smooth(tk + 0.7, tk + 1.5, t);
+        $(`#pn_${id}`).setAttribute("opacity", t < tk - 0.05 ? 0 : 1);
+        $(`#pn_${id}`).querySelectorAll(".pen").forEach((e) => { e.style.strokeDasharray = "1"; e.style.strokeDashoffset = (1 - pq).toFixed(3); e.style.stroke = PEN; e.style.strokeWidth = "5"; e.style.fill = "none"; });
+        $(`#g1_${id}`).style.filter = "none"; $(`#g1_${id}`).style.opacity = 0;
+        const rw = 420 * fq;
+        $(`#cpr_${id}`).setAttribute("x", (-220).toFixed(1)); $(`#cpr_${id}`).setAttribute("width", rw.toFixed(1));
+        $(`#g2_${id}`).setAttribute("clip-path", `url(#cp_${id})`);
+        $(`#g2_${id}`).style.opacity = 1;
+      }
+    }
+
+    if (p1) {
+      const jump = t > 32.5 && t < 33.6 ? 260 * Math.sin((t - 32.5) / 1.1 * Math.PI) : 0;
+      $("#o_fish").setAttribute("transform", `translate(1300 ${(880 - jump - bobA(2)).toFixed(1)})`);
+      const wob = t > 56.7 && t < 58.2 ? 12 * Math.sin((t - 56.7) * 14) * (1 - smooth(57.2, 58.2, t)) : 0;
+      $("#o_grapes").setAttribute("transform", `translate(1690 ${(560 - bobA(4)).toFixed(2)}) rotate(${wob.toFixed(2)})`);
+    }
+    // pour (pass 1): can tilts, stream falls onto the station, colour reveal above
+    let fxo = "", cano = "";
+    if (p1) {
+      const f = fistik(t);
+      const cx0 = f.x + 210, cy0 = 880;
+      let tilt = 0;
+      for (let k = 0; k < 6; k++) { const tk = v(k, 1); tilt = Math.max(tilt, 80 * smooth(tk + 0.2, tk + 0.6, t) * (1 - smooth(tk + 1.2, tk + 1.6, t))); }
+      tilt = -tilt;
+      cano = `<g transform="translate(${cx0} ${cy0})">${CAN(tilt)}</g>`;
+      for (let k = 0; k < 6; k++) {
+        const tk = v(k, 1), u = t - (tk + 0.2);
+        if (u > 0 && u < 1.0) {
+          const [id, sx, sy] = STATIONS[k];
+          const top = sy - 110, y = lerp(cy0 - 60, top, smooth(0, 0.5, u));
+          fxo += `<path d="M${cx0 - 34} ${cy0 - 70} Q${cx0 - 70} ${(cy0 + y) / 2 - 60} ${sx + 10} ${y}" stroke="${OBJ_COL[id]}" stroke-width="${(18 * (1 - u * 0.3)).toFixed(1)}" fill="none" stroke-linecap="round" opacity=".9"/>`;
+        }
+      }
+    }
+    $("#can").innerHTML = cano;
+    $("#scribble").innerHTML = "";
+    for (let i = 0; i < 18; i++) {
+      const ph = i * 1.37, x = (i * 211) % 1920 + 60 * Math.sin(t * 0.5 + ph), y = 120 + ((i * 317) % 760) + 40 * Math.cos(t * 0.7 + ph);
+      const col = ["#FFE27A", "#FFFFFF", "#FF9FB2", "#B9E4FF"][i % 4];
+      fxo += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(7 + (i % 4) * 3).toFixed(1)}" fill="${col}" opacity="${(0.55 + 0.4 * Math.sin(t * 2 + ph)).toFixed(2)}"/>`;
+    }
+    fxSvg.innerHTML = fxo;
+
+    // brush (pass 1 line 2): a crayon stroke of the verse colour across the sky, handled by bands above
+    // pass 2 brush: scribble drawn progressively in the verse colour
+    if (!p1) {
+      let sc = "";
+      for (let k = 0; k < 6; k++) {
+        const tb = vb(k, 2), q = smooth(tb, tb + 1.8, t);
+        if (q <= 0) continue;
+        const y0 = 170 + (k % 3) * 300, x0 = 200 + (k % 2) * 900;
+        let d = `M${x0} ${y0}`; for (let i = 1; i < 9; i++) d += ` L${x0 + i * 110} ${y0 + (i % 2 ? 90 : -40)}`;
+        sc += `<path d="${d}" pathLength="1" stroke="${OBJ_COL[STATIONS[k][0]]}" stroke-width="18" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="${(1 - q).toFixed(3)}"/>`;
+      }
+      $("#scribble").innerHTML = sc;
+      $("#scribble").setAttribute("transform", `translate(${(4 * Math.sin(t * 1.7)).toFixed(2)} ${(3 * Math.cos(t * 1.3)).toFixed(2)})`);
+    }
+
+    // Fıstık
+    const fp = fistik(t);
+    if (t > PASS2 - 0.2 && t < PASS2 + 1.0) fp.s *= 0.2 + 0.8 * outBack(smooth(PASS2 - 0.2, PASS2 + 0.8, t));
+    const k = fp.k;
+    const pose = fp.pose;
+    const lead = p1 ? (k >= 0 ? v(k, 1) : 0) : (k >= 0 ? v(k, 2) : 0);
+    const pour = p1 && k >= 0 ? smooth(lead, lead + 0.5, t) * (1 - smooth(lead + 1.2, lead + 1.6, t)) : 0;
+    const dance = fp.dance || (isSinging(t) && fp.pose === "pour" ? 0.6 : 0);
+    const bob = (9 + 10 * dance) * (1 - Math.cos(beatPh(t))) / 2;
+    el.rig.setAttribute("transform", `translate(0 ${(-bob).toFixed(2)})`);
+    const ea = 6 * Math.sin(beatPh(t)) + (dance ? 6 * Math.sin(beatPh(t) * 2) : 0);
+    el.earL.setAttribute("transform", `rotate(${(-ea).toFixed(2)} 222 230)`);
+    el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-ea).toFixed(2)} 222 230)`);
+    el.tail.setAttribute("transform", `rotate(${(14 * Math.sin(beatPh(t) / 2)).toFixed(2)} 432 470)`);
+    el.pom.setAttribute("transform", `rotate(${(10 * Math.sin(beatPh(t) - 0.8)).toFixed(2)} 300 100)`);
+    const tilt = (dance ? 7 : 0) * Math.sin(beatPh(t) / 2) + 2 * Math.sin(TAU * t / (BEAT * 8));
+    el.head.setAttribute("transform", `rotate(${tilt.toFixed(2)} 300 360)`);
+    el.legs.forEach((g, i) => { const [px, py, ph] = LEGP[i], a = (dance ? 18 : 0) * Math.sin(beatPh(t) + ph) + (fp.walk ? 16 * Math.sin(t * 9 + ph) * (1 - fp.walk) : 0);
+      g.setAttribute("transform", `translate(${px} ${py}) rotate(${a.toFixed(2)})`); });
+    const blink = (t % 4.1) < 0.14 || (t > 44.7 && t < 45.1) ? 1 : 0, sleep = pose === "sleep" ? 1 : 0;
+    const lid = clamp(Math.max(blink, sleep), 0, 1) * 92;
+    el.lidL.setAttribute("height", lid.toFixed(1)); el.lidR.setAttribute("height", lid.toFixed(1));
+    el.pupils.setAttribute("transform", `translate(${(fp.dance ? 6 : 0).toFixed(1)} ${(-4 * Math.sin(t * 1.3)).toFixed(1)})`);
+    const sing = isSinging(t) && pose !== "sleep" ? 0.5 + 0.5 * Math.sin(t * 22) : 0;
+    const m = Math.max(0, sing, sleep ? 0.9 : 0), my = 334;
+    const md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * m).toFixed(1)} 224 ${my} Z`;
+    el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", m > 0.04 ? "#8C2F45" : "none");
+    el.tongue.setAttribute("ry", (m > 0.15 ? 12 * m : 0).toFixed(1)); el.tongue.setAttribute("cy", (my + 6 + 24 * m).toFixed(1));
+    let A = REST[0], C = REST[1], L = REST[2];
+    if (pose === "pour") { A = lerp(REST[0], POUR[0], pour); C = lerp(REST[1], POUR[1], pour); L = lerp(REST[2], POUR[2], pour); }
+    else if (pose === "reach") { A = REACH[0]; C = REACH[1]; L = REACH[2]; }
+    else if (pose === "sleep") { A = 120; C = -40; L = 22; }
+    if (p1 && k >= 0 && pose === "pour" && t > lead && t < lead + 1.2) { const sway = Math.sin(t * 9) * 10 * (1 - smooth(lead + 0.9, lead + 1.2, t)); A += sway; }
+    drawTrunk(A + 3 * Math.sin(t * 2.3), C, L);
+    $("#charWrap").style.display = "block";
+    $("#charWrap").style.transform = `translate(${(fp.x - 300 * fp.s).toFixed(1)}px, ${(fp.y - 620 * fp.s).toFixed(1)}px) scale(${fp.s})`;
+
+    // final rainbow
+    const rb = p1 ? smooth(72.85, 76.5, t) : smooth(152.85, 156.5, t);
+    rainbowG.setAttribute("transform", `translate(960 1000) scale(${(0.3 + 0.7 * rb).toFixed(3)}) translate(-960 -1000)`);
+    rainbowG.setAttribute("opacity", rb.toFixed(3));
+
+    // transitions
+    let o = "";
+    const curtain = (t0, d) => { const u = t - t0; if (u < 0 || u > d) return; o += `<rect x="${(1920 * (1 - smooth(0, d, u))).toFixed(1)}" y="0" width="1920" height="1080" fill="#FFF8E7"/>`; };
+    curtain(PASS2 - 0.4, 1.0);
+    const iu = t - 3.9;
+    if (iu > 0 && iu < 0.9) { const r = iu < 0.45 ? 1500 * (1 - smooth(0, 0.45, iu)) : 1500 * smooth(0, 0.45, iu - 0.45);
+      o += `<mask id="mIris"><rect width="1920" height="1080" fill="#fff"/><circle cx="960" cy="540" r="${r.toFixed(1)}" fill="#000"/></mask><rect width="1920" height="1080" fill="#2B2D42" mask="url(#mIris)"/>`; }
+    tranSvg.innerHTML = o;
+
+    // lyrics, end card
+    lyricAt(t);
+    $("#end").style.opacity = smooth(180, 184, t).toFixed(3);
+    $("#flash").style.opacity = (t > 72.85 && t < 73.1) || (t > 152.85 && t < 153.1) ? 0.6 : 0;
+  }
+
+  // ───────── seek-safe timeline (CLAUDE.md §6.3) ─────────
+  gsap.defaults({ lazy: false });
+  const master = gsap.timeline({ paused: true });
+  const clock = { _t: 0 };
+  Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+  master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+  window.addEventListener("hf-seek", (e) => render(e?.detail ? e.detail.time : master.time()));
+  render(0);
+  window.__timelines["main"] = master;
+})();
+    </script>
+  </body>
+</html>
