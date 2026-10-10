@@ -100,3 +100,14 @@ Ajanların tur 4'te hâlâ istediği (bir sonraki tur yapılırsa):
 - Gökkuşağında her nesne kendi bandına zıplasın; renk anında her nesneye kurbağa yakın planı gibi yaklaşma.
 - Çiçekler ve şeritler hâlâ okunmuyor (A çiçekleri öneri olarak yazdı) → çok daha büyük.
 - Hazır: v8'de gerçek 180° sayfa çevirme (arka yüz görünür, açık defter gibi solda yatar) — incelenmedi.
+
+## Tur 4 → tur 5 (v9) — kullanıcı "karar sende" dedi; en fazla tur 6
+
+| Sorun (iki ajan, birçok tur) | v9 değişikliği |
+|---|---|
+| A: dünya ilk pırt'ta bir kerede renkleniyor | Kaza yalnızca çimi renklendirir. Her nakaratta fırçadan çıkan boya dünyanın bir parçasına uçar ve onu boyar: kırmızı → büyük çiçekler, sarı → güneş, mavi → gökyüzü, yeşil → ağaçlar, mor → dağlar, turuncu → raflar. İnce gökyüzü şeritleri kalktı |
+| A+B: pass 2 kıtaları aynı kalıp | Her kıta farklı yöntem: elma pastel tarama, muz yanlış renk + silgi, balık sprey (Fıstık hortumunda sprey kutusu), kurbağa mühür, üzüm tane tane, havuç renkli kâğıt kesik uçup yapışır. Muz ve üzümde Fıstık nesnenin sağında (aynalı ikili plan) |
+| B (her tur): sayfa düz kart gibi dönüyor | Gerçek 180°: sayfa kalkar, perspektifle döner, arka yüzü açık defterin sol sayfası gibi yatar |
+| A+B: final karanlık, durgun, kenarda kesik nesneler | Gece kaldırıldı. Fıstık el sallar (nesneler kadraj içinde) → bütün yaprak → sayfa masaya küçülür → turuncu kapak kapanır → kamera kapaktaki "Fıstık Fil · Boyama Defterim" logosuna ilerler → beyaz parlama → kanalın turuncu kapanışı |
+| B: gökkuşağı durgun | Raftaki nesneler sırayla kendi renk bantlarına zıplar |
+| A: çiçekler görünmüyor | Çiçekler ~1,5× büyük, yapraklı |
