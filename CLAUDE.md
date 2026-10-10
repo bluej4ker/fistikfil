@@ -482,8 +482,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   - `audioOffset`: ses kaynağı final video ise 5,6 (açılış) verilir.
   - Yerelde `CHROME=<chromium_headless_shell-1243 yolu>` ortam değişkeni ile çalıştır. Bölüm 8 klasörüne önce `ortak/gsap` ve `ortak/fonts` kopyalanmalı.
   - Son kart son 2,2 sn'yi kaplar. Önemli an (ör. balığın maviye boyanması) o süreye düşüyorsa `end`'i uzat.
-- `make_cover.py comp t out l1 l2 c1 c2 dx [hedef]`: `HIDE="#fxSvg text{display:none!important}"` ile efekt yazıları gizlenir.
-- `make_cover.py comp t out l1 l2 c1 c2 dx`: 1080×1920 kapak (sahne kırpması + iki satırlık başlık + "YENİ!" + logo).
+- `make_cover.py comp t out l1 l2 c1 c2 dx [hedef]`: 1080×1920 kapak (sahne kırpması + iki satırlık başlık + "YENİ!" + logo). `HIDE="#fxSvg text{display:none!important}"` ile efekt yazıları gizlenir; başlık Fıstık'ın yüzüne binmesin diye Fıstık'ın alçakta durduğu kareyi seç.
 - **Örnek ayarlar:**
   - r1: Güm Güm 21.0–51.8 s.
   - r2: Dere 117.4–148.2 s.
