@@ -8,7 +8,8 @@ Zamanlar video dosyası zamanıdır (bölüm zamanı = dosya − 5,6 sn). ±1 pu
 | 0 | v3 | 6/10 | 6/10 | 3:20 |
 | 1 | v4 | 7/10 | 6/10 | 3:02 |
 | 2 | v5 | 6,5/10 | 6/10 | 3:02 |
-| 3 | v6 | | | 3:02 |
+| 3 | v6 | 7/10 | 6,5/10 | 3:02 |
+| 4 | v7 | | | 3:02 |
 
 ## Tur 0 → tur 1 (v4)
 
@@ -73,3 +74,15 @@ Teşhis: tur 2'de eklenenlerin çoğu ekranda okunmuyordu (A, zaten var olan "ka
 | B: lacivert geceden sarı kapanışa sert kesme; kart iki kez veda | Bölüm içi kart kaldırıldı; Fıstık'ın el salladığı yakın plan → beyaz parlama (açılışın beyaz geçişinin aynası) |
 | A+B (2 tur): abone bandı Fıstık'ın girişini örter | Fıstık sağdan girer, bandın altından geçmez |
 | MAVİ / "hip-hop, rap" | Dokunulmadı: söz sorunu, çözümü dizeyi yeniden söyletmek |
+
+## Tur 3 → tur 4 (v7) — yapısal değişiklik
+
+Kullanıcı "10/10 olana kadar" dedi. Durma kuralı: iki ajan da ≥ 8 olunca, ya da iki tur üst üste ikisinde de ≥ 1 artış olmazsa, en geç tur 6'da.
+Dört turdur hiç gitmeyen iki şikâyet yapısal olarak ele alındı:
+
+| Sorun | v7 değişikliği |
+|---|---|
+| A+B (4 tur): ikinci geçiş birincinin kopyası | Pass 2 tek sayfa değil, 3840×2160'lık büyük bir defter yaprağı. Her kıta yaprağın farklı köşesinde (istasyonlar), Fıstık zıplayarak istasyondan istasyona gider, kamera onu izler. Çizimler raf/banta gitmez, çizildiği yerde kalır (bant sticker'ı orada). Finalde kamera ×0,5'e açılıp bütün yaprağı (tüm çizimler + yaprağı kaplayan gökkuşağı) gösterir, sonra "hey"ler için Fıstık'a döner. Gece de bütün yaprağa çöker (ay, yıldızlar), sonra el sallama yakın planı |
+| A+B: "her yer renk renk doldu" görünmüyor | Pass 1'de her nakaratta çayırda o rengin 5 çiçeği açar; şarkı sonunda çayır 30 renkli çiçekle dolu |
+| A+B: renk anında nesne küçük | Pass 1 ve pass 2 nesneleri 1,22× |
+| B: gece çamurlu mor | Gece katmanı lacivert, multiply karışım |

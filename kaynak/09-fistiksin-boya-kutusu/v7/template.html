@@ -37,9 +37,9 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="168.98" data-width="1920" data-height="1080">
-      <audio id="song" src="assets/song2x_mix.m4a" data-start="0" data-duration="168.98" data-volume="1"></audio>
-      <section id="world" class="clip" data-start="0" data-duration="168.98" data-track-index="0" data-layout-allow-overflow>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="/*DUR*/" data-width="1920" data-height="1080">
+      <audio id="song" src="assets/song2x_mix.m4a" data-start="0" data-duration="/*DUR*/" data-volume="1"></audio>
+      <section id="world" class="clip" data-start="0" data-duration="/*DUR*/" data-track-index="0" data-layout-allow-overflow>
         <svg id="table" class="full" viewBox="0 0 1920 1080"></svg>
         <div id="under" class="abs"><svg id="underSvg" class="full" viewBox="0 0 1920 1080"></svg><div id="underFis" class="abs"></div></div>
         <div id="page" class="abs" data-layout-allow-overflow>
@@ -63,8 +63,8 @@
 (function () {
   window.__timelines = window.__timelines || {};
   const $ = (s) => document.querySelector(s);
-  const D = 168.98, END = D, TAU = Math.PI * 2, OL = "#4C76B5", INK = "#2B2D42", PEN = "#55556A";
-  const LINES = [{"tag": "p1.1", "section": "verse 1", "words": [["Pırt", 8.3], ["pırt", 8.59], ["boya", 8.87], ["döktüm,", 9.45], ["elma", 10.03], ["kırmızı", 10.6], ["oldu", 11.47]], "end": 12.04, "who": "fistik", "pass_": 1}, {"tag": "p1.2", "section": "verse 1", "words": [["Hop", 12.37], ["hop", 12.67], ["fırça", 12.98], ["sürdüm,", 13.59], ["her", 14.2], ["yer", 14.51], ["renk", 14.81], ["renk", 15.12], ["doldu", 15.43]], "end": 16.04, "who": "fistik", "pass_": 1}, {"tag": "p1.3", "section": "verse 2", "words": [["Pırt", 16.36], ["pırt", 16.7], ["boya", 17.05], ["döktüm,", 17.74], ["muz", 18.44], ["sarı", 18.79], ["oldu", 19.48]], "end": 20.17, "who": "fistik", "pass_": 1}, {"tag": "p1.4", "section": "verse 2", "words": [["Hop", 20.5], ["hop", 20.81], ["fırça", 21.12], ["sürdüm,", 21.73], ["her", 22.34], ["yer", 22.65], ["renk", 22.95], ["renk", 23.26], ["doldu", 23.56]], "end": 24.18, "who": "fistik", "pass_": 1}, {"tag": "p1.5", "section": "verse 3", "words": [["Pırt", 24.5], ["pırt", 24.78], ["boya", 25.07], ["döktüm,", 25.65], ["balık", 26.22], ["hip-hop,", 26.8], ["rap", 27.37], ["oldu", 27.66]], "end": 28.24, "who": "fistik", "pass_": 1}, {"tag": "p1.6", "section": "verse 3", "words": [["Hop", 28.56], ["hop", 28.86], ["fırça", 29.18], ["sürdüm,", 29.79], ["her", 30.39], ["yer", 30.7], ["renk", 31.01], ["renk", 31.31], ["doldu", 31.62]], "end": 32.23, "who": "fistik", "pass_": 1}, {"tag": "p1.7", "section": "verse 4", "words": [["Pırt", 48.67], ["pırt", 48.96], ["boya", 49.26], ["döktüm,", 49.84], ["kurbağa", 50.43], ["yeşil", 51.31], ["oldu", 51.9]], "end": 52.49, "who": "fistik", "pass_": 1}, {"tag": "p1.8", "section": "verse 4", "words": [["Hop", 52.82], ["hop", 53.12], ["fırça", 53.42], ["sürdüm,", 54.02], ["her", 54.62], ["yer", 54.92], ["renk", 55.22], ["renk", 55.52], ["doldu", 55.82]], "end": 56.42, "who": "fistik", "pass_": 1}, {"tag": "p1.9", "section": "verse 5", "words": [["Pırt", 56.73], ["pırt", 57.08], ["boya", 57.42], ["döktüm,", 58.12], ["üzüm", 58.81], ["mor", 59.51], ["oldu", 59.85]], "end": 60.55, "who": "fistik", "pass_": 1}, {"tag": "p1.10", "section": "verse 5", "words": [["Hop", 60.88], ["hop", 61.18], ["fırça", 61.48], ["sürdüm,", 62.08], ["her", 62.68], ["yer", 62.98], ["renk", 63.28], ["renk", 63.58], ["doldu", 63.87]], "end": 64.47, "who": "fistik", "pass_": 1}, {"tag": "p1.11", "section": "verse 6", "words": [["Pırt", 64.79], ["pırt", 65.07], ["boya", 65.36], ["döktüm,", 65.94], ["havuç", 66.51], ["turuncu", 67.09], ["oldu", 67.95]], "end": 68.53, "who": "fistik", "pass_": 1}, {"tag": "p1.12", "section": "verse 6", "words": [["Hop", 68.86], ["hop", 69.16], ["fırça", 69.47], ["sürdüm,", 70.08], ["her", 70.69], ["yer", 71.0], ["renk", 71.3], ["renk", 71.61], ["doldu", 71.91]], "end": 72.53, "who": "fistik", "pass_": 1}, {"tag": "p1.13", "section": "final chorus", "words": [["Gökkuşağı", 72.85], ["çıktı", 73.77], ["gökte,", 74.23], ["yedi", 74.69], ["renk", 75.15], ["bir", 75.38], ["sepette", 75.61]], "end": 76.3, "who": "all", "pass_": 1}, {"tag": "p1.14", "section": "final chorus", "words": [["Pırt", 76.6], ["pırt", 76.93], ["pırt,", 77.26], ["fıstık", 77.6], ["fil,", 78.27], ["hey", 78.6], ["hey", 78.94], ["hey!", 79.27]], "end": 79.61, "who": "all", "pass_": 1}, {"tag": "p2.1", "section": "verse 1", "words": [["Pırt", 88.3], ["pırt", 88.59], ["boya", 88.87], ["döktüm,", 89.45], ["elma", 90.03], ["kırmızı", 90.6], ["oldu", 91.47]], "end": 92.04, "who": "fistik", "pass_": 2}, {"tag": "p2.2", "section": "verse 1", "words": [["Hop", 92.37], ["hop", 92.67], ["fırça", 92.98], ["sürdüm,", 93.59], ["her", 94.2], ["yer", 94.51], ["renk", 94.81], ["renk", 95.12], ["doldu", 95.43]], "end": 96.04, "who": "fistik", "pass_": 2}, {"tag": "p2.3", "section": "verse 2", "words": [["Pırt", 96.36], ["pırt", 96.7], ["boya", 97.05], ["döktüm,", 97.74], ["muz", 98.44], ["sarı", 98.79], ["oldu", 99.48]], "end": 100.17, "who": "fistik", "pass_": 2}, {"tag": "p2.4", "section": "verse 2", "words": [["Hop", 100.5], ["hop", 100.81], ["fırça", 101.12], ["sürdüm,", 101.73], ["her", 102.34], ["yer", 102.65], ["renk", 102.95], ["renk", 103.26], ["doldu", 103.56]], "end": 104.18, "who": "fistik", "pass_": 2}, {"tag": "p2.5", "section": "verse 3", "words": [["Pırt", 104.5], ["pırt", 104.78], ["boya", 105.07], ["döktüm,", 105.65], ["balık", 106.22], ["hip-hop,", 106.8], ["rap", 107.37], ["oldu", 107.66]], "end": 108.24, "who": "fistik", "pass_": 2}, {"tag": "p2.6", "section": "verse 3", "words": [["Hop", 108.56], ["hop", 108.86], ["fırça", 109.18], ["sürdüm,", 109.79], ["her", 110.39], ["yer", 110.7], ["renk", 111.01], ["renk", 111.31], ["doldu", 111.62]], "end": 112.23, "who": "fistik", "pass_": 2}, {"tag": "p2.7", "section": "verse 4", "words": [["Pırt", 128.67], ["pırt", 128.96], ["boya", 129.26], ["döktüm,", 129.84], ["kurbağa", 130.43], ["yeşil", 131.31], ["oldu", 131.9]], "end": 132.49, "who": "fistik", "pass_": 2}, {"tag": "p2.8", "section": "verse 4", "words": [["Hop", 132.82], ["hop", 133.12], ["fırça", 133.42], ["sürdüm,", 134.02], ["her", 134.62], ["yer", 134.92], ["renk", 135.22], ["renk", 135.52], ["doldu", 135.82]], "end": 136.42, "who": "fistik", "pass_": 2}, {"tag": "p2.9", "section": "verse 5", "words": [["Pırt", 136.73], ["pırt", 137.08], ["boya", 137.42], ["döktüm,", 138.12], ["üzüm", 138.81], ["mor", 139.51], ["oldu", 139.85]], "end": 140.55, "who": "fistik", "pass_": 2}, {"tag": "p2.10", "section": "verse 5", "words": [["Hop", 140.88], ["hop", 141.18], ["fırça", 141.48], ["sürdüm,", 142.08], ["her", 142.68], ["yer", 142.98], ["renk", 143.28], ["renk", 143.58], ["doldu", 143.87]], "end": 144.47, "who": "fistik", "pass_": 2}, {"tag": "p2.11", "section": "verse 6", "words": [["Pırt", 144.79], ["pırt", 145.07], ["boya", 145.36], ["döktüm,", 145.94], ["havuç", 146.51], ["turuncu", 147.09], ["oldu", 147.95]], "end": 148.53, "who": "fistik", "pass_": 2}, {"tag": "p2.12", "section": "verse 6", "words": [["Hop", 148.86], ["hop", 149.16], ["fırça", 149.47], ["sürdüm,", 150.08], ["her", 150.69], ["yer", 151.0], ["renk", 151.3], ["renk", 151.61], ["doldu", 151.91]], "end": 152.53, "who": "fistik", "pass_": 2}, {"tag": "p2.13", "section": "final chorus", "words": [["Gökkuşağı", 152.85], ["çıktı", 153.77], ["gökte,", 154.23], ["yedi", 154.69], ["renk", 155.15], ["bir", 155.38], ["sepette", 155.61]], "end": 156.3, "who": "all", "pass_": 2}, {"tag": "p2.14", "section": "final chorus", "words": [["Pırt", 156.6], ["pırt", 156.93], ["pırt,", 157.26], ["fıstık", 157.6], ["fil,", 158.27], ["hey", 158.6], ["hey", 158.94], ["hey!", 159.27]], "end": 159.61, "who": "all", "pass_": 2}];
+  const D = /*DUR*/, END = D, TAU = Math.PI * 2, OL = "#4C76B5", INK = "#2B2D42", PEN = "#55556A";
+  const LINES = /*LINES*/;
   const BEAT = 60 / 118;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const smooth = (e0, e1, x) => { const k = clamp((x - e0) / (e1 - e0), 0, 1); return k * k * (3 - 2 * k); };
@@ -115,109 +115,11 @@
   const NIGHT0 = END - 7.5, MOON0 = END - 6.4, WAVE0 = END - 5.5, CARD0 = END - 3.0;
 
   // ───────── Fıstık rig ─────────
-  function leg(c) { return `<path d="M-38 -30 L38 -30 L38 74 Q38 104 0 104 Q-38 104 -38 74 Z" fill="${c}"/><path d="M-38 -6 L-38 74 Q-38 104 0 104 Q38 104 38 74 L38 -6" fill="none" stroke="${OL}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
-      <g fill="#EEF5FD" stroke="${OL}" stroke-width="2"><ellipse cx="-20" cy="96" rx="9" ry="6"/><ellipse cx="0" cy="99" rx="9" ry="6"/><ellipse cx="20" cy="96" rx="9" ry="6"/></g>`; }
-  function ear() { return `<path d="M222 168 C128 92 26 160 44 278 C60 374 160 386 222 322 Z" fill="url(#gEar)" stroke="${OL}" stroke-width="5" stroke-linejoin="round"/>
-      <path d="M205 196 C140 146 76 192 88 272 C100 336 164 344 205 302 Z" fill="#F7B3C8"/>`; }
-
-  // ───────────────────────── Fıstık rig (SVG) ─────────────────────────
-  $("#char").innerHTML = `
-  <svg viewBox="0 0 600 640">
-    <defs>
-      <radialGradient id="gHead" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#C4E1FD"/><stop offset=".6" stop-color="#A3CAF2"/><stop offset="1" stop-color="#85B1E6"/></radialGradient>
-      <radialGradient id="gBody" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#B5D6F8"/><stop offset="1" stop-color="#7FA9DE"/></radialGradient>
-      <radialGradient id="gEar" cx="60%" cy="40%" r="80%"><stop offset="0" stop-color="#A6CBF2"/><stop offset="1" stop-color="#7DA6DC"/></radialGradient>
-      <linearGradient id="gTrunk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A2C8F1"/><stop offset="1" stop-color="#7AA6DD"/></linearGradient>
-      <linearGradient id="gHat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD966"/><stop offset="1" stop-color="#FFB627"/></linearGradient>
-      <clipPath id="cEyeL"><ellipse cx="248" cy="246" rx="34" ry="41"/></clipPath>
-      <clipPath id="cEyeR"><ellipse cx="352" cy="246" rx="34" ry="41"/></clipPath>
-      <clipPath id="cHat"><path d="M156 196 C160 60 440 60 444 196 Z"/></clipPath>
-    </defs>
-    <g id="rig">
-      <g id="tail"><path d="M432 470 Q482 452 494 492" stroke="${OL}" stroke-width="18" fill="none" stroke-linecap="round"/>
-        <path d="M432 470 Q482 452 494 492" stroke="#8DB6E8" stroke-width="10" fill="none" stroke-linecap="round"/>
-        <path d="M486 488 q8 22 -2 30 q16 -4 18 -24 z" fill="#5E86C2" stroke="${OL}" stroke-width="3"/></g>
-      <g id="legBL">${leg("#86AEE2")}</g><g id="legBR">${leg("#86AEE2")}</g>
-      <g id="earL">${ear()}</g><g id="earR">${ear()}</g>
-      <ellipse cx="300" cy="462" rx="146" ry="116" fill="url(#gBody)" stroke="${OL}" stroke-width="5"/>
-      <g id="legFL">${leg("#8DB4E6")}</g><g id="legFR">${leg("#8DB4E6")}</g>
-      <ellipse cx="300" cy="482" rx="92" ry="66" fill="#D3E7FA"/>
-      <g id="head">
-        <ellipse cx="300" cy="236" rx="152" ry="141" fill="url(#gHead)" stroke="${OL}" stroke-width="5"/>
-        <g id="hat">
-          <path d="M156 196 C160 60 440 60 444 196 Q300 170 156 196Z" fill="url(#gHat)" stroke="#D9861A" stroke-width="5"/>
-          <g clip-path="url(#cHat)" opacity=".9"><path d="M150 120 Q300 92 450 120" stroke="#FF8A3D" stroke-width="16" fill="none"/><path d="M150 152 Q300 126 450 152" stroke="#FF8A3D" stroke-width="16" fill="none"/></g>
-          <path d="M150 194 Q300 160 450 194 L452 218 Q300 186 148 218Z" fill="#FF9F1C" stroke="#D9861A" stroke-width="5" stroke-linejoin="round"/>
-          <g id="pom"><circle cx="300" cy="74" r="30" fill="#FF6B4A" stroke="#C94A2E" stroke-width="5"/><circle cx="290" cy="64" r="9" fill="#FF9F86"/></g>
-        </g>
-        <ellipse cx="203" cy="304" rx="27" ry="16" fill="#FF8FAB" opacity=".7"/><ellipse cx="397" cy="304" rx="27" ry="16" fill="#FF8FAB" opacity=".7"/>
-        <g id="eyes">
-          <ellipse cx="248" cy="246" rx="34" ry="41" fill="#fff" stroke="#2B2D42" stroke-width="3.5"/>
-          <ellipse cx="352" cy="246" rx="34" ry="41" fill="#fff" stroke="#2B2D42" stroke-width="3.5"/>
-          <g id="pupils">
-            <circle cx="254" cy="254" r="24" fill="#2B2D42"/><circle cx="358" cy="254" r="24" fill="#2B2D42"/>
-            <circle cx="263" cy="243" r="8.5" fill="#fff"/><circle cx="367" cy="243" r="8.5" fill="#fff"/>
-            <circle cx="248" cy="265" r="3.8" fill="#fff"/><circle cx="352" cy="265" r="3.8" fill="#fff"/>
-          </g>
-          <g clip-path="url(#cEyeL)"><rect id="lidL" x="210" y="200" width="80" height="0" fill="#9EC6F0"/></g>
-          <g clip-path="url(#cEyeR)"><rect id="lidR" x="314" y="200" width="80" height="0" fill="#9EC6F0"/></g>
-        </g>
-        <clipPath id="cMouth"><path id="mouthClip" d=""/></clipPath><path id="mouth" d="" fill="#8C2F45" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
-        <g clip-path="url(#cMouth)"><ellipse id="tongue" cx="252" cy="350" rx="16" ry="0" fill="#FF8FA3"/></g>
-        <g id="trunk"><path id="trunkShadow" fill="rgba(40,70,130,.22)" transform="translate(7 9)"/><path id="trunkFill" fill="url(#gTrunk)"/><path id="trunkLine" fill="none" stroke="${OL}" stroke-width="5" stroke-linejoin="round"/>
-          <path id="trunkWr" fill="none" stroke="#6F9AD3" stroke-width="4" stroke-linecap="round"/><ellipse id="nostril" rx="12" ry="7" fill="#6F9AD3"/></g>
-      </g>
-    </g>
-  </svg>`;
-  const E = (id) => document.getElementById(id);
-  const el = { rig: E("rig"), tail: E("tail"), earL: E("earL"), earR: E("earR"), head: E("head"), pom: E("pom"), pupils: E("pupils"),
-    lidL: E("lidL"), lidR: E("lidR"), mouth: E("mouth"), mclip: E("mouthClip"), tongue: E("tongue"), tf: E("trunkFill"), ts: E("trunkShadow"), tl: E("trunkLine"), tw: E("trunkWr"), nos: E("nostril"),
-    legs: [E("legFL"), E("legFR"), E("legBL"), E("legBR")] };
-  const LEGP = [[250, 518, 0], [350, 518, Math.PI], [218, 500, Math.PI], [382, 500, 0]];  // pivot x,y, phase
-
-  // trunk geometry: base at TB, TN segments, direction A + C·f²
-  const TB = [300, 298], TN = 9, TL = 22;
-  function trunkGeom(A, C, TLx = TL) {
-    const P = [[TB[0], TB[1]]], ANG = [];
-    for (let i = 0; i < TN; i++) { const f = i / (TN - 1), a = (A + C * f * f) * Math.PI / 180; ANG.push(a);
-      const p = P[P.length - 1]; P.push([p[0] + TLx * Math.cos(a), p[1] + TLx * Math.sin(a)]); }
-    ANG.push(ANG[ANG.length - 1]);
-    return { P, ANG };
-  }
-  function drawTrunk(A, C, Lx) {
-    const { P, ANG } = trunkGeom(A, C, Lx), Lp = [], Rp = [];
-    P.forEach((p, i) => { const w = (60 - 26 * i / TN) / 2, a = ANG[i], nx = -Math.sin(a), ny = Math.cos(a);
-      Lp.push([p[0] + nx * w, p[1] + ny * w]); Rp.push([p[0] - nx * w, p[1] - ny * w]); });
-    const f = (q) => q[0].toFixed(1) + " " + q[1].toFixed(1), wt = (60 - 26) / 2;
-    const side = "M" + Lp.map(f).join(" L") + ` A${wt} ${wt} 0 0 0 ` + f(Rp[TN]) + " L" + Rp.slice(0, TN).reverse().map(f).join(" L");
-    el.tf.setAttribute("d", side + " Z"); el.tl.setAttribute("d", side); el.ts.setAttribute("d", side + " Z");
-    let wr = ""; [3, 4, 5].forEach((i) => { const a = Lp[i], b = Rp[i], m = P[i];
-      const ax = m[0] + (a[0] - m[0]) * 0.55, ay = m[1] + (a[1] - m[1]) * 0.55, bx = m[0] + (b[0] - m[0]) * 0.55, by = m[1] + (b[1] - m[1]) * 0.55;
-      wr += `M${ax.toFixed(1)} ${ay.toFixed(1)} Q${(m[0] + Math.cos(ANG[i]) * 5).toFixed(1)} ${(m[1] + Math.sin(ANG[i]) * 5).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)} `; });
-    el.tw.setAttribute("d", wr);
-    const tp = P[TN], ta = ANG[TN], nx = tp[0] + Math.cos(ta) * 4, ny = tp[1] + Math.sin(ta) * 4;
-    el.nos.setAttribute("cx", nx.toFixed(1)); el.nos.setAttribute("cy", ny.toFixed(1));
-    el.nos.setAttribute("transform", `rotate(${(ta * 180 / Math.PI + 90).toFixed(1)} ${nx.toFixed(1)} ${ny.toFixed(1)})`);
-  }
-  const tipLocal = (A, C, Lx) => trunkGeom(A, C, Lx).P[TN];
-
+/*RIG*/
   const REST = [88, -140, 22], TRUMPET = [25, -110, 28], PUSH = [20, 70, 26], HOLD = [5, 40, 26], GRAB = [-20, 90, 27];
 
   // ───────── art ─────────
-  const APPLE = (c) => `<path d="M0 -70 C-70 -100 -120 -40 -110 20 C-100 90 -50 120 0 100 C50 120 100 90 110 20 C120 -40 70 -100 0 -70Z" fill="${c}" stroke="${OL}" stroke-width="6"/><path d="M0 -70 Q4 -105 30 -120" stroke="#6B4A2B" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M20 -100 Q60 -140 90 -110 Q60 -80 20 -100Z" fill="#5BBE57" stroke="${OL}" stroke-width="5"/><ellipse cx="-50" cy="-10" rx="16" ry="10" fill="#fff" opacity=".6"/>`;
-  const BANANA = (c) => `<path d="M-120 -40 Q-40 120 110 -20 Q80 60 -80 90 Q-130 40 -120 -40Z" fill="${c}" stroke="${OL}" stroke-width="6" stroke-linejoin="round"/><path d="M-115 -30 Q-40 90 95 -15" stroke="#FFF2B0" stroke-width="8" fill="none" opacity=".8"/><path d="M104 -24 L124 -34" stroke="#6B4A2B" stroke-width="10" stroke-linecap="round"/>`;
-  const FISH = (c) => `<g class="fishBody"><path d="M-70 0 L-120 -40 Q-105 0 -120 40Z" fill="${c}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/><ellipse cx="0" cy="0" rx="90" ry="58" fill="${c}" stroke="${INK}" stroke-width="5"/><path d="M-10 -50 Q-20 0 -10 50" stroke="#fff" stroke-width="9" fill="none" opacity=".5" stroke-linecap="round"/><ellipse cx="40" cy="-14" rx="17" ry="20" fill="#fff" stroke="${INK}" stroke-width="3.5"/><circle cx="46" cy="-12" r="9" fill="${INK}"/><path d="M52 22 Q64 32 74 18" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
-  const FROG = (c) => `<ellipse cx="0" cy="0" rx="110" ry="70" fill="${c}" stroke="${INK}" stroke-width="6"/><circle cx="-60" cy="-70" r="34" fill="${c}" stroke="${INK}" stroke-width="6"/><circle cx="60" cy="-70" r="34" fill="${c}" stroke="${INK}" stroke-width="6"/><circle cx="-60" cy="-74" r="16" fill="#fff"/><circle cx="60" cy="-74" r="16" fill="#fff"/><circle cx="-56" cy="-72" r="7" fill="${INK}"/><circle cx="64" cy="-72" r="7" fill="${INK}"/><path d="M-50 20 Q0 60 50 20" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round"/>`;
-  const GRAPES = (c) => { let s = `<path d="M0 -150 Q10 -190 60 -200" stroke="#6B4A2B" stroke-width="10" fill="none" stroke-linecap="round"/>`;
-    [[-40, -60], [40, -60], [0, -20], [-70, 20], [-20, 40], [40, 30], [0, 90], [-40, 110], [40, 110]].forEach(([x, y]) => { s += `<circle cx="${x}" cy="${y}" r="38" fill="${c}" stroke="${OL}" stroke-width="5"/><circle cx="${x - 12}" cy="${y - 12}" r="9" fill="#fff" opacity=".5"/>`; });
-    return s; };
-  const CARROT = (c) => `<path d="M-60 -20 L60 -20 L0 170 Z" fill="${c}" stroke="${OL}" stroke-width="6" stroke-linejoin="round"/><path d="M-30 20 L-10 30 M20 60 L40 66 M-10 110 L10 116" stroke="#C25A0A" stroke-width="6" stroke-linecap="round"/><path d="M0 -20 Q-30 -90 -70 -100 Q-40 -60 0 -20Z M0 -20 Q10 -100 30 -130 Q30 -70 0 -20Z M0 -20 Q50 -80 90 -80 Q50 -40 0 -20Z" fill="#5BBE57" stroke="${OL}" stroke-width="5"/>`;
-  const SUN = (c) => { let r = ""; for (let i = 0; i < 12; i++) { const a = i * TAU / 12; r += `<line x1="${(Math.cos(a) * 100).toFixed(1)}" y1="${(Math.sin(a) * 100).toFixed(1)}" x2="${(Math.cos(a) * 140).toFixed(1)}" y2="${(Math.sin(a) * 140).toFixed(1)}" stroke="${c}" stroke-width="14" stroke-linecap="round"/>`; }
-    return `${r}<circle r="90" fill="${c}" stroke="${OL}" stroke-width="6"/><g class="sunEyes"><circle cx="-30" cy="-20" r="10" fill="${INK}"/><circle cx="30" cy="-20" r="10" fill="${INK}"/></g><path d="M-30 20 Q0 48 30 20" stroke="${INK}" stroke-width="7" fill="none" stroke-linecap="round"/>`; };
-
-  // [id, x, y, scale, art, colour, colourStart, grayCss]
-  const RAINBOW_COLS = ["#FF5A5F", "#FF9F1C", "#FFD43B", "#3FBF6F", "#3D9BFF", "#4C76B5", "#A66BFF"];
-
+/*ART*/
   const ART = { apple: APPLE, banana: BANANA, fish: FISH, frog: FROG, grapes: GRAPES, carrot: CARROT, sun: SUN };
 
   // ───────── table ─────────
