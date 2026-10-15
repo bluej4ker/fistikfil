@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; background: #000; }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+  canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  .abs { position: absolute; }
+  #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 0 0; }
+  #char svg { width: 600px; height: 640px; overflow: visible; }
+</style>
+</head>
+<body>
+<div id="root">
+  <canvas id="cvBack"></canvas>
+  <div id="charWrap" class="abs"><div id="char"></div></div>
+  <canvas id="cvFront"></canvas>
+</div>
+<script>
+// ═════════════════════════════════════════════════════════════════════════════
+// Bölüm 10 eskiz: Canvas 2D ortam + SVG Fıstık. render(t) saf fonksiyon (seek-güvenli).
+//   t < 10  → göl üstü (gündüz)      t ≥ 10 → göl altı (renk saklambacı, hortum feneri)
+// ═════════════════════════════════════════════════════════════════════════════
+const W = 1920, H = 1080, DPR = window.devicePixelRatio || 1;
+const $ = (s) => document.querySelector(s), OL = "#4C76B5";
+const cvs = ["cvBack", "cvFront"].map((id) => { const c = document.getElementById(id); c.width = W * DPR; c.height = H * DPR; return c; });
+const [bx, fx] = cvs.map((c) => { const x = c.getContext("2d"); x.setTransform(DPR, 0, 0, DPR, 0, 0); return x; });
+const off = (w = W, h = H) => { const c = document.createElement("canvas"); c.width = w * DPR; c.height = h * DPR; const x = c.getContext("2d"); x.setTransform(DPR, 0, 0, DPR, 0, 0); return [c, x]; };
+const [skyC, skyX] = off(), [murkC, murkX] = off();
+
+// deterministic random
+function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+const lerp = (a, b, k) => a + (b - a) * k, clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const sstep = (a, b, x) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+
+// ───────────────────────── shared painters ─────────────────────────
+function cloud(x, cx, cy, s, t) {
+  // cumulus: big central dome + side puffs, flat shaded base (not a row of bubbles)
+  const R = rng(Math.floor(cx * 7 + cy)), wob = Math.sin(t * .07 + cy) * 18;
+  const puffs = [[0, -40, 78], [-70, -14, 58], [72, -18, 62], [-128, 6, 40], [130, 4, 44], [-30, -70, 50], [38, -66, 46]].map(([px, py, r]) => [px * s + (R() - .5) * 8 * s, py * s, r * s * (.9 + R() * .2)]);
+  const base = 26 * s;
+  x.save(); x.translate(cx + wob, cy);
+  x.beginPath(); x.rect(-260 * s, -200 * s, 520 * s, 200 * s + base); x.clip();
+  const shape = () => { x.beginPath(); for (const [px, py, r] of puffs) { x.moveTo(px + r, py); x.arc(px, py, r, 0, 7); } };
+  shape(); let g = x.createLinearGradient(0, -120 * s, 0, base); g.addColorStop(0, "#FFFFFF"); g.addColorStop(.55, "#F4F9FF"); g.addColorStop(1, "#C9DDF0"); x.fillStyle = g; x.fill();
+  // top-left light, inner shading per puff
+  for (const [px, py, r] of puffs) { g = x.createRadialGradient(px - r * .35, py - r * .5, r * .05, px, py, r); g.addColorStop(0, "rgba(255,255,255,.9)"); g.addColorStop(.7, "rgba(255,255,255,0)"); x.fillStyle = g; x.beginPath(); x.arc(px, py, r, 0, 7); x.fill(); }
+  x.restore();
+  x.save(); x.translate(cx + wob, cy); g = x.createLinearGradient(0, base - 14 * s, 0, base + 4); g.addColorStop(0, "rgba(160,190,220,0)"); g.addColorStop(1, "rgba(160,190,220,.35)");
+  x.fillStyle = g; x.fillRect(-200 * s, base - 14 * s, 400 * s, 18 * s); x.restore();
+}
+function ridge(x, y0, amp, seed, col0, col1, freq = 1) {
+  const R = rng(seed), ph = [R() * 6, R() * 6, R() * 6];
+  const yAt = (px) => y0 - amp * (0.55 * Math.sin(px * .0031 * freq + ph[0]) + .3 * Math.sin(px * .0083 * freq + ph[1]) + .15 * Math.sin(px * .021 * freq + ph[2]) + .9);
+  x.beginPath(); x.moveTo(0, H); for (let px = 0; px <= W; px += 8) x.lineTo(px, yAt(px)); x.lineTo(W, H); x.closePath();
+  const g = x.createLinearGradient(0, y0 - amp * 1.8, 0, y0 + 40); g.addColorStop(0, col0); g.addColorStop(1, col1); x.fillStyle = g; x.fill();
+  return yAt;
+}
+function tree(x, tx, ty, s, seed, cDark, cLight) {
+  const R = rng(seed);
+  x.fillStyle = "#7A5236"; x.beginPath(); x.roundRect(tx - 9 * s, ty - 70 * s, 18 * s, 74 * s, 6 * s); x.fill();
+  const blobs = Array.from({ length: 7 }, () => [tx + (R() - .5) * 110 * s, ty - 110 * s - R() * 90 * s, (42 + R() * 30) * s]);
+  x.fillStyle = cDark; for (const [px, py, r] of blobs) { x.beginPath(); x.arc(px, py + 10 * s, r, 0, 7); x.fill(); }
+  for (const [px, py, r] of blobs) { const g = x.createRadialGradient(px - r * .4, py - r * .5, r * .1, px, py, r);
+    g.addColorStop(0, cLight); g.addColorStop(1, cDark); x.fillStyle = g; x.beginPath(); x.arc(px, py, r * .92, 0, 7); x.fill(); }
+}
+// cute fish, facing right; colour set {body, belly, fin, line}
+const FISHC = {
+  red: { b0: "#FF6B6F", b1: "#D92B3C", belly: "#FFC2B8", fin: "#FF9A8C", line: "#A8283A" },
+  yellow: { b0: "#FFE36A", b1: "#F4B21E", belly: "#FFF4C2", fin: "#FFD65C", line: "#B9790E" },
+  blue: { b0: "#6CC6FF", b1: "#2C86E0", belly: "#CDEBFF", fin: "#8DD3FF", line: "#1B5DA8" },
+  green: { b0: "#8EE27A", b1: "#3FA84A", belly: "#D9F7C8", fin: "#A9EC8E", line: "#26733A" },
+};
+function fish(x, cx, cy, s, col, t, { rot = 0, alpha = 1, blink = 0, mouthO = 0, flip = 1 } = {}) {
+  const C = FISHC[col], wig = Math.sin(t * 9) * 0.22;
+  x.save(); x.globalAlpha = alpha; x.translate(cx, cy); x.rotate(rot); x.scale(s * flip, s); x.lineJoin = "round"; x.lineCap = "round";
+  // tail
+  x.save(); x.translate(-108, 0); x.rotate(wig);
+  x.beginPath(); x.moveTo(12, 0); x.bezierCurveTo(-30, -20, -70, -70, -86, -58); x.bezierCurveTo(-64, -20, -64, 20, -86, 58); x.bezierCurveTo(-70, 70, -30, 20, 12, 0); x.closePath();
+  let g = x.createLinearGradient(-86, 0, 12, 0); g.addColorStop(0, C.fin); g.addColorStop(1, C.b1); x.fillStyle = g; x.fill(); x.lineWidth = 7; x.strokeStyle = C.line; x.stroke();
+  x.strokeStyle = "rgba(255,255,255,.45)"; x.lineWidth = 3; for (const k of [-1, 0, 1]) { x.beginPath(); x.moveTo(-6, k * 4); x.lineTo(-62, k * 34); x.stroke(); }
+  x.restore();
+  // dorsal + pelvic fins
+  x.beginPath(); x.moveTo(-40, -70); x.quadraticCurveTo(0, -128 + wig * 20, 46, -78); x.closePath(); x.fillStyle = C.fin; x.fill(); x.lineWidth = 6; x.strokeStyle = C.line; x.stroke();
+  // body
+  x.beginPath(); x.moveTo(126, 4); x.bezierCurveTo(118, -70, 30, -98, -40, -78); x.bezierCurveTo(-96, -60, -122, -24, -120, 0); x.bezierCurveTo(-122, 24, -96, 60, -40, 78); x.bezierCurveTo(30, 98, 118, 74, 126, 4); x.closePath();
+  g = x.createRadialGradient(10, -46, 10, 0, 0, 140); g.addColorStop(0, C.b0); g.addColorStop(1, C.b1); x.fillStyle = g; x.fill();
+  x.save(); x.clip();
+  x.fillStyle = C.belly; x.beginPath(); x.ellipse(10, 58, 110, 46, 0, 0, 7); x.fill();                          // belly
+  x.strokeStyle = "rgba(255,255,255,.35)"; x.lineWidth = 4;                                                         // scale arcs
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) { x.beginPath(); x.arc(-70 + c * 36 + (r % 2) * 18, -34 + r * 30, 16, -1.2, 1.2); x.stroke(); }
+  g = x.createLinearGradient(0, -98, 0, -20); g.addColorStop(0, "rgba(255,255,255,.55)"); g.addColorStop(1, "rgba(255,255,255,0)");   // rim light
+  x.fillStyle = g; x.beginPath(); x.ellipse(10, -64, 96, 26, -.08, 0, 7); x.fill();
+  x.restore();
+  x.lineWidth = 7; x.strokeStyle = C.line; x.beginPath(); x.moveTo(126, 4); x.bezierCurveTo(118, -70, 30, -98, -40, -78); x.bezierCurveTo(-96, -60, -122, -24, -120, 0); x.bezierCurveTo(-122, 24, -96, 60, -40, 78); x.bezierCurveTo(30, 98, 118, 74, 126, 4); x.closePath(); x.stroke();
+  // side fin
+  x.beginPath(); x.moveTo(8, 18); x.quadraticCurveTo(-34, 46 + wig * 30, -18, 66); x.quadraticCurveTo(14, 52, 8, 18); x.fillStyle = C.fin; x.fill(); x.lineWidth = 5; x.stroke();
+  // cheek, eye, mouth
+  x.fillStyle = "rgba(255,120,150,.45)"; x.beginPath(); x.ellipse(64, 30, 18, 11, 0, 0, 7); x.fill();
+  x.fillStyle = "#fff"; x.beginPath(); x.ellipse(70, -16, 30, 34 * (1 - blink * .9), 0, 0, 7); x.fill(); x.lineWidth = 4.5; x.strokeStyle = "#2B2D42"; x.stroke();
+  if (blink < .7) { x.fillStyle = "#2B2D42"; x.beginPath(); x.arc(78, -12, 18, 0, 7); x.fill(); x.fillStyle = "#fff"; x.beginPath(); x.arc(85, -21, 7, 0, 7); x.fill(); x.beginPath(); x.arc(72, -2, 3, 0, 7); x.fill(); }
+  x.lineWidth = 5; x.strokeStyle = "#2B2D42"; x.beginPath();
+  if (mouthO > .05) { x.fillStyle = "#8C2F45"; x.ellipse(116, 20, 9, 7 + 9 * mouthO, 0, 0, 7); x.fill(); x.stroke(); } else { x.arc(104, 18, 12, .2, 1.6); x.stroke(); }
+  x.restore();
+}
+function strawberry(x, cx, cy, s) {
+  x.save(); x.translate(cx, cy); x.scale(s, s); x.lineJoin = "round";
+  x.beginPath(); x.moveTo(0, 70); x.bezierCurveTo(-60, 30, -66, -40, -34, -50); x.bezierCurveTo(-14, -58, 14, -58, 34, -50); x.bezierCurveTo(66, -40, 60, 30, 0, 70); x.closePath();
+  const g = x.createRadialGradient(-16, -24, 6, 0, 0, 80); g.addColorStop(0, "#FF7A7E"); g.addColorStop(1, "#D62F43"); x.fillStyle = g; x.fill(); x.lineWidth = 6; x.strokeStyle = "#A8283A"; x.stroke();
+  x.fillStyle = "#FFE7A3"; const R = rng(5); for (let i = 0; i < 16; i++) { const px = (R() - .5) * 70, py = -34 + R() * 86; if (Math.abs(px) < 40 - py * .35) { x.beginPath(); x.ellipse(px, py, 3.5, 5, 0, 0, 7); x.fill(); } }
+  x.fillStyle = "#4FB548"; x.strokeStyle = "#26733A"; x.lineWidth = 5;
+  for (const a of [-1.1, -.4, .3, 1.0]) { x.beginPath(); x.ellipse(Math.sin(a) * 26, -56 - Math.cos(a) * 6, 24, 10, a * .6, 0, 7); x.fill(); x.stroke(); }
+  x.restore();
+}
+function lilyPad(x, cx, cy, r, rot, t) {
+  x.save(); x.translate(cx, cy + Math.sin(t * 1.3 + cx) * 2); x.scale(1, .34); x.rotate(rot);
+  x.beginPath(); x.moveTo(0, 0); x.arc(0, 0, r, .22, Math.PI * 2 - .02); x.closePath();
+  const g = x.createRadialGradient(-r * .3, -r * .3, r * .1, 0, 0, r); g.addColorStop(0, "#8FDB6F"); g.addColorStop(1, "#3F9E45"); x.fillStyle = g; x.fill();
+  x.lineWidth = 9; x.strokeStyle = "#2D7A36"; x.stroke();
+  x.strokeStyle = "rgba(255,255,255,.25)"; x.lineWidth = 5; for (let k = 0; k < 6; k++) { const a = .4 + k * 1.0; x.beginPath(); x.moveTo(0, 0); x.lineTo(Math.cos(a) * r * .85, Math.sin(a) * r * .85); x.stroke(); }
+  x.restore();
+}
+function lotus(x, cx, cy, s) {
+  x.save(); x.translate(cx, cy); x.scale(s, s);
+  for (const [a, c] of [[-1.0, "#F48FB8"], [1.0, "#F48FB8"], [-.5, "#F9A8C9"], [.5, "#F9A8C9"], [0, "#FFC2DA"]]) {
+    x.save(); x.rotate(a * .7); x.beginPath(); x.moveTo(0, 0); x.bezierCurveTo(-20, -24, -12, -58, 0, -66); x.bezierCurveTo(12, -58, 20, -24, 0, 0);
+    x.fillStyle = c; x.fill(); x.lineWidth = 3.5; x.strokeStyle = "#C2507F"; x.stroke(); x.restore(); }
+  x.fillStyle = "#FFD45C"; x.beginPath(); x.arc(0, -10, 9, 0, 7); x.fill(); x.restore();
+}
+function grassBank(x, t) {
+  // bank shape (foreground, bottom-left), soft gradient + blade strokes
+  x.beginPath(); x.moveTo(0, 790); x.bezierCurveTo(360, 760, 760, 830, 980, 1000); x.lineTo(1000, H); x.lineTo(0, H); x.closePath();
+  let g = x.createLinearGradient(0, 760, 0, H); g.addColorStop(0, "#8FD45F"); g.addColorStop(1, "#4E9E3C"); x.fillStyle = g; x.fill();
+  const edge = () => { x.beginPath(); x.moveTo(0, 790); x.bezierCurveTo(360, 760, 760, 830, 980, 1000); x.lineTo(1000, H + 20); };
+  x.save(); edge(); x.lineWidth = 26; x.strokeStyle = `rgba(235,252,255,${.35 + .1 * Math.sin(t * 2)})`; x.stroke(); x.restore();
+  edge(); x.lineWidth = 8; x.strokeStyle = "#3F8A35"; x.stroke();
+  g = x.createRadialGradient(560, 905, 10, 560, 905, 170); g.addColorStop(0, "rgba(30,80,30,.38)"); g.addColorStop(1, "rgba(30,80,30,0)");
+  x.save(); x.translate(0, 905); x.scale(1, .28); x.translate(0, -905); x.fillStyle = g; x.beginPath(); x.arc(560, 905, 170, 0, 7); x.fill(); x.restore();
+  const R = rng(77); x.lineCap = "round";
+  for (let i = 0; i < 520; i++) {
+    const px = R() * 1000, base = 800 + (px / 1000) * 190 + R() * 280; if (base > H + 10) continue;
+    const hgt = 18 + R() * 26, lean = Math.sin(t * 1.6 + px * .02) * 5 + (R() - .5) * 10;
+    x.strokeStyle = R() < .5 ? "#6CBD4A" : "#A6E36F"; x.lineWidth = 3 + R() * 2;
+    x.beginPath(); x.moveTo(px, base); x.quadraticCurveTo(px + lean * .4, base - hgt * .6, px + lean, base - hgt); x.stroke();
+  }
+  for (const [px, py, c] of [[120, 900, "#FFFFFF"], [260, 960, "#FFD45C"], [420, 930, "#FF8FAB"], [610, 1010, "#FFFFFF"], [180, 1040, "#FF8FAB"], [770, 1050, "#FFD45C"]]) {
+    x.fillStyle = c; for (let k = 0; k < 5; k++) { x.beginPath(); x.arc(px + Math.cos(k * 1.256) * 9, py + Math.sin(k * 1.256) * 9, 7, 0, 7); x.fill(); }
+    x.fillStyle = "#FFB627"; x.beginPath(); x.arc(px, py, 5, 0, 7); x.fill();
+  }
+}
+function reeds(x, baseX, t, n, seed) {
+  const R = rng(seed);
+  for (let i = 0; i < n; i++) {
+    const px = baseX + R() * 220, h = 220 + R() * 200, sway = Math.sin(t * 1.4 + i) * 10;
+    x.strokeStyle = "#4C8F3A"; x.lineWidth = 7; x.lineCap = "round";
+    x.beginPath(); x.moveTo(px, H + 10); x.quadraticCurveTo(px + sway * .3, H - h * .5, px + sway, H - h); x.stroke();
+    if (R() < .55) { x.fillStyle = "#8A5A33"; x.beginPath(); x.ellipse(px + sway * .95, H - h + 30, 11, 34, sway * .01, 0, 7); x.fill(); }
+    x.strokeStyle = "#6DB54C"; x.lineWidth = 6; x.beginPath(); x.moveTo(px, H + 10); x.quadraticCurveTo(px - 30 - R() * 40, H - h * .4, px - 70 - R() * 50 + sway, H - h * .55); x.stroke();
+  }
+}
+
+// ───────────────────────── scene A: göl üstü ─────────────────────────
+const HZ = 560;   // horizon / far shore line
+function sceneAbove(t) {
+  // sky + far world into skyC (also used for the reflection)
+  const s = skyX; s.clearRect(0, 0, W, H);
+  let g = s.createLinearGradient(0, 0, 0, HZ); g.addColorStop(0, "#5BB8F2"); g.addColorStop(.6, "#9BD6F7"); g.addColorStop(1, "#DDF3FD"); s.fillStyle = g; s.fillRect(0, 0, W, HZ + 2);
+  const SX = 1480, SY = 170;   // sun glow
+  g = s.createRadialGradient(SX, SY, 10, SX, SY, 520); g.addColorStop(0, "rgba(255,248,214,.95)"); g.addColorStop(.15, "rgba(255,240,180,.55)"); g.addColorStop(1, "rgba(255,240,180,0)"); s.fillStyle = g; s.fillRect(0, 0, W, HZ);
+  g = s.createRadialGradient(SX - 20, SY - 20, 4, SX, SY, 74); g.addColorStop(0, "#FFFBE0"); g.addColorStop(1, "#FFD45C"); s.fillStyle = g; s.beginPath(); s.arc(SX, SY, 70, 0, 7); s.fill();
+  cloud(s, 360, 170, 1.15, t); cloud(s, 900, 110, .8, t); cloud(s, 1770, 300, .7, t); cloud(s, 1180, 260, .55, t);
+  ridge(s, HZ - 60, 120, 3, "#B7D4EC", "#CFE5F5", .8);                                                         // far mountains (hazy)
+  ridge(s, HZ - 8, 70, 11, "#9CCB8E", "#B7DDA4", 1.3);                                                         // mid hills
+  for (const [tx, sc, sd] of [[180, .72, 1], [310, .6, 2], [1300, .66, 3], [1420, .8, 4], [1560, .62, 5], [1700, .74, 6]]) tree(s, tx, HZ + 4, sc, sd, "#4E9C4E", "#8FD37A");
+  g = s.createLinearGradient(0, HZ - 60, 0, HZ); g.addColorStop(0, "rgba(230,245,255,0)"); g.addColorStop(1, "rgba(230,245,255,.55)"); s.fillStyle = g; s.fillRect(0, HZ - 60, W, 60);   // aerial haze
+  s.fillStyle = "#7CC46A"; s.fillRect(0, HZ - 2, W, 6);                                                         // far shore
+  // ── compose to back canvas
+  const x = bx; x.clearRect(0, 0, W, H); x.drawImage(skyC, 0, 0, W, H);
+  // lake water body
+  g = x.createLinearGradient(0, HZ, 0, H); g.addColorStop(0, "#9FDDF0"); g.addColorStop(.35, "#4FB8D2"); g.addColorStop(1, "#1F8BAA"); x.fillStyle = g; x.fillRect(0, HZ, W, H - HZ);
+  // reflection: mirrored sky slices with ripple displacement, fading with depth
+  for (let y = HZ; y < H; y += 2) {
+    const d = (y - HZ) / (H - HZ), srcY = HZ - (y - HZ) * 1.05; if (srcY < 0) break;
+    const dx = Math.sin(y * .09 + t * 2.4) * (2 + 16 * d) + Math.sin(y * .23 - t * 1.7) * 3 * d;
+    x.globalAlpha = .55 * (1 - d * .85);
+    x.drawImage(skyC, 0, srcY * DPR, W * DPR, 2 * DPR, dx, y, W, 2);
+  }
+  x.globalAlpha = 1;
+  // sun glitter path + wave highlights
+  const R = rng(9);
+  for (let i = 0; i < 260; i++) {
+    const y = HZ + 6 + Math.pow(R(), 1.7) * (H - HZ), d = (y - HZ) / (H - HZ), wx = R() * W, len = 10 + 60 * d * R();
+    const nearSun = Math.exp(-Math.pow((wx - 1480) / (140 + 300 * d), 2)), tw = .5 + .5 * Math.sin(t * 3 + i * 1.7);
+    x.strokeStyle = `rgba(255,255,255,${(.1 + .7 * nearSun) * tw})`; x.lineWidth = 1.5 + 3 * d;
+    x.beginPath(); x.moveTo(wx - len / 2, y); x.lineTo(wx + len / 2, y); x.stroke();
+  }
+  // lily pads & lotus
+  for (const [px, py, r, ro] of [[1020, 700, 70, .4], [1150, 760, 90, 2.1], [1600, 690, 60, 1.2], [1730, 820, 110, 4.0], [880, 640, 46, 3.0], [1420, 640, 40, 5.1]]) lilyPad(x, px, py, r, ro, t);
+  lotus(x, 1700, 812, .9); lotus(x, 1030, 692, .65);
+  // jumping red fish + splash + rings (t-driven)
+  const ph = (t % 3.2) / 3.2, jx = 1240 + ph * 160, jy = 690 - Math.sin(ph * Math.PI) * 260;
+  for (let k = 0; k < 3; k++) { const rr = ((t * .7 + k / 3) % 1); x.strokeStyle = `rgba(255,255,255,${.6 * (1 - rr)})`; x.lineWidth = 3; x.beginPath(); x.ellipse(1240, 700, 30 + rr * 160, (30 + rr * 160) * .25, 0, 0, 7); x.stroke(); }
+  bx.save(); fish(x, jx, jy, .62, "red", t, { rot: (ph - .5) * -1.6 }); bx.restore();
+  for (let i = 0; i < 14; i++) { const a = -Math.PI * (.1 + .8 * i / 13), sp = 60 + (i % 4) * 24, dd = clamp(ph * 2.2);
+    x.fillStyle = `rgba(230,250,255,${.9 * (1 - dd)})`; x.beginPath(); x.arc(1240 + Math.cos(a) * sp * dd, 700 + Math.sin(a) * sp * dd * 1.4 + 120 * dd * dd, 7 * (1 - dd * .5), 0, 7); x.fill(); }
+  // bank + reeds
+  grassBank(x, t);
+  // Fıstık placement (SVG layer) — stands on the bank
+  placeFistik(560, 905, .62, 1);
+  // front layer: reeds right, light rays, vignette, grain
+  const f = fx; f.clearRect(0, 0, W, H);
+  reeds(f, 1740, t, 9, 21);
+  g = f.createRadialGradient(1480, 170, 50, 1480, 170, 1500); g.addColorStop(0, "rgba(255,236,170,.22)"); g.addColorStop(1, "rgba(255,236,170,0)");
+  f.globalCompositeOperation = "screen"; f.fillStyle = g; f.fillRect(0, 0, W, H); f.globalCompositeOperation = "source-over";
+  vignette(f, .28); grain(f, t, .035);
+}
+
+// ───────────────────────── scene B: göl altı ─────────────────────────
+function caustics(x, t, y0, y1, alpha) {
+  x.save(); x.globalCompositeOperation = "lighter"; x.lineWidth = 3;
+  for (let k = 0; k < 2; k++) for (let i = 0; i < 26; i++) {
+    x.beginPath();
+    for (let px = -40; px <= W + 40; px += 24) {
+      const base = y0 + (i / 25) * (y1 - y0), w = Math.sin(px * .012 + i * 1.7 + t * (k ? 1.1 : -.8)) * 22 + Math.sin(px * .031 - t * 1.6 + i) * 9;
+      const py = base + w * (k ? 1 : -1); px === -40 ? x.moveTo(px, py) : x.lineTo(px, py);
+    }
+    x.strokeStyle = `rgba(200,255,255,${alpha * (.5 + .5 * Math.sin(i + t))})`; x.stroke();
+  }
+  x.restore();
+}
+function kelp(x, kx, h, t, seed, col0, col1) {
+  const R = rng(seed), segs = 14, pts = [];
+  for (let i = 0; i <= segs; i++) { const k = i / segs; pts.push([kx + Math.sin(t * 1.1 + k * 3 + seed) * 40 * k * k + Math.sin(k * 6 + seed) * 6, H + 20 - h * k]); }
+  x.lineCap = "round"; x.lineJoin = "round";
+  const g = x.createLinearGradient(0, H, 0, H - h); g.addColorStop(0, col0); g.addColorStop(1, col1);
+  x.strokeStyle = g; x.lineWidth = 22; x.beginPath(); pts.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py))); x.stroke();
+  x.fillStyle = col1;
+  for (let i = 2; i < segs; i += 2) { const [px, py] = pts[i], side = i % 4 ? 1 : -1, a = Math.sin(t * 1.4 + i) * .3;
+    x.save(); x.translate(px, py); x.rotate(side * (.9 + a)); x.beginPath(); x.ellipse(28, 0, 34, 12, 0, 0, 7); x.fill(); x.restore(); }
+}
+function coral(x, cx, cy, s, seed, c0, c1) {
+  const R = rng(seed);
+  function br(px, py, a, len, w, d) {
+    const ex = px + Math.cos(a) * len, ey = py + Math.sin(a) * len;
+    x.strokeStyle = c1; x.lineWidth = w + 6; x.beginPath(); x.moveTo(px, py); x.lineTo(ex, ey); x.stroke();
+    x.strokeStyle = c0; x.lineWidth = w; x.beginPath(); x.moveTo(px, py); x.lineTo(ex, ey); x.stroke();
+    if (d > 0) { br(ex, ey, a - .45 - R() * .3, len * .72, w * .78, d - 1); br(ex, ey, a + .4 + R() * .3, len * .7, w * .78, d - 1); }
+    else { x.fillStyle = c0; x.beginPath(); x.arc(ex, ey, w * .9, 0, 7); x.fill(); }
+  }
+  x.save(); x.translate(cx, cy); x.scale(s, s); x.lineCap = "round"; br(0, 0, -Math.PI / 2, 90, 26, 3); x.restore();
+}
+function sceneBelow(t) {
+  const x = bx; x.clearRect(0, 0, W, H);
+  // bright water column (≈60 % of daylight, never black — Fable notu)
+  let g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#7FE0F0"); g.addColorStop(.45, "#3FB6D3"); g.addColorStop(1, "#1E86AE"); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  // surface seen from below (wavy bright band)
+  x.beginPath(); x.moveTo(0, 0); for (let px = 0; px <= W; px += 10) x.lineTo(px, 46 + Math.sin(px * .013 + t * 1.5) * 10 + Math.sin(px * .041 - t) * 4); x.lineTo(W, 0); x.closePath();
+  g = x.createLinearGradient(0, 0, 0, 60); g.addColorStop(0, "#E9FDFF"); g.addColorStop(1, "#A6EEF7"); x.fillStyle = g; x.fill();
+  caustics(x, t, 60, 300, .05);
+  // god rays
+  x.save(); x.globalCompositeOperation = "lighter";
+  for (let i = 0; i < 7; i++) {
+    const rx = 180 + i * 270 + Math.sin(t * .4 + i) * 40, w0 = 50 + (i % 3) * 30, sk = 260;
+    g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "rgba(255,255,230,.30)"); g.addColorStop(1, "rgba(255,255,230,0)");
+    x.fillStyle = g; x.beginPath(); x.moveTo(rx, 0); x.lineTo(rx + w0, 0); x.lineTo(rx + w0 + sk + 120, H); x.lineTo(rx + sk - 60, H); x.closePath(); x.fill();
+  }
+  x.restore();
+  // far silhouettes (depth haze): rocks & kelp
+  x.fillStyle = "rgba(30,110,150,.45)";
+  for (let i = 0; i < 9; i++) { x.beginPath(); x.ellipse(i * 240 + 60, 860, 160, 90, 0, Math.PI, 0); x.fill(); }
+  for (let i = 0; i < 12; i++) kelp(x, 80 + i * 165, 380 + (i % 3) * 90, t * .8, 30 + i, "rgba(40,120,110,.55)", "rgba(70,150,120,.5)");
+  // sand floor with dunes + caustics
+  x.beginPath(); x.moveTo(0, 880); for (let px = 0; px <= W; px += 12) x.lineTo(px, 880 + Math.sin(px * .006) * 26 + Math.sin(px * .017 + 1) * 10); x.lineTo(W, H); x.lineTo(0, H); x.closePath();
+  g = x.createLinearGradient(0, 860, 0, H); g.addColorStop(0, "#F3DFA2"); g.addColorStop(1, "#D9B66E"); x.fillStyle = g; x.fill();
+  x.save(); x.clip(); caustics(x, t, 870, H, .16); x.restore();
+  // mid-ground life: coral (red), starfish (yellow), seaweed (green), rocks
+  coral(x, 1260, 930, 1.0, 3, "#FF6B6B", "#C83C4C"); coral(x, 1370, 950, .8, 8, "#FF8A80", "#C83C4C"); coral(x, 1170, 960, .7, 12, "#FF5A5F", "#B9324A");
+  for (const [sx, sy, sr, ro] of [[560, 990, 34, .3], [1640, 1010, 28, 1.1]]) { x.save(); x.translate(sx, sy); x.rotate(ro); x.beginPath();
+    for (let k = 0; k < 10; k++) { const a = k * Math.PI / 5, r = k % 2 ? sr * .45 : sr; x.lineTo(Math.cos(a) * r, Math.sin(a) * r * .7); } x.closePath();
+    x.fillStyle = "#FFC23D"; x.fill(); x.lineWidth = 5; x.strokeStyle = "#C8861A"; x.stroke(); x.restore(); }
+  for (let i = 0; i < 5; i++) kelp(x, 1620 + i * 52, 520 + i * 40, t, 50 + i, "#2F8A3E", "#6FD06A");
+  for (const [rx, ry, rw] of [[300, 1000, 140], [880, 1030, 110], [1880, 990, 120]]) { g = x.createRadialGradient(rx - rw * .3, ry - 40, 10, rx, ry, rw); g.addColorStop(0, "#9AA7B5"); g.addColorStop(1, "#5E6E80"); x.fillStyle = g; x.beginPath(); x.ellipse(rx, ry, rw, rw * .55, 0, Math.PI, 0); x.fill(); }
+  // hidden red fish among the coral (pale until the lantern hits it) + crab buddy
+  const hit = sstep(.2, 1.4, (t - 10) % 6);                          // lantern sweep reaches the fish
+  fish(x, 1290, 820, .42, "red", t, { alpha: .35 + .65 * hit, blink: hit < .3 ? 1 : 0, flip: -1 });
+  crab(x, 760, 1000, .9, t);
+  // Fıstık diving (SVG) — floats mid-left, trunk = lantern
+  placeFistik(560, 860, .58, 1, true, t);
+  // front: lantern cone, bubbles, particles, vignette, grain
+  const f = fx; f.clearRect(0, 0, W, H);
+  const tip = [560 + 130, 860 - 230], tgt = [lerp(900, 1290, hit), lerp(760, 820, hit)];
+  const ang = Math.atan2(tgt[1] - tip[1], tgt[0] - tip[0]), len = Math.hypot(tgt[0] - tip[0], tgt[1] - tip[1]) + 140;
+  f.save(); f.globalCompositeOperation = "lighter"; f.translate(tip[0], tip[1]); f.rotate(ang);
+  g = f.createLinearGradient(0, 0, len, 0); g.addColorStop(0, "rgba(255,250,200,.55)"); g.addColorStop(1, "rgba(255,250,200,.05)");
+  f.fillStyle = g; f.beginPath(); f.moveTo(0, -10); f.lineTo(len, -150); f.quadraticCurveTo(len + 60, 0, len, 150); f.lineTo(0, 10); f.closePath(); f.fill(); f.restore();
+  g = f.createRadialGradient(tgt[0], tgt[1], 10, tgt[0], tgt[1], 190); g.addColorStop(0, `rgba(255,250,210,${.35 * hit})`); g.addColorStop(1, "rgba(255,250,210,0)");
+  f.fillStyle = g; f.fillRect(0, 0, W, H);
+  const R = rng(44);
+  for (let i = 0; i < 26; i++) { const bxp = R() * W, sp = 40 + R() * 70, by = H - ((t * sp + R() * H) % (H + 80)), br = 4 + R() * 12;
+    f.strokeStyle = "rgba(255,255,255,.75)"; f.lineWidth = 2.5; f.beginPath(); f.arc(bxp + Math.sin(t * 2 + i) * 8, by, br, 0, 7); f.stroke();
+    f.fillStyle = "rgba(255,255,255,.8)"; f.beginPath(); f.arc(bxp + Math.sin(t * 2 + i) * 8 - br * .35, by - br * .35, br * .25, 0, 7); f.fill(); }
+  for (let i = 0; i < 70; i++) { f.fillStyle = `rgba(230,255,255,${.25 + .25 * Math.sin(t + i)})`; f.beginPath(); f.arc((R() * W + t * 6) % W, (R() * H + Math.sin(t * .5 + i) * 20), 1.5 + R() * 2, 0, 7); f.fill(); }
+  g = f.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(1, "rgba(10,60,100,.22)"); f.fillStyle = g; f.fillRect(0, 0, W, H);
+  vignette(f, .3); grain(f, t, .03);
+}
+function crab(x, cx, cy, s, t) {
+  x.save(); x.translate(cx, cy + Math.abs(Math.sin(t * 4)) * -6); x.scale(s, s); x.lineJoin = "round"; x.lineCap = "round";
+  x.strokeStyle = "#B9324A"; x.lineWidth = 8; for (const k of [-1, 1]) for (let i = 0; i < 3; i++) { x.beginPath(); x.moveTo(k * 30, 10 + i * 8); x.lineTo(k * (66 + i * 4), 30 + i * 10 + Math.sin(t * 8 + i) * 4); x.stroke(); }
+  for (const k of [-1, 1]) { x.beginPath(); x.moveTo(k * 36, -6); x.lineTo(k * 70, -40); x.stroke(); x.fillStyle = "#FF6B5A"; x.beginPath(); x.ellipse(k * 78, -52, 20, 15, k * .5, 0, 7); x.fill(); x.lineWidth = 5; x.stroke(); x.lineWidth = 8; }
+  const g = x.createRadialGradient(-12, -16, 4, 0, 0, 60); g.addColorStop(0, "#FF8A78"); g.addColorStop(1, "#E04848"); x.fillStyle = g; x.beginPath(); x.ellipse(0, 4, 52, 34, 0, 0, 7); x.fill(); x.lineWidth = 6; x.stroke();
+  for (const k of [-1, 1]) { x.strokeStyle = "#B9324A"; x.lineWidth = 5; x.beginPath(); x.moveTo(k * 14, -24); x.lineTo(k * 18, -46); x.stroke(); x.fillStyle = "#fff"; x.beginPath(); x.arc(k * 18, -52, 10, 0, 7); x.fill(); x.stroke(); x.fillStyle = "#2B2D42"; x.beginPath(); x.arc(k * 19, -51, 5, 0, 7); x.fill(); }
+  x.strokeStyle = "#2B2D42"; x.lineWidth = 4; x.beginPath(); x.arc(0, 4, 12, .3, 2.8); x.stroke(); x.restore();
+}
+function vignette(x, a) { const g = x.createRadialGradient(W / 2, H / 2, H * .45, W / 2, H / 2, H * 1.05); g.addColorStop(0, "rgba(0,20,40,0)"); g.addColorStop(1, `rgba(0,20,40,${a})`); x.fillStyle = g; x.fillRect(0, 0, W, H); }
+function grain(x, t, a) { const R = rng(Math.floor(t * 30) + 1); x.fillStyle = `rgba(255,255,255,${a})`; for (let i = 0; i < 2600; i++) x.fillRect(R() * W, R() * H, 1.4, 1.4); x.fillStyle = `rgba(0,0,0,${a})`; for (let i = 0; i < 2600; i++) x.fillRect(R() * W, R() * H, 1.4, 1.4); }
+
+// ───────────────────────── Fıstık (SVG rig) ─────────────────────────
+/*RIG*/
+el.legs.forEach((g, i) => g.setAttribute("transform", `translate(${LEGP[i][0]} ${LEGP[i][1]})`));
+el.earR.setAttribute("transform", "translate(600 0) scale(-1 1)");
+// diving mask + lantern (only under water)
+const NS = "http://www.w3.org/2000/svg";
+const mask = document.createElementNS(NS, "g"); mask.setAttribute("id", "diveMask");
+mask.innerHTML = `<path d="M182 206 Q300 176 418 206 L414 292 Q360 312 300 290 Q240 312 186 292 Z" fill="rgba(190,240,255,.35)" stroke="#2B6CB0" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M206 222 Q240 214 262 222" stroke="rgba(255,255,255,.9)" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M182 226 Q120 236 152 200 M418 226 Q480 236 448 200" stroke="#FF8A3D" stroke-width="14" fill="none" stroke-linecap="round"/>`;
+el.head.appendChild(mask);
+const lamp = document.createElementNS(NS, "g"); lamp.innerHTML = `<rect x="-18" y="-14" width="36" height="28" rx="8" fill="#FFC23D" stroke="#C8861A" stroke-width="5"/><circle cx="20" cy="0" r="12" fill="#FFF7C2" stroke="#C8861A" stroke-width="4"/>`;
+el.head.appendChild(lamp);
+function placeFistik(x, y, sc, face, under = false, t = 0) {
+  const pose = under ? [-28, 30, 25] : [70, -120, 23];                 // under water: trunk forward as a lantern
+  drawTrunk(pose[0] + 2 * Math.sin(t * 2), pose[1], pose[2]);
+  mask.style.display = under ? "" : "none"; lamp.style.display = under ? "" : "none";
+  if (under) { const tp = tipLocal(pose[0], pose[1], pose[2]); lamp.setAttribute("transform", `translate(${tp[0].toFixed(1)} ${tp[1].toFixed(1)}) rotate(${pose[0] + pose[1]})`); }
+  const my = 334, mo = under ? 0 : .35;
+  const md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * mo).toFixed(1)} 224 ${my} Z`; el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md);
+  el.mouth.setAttribute("fill", mo > .04 ? "#8C2F45" : "none"); el.tongue.setAttribute("ry", mo > .15 ? 12 * mo : 0);
+  el.pupils.setAttribute("transform", under ? "translate(10 2)" : "translate(8 6)");
+  const bob = under ? Math.sin(t * 1.2) * 14 : 0, rot = under ? -8 + Math.sin(t * .9) * 4 : 0;
+  $("#charWrap").style.transform = `translate(${x - 300 * sc}px, ${y - 620 * sc + bob}px) scale(${sc}) translate(300px, 620px) rotate(${rot}deg) scale(${face},1) translate(-300px, -620px)`;
+}
+
+function render(t) { t < 10 ? sceneAbove(t) : sceneBelow(t); }
+window.render = render;
+render(Number(new URLSearchParams(location.search).get("t") || 1.1));
+</script>
+</body>
+</html>
