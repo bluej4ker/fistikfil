@@ -1,0 +1,92 @@
+1
+00:00:08,457 --> 00:00:08,457
+[Intro]
+
+2
+00:00:08,457 --> 00:00:08,457
+[Instrumental]
+
+3
+00:00:08,457 --> 00:00:08,457
+[Verse 1]
+
+4
+00:00:08,457 --> 00:00:12,527
+Kırmızı balık gölde, yüzer yüzer, şap şap şap!
+
+5
+00:00:12,527 --> 00:00:16,755
+Fıstık Fil der: Merhaba! Balık der: Blup blup blup!
+
+6
+00:00:16,755 --> 00:00:22,899
+Kırmızı, kırmızı, çilek gibi kırmızı!
+
+7
+00:00:22,899 --> 00:00:22,899
+[Verse 2]
+
+8
+00:00:22,899 --> 00:00:26,968
+Sarı balık gölde, yüzer yüzer, şap şap şap!
+
+9
+00:00:26,968 --> 00:00:31,197
+Fıstık Fil der: Merhaba! Balık der: Blup blup blup!
+
+10
+00:00:31,197 --> 00:00:35,266
+Sarı, sarı, güneş gibi sarı!
+
+11
+00:00:35,266 --> 00:00:35,266
+[Verse 3]
+
+12
+00:00:35,266 --> 00:00:39,335
+Masmavi balık gölde, yüzer yüzer, şap şap şap!
+
+13
+00:00:39,335 --> 00:00:43,564
+Fıstık Fil der: Merhaba! Balık der: Blup blup blup!
+
+14
+00:00:43,564 --> 00:00:49,548
+Masmavi, masmavi, gökyüzü gibi masmavi!
+
+15
+00:00:49,548 --> 00:00:49,548
+[Verse 4]
+
+16
+00:00:49,548 --> 00:00:53,617
+Yeşil balık gölde, yüzer yüzer, şap şap şap!
+
+17
+00:00:53,617 --> 00:00:57,766
+Fıstık Fil der: Merhaba! Balık der: Blup blup blup!
+
+18
+00:00:57,766 --> 00:01:01,755
+Yeşil, yeşil, yaprak gibi yeşil!
+
+19
+00:01:01,755 --> 00:01:01,755
+[Final Chorus]
+
+20
+00:01:01,755 --> 00:01:01,755
+[Children’s choir joins]
+
+21
+00:01:01,755 --> 00:01:05,824
+Dört balık gölde, yüzer yüzer, şap şap şap!
+
+22
+00:01:05,824 --> 00:01:09,894
+Pırt pırt pırt, Fıstık Fil, hep beraber blup blup blup!
+
+23
+00:01:09,894 --> 00:01:19,894
+Kırmızı, sarı, masmavi, yeşil, gölde renk renk balıklar!
+
