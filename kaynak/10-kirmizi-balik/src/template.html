@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<script src="assets/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+  html, body { margin: 0; background: #000; }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: "Baloo 2", sans-serif; }
+  #world { position: absolute; inset: 0; }
+  canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  .abs { position: absolute; }
+  #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 0 0; }
+  #char svg { width: 600px; height: 640px; overflow: visible; }
+  #lyric { position: absolute; left: 50%; bottom: 46px; transform: translateX(-50%); white-space: nowrap; padding: 8px 34px 2px; border-radius: 40px;
+    background: rgba(255,255,255,.82); border: 4px solid rgba(255,255,255,.95); box-shadow: 0 6px 0 rgba(0,40,80,.15); font-size: 44px; font-weight: 700; color: #6B7A90; opacity: 0; }
+  #lyric b { font-weight: 800; color: #2B2D42; }
+  #lyric .snd { color: #E5484D; } #lyric .c-red { color: #E2404D; } #lyric .c-yellow { color: #E8A10E; } #lyric .c-blue { color: #2C86E0; } #lyric .c-green { color: #2F9A44; }
+  #bug { position: absolute; left: 34px; top: 26px; background: #fff; border-radius: 30px; padding: 4px 20px 0; font-size: 28px; font-weight: 800; box-shadow: 0 4px 0 rgba(0,0,0,.12); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="/*DUR*/" data-width="1920" data-height="1080">
+  <audio id="song" src="assets/song2x_mix.m4a" data-start="0" data-duration="/*DUR*/" data-volume="1"></audio>
+  <section id="world" class="clip" data-start="0" data-duration="/*DUR*/" data-track-index="0" data-layout-allow-overflow>
+    <canvas id="cvBack"></canvas>
+    <div id="charWrap" class="abs"><div id="char"></div></div>
+    <canvas id="cvFront"></canvas>
+    <canvas id="cvOver"></canvas>
+    <div id="lyric"></div>
+    <div id="bug"><span style="color:#3D9BFF">Fıstık</span> <span style="color:#FF7A3D">Fil</span></div>
+  </section>
+</div>
+<script>
+// ═══════════════════════ Bölüm 10 · Kırmızı Balık Gölde ═══════════════════════
+// Canvas 2D ortam (cvBack: dünya, cvFront: Fıstık'ın önündekiler, cvOver: ekran geçişleri) + SVG Fıstık rig.
+// Her şey render(t)'nin saf fonksiyonu (CLAUDE.md §6.3). Tur 2 = tur 1 + S.
+window.__timelines = window.__timelines || {};
+const W = 1920, H = 1080, DPR = window.devicePixelRatio || 1, D = /*DUR*/, S = 80.36;
+const $ = (s) => document.querySelector(s), OL = "#4C76B5";
+const LINES = /*LINES*/;
+const cv = ["cvBack", "cvFront", "cvOver"].map((id) => { const c = document.getElementById(id); c.width = W * DPR; c.height = H * DPR; return c.getContext("2d"); });
+const [bx, fx, ox] = cv;
+const off = () => { const c = document.createElement("canvas"); c.width = W * DPR; c.height = H * DPR; const x = c.getContext("2d"); x.setTransform(DPR, 0, 0, DPR, 0, 0); return [c, x]; };
+const [skyC, skyX] = off();
+
+/*PAINT*/
+
+// ─────────────── zaman yardımcıları ───────────────
+const io = (k) => (k = clamp(k), k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+const outB = (k, s = 1.8) => { k = clamp(k) - 1; return 1 + (s + 1) * k * k * k + s * k * k; };
+const win = (t, a, b, fi = .25, fo = .25) => Math.min(sstep(a - fi, a, t), 1 - sstep(b, b + fo, t));
+const pulse = (t, t0, d = .55) => { const k = (t - t0) / d; return k < 0 || k > 1 ? 0 : Math.sin(k * Math.PI); };
+const BEAT = 0.512, B0 = 0.16;
+const beatPh = (t) => ((t - B0) / BEAT) % 1;
+const WT = {}; LINES.forEach((L) => (WT[L.tag] = L.words.map((w) => w[1])));
+const wt = (p, tag, i) => WT[`p${p}.${tag}`][i];
+const VS = [7.8, 22.28, 34.54, 48.94], L2 = [12.2, 26.72, 39.14, 53.36], L3 = [16.34, 30.8, 43.26, 57.5], VE = [22.28, 34.54, 48.94, 60.96];
+const FIN = 60.96, F2 = 65.66, F3 = 69.66, F4 = 74.4, OUT = 77.54;
+const COLS = ["red", "yellow", "blue", "green"], HEX = { red: "#FF5A5F", yellow: "#FFC23D", blue: "#3D9BFF", green: "#3FBF6F" };
+// three colour beats of a colour line: word 0 (fish), word 2 (simile object), word 4 (both + ring)
+const cbeats = (p, k) => { const w = WT[`p${p}.v${k + 1}.3`]; return [w[0], w[2], w[4]]; };
+function jumpArc(u, t0, t1, x0, x1, y0, h) { const k = clamp((u - t0) / (t1 - t0)); return { x: lerp(x0, x1, k), y: y0 - 4 * h * k * (1 - k), rot: Math.atan2(-4 * h * (1 - 2 * k) / (t1 - t0), (x1 - x0) / (t1 - t0)) * .6, k }; }
+
+// ─────────────── kamera (olay listesi: [t, cx, cy, z, süre]) ───────────────
+const CAM1 = [[0, 960, 540, 1, 0], [0.4, 1010, 560, 1.04, 7], [7.6, 1150, 640, 1.22, 1], [12.0, 860, 690, 1.1, .8], [16.2, 1080, 660, 1.42, .7],
+  [21.8, 1250, 380, 1.12, .5], [22.6, 1250, 600, 1.2, 2.2], [26.6, 900, 690, 1.08, .8], [30.6, 1300, 420, 1.0, .8],
+  [34.4, 1150, 620, 1.15, .6], [35.3, 1150, 60, 1.05, 1.4], [37.0, 1200, -120, 1.05, 2], [43.0, 1150, -120, .92, .8], [46.4, 1050, 560, 1.0, 1.8],
+  [48.8, 830, 720, 1.22, .8], [57.3, 1330, 700, 1.6, .5], [60.8, 960, 560, 1.0, .6], [64.2, 620, 600, 1.45, .5], [65.6, 960, 470, .92, .9],
+  [74.3, 1000, 520, 1.0, 1], [77.4, 620, 650, 1.32, 1.0], [79.1, 960, 760, 1.5, .8]];
+const CAM2 = [[0, 960, 330, 1, 0], [0.3, 960, 540, 1, 5.5], [7.6, 1000, 600, 1.08, .8], [16.2, 1080, 700, 1.25, .7], [22.4, 1050, 760, 1.15, .8],
+  [30.6, 1080, 600, 1.1, .8], [34.4, 1000, 520, 1.0, .6], [43.1, 1050, 450, 1.1, .8], [48.8, 1150, 620, 1.12, .4], [49.3, 1000, 620, 1.12, 7.5],
+  [57.3, 1080, 640, 1.3, .5], [60.8, 960, 540, 1.0, .6], [63.3, 360, 790, 1.55, .4], [64.6, 960, 540, 1.0, .5], [65.8, 960, 520, 1.05, .8],
+  [66.6, 960, 160, 1.1, 1.2], [68.0, 960, 470, .92, 0], [74.3, 1000, 520, 1.0, 1], [77.4, 640, 600, 1.45, .9]];
+function camAt(u, K) {
+  let c = K[0].slice(1, 4);
+  for (const [t0, x, y, z, d] of K) { if (u < t0) break; const k = d > 0 ? io((u - t0) / d) : 1; c = [lerp(c[0], x, k), lerp(c[1], y, k), lerp(c[2], z, k)]; }
+  const z = Math.max(1, c[2]), hw = W / (2 * z), hh = H / (2 * z);
+  return [clamp(c[0], hw, W - hw), Math.min(c[1], H - hh), z];
+}
+let CAM = [960, 540, 1];
+const camOn = (x) => x.setTransform(DPR * CAM[2], 0, 0, DPR * CAM[2], DPR * (W / 2 - CAM[0] * CAM[2]), DPR * (H / 2 - CAM[1] * CAM[2]));
+const camOff = (x) => x.setTransform(DPR, 0, 0, DPR, 0, 0);
+const W2S = (x, y) => [(x - CAM[0]) * CAM[2] + W / 2, (y - CAM[1]) * CAM[2] + H / 2];
+
+// ─────────────── Fıstık rig ───────────────
+/*RIG*/
+el.legs.forEach((g, i) => g.setAttribute("transform", `translate(${LEGP[i][0]} ${LEGP[i][1]})`));
+const NS = "http://www.w3.org/2000/svg";
+const dmask = document.createElementNS(NS, "g");
+dmask.innerHTML = `<path d="M182 206 Q300 176 418 206 L414 292 Q360 312 300 290 Q240 312 186 292 Z" fill="rgba(190,240,255,.35)" stroke="#2B6CB0" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M206 222 Q240 214 262 222" stroke="rgba(255,255,255,.9)" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M182 226 Q120 236 152 200 M418 226 Q480 236 448 200" stroke="#FF8A3D" stroke-width="14" fill="none" stroke-linecap="round"/>`;
+el.head.appendChild(dmask);
+const lamp = document.createElementNS(NS, "g");
+lamp.innerHTML = `<rect x="-18" y="-14" width="36" height="28" rx="8" fill="#FFC23D" stroke="#C8861A" stroke-width="5"/><circle cx="20" cy="0" r="12" fill="#FFF7C2" stroke="#C8861A" stroke-width="4"/>`;
+el.head.appendChild(lamp);
+const POSE = { rest: [88, -140, 22], wave: [45, -150, 28], trumpet: [25, -110, 28], lantern: [-28, 30, 25], nose: [70, -250, 17], look: [80, -60, 24] };
+const mixP = (a, b, k) => a.map((v, i) => lerp(v, b[i], k));
+// st: {x, y, sc, rot, face, tr:[A,C,L], mo, blink, lx, ly, ea, legs, mask, lampOn, sq}
+function drawFistik(st) {
+  drawTrunk(st.tr[0], st.tr[1], st.tr[2]);
+  const my = 334, mo = st.mo, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * mo).toFixed(1)} 224 ${my} Z`;
+  el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", mo > .04 ? "#8C2F45" : "none");
+  el.tongue.setAttribute("ry", mo > .15 ? (12 * mo).toFixed(1) : 0); el.tongue.setAttribute("cy", (my + 6 + 24 * mo).toFixed(1));
+  el.lidL.setAttribute("height", (84 * st.blink).toFixed(1)); el.lidR.setAttribute("height", (84 * st.blink).toFixed(1));
+  el.pupils.setAttribute("transform", `translate(${(st.lx * 10).toFixed(1)} ${(st.ly * 9).toFixed(1)})`);
+  el.earL.setAttribute("transform", `rotate(${(-st.ea).toFixed(1)} 222 230)`);
+  el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-st.ea).toFixed(1)} 222 230)`);
+  el.legs.forEach((g, i) => g.setAttribute("transform", `translate(${LEGP[i][0]} ${LEGP[i][1]}) rotate(${(st.legs * Math.sin(st.lph + LEGP[i][2])).toFixed(1)})`));
+  dmask.style.display = st.mask ? "" : "none"; lamp.style.display = st.lampOn ? "" : "none";
+  if (st.lampOn) { const tp = tipLocal(st.tr[0], st.tr[1], st.tr[2]); lamp.setAttribute("transform", `translate(${tp[0].toFixed(1)} ${tp[1].toFixed(1)}) rotate(${(st.tr[0] + st.tr[1]).toFixed(1)})`); }
+  const [sx, sy] = W2S(st.x, st.y), s = st.sc * CAM[2];
+  $("#charWrap").style.display = st.hide ? "none" : "block";
+  $("#charWrap").style.transform = `translate(${(sx - 300 * s).toFixed(1)}px, ${(sy - 620 * s).toFixed(1)}px) scale(${s.toFixed(4)}) translate(300px, 620px) rotate(${st.rot.toFixed(2)}deg) scale(${st.face * (2 - st.sq)}, ${st.sq}) translate(-300px, -620px)`;
+}
+// Fıstık'ın hortum ucu (dünya koordinatı)
+function trunkTip(st) { const tp = tipLocal(st.tr[0], st.tr[1], st.tr[2]), r = st.rot * Math.PI / 180, lx = (tp[0] - 300) * st.sc * st.face, ly = (tp[1] - 620) * st.sc;
+  return [st.x + lx * Math.cos(r) - ly * Math.sin(r), st.y + lx * Math.sin(r) + ly * Math.cos(r)]; }
+const blinkAt = (t) => { const k = (t % 3.7) / 3.7; return k > .955 ? Math.sin((k - .955) / .045 * Math.PI) : 0; };
+
+// ═══════════════════════ TUR 1: göl üstü ═══════════════════════
+const HZ = 560, F1 = [560, 905, .62], BUSH = [930, 820];
+function redFish1(u) {
+  if (u < 7.9 || u > 22.3) return null;
+  let p;
+  if (u < 9.5) p = jumpArc(u, 8.2, 9.4, 1330, 1240, 715, 230);
+  else if (u < 11.2) p = jumpArc(u, 9.8, 11.0, 1240, 1180, 715, 160);
+  else if (u < 12.2) { const k = [11.32, 11.64, 11.98].map((a) => pulse(u, a, .32)).reduce((a, b) => Math.max(a, b)); p = { x: 1180, y: 700 - 46 * k, rot: 0 }; }
+  else p = { x: 1180, y: 700 + Math.sin(u * 2.2) * 5, rot: Math.sin(u * 1.4) * .05 };
+  const out = u > 21.4 ? sstep(21.4, 22.2, u) : 0;
+  return { ...p, y: p.y + 120 * out, col: "red", s: .62, surf: u > 11.2 ? 712 : null };
+}
+function yellowFish1(u) {
+  if (u < 24.4 || u > 34.6) return null;
+  let p;
+  if (u < 25.75) p = jumpArc(u, 24.5, 25.7, 1300, 1230, 720, 210);
+  else if (u < 26.7) { const k = [25.78, 26.12, 26.42].map((a) => pulse(u, a, .3)).reduce((a, b) => Math.max(a, b)); p = { x: 1230, y: 705 - 44 * k, rot: 0 }; }
+  else p = { x: 1230, y: 705 + Math.sin(u * 2.1) * 5, rot: Math.sin(u * 1.3) * .05 };
+  const out = sstep(33.9, 34.5, u);
+  return { ...p, y: p.y + 120 * out, col: "yellow", s: .62, surf: u > 25.75 ? 716 : null, blink: pulse(u, 32.0, .35) };
+}
+function blueFish1(u) {
+  if (u < 34.9 || u > 48.7) return null;
+  let p;
+  if (u < 36.6) p = jumpArc(u, 35.0, 36.6 + 1.0, 1250, 1150, 720, 1000), p.y = Math.max(p.y, -260);
+  else if (u < 46.5) p = { x: 1150 + Math.sin(u * .9) * 120, y: -230 + Math.sin(u * 1.7) * 40, rot: Math.cos(u * .9) * .25 };
+  else { const k = io((u - 46.5) / 1.9); p = { x: lerp(1150 + Math.sin(46.5 * .9) * 120, 1150, k), y: lerp(-230 + Math.sin(46.5 * 1.7) * 40, 700, k), rot: 0 }; }
+  return { ...p, col: "blue", s: .62, surf: u > 48.3 ? 712 : null };
+}
+const PADG = [1160, 760];
+function greenFish1(u) {
+  if (u < 49.0 || u > 61.0) return null;
+  if (u < 50.4) { const p = jumpArc(u, 49.1, 50.3, 1420, PADG[0], 730, 200); return { ...p, col: "green", s: .58 }; }
+  if (u < 57.5) return null;                                               // under the lily pad
+  const k = outB((u - 57.5) / .6);
+  return { x: PADG[0], y: lerp(770, 700, k) + Math.sin(u * 2) * 4, rot: 0, col: "green", s: .58, surf: 714, hat: true };
+}
+function finalFish1(u, i) {   // 0 red, 1 yellow, 2 blue, 3 green
+  const T0 = [61.0, 62.1, 62.8, 63.6][i], X = [1500, 1360, 1220, 1080][i];
+  if (u < T0) return null;
+  if (i === 3 && u < 69) {                                                  // green lands on Fıstık's head (Fable #7)
+    if (u < 64.6) { const p = jumpArc(u, T0, 64.6, X + 120, 600, 720, 260); return { ...p, col: "green", s: .5, front: true }; }
+    if (u < 68.1) return { x: 590, y: 498 + Math.sin(u * 4) * 3, rot: -.15, col: "green", s: .42, front: true, flip: 1 };
+    const p = jumpArc(u, 68.1, 69.0, 590, X, 498, 140); return { ...p, col: "green", s: .5, front: u < 68.7 };
+  }
+  if (u < T0 + 1.1) { const p = jumpArc(u, T0, T0 + 1.1, X + 120, X, 720, 220); return { ...p, col: COLS[i], s: .55 }; }
+  // slide down the rainbow on its colour word (f.3)
+  const TS = [69.66, 70.62, 71.4, 72.86][i], R = 470 - i * 30, top = [1000, 760 - R * .9 - 20];
+  if (u > TS - .75 && u < TS) { const p = jumpArc(u, TS - .75, TS, X, top[0], 705, 120 + (705 - top[1])); return { ...p, y: Math.max(p.y, top[1] - 40), col: COLS[i], s: .5, flip: 1 }; }   // hop up onto the rainbow
+  if (u >= TS && u < TS + 1.2) { const k = io((u - TS) / 1.2), a = Math.PI * (1.5 + .5 * k);                                     // slide down its own colour band
+    return { x: 1000 + Math.cos(a) * R, y: 760 + Math.sin(a) * R * .9 - 20, rot: a - Math.PI * 1.5 + .3, col: COLS[i], s: .5, flip: 1 }; }
+  const back = u > TS ? sstep(TS + 1.2, TS + 1.8, u) : 1, xr = u > TS ? lerp(1000 + R, X, back) : X;
+  const hop = Math.max(pulse(u, 75.64 + i * .05, .5), pulse(u, 76.34 + i * .05, .5));
+  return { x: xr, y: 705 - 120 * hop + Math.sin(u * 2 + i) * 4, rot: 0, col: COLS[i], s: .52, surf: hop > .2 ? null : 716 };
+}
+function strawberry1(u) {
+  if (u < 16.3 || u > 22.2) return null;
+  const nose = [1100, 640];
+  if (u < 17.2) { const k = io((u - 16.3) / .9); return { x: lerp(BUSH[0] + 30, nose[0], k), y: lerp(BUSH[1] - 40, nose[1], k) - Math.sin(k * Math.PI) * 180 }; }
+  if (u < 20.6) { const b = Math.abs(Math.sin((u - 17.2) * Math.PI / .55)); return { x: nose[0], y: nose[1] - 120 * b }; }
+  return { x: lerp(nose[0], nose[0] - 20, sstep(20.6, 21.2, u)), y: lerp(nose[1], 712, sstep(20.6, 21.2, u)) + 60 * sstep(21.6, 22.2, u) };
+}
+function sceneAbove(t, u, P) {
+  const x = bx; camOff(x); x.clearRect(0, 0, W, H); camOn(x);
+  // extended sky above the frame (blue fish swims there in verse 3)
+  let g = x.createLinearGradient(0, -1300, 0, HZ); g.addColorStop(0, "#2E8FD8"); g.addColorStop(.6, "#7FC6F4"); g.addColorStop(1, "#DDF3FD"); x.fillStyle = g; x.fillRect(-1200, -1400, W + 2400, HZ + 1402);
+  for (const [cx, cy, s] of [[700, -420, 1.0], [1500, -560, .9], [1050, -150, .7], [300, -760, 1.1], [1800, -260, .75], [1250, -360, .55]]) cloud(x, cx, cy, s, t);
+  // sky (sun follows verse 2: dips to its reflection, then back up with a face)
+  const sunDip = P === 1 ? win(u, 22.4, 26.6, 1.6, 1.2) : 0;
+  const SX = 1480, SY = lerp(170, 470, sunDip);
+  const s = skyX; s.setTransform(DPR, 0, 0, DPR, 0, 0); s.clearRect(0, 0, W, H);
+  g = s.createLinearGradient(0, -1300, 0, HZ); g.addColorStop(0, "#2E8FD8"); g.addColorStop(.6, "#7FC6F4"); g.addColorStop(1, "#DDF3FD"); s.fillStyle = g; s.fillRect(0, 0, W, HZ + 2);
+  const face = P === 1 ? sstep(30.6, 31.0, u) * (1 - sstep(34.2, 34.6, u)) : 0;
+  const sp = P === 1 ? pulse(u, cbeats(1, 1)[1]) + pulse(u, cbeats(1, 1)[2]) : 0;
+  const sunR = 70 * (1 + .25 * sp + .6 * face), wink = pulse(u, 31.55, .45) > .3 ? 1 : 0;
+  sunDisk(x, SX, SY, sunR, t, face, wink); sunDisk(s, SX, SY, sunR, t, face, wink);
+  cloud(s, 360, 200, 1.15, t); cloud(s, 900, 170, .8, t); cloud(s, 1770, 300, .7, t); cloud(s, 1180, 260, .55, t);
+  ridge(s, HZ - 60, 120, 3, "#B7D4EC", "#CFE5F5", .8); ridge(s, HZ - 8, 70, 11, "#9CCB8E", "#B7DDA4", 1.3);
+  for (const [tx, sc, sd] of [[180, .72, 1], [310, .6, 2], [1300, .66, 3], [1420, .8, 4], [1560, .62, 5], [1700, .74, 6]]) tree(s, tx, HZ + 4, sc, sd, "#4E9C4E", "#8FD37A");
+  g = s.createLinearGradient(0, HZ - 60, 0, HZ); g.addColorStop(0, "rgba(230,245,255,0)"); g.addColorStop(1, "rgba(230,245,255,.55)"); s.fillStyle = g; s.fillRect(0, HZ - 60, W, 60);
+  s.fillStyle = "#7CC46A"; s.fillRect(0, HZ - 2, W, 6);
+  x.drawImage(skyC, 0, 0, W, H);
+  // lake: body, wide edges for camera, rippled reflection, glitter
+  g = x.createLinearGradient(0, HZ, 0, H); g.addColorStop(0, "#9FDDF0"); g.addColorStop(.35, "#4FB8D2"); g.addColorStop(1, "#1F8BAA"); x.fillStyle = g; x.fillRect(-1200, HZ, W + 2400, H - HZ + 600);
+  for (let y = HZ; y < H; y += 2) { const d = (y - HZ) / (H - HZ), srcY = HZ - (y - HZ) * 1.05; if (srcY < 0) break;
+    x.globalAlpha = .55 * (1 - d * .85); x.drawImage(skyC, 0, srcY * DPR, W * DPR, 2 * DPR, Math.sin(y * .09 + t * 2.4) * (2 + 16 * d) + Math.sin(y * .23 - t * 1.7) * 3 * d, y, W, 2); }
+  x.globalAlpha = 1;
+  // verse 2: the sun's reflection disc on the water — the yellow fish leaps out of it
+  const refl = P === 1 ? win(u, 23.2, 25.0, 1.0, .8) : 0;
+  if (refl > 0) { g = x.createRadialGradient(1300, 722, 4, 1300, 722, 150); g.addColorStop(0, `rgba(255,236,140,${.95 * refl})`); g.addColorStop(1, "rgba(255,236,140,0)");
+    x.save(); x.translate(0, 722); x.scale(1, .32); x.translate(0, -722); x.fillStyle = g; x.beginPath(); x.arc(1300, 722, 150, 0, 7); x.fill(); x.restore(); }
+  const R = rng(9);
+  for (let i = 0; i < 260; i++) { const y = HZ + 6 + Math.pow(R(), 1.7) * (H - HZ), d = (y - HZ) / (H - HZ), wx = R() * W, len = 10 + 60 * d * R();
+    const near = Math.exp(-Math.pow((wx - SX) / (140 + 300 * d), 2)), tw = .5 + .5 * Math.sin(t * 3 + i * 1.7);
+    x.strokeStyle = `rgba(255,255,255,${(.1 + .7 * near) * tw})`; x.lineWidth = 1.5 + 3 * d; x.beginPath(); x.moveTo(wx - len / 2, y); x.lineTo(wx + len / 2, y); x.stroke(); }
+  // rainbow + fountain (final)
+  const rb = P === 1 ? sstep(66.4, 68.4, u) : sstep(69.0, 70.6, u);
+  if (rb > 0) rainbowArc(x, 1000, 760, 520, rb, P === 1 ? 1 - sstep(80.0, 80.4, u) : 1);
+  // lily pads (the big one hides the green fish in verse 4 and lifts at "yeşil")
+  for (const [px, py, r, ro] of [[1020, 700, 70, .4], [1600, 690, 60, 1.2], [1730, 820, 110, 4.0], [880, 640, 46, 3.0], [1420, 640, 40, 5.1]]) lilyPad(x, px, py, r, ro, t);
+  const padLift = P === 1 ? sstep(57.4, 57.9, u) * (1 - sstep(60.8, 61.3, u)) : 0;
+  const padWig = P === 1 ? [52.48, 52.82, 53.12, 56.34, 56.9, 57.2].map((a) => pulse(u, a, .3)).reduce((a, b) => Math.max(a, b)) : 0;
+  if (padLift < .99) { x.save(); x.translate(0, -padWig * 10); lilyPad(x, PADG[0], PADG[1], 95, 2.1 + padWig * .15, t); x.restore(); }
+  lotus(x, 1700, 812, .9); lotus(x, 1030, 692, .65);
+  // fish in the lake
+  const fishes = [];
+  if (P === 1) { for (const f of [redFish1(u), yellowFish1(u), blueFish1(u), greenFish1(u)]) if (f) fishes.push(f);
+    if (u >= 61.0) for (let i = 0; i < 4; i++) { const f = finalFish1(u, i); if (f) fishes.push(f); } }
+  else for (const f of burstFish(u)) fishes.push(f);
+  for (const f of fishes) if (!f.front) drawFishW(x, f, u, P);
+  // splash rings where fish touch the water
+  for (const f of fishes) if (f.surf) { for (let k = 0; k < 2; k++) { const rr = ((t * .8 + k / 2 + f.x * .001) % 1); x.strokeStyle = `rgba(255,255,255,${.5 * (1 - rr)})`; x.lineWidth = 3; x.beginPath(); x.ellipse(f.x, f.surf + 4, 40 + rr * 110, (40 + rr * 110) * .22, 0, 0, 7); x.stroke(); } }
+  // bank, bush, Fıstık contact shadow
+  const st = P === 1 ? fistik1(u, t) : fistikBurst(u, t);
+  grassBank(x, t, F1[0], F1[1], st.onBank ? 1 : 0);
+  bush(x, BUSH[0], BUSH[1], .8, t, [{ dx: -50, dy: -50, on: true }, { dx: 30, dy: -70, on: !(P === 1 && u > 16.3 && u < 61) }, { dx: 60, dy: -10, on: true }]);
+  // the lifted lily pad (in front of the fish) + its leaf
+  if (padLift > 0) { x.save(); x.translate(PADG[0] + 40 * padLift, PADG[1] - 160 * padLift); x.rotate(-.5 * padLift); lilyPad(x, 0, 0, 95, 2.1, t); x.restore(); }
+  drawFistik(st);
+  // ── front layer (camera space)
+  const f = fx; camOff(f); f.clearRect(0, 0, W, H); camOn(f);
+  reeds(f, 1740, t, 9, 21);
+  for (const fi of fishes) if (fi.front) drawFishW(f, fi, u, P);
+  if (P === 1) frontAbove1(f, u, t, st);
+  else frontBurst(f, u, t, st);
+  camOff(f);
+  g = f.createRadialGradient(W * .78, 120, 50, W * .78, 120, 1500); g.addColorStop(0, "rgba(255,236,170,.2)"); g.addColorStop(1, "rgba(255,236,170,0)");
+  f.globalCompositeOperation = "screen"; f.fillStyle = g; f.fillRect(0, 0, W, H); f.globalCompositeOperation = "source-over";
+}
+// draw a fish state in world coords (+ colour-beat pulse / leaf hat / surface clip)
+function drawFishW(x, f, u, P) {
+  const k = COLS.indexOf(f.col);
+  let pl = 0;
+  if (k >= 0 && P === 1 && Math.abs(u - L3[k] - 2) < 4) { const cb = cbeats(1, k); pl = Math.max(pulse(u, cb[0]), pulse(u, cb[2])); }
+  if (P === 1 && u > F3 - .1 && u < F4) pl = Math.max(pl, pulse(u, [69.66, 70.62, 71.4, 72.86][k]));
+  const s = f.s * (1 + .22 * pl), mo = blupMouth(u, P);
+  x.save();
+  if (f.surf) { x.beginPath(); x.rect(f.x - 400, f.surf - 1200, 800, 1200); x.clip(); }
+  fish(x, f.x, f.y, s, f.col, u, { rot: f.rot || 0, flip: f.flip || -1, blink: f.blink || blinkAt(u + k), mouthO: mo, alpha: f.alpha == null ? 1 : f.alpha });
+  if (f.hat) leaf(x, f.x + 6, f.y - 64 * s / .58, .5 * s / .58 * (1 + .25 * (P === 1 ? pulse(u, cbeats(1, 3)[1]) : pulse(u, cbeats(2, 3)[1]))), -.2);
+  x.restore();
+}
+const blupMouth = (u, P) => { const p = P; let m = 0; for (let k = 0; k < 4; k++) for (const i of [6, 7, 8]) m = Math.max(m, pulse(u, wt(p, `v${k + 1}.2`, i) - (p - 1) * S, .28)); for (const i of [7, 8, 9]) m = Math.max(m, pulse(u, wt(p, "f.2", i) - (p - 1) * S, .28)); return m; };
+function fistik1(u, t) {
+  const st = { x: F1[0], y: F1[1], sc: F1[2], rot: 0, face: 1, tr: POSE.rest.slice(), mo: 0, blink: blinkAt(t), lx: .6, ly: .1, ea: 6 * Math.sin(beatPh(t) * 6.283), legs: 0, lph: 0, mask: false, lampOn: false, sq: 1, onBank: true };
+  // "Fıstık Fil der: Merhaba!" — waves the trunk, mouth on Merhaba
+  for (let k = 0; k < 4; k++) { const a = L2[k], m = wt(1, `v${k + 1}.2`, 3); const w = win(u, a, m + .7, .3, .4);
+    if (w > 0) { st.tr = mixP(st.tr, mixP(POSE.wave, [45 + 18 * Math.sin(u * 9), -150, 28], .6), w); st.mo = Math.max(st.mo, .7 * pulse(u, m, .7) + .25 * pulse(u, a, .5)); } }
+  // verse 1 surprise: blup bubbles stick on the trunk → sneeze
+  st.rot += -6 * pulse(u, 16.05, .35); st.sq = 1 - .08 * pulse(u, 16.05, .3);
+  // look at the action
+  if (u > 34.9 && u < 48.5) st.ly = -1, st.lx = .5;                    // blue fish in the sky
+  if (u > 48.9 && u < 57.4) st.tr = mixP(st.tr, POSE.look, .7), st.rot = 5;   // peeking at the lily pad
+  // final: trumpet fountain
+  const tw = win(u, F2 - .2, 69.4, .3, .5);
+  if (tw > 0) { const kick = [65.66, 65.94, 66.23].map((a) => pulse(u, a, .25)).reduce((a, b) => Math.max(a, b)); st.tr = mixP(st.tr, mixP(POSE.trumpet, [18, -112, 29.5], kick), tw); st.rot -= 4 * kick; st.ea += 18 * kick; }
+  if (u > 64.6 && u < 68.1) st.ly = -1, st.lx = .1;                    // fish on his head: eyes roll up
+  // dance on the beat in "gölde renk renk"
+  const dn = win(u, F4, OUT, .3, .3); st.rot += dn * 6 * Math.sin(beatPh(t) * 6.283); st.legs = 14 * dn; st.lph = beatPh(t) * 6.283;
+  // outro: mask on, hold nose, hop into the lake
+  if (u > OUT) { st.mask = u > 77.9; st.tr = mixP(st.tr, POSE.nose, sstep(78.1, 78.5, u)); st.sq = 1 - .12 * pulse(u, 78.95, .45);
+    if (u > 79.15) { const p = jumpArc(u, 79.15, 79.95, F1[0], 1000, F1[1], 260); st.x = p.x; st.y = p.y; st.rot = p.k * 40; st.onBank = false; st.sc = F1[2] * (1 - .25 * p.k); st.hide = u > 79.95; } }
+  return st;
+}
+function frontAbove1(f, u, t, st) {
+  // verse 1: three blup bubbles fly from the fish to the trunk, stick, pop on the sneeze
+  const tip = trunkTip(st);
+  for (let k = 0; k < 4; k++) for (const i of [6, 7, 8]) { const t0 = wt(1, `v${k + 1}.2`, i); const fi = [redFish1, yellowFish1, blueFish1, greenFish1][k](t0);
+    if (!fi && k !== 3) continue; const src = k === 3 ? [PADG[0] - 40, PADG[1] - 20] : [fi.x - 70, fi.y - 20];
+    const dst = k === 0 ? [tip[0] + (i - 7) * 26, tip[1] - 10] : [src[0] - 60 - (i - 6) * 30, src[1] - 260];
+    const life = k === 0 ? 16.05 : t0 + 1.6; if (u < t0 || u > life + .25) continue;
+    const kk = io((u - t0) / .9), bxp = lerp(src[0], dst[0], kk), byp = lerp(src[1], dst[1], kk) - Math.sin(kk * Math.PI) * 60;
+    if (u < life) bubble(f, bxp, byp, 22 + 4 * Math.sin(u * 6 + i)); else { const pk = (u - life) / .25; for (let j = 0; j < 6; j++) { const a = j * 1.047; f.fillStyle = `rgba(255,255,255,${1 - pk})`; f.beginPath(); f.arc(bxp + Math.cos(a) * 30 * pk, byp + Math.sin(a) * 30 * pk, 4, 0, 7); f.fill(); } } }
+  // jump splashes (crowns of droplets) for every leap
+  for (const [t0, sx, sy] of [[8.2, 1330, 715], [9.4, 1240, 715], [9.8, 1240, 715], [11.0, 1180, 715], [24.5, 1300, 720], [25.7, 1230, 720], [35.0, 1250, 720], [48.3, 1150, 712], [49.1, 1420, 730], [50.3, PADG[0], 740],
+    [61.0, 1620, 720], [62.1, 1480, 720], [62.8, 1340, 720], [63.6, 1200, 720], [62.1, 1360, 720], [63.2, 1220, 720], [63.9, 1080, 720], [79.95, 1000, 760]]) {
+    const k = (u - t0) / .7; if (k < 0 || k > 1) continue;
+    for (let i = 0; i < 14; i++) { const a = -Math.PI * (.08 + .84 * i / 13), sp = 70 + (i % 4) * 26; f.fillStyle = `rgba(235,252,255,${.95 * (1 - k)})`;
+      f.beginPath(); f.arc(sx + Math.cos(a) * sp * k, sy + Math.sin(a) * sp * k * 1.5 + 160 * k * k, 7 * (1 - k * .5), 0, 7); f.fill(); } }
+  // strawberry (verse 1 colour line)
+  const sb = strawberry1(u); if (sb) strawberry(f, sb.x, sb.y, .55 * (1 + .3 * pulse(u, cbeats(1, 0)[1]) + .3 * pulse(u, cbeats(1, 0)[2])));
+  // colour rings on the third beat (fish + simile object together)
+  for (let k = 0; k < 4; k++) { const t0 = cbeats(1, k)[2], kk = (u - t0) / 1.1; if (kk < 0 || kk > 1) continue;
+    const c = [[1120, 650], [1360, 420], [1150, -180], [PADG[0], 690]][k]; ring(f, c[0], c[1], 80 + 420 * kk, HEX[COLS[k]], 1 - kk); }
+  // blue fish: clouds answer "blup" (little cloud puffs)
+  for (const i of [6, 7, 8]) { const t0 = wt(1, "v3.2", i), kk = (u - t0) / 1.0; if (kk < 0 || kk > 1) continue; const bf = blueFish1(t0);
+    cloud(f, bf.x - 160 + i * 20, bf.y - 120 - 90 * kk, .18 + .12 * kk, t); }
+  // fountain from the trunk (final)
+  const fw = win(u, 66.3, 69.4, .2, .5);
+  if (fw > 0) { const tip2 = trunkTip(st); for (let i = 0; i < 60; i++) { const k = ((u * 1.4 + i / 60) % 1), c = HEX[COLS[i % 4]];
+    const px = lerp(tip2[0], 1450, k), py = lerp(tip2[1], 720, k) - Math.sin(k * Math.PI) * 420; f.fillStyle = c; f.globalAlpha = fw * (1 - k * .4);
+    f.beginPath(); f.arc(px + (i % 4 - 1.5) * 8, py, 9 * (1 - k * .5), 0, 7); f.fill(); } f.globalAlpha = 1; }
+  // "pırt" notes
+  for (const a of [65.66, 65.94, 66.23]) { const kk = (u - a) / 1.0; if (kk < 0 || kk > 1) continue; const tip3 = trunkTip(st);
+    f.fillStyle = `rgba(255,122,61,${1 - kk})`; f.font = "800 64px 'Baloo 2'"; f.fillText("♪", tip3[0] + 40 * kk, tip3[1] - 80 * kk - 20); }
+}
+
+// ═══════════════════════ TUR 2: göl altı ═══════════════════════
+const ST = (u) => (u < VE[0] ? 0 : u < VE[1] ? 1 : u < VE[2] ? 2 : u < VE[3] ? 3 : 4);   // station
+const FOUND = [12.6, 26.0, 38.9, 54.4];                                            // fish found by the lantern
+const FISHPOS2 = [[1320, 850], [1360, 1000], [1250, 520], [1460, 660]];
+const FALSE2 = [[10.2, 1150, 880, "coral"], [24.4, 980, 1005, "star"], [null], [51.8, 1000, 860, "turtle"]];
+const SWEEP = [[[8.0, 900, 800], [10.2, 1150, 880], [11.4, 1230, 820], [12.4, 1320, 850]],
+  [[22.6, 800, 980], [24.4, 980, 1005], [25.2, 1180, 990], [25.9, 1360, 1000]],
+  [[34.8, 900, 420], [36.5, 1500, 600], [37.8, 1100, 480], [38.8, 1250, 520]],
+  [[49.2, 800, 600], [51.8, 1000, 860], [53.3, 1250, 560], [54.3, 1460, 660]]];
+function sweepAt(u, k) { const S_ = SWEEP[k]; if (u <= S_[0][0]) return S_[0].slice(1); for (let i = 1; i < S_.length; i++) if (u < S_[i][0]) { const kk = io((u - S_[i - 1][0]) / (S_[i][0] - S_[i - 1][0])); return [lerp(S_[i - 1][1], S_[i][1], kk), lerp(S_[i - 1][2], S_[i][2], kk)]; } return S_[S_.length - 1].slice(1); }
+function fish2(u, k) {
+  const [hx, hy] = FISHPOS2[k], found = sstep(FOUND[k], FOUND[k] + .5, u), pop = outB((u - FOUND[k]) / .6);
+  let x = hx, y = hy, alpha = .3 + .7 * found, blink = 0;
+  if (k === 0) { y = hy + 30 * (1 - pop) - 110 * clamp(pop); }                     // pops out of the coral
+  if (k === 1) { y = hy + 46 * (1 - clamp(pop)) - 150 * clamp(pop); alpha = 1; }  // buried in sand, only eyes show
+  if (k === 2) { x = hx + Math.sin(u * .8) * 160 * (1 - found); y = hy + Math.sin(u * 1.3) * 40; alpha = .4 + .6 * found; }
+  if (k === 3) { y = hy - 60 * clamp(pop); }
+  const v = (u > VS[k] - 2.2 && u < VE[k] + .2);
+  const cb = cbeats(2, k).map((a) => a - S), pl = Math.max(pulse(u, cb[0]), pulse(u, cb[2]));
+  if (k === 2) alpha = Math.max(alpha, sstep(cb[2] - .1, cb[2] + .2, u));
+  return v ? { x, y: y + Math.sin(u * 2 + k) * 6, col: COLS[k], s: .6 * (1 + .22 * pl), alpha, hat: k === 3 && u > cb[1] - .1, sandHide: k === 1 && u < FOUND[1] } : null;
+}
+function fistik2(u, t) {
+  const FP = [[640, 600], [620, 640], [600, 540], [600, 580]], k_ = ST(u) < 4 ? ST(u) : 3, kp = ST(u) > 0 && ST(u) < 4 ? io((u - VE[ST(u) - 1]) / 1.5) : 1, prv = FP[Math.max(0, k_ - 1)];
+  const st = { x: lerp(prv[0], FP[k_][0], kp), y: 600, sc: .62, rot: -6 + Math.sin(t * .9) * 4, face: 1, tr: POSE.lantern.slice(), mo: 0, blink: blinkAt(t), lx: .8, ly: .2, ea: 8 * Math.sin(t * 2.2), legs: 16, lph: t * 4, mask: true, lampOn: true, sq: 1 };
+  st.y = lerp(150, lerp(prv[1], FP[k_][1], kp), io(u / 4.5)) + Math.sin(t * 1.2) * 14;
+  // first "pırt" bubble (intro)
+  const pb = pulse(u, 3.0, .5); if (pb > 0) { st.tr = mixP(st.tr, POSE.trumpet, pb); st.lampOn = false; }
+  // "hı-hı" head shake on a false find
+  for (const fz of FALSE2) if (fz[0]) { const w = win(u, fz[0] + .2, fz[0] + 1.0, .1, .2); st.rot += w * 9 * Math.sin((u - fz[0]) * 22); st.mo = Math.max(st.mo, .3 * w); }
+  for (let k = 0; k < 4; k++) { const m = wt(2, `v${k + 1}.2`, 3) - S; st.mo = Math.max(st.mo, .7 * pulse(u, m, .7)); }
+  // conga: swims across with the line
+  if (u > FIN) { const c = conga(u, 5); st.x = c[0]; st.y = c[1]; st.rot = c[2] * 57; st.lampOn = false; st.tr = POSE.rest.slice(); st.legs = 26; st.lph = t * 7; }
+  const tw = win(u, F2 - .2, 67.0, .2, .3); if (tw > 0) { st.tr = mixP(st.tr, POSE.trumpet, tw); }
+  if (u > 66.0) { const k = io((u - 66.0) / 1.9); st.x = lerp(st.x, 960, k); st.y = lerp(st.y, 40, k); st.rot = lerp(st.rot, -10, k); }   // rides the geyser up
+  return st;
+}
+// conga line: crab(0) red(1) yellow(2) blue(3) green(4) Fıstık(5) turtle(6, lags)
+function conga(u, i) { const k = u - FIN, lag = i === 6 ? 160 * sstep(61.6, 63.6, u) * (1 - sstep(64.6, 65.6, u)) : 0;
+  const xx = 1560 + k * 70 - i * 205 - lag, yy = 600 + Math.sin(k * 3.2 - i * .9) * 60 + (i === 0 ? 300 : 0) + (i === 6 ? 210 : 0);
+  return [xx, yy, Math.cos(k * 2.2 - i * .9) * .25]; }
+function sceneBelow(t, u) {
+  const x = bx; camOff(x); x.clearRect(0, 0, W, H); camOn(x);
+  const st_ = ST(u), bright = u > FIN ? .15 * sstep(FIN, FIN + 2, u) : 0;
+  // water column (bright, never black) + the surface seen from below + light above it
+  let g = x.createLinearGradient(0, -900, 0, H); g.addColorStop(0, "#F2FFFF"); g.addColorStop(.43, "#A6EEF7"); g.addColorStop(.47, "#7FE0F0"); g.addColorStop(.72, "#3FB6D3"); g.addColorStop(1, "#1E86AE");
+  x.fillStyle = g; x.fillRect(-1000, -900, W + 2000, H + 1300);
+  x.beginPath(); x.moveTo(-1000, -900); x.lineTo(-1000, 40); for (let px = -1000; px <= W + 1000; px += 12) x.lineTo(px, 46 + Math.sin(px * .013 + t * 1.5) * 10 + Math.sin(px * .041 - t) * 4); x.lineTo(W + 1000, -900); x.closePath();
+  g = x.createLinearGradient(0, -900, 0, 60); g.addColorStop(0, "#FFFFFF"); g.addColorStop(1, "#BFF4FA"); x.fillStyle = g; x.fill();
+  caustics(x, t, 60, 300, .05);
+  // god rays (verse 2 colour line: one shaft lands on the yellow fish)
+  x.save(); x.globalCompositeOperation = "lighter";
+  for (let i = 0; i < 7; i++) { const rx = 180 + i * 270 + Math.sin(t * .4 + i) * 40, w0 = 50 + (i % 3) * 30, sk = 260; g = x.createLinearGradient(0, 52, 0, H); g.addColorStop(0, "rgba(255,255,230,.30)"); g.addColorStop(1, "rgba(255,255,230,0)");
+    x.fillStyle = g; x.beginPath(); x.moveTo(rx + 12, 52); x.lineTo(rx + w0 + 12, 52); x.lineTo(rx + w0 + sk + 120, H); x.lineTo(rx + sk - 60, H); x.closePath(); x.fill(); }
+  const shaft = win(u, 30.6, 34.3, .4, .4) * (.6 + .4 * Math.max(pulse(u, cbeats(2, 1)[1] - S), pulse(u, cbeats(2, 1)[2] - S)));
+  if (shaft > 0) { g = x.createLinearGradient(0, 0, 0, 900); g.addColorStop(0, `rgba(255,236,140,${.75 * shaft})`); g.addColorStop(1, `rgba(255,236,140,${.15 * shaft})`); x.fillStyle = g;
+    x.beginPath(); x.moveTo(1180, 0); x.lineTo(1300, 0); x.lineTo(1430, 900); x.lineTo(1230, 900); x.closePath(); x.fill(); }
+  x.restore();
+  if (shaft > 0) sunDisk(x, 1240, -10, 60, t, sstep(30.8, 31.2, u), 0);
+  // far haze silhouettes
+  x.fillStyle = "rgba(30,110,150,.45)"; for (let i = -2; i < 11; i++) { x.beginPath(); x.ellipse(i * 240 + 60, 860, 160, 90, 0, Math.PI, 0); x.fill(); }
+  for (let i = -3; i < 14; i++) kelp(x, 80 + i * 165, 380 + ((i + 9) % 3) * 90, t * .8, 30 + i + 9, "rgba(40,120,110,.55)", "rgba(70,150,120,.5)");
+  // sand floor + caustics
+  x.beginPath(); x.moveTo(-1000, 880); for (let px = -1000; px <= W + 1000; px += 12) x.lineTo(px, 880 + Math.sin(px * .006) * 26 + Math.sin(px * .017 + 1) * 10); x.lineTo(W + 1000, H + 400); x.lineTo(-1000, H + 400); x.closePath();
+  g = x.createLinearGradient(0, 860, 0, H); g.addColorStop(0, "#F3DFA2"); g.addColorStop(1, "#D9B66E"); x.fillStyle = g; x.fill();
+  x.save(); x.clip(); caustics(x, t, 870, H + 300, .16); x.restore();
+  // station props
+  const all = st_ === 4;
+  if (st_ === 0 || all) { coral(x, 1260, 930, 1.0, 3, "#FF6B6B", "#C83C4C"); coral(x, 1370, 950, .8, 8, "#FF8A80", "#C83C4C"); coral(x, 1170, 960, .7, 12, "#FF5A5F", "#B9324A");
+    const wk = pulse(u, 10.2, .5); x.fillStyle = "#fff"; for (const dx of [-10, 10]) { x.beginPath(); x.ellipse(1150 + dx, 880, 8, 9 * (1 - wk * .9), 0, 0, 7); x.fill(); } x.fillStyle = "#2B2D42"; for (const dx of [-10, 10]) { x.beginPath(); x.arc(1151 + dx, 881, 4 * (1 - wk), 0, 7); x.fill(); } }
+  if (st_ === 1 || all) { starfish(x, 980, 1005, 40, .3, true); starfish(x, 1640, 1010, 30, 1.1); }
+  if (st_ === 3 || all) for (let i = 0; i < 9; i++) kelp(x, 1300 + i * 60, 520 + (i % 4) * 60, t, 50 + i, "#2F8A3E", "#6FD06A");
+  for (const [rx, ry, rw] of [[300, 1000, 140], [880, 1030, 110], [1880, 990, 120]]) rock(x, rx, ry, rw);
+  // turtle (verse 4 false find, final conga lag)
+  if (st_ === 3) turtle(x, 1000, 860, .9, t, pulse(u, 51.8, .8));
+  // crab buddy
+  const crabP = u < FIN ? [lerp(-120, 760, io((u - 1) / 3)), 1000] : conga(u, 0);
+  crab(x, crabP[0], crabP[1], .9, t);
+  // the hidden fish of the station
+  for (let k = 0; k < 4; k++) { const fk = fish2(u, k); if (!fk || u > FIN) continue;
+    x.save(); if (fk.sandHide) { x.beginPath(); x.rect(fk.x - 300, fk.y - 400, 600, 400); x.clip(); }
+    drawFishW(x, { ...fk, flip: -1 }, u, 2); x.restore();
+    if (fk.sandHide) { x.fillStyle = "#E8CF8C"; x.beginPath(); x.ellipse(fk.x, fk.y + 14, 96, 28, 0, 0, 7); x.fill(); } }
+  // final conga (fish + turtle)
+  if (u > FIN) { for (let i = 1; i <= 4; i++) { const c = conga(u, i); drawFishW(x, { x: c[0], y: c[1], rot: c[2], col: COLS[i - 1], s: .52, flip: 1, hat: i === 4 }, u, 2); }
+    const ct = conga(u, 6); turtle(x, ct[0], ct[1], .85, t * (1 + sstep(62, 64.5, u))); }
+  // geyser of bubbles (push-through to the surface)
+  const gy = win(u, 65.9, 68.0, .2, .1);
+  const st = fistik2(u, t);
+  drawFistik(st);
+  // ── front layer
+  const f = fx; camOff(f); f.clearRect(0, 0, W, H); camOn(f);
+  if (st_ === 3) for (let i = 0; i < 6; i++) kelp(f, 400 + i * 260 + (i % 2) * 60, 260 + (i % 3) * 80, t, 70 + i, "#2F8A3E", "#6FD06A");
+  // lantern beam (only while searching)
+  if (st.lampOn && u > 7.6 && u < FIN) { const k = Math.min(3, Math.max(0, st_)); const tip = trunkTip(st), tgt = u < VE[k] ? sweepAt(u, k) : FISHPOS2[k];
+    const ang = Math.atan2(tgt[1] - tip[1], tgt[0] - tip[0]), len = Math.hypot(tgt[0] - tip[0], tgt[1] - tip[1]) + 130;
+    f.save(); f.globalCompositeOperation = "lighter"; f.translate(tip[0], tip[1]); f.rotate(ang); g = f.createLinearGradient(0, 0, len, 0); g.addColorStop(0, "rgba(255,250,200,.5)"); g.addColorStop(1, "rgba(255,250,200,.06)");
+    f.fillStyle = g; f.beginPath(); f.moveTo(0, -10); f.lineTo(len, -140); f.quadraticCurveTo(len + 60, 0, len, 140); f.lineTo(0, 10); f.closePath(); f.fill(); f.restore();
+    g = f.createRadialGradient(tgt[0], tgt[1], 10, tgt[0], tgt[1], 180); g.addColorStop(0, "rgba(255,250,210,.28)"); g.addColorStop(1, "rgba(255,250,210,0)"); f.fillStyle = g; f.beginPath(); f.arc(tgt[0], tgt[1], 180, 0, 7); f.fill(); }
+  // "ce-ee!" flash when found
+  for (let k = 0; k < 4; k++) { const kk = (u - FOUND[k]) / .9; if (kk < 0 || kk > 1) continue; const [fx_, fy_] = FISHPOS2[k];
+    for (let i = 0; i < 12; i++) { const a = i * .5236; f.strokeStyle = `rgba(255,255,255,${1 - kk})`; f.lineWidth = 6; f.beginPath(); f.moveTo(fx_ + Math.cos(a) * (60 + 140 * kk), fy_ - 60 + Math.sin(a) * (60 + 140 * kk)); f.lineTo(fx_ + Math.cos(a) * (90 + 170 * kk), fy_ - 60 + Math.sin(a) * (90 + 170 * kk)); f.stroke(); } }
+  // sand puff (yellow fish sneezes)
+  { const kk = (u - FOUND[1]) / 1.2; if (kk > 0 && kk < 1) for (let i = 0; i < 18; i++) { const a = -Math.PI * (i / 17); f.fillStyle = `rgba(240,215,150,${.8 * (1 - kk)})`; f.beginPath(); f.arc(1360 + Math.cos(a) * 160 * kk * (1 + i % 3 * .3), 990 + Math.sin(a) * 120 * kk, 22 * (1 - kk * .4), 0, 7); f.fill(); } }
+  // simile objects of pass 2: strawberry bubble (v1), sky bubble (v3), falling leaf (v4)
+  { const cb = cbeats(2, 0).map((a) => a - S); if (u > 16.3 && u < 22.2) { const k = io((u - 16.4) / (cb[1] - 16.4)), bxp = 1450, byp = lerp(-80, 760, k);
+      if (u < cb[1] + .05) { bubble(f, bxp, byp, 90, .9); strawberry(f, bxp, byp, .5); } else strawberry(f, bxp, 760 + Math.sin(u * 2) * 8, .5 * (1 + .3 * pulse(u, cb[2]))); } }
+  { const cb = cbeats(2, 2).map((a) => a - S); if (u > 43.2 && u < cb[2] + .3) { const k = io((u - 43.3) / (cb[1] - 43.3)), bxp = 1250, byp = lerp(-80, 470, k);
+      f.save(); f.beginPath(); f.arc(bxp, byp, 120, 0, 7); f.clip(); g = f.createLinearGradient(0, byp - 120, 0, byp + 120); g.addColorStop(0, "#5BB8F2"); g.addColorStop(1, "#DDF3FD"); f.fillStyle = g; f.fillRect(bxp - 120, byp - 120, 240, 240);
+      cloud(f, bxp - 10, byp + 20, .45, t); sunDisk(f, bxp + 60, byp - 60, 20, t); f.restore(); bubble(f, bxp, byp, 120, .95); } }
+  { const cb = cbeats(2, 3).map((a) => a - S); if (u > 57.4 && u < cb[1]) { const k = io((u - 57.4) / (cb[1] - 57.4)); leaf(f, lerp(1300, FISHPOS2[3][0] + 6, k) + Math.sin(k * 9) * 60, lerp(-60, FISHPOS2[3][1] - 120, k), .5, Math.sin(k * 9) * .6); } }
+  // colour rings (third beat)
+  for (let k = 0; k < 4; k++) { const t0 = cbeats(2, k)[2] - S, kk = (u - t0) / 1.1; if (kk < 0 || kk > 1) continue; const [cx, cy] = FISHPOS2[k]; ring(f, cx, cy - 80, 80 + 420 * kk, HEX[COLS[k]], 1 - kk); }
+  // bubbles: ambient + Fıstık's first "pırt" bubble + geyser
+  const R = rng(44);
+  for (let i = 0; i < 26; i++) { const bxp = R() * W, sp = 40 + R() * 70, byp = H - ((t * sp + R() * H) % (H + 80)); bubble(f, bxp + Math.sin(t * 2 + i) * 8, byp, 4 + R() * 12, .7); }
+  { const k = (u - 3.0) / 3; if (k > 0 && k < 1) { const tip = trunkTip(st); bubble(f, tip[0] + 30 * k, tip[1] - 520 * k, 34 + 20 * k, .9); } }
+  if (gy > 0) for (let i = 0; i < 70; i++) { const k = ((u * 1.6 + i / 70) % 1); bubble(f, 960 + Math.sin(i * 2.3 + u * 3) * 140, 900 - k * 1700, 8 + (i % 5) * 7, gy * .9); }
+  for (let i = 0; i < 70; i++) { f.fillStyle = `rgba(230,255,255,${.25 + .25 * Math.sin(t + i)})`; f.beginPath(); f.arc((R() * W + t * 6) % W, R() * H + Math.sin(t * .5 + i) * 20, 1.5 + R() * 2, 0, 7); f.fill(); }
+  camOff(f);
+  g = f.createLinearGradient(0, 0, 0, H); g.addColorStop(0, `rgba(255,255,255,${bright})`); g.addColorStop(1, `rgba(10,60,100,${.22 - bright})`); f.fillStyle = g; f.fillRect(0, 0, W, H);
+}
+// ── pass 2 ending above water: everyone bursts out, rainbow, colour words, wave goodbye
+function burstFish(u) {
+  if (u < 68.0) return [];
+  return COLS.map((c, i) => { const X = [1080, 1220, 1360, 1500][i];
+    if (u < 69.4) { const p = jumpArc(u, 68.0 + i * .12, 69.4 + i * .12, 980, X, 760, 420 + i * 40); return { ...p, col: c, s: .5 }; }
+    const TS = [69.66, 70.62, 71.4, 72.86][i], hop = Math.max(pulse(u, TS, .6), pulse(u, 75.64 + i * .05, .5), pulse(u, 76.34 + i * .05, .5));
+    return { x: X, y: 705 - 140 * hop + Math.sin(u * 2 + i) * 4, rot: 0, col: c, s: .5 * (1 + .25 * pulse(u, TS)), surf: hop > .2 ? null : 716, flip: -1, hat: i === 3 }; });
+}
+function fistikBurst(u, t) {
+  const st = { x: 900, y: 760, sc: .55, rot: 0, face: 1, tr: POSE.trumpet.slice(), mo: 0, blink: blinkAt(t), lx: .5, ly: -.3, ea: 10 * Math.sin(beatPh(t) * 6.283), legs: 18, lph: t * 6, mask: true, lampOn: false, sq: 1, onBank: false };
+  if (u < 70.2) { const p = jumpArc(u, 68.0, 70.2, 900, 700, 780, 480); st.y = p.y; st.x = p.x; st.rot = (p.k - .5) * 30; }
+  else { st.x = 700; st.y = 790 + Math.sin(t * 2) * 6; st.tr = POSE.wave.slice(); }
+  if (u > OUT) { st.tr = mixP(POSE.wave, [45 + 22 * Math.sin(u * 10), -150, 28], 1); st.mo = .4 + .3 * Math.sin(u * 8); }
+  return st;
+}
+function frontBurst(f, u, t, st) {
+  // water burst column + crab on the beret
+  const k = (u - 68.0) / .9; if (k > 0 && k < 1) for (let i = 0; i < 30; i++) { const a = -Math.PI * (.1 + .8 * i / 29), sp = 120 + (i % 5) * 50; f.fillStyle = `rgba(235,252,255,${.95 * (1 - k)})`; f.beginPath(); f.arc(900 + Math.cos(a) * sp * k, 760 + Math.sin(a) * sp * k * 2 + 200 * k * k, 10 * (1 - k * .5), 0, 7); f.fill(); }
+  const top = [st.x + 10, st.y - 620 * st.sc + 40]; crab(f, top[0], top[1], .45, t);
+}
+
+// ─────────────── ekran geçişleri (cvOver, ekran koordinatı) ───────────────
+function overlays(t, u, P) {
+  const o = ox; camOff(o); o.clearRect(0, 0, W, H);
+  // colour ripple ring between verses of pass 1 (material: ripple-ring)
+  if (P === 1) for (let k = 0; k < 3; k++) { const t0 = VE[k] - .35, kk = (u - t0) / .9; if (kk < 0 || kk > 1) continue;
+    o.strokeStyle = HEX[COLS[k + 1]]; o.globalAlpha = .85 * (1 - kk); o.lineWidth = 120 * (1 - kk) + 20; o.beginPath(); o.arc(W / 2, H / 2, 40 + 1300 * io(kk), 0, 7); o.stroke(); o.globalAlpha = 1; }
+  // dive: splash + bubble curtain across the pass boundary (u: 79.8 → S+0.6)
+  const tc = P === 1 ? u : u + S, cur = win(tc, 80.0, 80.75, .35, .45);
+  if (cur > 0) { o.fillStyle = `rgba(120,215,235,${.9 * cur})`; o.fillRect(0, 0, W, H); const R = rng(3);
+    for (let i = 0; i < 110; i++) { const bxp = R() * W, byp = (R() * H * 1.4 - (tc - 79.8) * 900 * (0.6 + R())) % (H * 1.4); bubble(o, bxp, byp < -60 ? byp + H * 1.4 : byp, 18 + R() * 60, cur); } }
+  // periscope iris at verse 1 of pass 2
+  if (P === 2) { const ir = win(u, 7.55, 7.85, .25, .3); if (ir > 0) { o.fillStyle = `rgba(14,70,100,${ir})`; o.beginPath(); o.rect(0, 0, W, H); o.arc(W / 2, H / 2, lerp(1200, 0, ir), 0, 7, true); o.fill("evenodd"); } }
+  // kelp curtain between stations (pass 2)
+  if (P === 2) for (let k = 0; k < 3; k++) { const t0 = VE[k] - .55, kk = (u - t0) / 1.1; if (kk < 0 || kk > 1) continue;
+    const xs = lerp(-700, W + 700, kk); for (let i = 0; i < 9; i++) { const kx = xs + (i - 4) * 110, h = H + 200;
+      o.strokeStyle = i % 2 ? "#2F8A3E" : "#3FA84A"; o.lineWidth = 120; o.lineCap = "round"; o.beginPath(); o.moveTo(kx, H + 80); o.quadraticCurveTo(kx + Math.sin(i + u * 3) * 80, H / 2, kx + 40 * Math.sin(i), -80); o.stroke();
+      o.fillStyle = "#6FD06A"; for (let j = 0; j < 5; j++) { o.beginPath(); o.ellipse(kx + 40, j * 230 + 60, 70, 22, .5, 0, 7); o.fill(); } } }
+  // push-through flash at the geyser cut, final white flash
+  if (P === 2) { const wf = Math.max(win(u, 67.85, 68.0, .25, .35), sstep(79.9, 80.36, u)); if (wf > 0) { o.fillStyle = `rgba(255,255,255,${wf})`; o.fillRect(0, 0, W, H); } }
+  // closing "blup" bubble fills the screen
+  if (P === 2) { const kb = sstep(78.6, 80.0, u); if (kb > 0) bubble(o, W / 2, H / 2, 40 + 1200 * kb, .9); }
+  vignette(o, .26); grain(o, t, .03);
+}
+
+// ─────────────── söz hapı ───────────────
+const CW_ = { "kırmızı": "c-red", "sarı": "c-yellow", "masmavi": "c-blue", "yeşil": "c-green" }, SND = ["şap", "blup", "pırt"];
+let lastLy = "";
+function lyric(t) {
+  let L = null; for (const l of LINES) if (t >= l.words[0][1] - .25 && t < l.end + .45) L = l;
+  const ly = $("#lyric");
+  if (!L) { ly.style.opacity = 0; return; }
+  const a = Math.min(sstep(L.words[0][1] - .25, L.words[0][1], t), 1 - sstep(L.end + .1, L.end + .45, t));
+  const html = L.words.map(([w, wt_]) => { const b = w.toLowerCase().replace(/[^a-zçğıöşü]/g, ""); const cls = CW_[b] || (SND.includes(b) ? "snd" : "");
+    const on = t >= wt_ - .02; return on ? `<b class="${cls}">${w}</b>` : `<span class="${cls}">${w}</span>`; }).join(" ");
+  if (html !== lastLy) { ly.innerHTML = html; lastLy = html; }
+  ly.style.opacity = a.toFixed(3);
+}
+
+// ─────────────── render ───────────────
+function render(t) {
+  t = Math.max(0, Math.min(D - 1e-3, t));
+  const P = t < S ? 1 : 2, u = P === 1 ? t : t - S;
+  CAM = camAt(u, P === 1 ? CAM1 : CAM2);
+  if (P === 1 || u >= 68.0) sceneAbove(t, u, P); else sceneBelow(t, u);
+  overlays(t, u, P);
+  lyric(t);
+}
+gsap.defaults({ lazy: false });
+const master = gsap.timeline({ paused: true });
+const clock = { _t: 0 };
+Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+window.addEventListener("hf-seek", (e) => render(e?.detail ? e.detail.time : master.time()));
+render(0);
+window.__timelines["main"] = master;
+</script>
+</body>
+</html>

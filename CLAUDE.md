@@ -42,7 +42,8 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 8 | Uçağı Kaldırsana · Hayal Kur, Dene, Başar · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır (v2, Fable incelemesi sonrası 4K), yüklenmedi |
 | 9 | Pırt Pırt Boya Döktüm · Renkleri Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:02 | Yayında |
 | D1 | 20 Dakika Çocuk Şarkıları · Küçük Kurbağa, Arı Vız Vız, Ali Baba'nın Çiftliği · Fıstık Fil (derleme, 8 şarkı) | — | ~20:00 | Hazır (`D1 - 20 Dakika Çocuk Şarkıları/`), yüklenmedi |
-| 10–13 | Kırmızı Balık Gölde · Dandini Ninnisi (uzun) · Beş Küçük Ördek · Otobüsün Tekerleği | — | — | Suno promptları hazır (`kaynak/10…13/suno-prompt.txt`), şarkılar bekleniyor |
+| 10 | Kırmızı Balık Gölde · Renkleri Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 2:53 (açılış+kapanış dahil) | Hazır (Canvas 2D, 4K), yüklenmedi |
+| 11–13 | Dandini Ninnisi (uzun) · Beş Küçük Ördek · Otobüsün Tekerleği | — | — | Suno promptları hazır (`kaynak/11…13/suno-prompt.txt`), şarkılar bekleniyor |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S3–S8 | Reels 3–4 (Küçük Kurbağa), 5–6 (Fıstık Yer), 7–8 (Arı Vız Vız) | — | ~0:30 | Hazır, `Reels/` + `Reels/reels-metin.txt` |
@@ -66,6 +67,7 @@ FistikFil/
 ├── 06 - Arı Vız Vız/             ← aynı düzen (3 parça)
 ├── 08 - Uçağı Kaldırsana/        ← aynı düzen
 ├── 09 - Pırt Pırt Boya Döktüm/   ← aynı düzen (4 parça)
+├── 10 - Kırmızı Balık Gölde/     ← aynı düzen (4 parça)
 ├── D1 - 20 Dakika Çocuk Şarkıları/ ← derleme: 4K mp4 (parçalı), kapak, youtube-metin.txt (bölüm zaman damgalı)
 ├── Reels/                        ← reels-3…8 mp4 + reels-1…8 kapak png + reels-metin.txt
 │   └── 04 - Kayıp Yıldız/        ← kullanıcının 3 Reels'i + srt + kapak + reels-meta.json
@@ -83,7 +85,8 @@ FistikFil/
     ├── 07-anneannem-dedem/       ← suno-prompt.txt (güncel), gemini-prompt.txt (eski v1)
     ├── 08-ucagi-kaldirsana/      ← aynı düzen + suno-prompt.txt, tek-prompt.txt (§7.7)
     ├── 09-fistiksin-boya-kutusu/ ← build.py, kapak.py, lines.json (iki geçiş), src/(template, rig_part, art, sfx), storyboard/(STORYBOARD.md, ROUND_LOG.md) (§7.8)
-    ├── 10-kirmizi-balik/ 11-dandini-ninni/ 12-bes-kucuk-ordek/ 13-otobusun-tekerlegi/ ← suno-prompt.txt (özgün söz + bilinen başlık kancası)
+    ├── 10-kirmizi-balik/         ← İLK CANVAS 2D BÖLÜM: build.py, src/(template.html, paint.js, rig_part.js, eskiz.html), lines_build.py, fw.py, sfx.py, kapak.py, storyboard/ (§7.10)
+    ├── 11-dandini-ninni/ 12-bes-kucuk-ordek/ 13-otobusun-tekerlegi/ ← suno-prompt.txt (özgün söz + bilinen başlık kancası)
     ├── derleme/                  ← build.py (SONGS sırası + "Sıradaki şarkı!" kartları), src/bumper.html, derle.py (birleştirme), kapak.py (§7.9)
     ├── intro/                    ← açılış/kapanış/abone bandı: src/(intro.html, abone.html), build.py, make_jingle.py, render.sh, intro_ekle.py (§6.6)
     ├── reels/                    ← make_reel.py, make_cover.py, r1…r6b.json, r8a/r8b/r9a/r9b.json (Reels 9–12), reel_lines_v1.json
@@ -452,6 +455,17 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - Ayrı bölümlerin abone bandı videonun içine gömülü olduğu için derlemede de görünür (Küçük Kurbağa ve Fıstık Yer'de ortada da bir bant var); kabul edildi.
 - **Açıklamada bölüm zaman damgaları** (0:00 ile başlar) → YouTube bölümleri. Zamanlar SONGS kırpmalarından hesaplanır; SONGS değişirse güncelle.
 
+### 7.10 Bölüm 10 — "Kırmızı Balık Gölde" (80,36 sn × 2 tur + açılış/kapanış = 2:53) · renkler · İLK CANVAS 2D BÖLÜM
+
+- **Kullanıcı isteği:** "canvas 2d gibi bir şey kullanarak daha gelişmiş görüntü kalitesi". Karma yapı: ortam **Canvas 2D** (3 tuval: `cvBack` dünya, `cvFront` Fıstık'ın önündekiler, `cvOver` ekran geçişleri/vinyet/gren), **Fıstık SVG rig** (keskin vektör, dudak/hortum aynı). Tuval boyutu `W×DPR` (4K render'da DPR 2) → keskin. Eskiz önce onaylatıldı (`eskiz/eskiz-a.jpg`, `eskiz-b.jpg`).
+- **Çizim kütüphanesi `src/paint.js`:** kümülüs bulut (düz tabanlı, puf başına iç gölge), pus katmanlı sırtlar, ağaç, gradyanlı + kenar ışıklı + pullu balık (`fish(ctx,x,y,s,renk,t,{rot,flip,alpha,blink,mouthO})`), çilek, nilüfer yaprağı/çiçeği, çimen (tek tek yaprak), sazlık, kostik ağı, yosun, mercan, yengeç, denizyıldızı, kaplumbağa, kaya, baloncuk, yüzlü güneş, gökkuşağı kemeri, yaprak, renk halkası. Göl yansıması: gökyüzü katmanı ayrı tuvale (`skyC`) çizilir, gölde satır satır ters + dalgalı kaydırmayla basılır.
+- **Kamera:** olay listesi `[t, cx, cy, z, süre]` (CAM1/CAM2), `camOn(ctx)` dünya dönüşümü; SVG Fıstık `W2S()` ile aynı kameraya bağlanır. **Ders:** kamera yana kayınca/uzaklaşınca gökyüzü tuvalinin kenarı dikiş gibi görünüyordu → `camAt` z ≥ 1 ve cx/cy dünya sınırına kıstırılır; uzatılmış gökyüzü ile `skyC` aynı gradyanı kullanır, güneş iki katmana da çizilir.
+- **Hikâye:** tur 1 göl üstü (kırmızı: çilek sektirme + hapşırık baloncukları; sarı: güneş yansımasından doğan balık, güneş göz kırpar; masmavi: balık gökte yüzer; yeşil: nilüfer altında saklanır, yaprak şapka; final: 1-2-3-4 zıplayış, yeşil Fıstık'ın kafasına konar, hortum fıskiyesi → gökkuşağı, her balık kendi renginde kayar). Fıstık maske takıp "hop" diye dalar → baloncuk perdesi. Tur 2 göl altı **hortum feneri** saklambacı (yeni bileşen: fener konisi; yanlış buluşta "hı-hı"), istasyonlar arası yosun perdesi, konga (kaplumbağa geride kalır), fıskiyeyle yüzeye fırlayış, el sallama, ekranı dolduran blup baloncuğu.
+- **Renk vuruşu (Fable önerisi):** renk satırının 0., 2. ve 4. kelimesinde balık → benzetme nesnesi → ikisi + o renkte halka. Söz hapında renk kelimeleri kendi renginde.
+- **Fable çocuk gözü incelemesi** plan aşamasında: soyut ayna dönüşü yerine somut dalış; göl altı karanlık değil (gündüzün ~%60'ı); görünmez değil yarı saydam mavi balık.
+- **Şarkı:** Gemini. v1'de "mavi" → "hip hop rap" (2. kez!) → "masmavi" ile yeniden üretildi (`tek-prompt.txt`, kısa tek blok; uzun prompta Gemini "çok uzun" dedi). 117 BPM, vokal 7,8 sn'de. Söz zamanı: `fw.py` (faster-whisper large-v3, promptsuz) → `lines_build.py`.
+- **Render:** 4K 160,7 sn ≈ 6,5 dk (380 ms/kare). Final crf 14 → 611 MB; teslim için crf 17 `-tune animation` ile yeniden kodlandı (361 MB, görsel fark yok, VideoToolbox 0 hata, −11,5 LUFS).
+
 ## 8. Teslimat (kullanıcının bilgisayarı)
 
 - Kullanıcı klasörü: `/Users/anil/Projects/max-digital-projects/FistikFil` (Cowork'te bağlı klasör).
@@ -632,6 +646,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
 - [x] D1 derleme "20 Dakika Çocuk Şarkıları" (`D1 - …/`). Yükleme kullanıcıda.
-- [ ] 10 Kırmızı Balık, 11 Dandini ninnisi (A vokalli + B enstrümantal), 12 Beş Küçük Ördek, 13 Otobüsün Tekerleği: Suno şarkıları bekleniyor (promptlar hazır).
+- [x] Bölüm 10 "Kırmızı Balık Gölde" (Canvas 2D): video + kapak + YouTube metni `10 - Kırmızı Balık Gölde/`. Yükleme kullanıcıda.
+- [ ] 11 Dandini ninnisi (A vokalli + B enstrümantal), 12 Beş Küçük Ördek, 13 Otobüsün Tekerleği: şarkılar bekleniyor (promptlar hazır). Canvas 2D altyapısı (`10-kirmizi-balik/src/paint.js`) yeniden kullanılacak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
 - [ ] Sözlerin telif durumu (MESAM/MSG) kontrolü.
