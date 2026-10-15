@@ -40,12 +40,12 @@ Güneş gibi sarı!
 [Instrumental Break, 2 bars]
 
 [Verse 3]
-Mavi balık gölde,
+Masmavi balık gölde,
 Yüzer yüzer, şap şap şap!
 Fıstık Fil der: Merhaba!
 Balık der: Blup blup blup!
-Mavi, mavi,
-Gökyüzü gibi mavi!
+Masmavi, masmavi,
+Gökyüzü gibi masmavi!
 
 [Instrumental Break, 4 bars, marimba]
 
@@ -65,7 +65,7 @@ Dört balık gölde,
 Yüzer yüzer, şap şap şap!
 Pırt pırt pırt, Fıstık Fil,
 Hep beraber blup blup blup!
-Kırmızı, sarı, mavi, yeşil,
+Kırmızı, sarı, masmavi, yeşil,
 Gölde renk renk balıklar!
 
 [Outro]
@@ -76,7 +76,8 @@ Blup blup blup!
 
 ▶ Notlar
 - Köşeli parantez söylenmez. Normal parantez ve tırnak kullanma.
-- Renk kelimeleri (kırmızı, sarı, mavi, yeşil) net duyulmalı; Bölüm 9'da Suno "mavi" yerine başka söz söyledi → her varyantı dinle, renkleri yanlış söyleyeni eleme.
+- Renk kelimeleri (kırmızı, sarı, masmavi, yeşil) net duyulmalı.
+- ÖNEMLİ (v1 dersi, Ekim 2026): Gemini "mavi" kelimesini iki şarkıda da (Bölüm 9 ve bu bölümün v1'i) "hip hop rap" diye değiştirdi; gömülü altyazı ve faster-whisper bunu doğruladı. Bu yüzden "masmavi" yazıldı. Yine değişirse: Suno'da üret ya da "mas-ma-vi" diye hecele.
 - Giriş 8 sn'den kısa gelirse yeniden üret. 2–4 varyant üret, en net Türkçeyi seç. Suno Pro/Premier açıkken üret.
 
 ▶ Videoda (yazı yok, eylem var)
