@@ -1,0 +1,86 @@
+SUNO — "Kırmızı Balık Gölde · Renkleri Öğreniyoruz" (Custom mode) · Bölüm 10
+==========================================================================
+Sözler özgün (Fıstık Fil için yazıldı). Bilinen şarkıdan yalnızca başlıktaki "Kırmızı balık gölde" kancası alındı.
+
+▶ Title
+Kırmızı Balık Gölde
+
+▶ Style of Music — kopyala-yapıştır
+Turkish children's song, nursery rhyme, playful tekerleme, 116 BPM, 4/4, major key, ukulele, marimba, glockenspiel, water drop sounds, hand claps, light shaker, warm clear female vocal, Turkish lyrics, clear slow diction, kids choir on final chorus, long instrumental intro, bright, happy
+
+▶ Exclude Styles
+male vocals, rap, hip hop, autotune, sad, minor key, rock, electronic, spoken word
+
+▶ Ayarlar
+- Vocal Gender: Female · Instrumental: KAPALI
+- Weirdness ~30% · Style Influence ~70%
+
+▶ Lyrics — kopyala-yapıştır
+[Intro]
+[Instrumental intro, 4 bars, marimba and water drops, no vocals]
+
+[Verse 1]
+Kırmızı balık gölde,
+Yüzer yüzer, şap şap şap!
+Fıstık Fil der: Merhaba!
+Balık der: Blup blup blup!
+Kırmızı, kırmızı,
+Çilek gibi kırmızı!
+
+[Instrumental Break, 2 bars]
+
+[Verse 2]
+Sarı balık gölde,
+Yüzer yüzer, şap şap şap!
+Fıstık Fil der: Merhaba!
+Balık der: Blup blup blup!
+Sarı, sarı,
+Güneş gibi sarı!
+
+[Instrumental Break, 2 bars]
+
+[Verse 3]
+Mavi balık gölde,
+Yüzer yüzer, şap şap şap!
+Fıstık Fil der: Merhaba!
+Balık der: Blup blup blup!
+Mavi, mavi,
+Gökyüzü gibi mavi!
+
+[Instrumental Break, 4 bars, marimba]
+
+[Verse 4]
+Yeşil balık gölde,
+Yüzer yüzer, şap şap şap!
+Fıstık Fil der: Merhaba!
+Balık der: Blup blup blup!
+Yeşil, yeşil,
+Yaprak gibi yeşil!
+
+[Instrumental Break, 2 bars, drum roll]
+
+[Key Change Up]
+[Final Chorus, kids choir and female vocal, hand claps]
+Dört balık gölde,
+Yüzer yüzer, şap şap şap!
+Pırt pırt pırt, Fıstık Fil,
+Hep beraber blup blup blup!
+Kırmızı, sarı, mavi, yeşil,
+Gölde renk renk balıklar!
+
+[Outro]
+Blup blup blup!
+[Water splash]
+[Applause]
+[End]
+
+▶ Notlar
+- Köşeli parantez söylenmez. Normal parantez ve tırnak kullanma.
+- Renk kelimeleri (kırmızı, sarı, mavi, yeşil) net duyulmalı; Bölüm 9'da Suno "mavi" yerine başka söz söyledi → her varyantı dinle, renkleri yanlış söyleyeni eleme.
+- Giriş 8 sn'den kısa gelirse yeniden üret. 2–4 varyant üret, en net Türkçeyi seç. Suno Pro/Premier açıkken üret.
+
+▶ Videoda (yazı yok, eylem var)
+- Dekor: Bölüm 2/4'ün dere/göl dünyası; nilüfer, sazlık. Her kıtada o renkte balık sudan zıplar ("şap şap"), Fıstık'a "blup" baloncuğu üfler.
+- "… gibi kırmızı" satırında benzetme nesnesi gerçekten belirir: çilek, güneş (gülen güneş), gökyüzü (bulutlar açılır), yaprak (ağaçtan süzülür) — balıkla yan yana, aynı renkte parlar.
+- Gag'ler: balık Fıstık'ın hortumundan çıkan su fıskiyesinde sörf yapar; sarı balık güneşle göz kırpışır; mavi balık gökyüzüne zıplayıp bulutta yüzer; yeşil balık yaprağa saklanır, Fıstık bulamaz.
+- Final: dört balık birlikte su dansı (fıskiye halkaları), Fıstık "pırt pırt" ile renkli su fışkırtır → gölde gökkuşağı.

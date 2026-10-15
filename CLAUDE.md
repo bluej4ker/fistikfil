@@ -40,7 +40,9 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 6 | Arı Vız Vız · Renkleri ve Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | ~2:11 (açılış+kapanış dahil) | Hazır, yüklenmedi |
 | 7 | Anneannem ve Dedem | — | — | Suno promptu hazır, şarkı bekleniyor |
 | 8 | Uçağı Kaldırsana · Hayal Kur, Dene, Başar · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır (v2, Fable incelemesi sonrası 4K), yüklenmedi |
-| 9 | Pırt Pırt Boya Döktüm · Renkleri Öğreniyoruz (taslak başlık) | — | 3:02 (açılış+kapanış dahil) | Hazır (v9 4K, 5 inceleme turunun sonu), kapak + YouTube metni hazır; yüklenmedi |
+| 9 | Pırt Pırt Boya Döktüm · Renkleri Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:02 | Yayında |
+| D1 | 20 Dakika Çocuk Şarkıları · Küçük Kurbağa, Arı Vız Vız, Ali Baba'nın Çiftliği · Fıstık Fil (derleme, 8 şarkı) | — | ~20:00 | Hazır (`D1 - 20 Dakika Çocuk Şarkıları/`), yüklenmedi |
+| 10–13 | Kırmızı Balık Gölde · Dandini Ninnisi (uzun) · Beş Küçük Ördek · Otobüsün Tekerleği | — | — | Suno promptları hazır (`kaynak/10…13/suno-prompt.txt`), şarkılar bekleniyor |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S3–S8 | Reels 3–4 (Küçük Kurbağa), 5–6 (Fıstık Yer), 7–8 (Arı Vız Vız) | — | ~0:30 | Hazır, `Reels/` + `Reels/reels-metin.txt` |
@@ -64,6 +66,7 @@ FistikFil/
 ├── 06 - Arı Vız Vız/             ← aynı düzen (3 parça)
 ├── 08 - Uçağı Kaldırsana/        ← aynı düzen
 ├── 09 - Pırt Pırt Boya Döktüm/   ← aynı düzen (4 parça)
+├── D1 - 20 Dakika Çocuk Şarkıları/ ← derleme: 4K mp4 (parçalı), kapak, youtube-metin.txt (bölüm zaman damgalı)
 ├── Reels/                        ← reels-3…8 mp4 + reels-1…8 kapak png + reels-metin.txt
 │   └── 04 - Kayıp Yıldız/        ← kullanıcının 3 Reels'i + srt + kapak + reels-meta.json
 ├── Claude outputs/               ← (git dışı) yerel ara çıktılar; artık önizleme üretilmiyor
@@ -80,6 +83,8 @@ FistikFil/
     ├── 07-anneannem-dedem/       ← suno-prompt.txt (güncel), gemini-prompt.txt (eski v1)
     ├── 08-ucagi-kaldirsana/      ← aynı düzen + suno-prompt.txt, tek-prompt.txt (§7.7)
     ├── 09-fistiksin-boya-kutusu/ ← build.py, kapak.py, lines.json (iki geçiş), src/(template, rig_part, art, sfx), storyboard/(STORYBOARD.md, ROUND_LOG.md) (§7.8)
+    ├── 10-kirmizi-balik/ 11-dandini-ninni/ 12-bes-kucuk-ordek/ 13-otobusun-tekerlegi/ ← suno-prompt.txt (özgün söz + bilinen başlık kancası)
+    ├── derleme/                  ← build.py (SONGS sırası + "Sıradaki şarkı!" kartları), src/bumper.html, derle.py (birleştirme), kapak.py (§7.9)
     ├── intro/                    ← açılış/kapanış/abone bandı: src/(intro.html, abone.html), build.py, make_jingle.py, render.sh, intro_ekle.py (§6.6)
     ├── reels/                    ← make_reel.py, make_cover.py, r1…r6b.json, r8a/r8b/r9a/r9b.json (Reels 9–12), reel_lines_v1.json
     └── marka/                    ← extract.py, make.py (profil+banner), thumb.py, poses.json, _thumb.html
@@ -438,6 +443,14 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 
 ---
 
+### 7.9 Derleme D1 — "20 Dakika Çocuk Şarkıları" (Ekim 2026)
+
+- **Neden:** Rakip araştırması (Sevimli Dostlar "Popüler" sekmesi, YouTube aramaları): bilinen şarkı adları (Kırmızı Balık 810 Mn, Ali Baba 511 Mn, Otobüsün Tekerleği 458 Mn) ve uzun formatlar (1 saatlik Dandini ninnisi 500–625 Mn, derlemeler 40–70 Mn) kazanıyor. Kanalda Küçük Kurbağa (bilinen ad) 8 günde 2,4 B ile açık ara önde. Sıradaki plan: D1 derleme → 10 Kırmızı Balık (renkler) → 11 Dandini (15–20 dk ninni, vokalli + enstrümantal dönüşümlü) → 12 Beş Küçük Ördek (sayılar) → 13 Otobüsün Tekerleği (Bölüm 8'in karton aracı otobüs olur).
+- **Söz stratejisi:** sözler özgün, yalnızca başlıktaki bilinen kanca ifade alınır (arama için). Suno bilinen melodiyi çalmaz; tanınırlık addan gelir.
+- **Kurgu:** `kaynak/derleme/build.py` SONGS listesi (sıra + baş/son kırpma). Açılışlı finallerden 5,6 sn baş ve 7 sn son kesilir; uzun enstrümantal girişler (Küçük Kurbağa, Arı) 9 sn, 8/9. bölüm 4 sn daha kırpılır (kart müziği zaten giriş yapıyor). Tek açılış + 7 "Sıradaki şarkı!" kartı (3,5 sn: beyazdan açılış, hap düşer, kapak yaylanır, yıldız saçılır, kapak ekranı doldurur → beyaz) + tek kapanış. Kapaklardaki "YENİ!" etiketinin üstüne şarkı numarası çıkartması (`YENI` oranları build.py'de). Her şarkının sesi ebur128 ile ölçülüp −11 LUFS'e çekilir (Arı Vız Vız +5,3 dB kısık geliyordu), `alimiter`.
+- Ayrı bölümlerin abone bandı videonun içine gömülü olduğu için derlemede de görünür (Küçük Kurbağa ve Fıstık Yer'de ortada da bir bant var); kabul edildi.
+- **Açıklamada bölüm zaman damgaları** (0:00 ile başlar) → YouTube bölümleri. Zamanlar SONGS kırpmalarından hesaplanır; SONGS değişirse güncelle.
+
 ## 8. Teslimat (kullanıcının bilgisayarı)
 
 - Kullanıcı klasörü: `/Users/anil/Projects/max-digital-projects/FistikFil` (Cowork'te bağlı klasör).
@@ -584,6 +597,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 | Final dosyada ses −14 LUFS | HyperFrames render sesi ~4 dB kısıyor; intro_ekle normalize etmiyor | Finalde `-c:v copy -af loudnorm=I=-11:TP=-1.5:LRA=9` |
 | 3B sayfa çevirme videoda 2 karede geçip kayboluyor (önizleme karelerinde normal) | `scale()` z eksenini küçültmüyor; dönen sayfanın kenarı kameraya çarpıyor; ayrıca `power2.inOut` görünür ön yarıyı sıkıştırıyor | `scale3d(s,s,s)`, perspektif ≥ 3600, neredeyse sabit hızlı dönüş; asıl render'dan 10 kare/sn şeritle doğrula |
 | Kamera olayları arasında sıçrama | "En güçlü olay kazanır" seçimi | Olayları ağırlıkla karıştır (`camAt` Bölüm 9) |
+| Playwright `evaluate("…main.seek(t)")` sonsuza kadar bekliyor | `seek()` GSAP timeline'ı döndürüyor, timeline "thenable" → Playwright onu promise sanıp bekliyor | İfadeyi `…seek(t); 0` ile bitir (ya da `() => { …seek(t); }` fonksiyonu kullan) |
 | Denetim temiz ama video "slayt gibi" | Defter fikirleri ekrana yansımadı; aynı geniş plan 30+ sn kaldı | Ekran kapıları E1–E4; render'a `breakdown.py` ile kontak sayfası + ritim ölçümü |
 
 ---
@@ -615,5 +629,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [ ] Kullanıcının kişisel YouTube kanalı: konu/niş bekleniyor (saas-motion-kit ile yapım günlüğü, ürün tanıtımı ve veri görselleştirme fikirleri önerildi).
 - [ ] Oynatma listesinin dilini Türkçe yap (Studio).
 - [ ] Ali Baba Reels + kapak.
+- [x] D1 derleme "20 Dakika Çocuk Şarkıları" (`D1 - …/`). Yükleme kullanıcıda.
+- [ ] 10 Kırmızı Balık, 11 Dandini ninnisi (A vokalli + B enstrümantal), 12 Beş Küçük Ördek, 13 Otobüsün Tekerleği: Suno şarkıları bekleniyor (promptlar hazır).
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
 - [ ] Sözlerin telif durumu (MESAM/MSG) kontrolü.

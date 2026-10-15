@@ -1,0 +1,76 @@
+SUNO — "Dandini Dandini Dastana · Fıstık Fil Ninnisi" (Custom mode) · Bölüm 11 (uzun ninni)
+=========================================================================================
+Nakarattaki "Dandini dandini dastana, danalar girmiş bostana" geleneksel (anonim) ninni kancası; kıtalar özgün.
+Hedef: 15–20 dk'lık uyku videosu. Bunun için İKİ dosya üret:
+  A) Vokalli ninni (~3 dk)   B) Aynı ayarlarla Instrumental: AÇIK (~3 dk, müzik kutusu)
+Videoda A, B, A, B, A… diye arka arkaya dizilir; ışık her turda biraz kısılır.
+
+▶ Title
+Dandini Dandini Dastana
+
+▶ Style of Music — kopyala-yapıştır
+Turkish lullaby, ninni, very slow and gentle, 66 BPM, 3/4 waltz feel, soft music box, celesta, warm nylon guitar, soft strings pad, very soft female vocal, whispery and tender, Turkish lyrics, clear slow diction, calm, sleepy, dreamy, no drums
+
+▶ Exclude Styles
+drums, percussion, male vocals, rap, upbeat, loud, electronic, autotune, kids choir, claps
+
+▶ Ayarlar
+- Vocal Gender: Female · Weirdness ~20% · Style Influence ~75%
+
+▶ Lyrics — kopyala-yapıştır (A dosyası)
+[Intro]
+[Soft music box intro, 4 bars, no vocals]
+
+[Chorus]
+Dandini dandini dastana,
+Danalar girmiş bostana,
+Fıstık Fil uyusun da,
+Yarın oynasın bahçemizde.
+
+[Verse 1]
+Ay doğdu, gökte parladı,
+Yıldızlar göz kırpmaya başladı,
+Bere çıktı, yastık geldi,
+Fıstık Fil yavaşça esnedi.
+
+[Chorus]
+Dandini dandini dastana,
+Danalar girmiş bostana,
+Fıstık Fil uyusun da,
+Yarın oynasın bahçemizde.
+
+[Verse 2]
+Kurbağa sustu, vırak bitti,
+Ördekler yuvasına gitti,
+Arı kovanda mışıl mışıl,
+Rüzgâr söyler fısıl fısıl.
+
+[Instrumental Break, 4 bars, music box]
+
+[Verse 3]
+Hortumunu yorgan yaptı,
+Kulaklarını yastık yaptı,
+Kapandı gözler, kapandı,
+Fıstık Fil rüyaya daldı.
+
+[Chorus, softer, almost whisper]
+Dandini dandini dastana,
+Danalar girmiş bostana,
+Fıstık Fil uyusun da,
+Yarın oynasın bahçemizde.
+
+[Outro]
+[Humming, mmm]
+[Soft music box fades out]
+[End]
+
+▶ Notlar
+- Hiç vurmalı yok; ses düzeyi düşük ve sabit olmalı (uyutma videosu). Final karışımda −16 LUFS civarı tutacağız (diğer şarkılardan kısık).
+- Yumuşak olmayan, ani ses/yüksek nota olan varyantı ele.
+- Suno Pro/Premier açıkken üret.
+
+▶ Videoda (yazı yok, eylem var; yavaş, sakin, az kesme)
+- Gece bahçe: ay, yıldızlar, ateş böcekleri, çit. Bostanda iki minik dana sebzeleri koklar (komik ama yumuşak: biri havuçla, öteki lahanayla uyuyakalır).
+- Fıstık beresini çıkarır, yastığa yatar, hortumunu yorgan gibi üstüne çeker, kulaklarını yastık yapar; esner, gözleri yavaşça kapanır.
+- Kurbağa, ördekler, arı (önceki bölümlerin karakterleri) teker teker uyur — kanalın evreni.
+- Her turda gökyüzü biraz daha koyulaşır, yıldızlar çoğalır; son turda kamera yavaşça aya yükselir. Kayıp Yıldız'daki yıldız karakteri göz kırpabilir.

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<script src="assets/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+  html, body { margin: 0; background: #FFB627; }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: "Baloo 2", sans-serif; }
+  #world { position: absolute; inset: 0; }
+  #bg { position: absolute; inset: 0; background: radial-gradient(circle at 50% 55%, #FFE27A 0%, #FFC23D 45%, #FF9F3D 100%); }
+  #rays { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; opacity: .28; }
+  #pill { position: absolute; left: 50%; top: 70px; transform: translateX(-50%); white-space: nowrap; background: #fff; border-radius: 70px;
+    padding: 14px 58px 4px; font-size: 92px; font-weight: 800; color: #FF7A3D; box-shadow: 0 10px 0 rgba(0,0,0,.14); }
+  #pill b { color: #3D9BFF; }
+  #card { position: absolute; left: 50%; top: 600px; width: 1180px; height: 664px; margin: -332px 0 0 -590px; border-radius: 44px; overflow: hidden;
+    border: 16px solid #fff; box-shadow: 0 24px 0 rgba(0,0,0,.16); background: #fff; }
+  #card .slot, #card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* kapaktaki "YENİ!" etiketinin üstüne şarkı numarası çıkartması (derlemede "yeni" anlamsız) */
+  #card .stk { position: absolute; width: 210px; height: 210px; margin: -105px 0 0 -105px; border-radius: 50%; background: #FF5A5F; border: 12px solid #fff;
+    box-shadow: 0 8px 0 rgba(0,0,0,.18); color: #fff; font-size: 118px; font-weight: 800; line-height: 222px; text-align: center; box-sizing: border-box; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+  #flash { position: absolute; inset: 0; background: #fff; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="/*DUR*/" data-width="1920" data-height="1080">
+  <audio id="sfx" src="assets/sfx.wav" data-start="0" data-duration="/*DUR*/" data-volume="1"></audio>
+  <section id="world" class="clip" data-start="0" data-duration="/*DUR*/" data-track-index="0">
+    <div id="bg"></div><svg id="rays" viewBox="0 0 1920 1080"><g id="raysG"></g></svg>
+    <div id="card">/*IMGS*/</div>
+    <div id="pill">♪ <b>Sıradaki</b> şarkı! ♪</div>
+    <svg id="fx" viewBox="0 0 1920 1080"></svg>
+    <div id="flash"></div>
+  </section>
+</div>
+<script>
+  // Her kart SEG sn: beyazdan açılır, hap zıplar, kapak yaylanarak gelir, sonda kapak ekranı doldurur → beyaz.
+  // Her şey render(t)'nin saf fonksiyonu (seek-güvenli, CLAUDE.md §6.3).
+  window.__timelines = window.__timelines || {};
+  const SEG = /*SEG*/, N = /*N*/, D = SEG * N;
+  const $ = (id) => document.getElementById(id);
+  const imgs = [...document.querySelectorAll("#card .slot")];
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const backOut = (u, s = 2.2) => { u = clamp(u); const v = u - 1; return 1 + (s + 1) * v * v * v + s * v * v; };
+  const elastic = (u) => { u = clamp(u); return u === 0 || u === 1 ? u : Math.pow(2, -9 * u) * Math.sin((u * 10 - .75) * 2.0944) + 1; };
+  const easeIn = (u) => clamp(u) ** 3;
+  const COLS = ["#3D9BFF", "#FF5A5F", "#FFC23D", "#3FBF6F", "#A66BFF", "#FF7A3D"];
+  const STARS = Array.from({ length: 16 }, (_, i) => ({ a: i / 16 * 6.2832 + (i % 3) * .3, r: 560 + (i * 97) % 240, c: COLS[i % 6], s: 18 + (i * 7) % 16 }));
+  function star(x, y, r, c, rot) {
+    let p = ""; for (let k = 0; k < 10; k++) { const a = rot + k * Math.PI / 5 - Math.PI / 2, rr = k % 2 ? r * .45 : r; p += (k ? "L" : "M") + (x + rr * Math.cos(a)).toFixed(1) + " " + (y + rr * Math.sin(a)).toFixed(1); }
+    return `<path d="${p}Z" fill="${c}" stroke="#fff" stroke-width="4"/>`;
+  }
+  { let w = ""; for (let k = 0; k < 16; k++) { const a0 = k * 22.5 * Math.PI / 180, a1 = a0 + 9 * Math.PI / 180, R = 2400;
+      w += `<path d="M0 0L${(R * Math.cos(a0)).toFixed(0)} ${(R * Math.sin(a0)).toFixed(0)}L${(R * Math.cos(a1)).toFixed(0)} ${(R * Math.sin(a1)).toFixed(0)}Z" fill="#fff"/>`; }
+    $("raysG").innerHTML = w; }
+  function render(T) {
+    const i = Math.min(N - 1, Math.floor(T / SEG)), t = T - i * SEG;
+    imgs.forEach((im, k) => (im.style.display = k === i ? "" : "none"));
+    $("raysG").setAttribute("transform", `translate(960 594) rotate(${(T * 14).toFixed(2)})`);
+    // giriş beyazı 0–0.3, çıkış: 2.95'ten itibaren kapak büyür, 3.25'te beyaz
+    const fin = clamp((t - .02) / .3), fout = clamp((t - (SEG - .32)) / .26);
+    $("flash").style.opacity = Math.max(1 - fin, fout).toFixed(3);
+    const pu = elastic((t - .12) / .7);
+    $("pill").style.transform = `translateX(-50%) translateY(${(-260 * (1 - pu)).toFixed(1)}px) rotate(${(Math.sin(t * 5) * 2).toFixed(2)}deg)`;
+    const cu = backOut((t - .3) / .55), zoom = easeIn((t - (SEG - .65)) / .55);
+    const bob = Math.sin(t * 4.2) * 8, rot = (1 - cu) * -12 + Math.sin(t * 3.1) * 1.4 * (1 - zoom);
+    const s = cu * (1 + zoom * 1.9);
+    const sk = backOut((t - .75) / .4, 3);
+    imgs[i].querySelector(".stk").style.transform = `scale(${sk.toFixed(3)}) rotate(${(-14 + Math.sin(t * 6) * 4).toFixed(1)}deg)`;
+    $("card").style.transform = `translateY(${(bob * (1 - zoom) - zoom * 80).toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${s.toFixed(4)})`;
+    // kapak gelince yıldızlar dışa saçılır (t 0.55–1.9)
+    let h = ""; const su = clamp((t - .55) / 1.35);
+    if (su > 0 && su < 1) for (const st of STARS) {
+      const r = 120 + st.r * Math.sqrt(su), x = 960 + Math.cos(st.a) * r, y = 600 + Math.sin(st.a) * r * .62 + 140 * su * su;
+      h += `<g opacity="${(1 - su ** 2).toFixed(2)}">${star(x, y, st.s * (1 - su * .4), st.c, su * 4 + st.a)}</g>`;
+    }
+    $("fx").innerHTML = h;
+  }
+  gsap.defaults({ lazy: false });
+  const master = gsap.timeline({ paused: true });
+  const clock = { _t: 0 };
+  Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+  master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+  window.addEventListener("hf-seek", (e) => render(e?.detail ? e.detail.time : master.time()));
+  render(0);
+  window.__timelines["main"] = master;
+</script>
+</body>
+</html>

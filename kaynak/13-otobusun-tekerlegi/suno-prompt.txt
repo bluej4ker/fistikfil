@@ -1,0 +1,78 @@
+SUNO — "Otobüsün Tekerleği · Fıstık Fil'in Karton Otobüsü" (Custom mode) · Bölüm 13
+=================================================================================
+Sözler özgün; başlıktaki "Otobüsün tekerleği" kancası geleneksel "Wheels on the Bus" kalıbından (her kıtada otobüsün bir parçası + ses taklidi).
+
+▶ Title
+Otobüsün Tekerleği
+
+▶ Style of Music — kopyala-yapıştır
+Turkish children's song, nursery rhyme, tekerleme, 120 BPM, 4/4, major key, ukulele, honky-tonk piano, xylophone, bus horn and cartoon sound effects, hand claps, light drums, warm clear female vocal, Turkish lyrics, clear slow diction, kids choir on final chorus, long instrumental intro, bouncy, happy
+
+▶ Exclude Styles
+male vocals, rap, autotune, sad, minor key, rock, electronic
+
+▶ Lyrics — kopyala-yapıştır
+[Intro]
+[Instrumental intro, 4 bars, honky-tonk piano and ukulele, no vocals]
+
+[Verse 1]
+Otobüsün tekerleği,
+Dön dön dön, dön dön dön!
+Fıstık Fil'in otobüsü,
+Haydi gidelim, dön dön dön!
+
+[Verse 2]
+Otobüsün kornası,
+Düt düt düt, düt düt düt!
+Fıstık Fil'in otobüsü,
+Haydi gidelim, düt düt düt!
+
+[Verse 3]
+Otobüsün silecekleri,
+Fış fış fış, fış fış fış!
+Fıstık Fil'in otobüsü,
+Haydi gidelim, fış fış fış!
+
+[Instrumental Break, 2 bars]
+
+[Verse 4]
+Otobüsün kapıları,
+Açıl kapan, açıl kapan!
+Fıstık Fil'in otobüsü,
+Haydi binelim, açıl kapan!
+
+[Verse 5]
+Otobüsteki kurbağa,
+Vırak vırak, vırak vırak!
+Fıstık Fil'in otobüsü,
+Haydi gidelim, vırak vırak!
+
+[Verse 6]
+Otobüsteki ördekler,
+Vak vak vak, vak vak vak!
+Fıstık Fil'in otobüsü,
+Haydi gidelim, vak vak vak!
+
+[Instrumental Break, 2 bars, drum roll]
+
+[Key Change Up]
+[Final Chorus, kids choir and female vocal, hand claps]
+Otobüsteki Fıstık Fil,
+Pırt pırt pırt, pırt pırt pırt!
+Hep beraber otobüste,
+Haydi gidelim, hey hey hey!
+
+[Outro]
+[Bus horn]
+Düt düt!
+[Applause]
+[End]
+
+▶ Notlar
+- Ses taklitleri (dön dön, düt düt, fış fış, vırak, vak vak, pırt pırt) kısa, kesik ve vurgulu olmalı.
+- Giriş 8 sn'den kısa gelirse yeniden üret. Suno Pro/Premier açıkken üret.
+
+▶ Videoda (yazı yok, eylem var)
+- Bölüm 8'in "canlanan karton araç" bileşeni bu kez otobüs: koli kutusu gövde, düğme tekerlekler, far-gözler; her kıtada bir parçası canlanır (silecek kaş gibi, kapı ağız gibi açılır).
+- Durak durak yolculuk: bahçe → çiçek tarlası → gölet → arı kovanı ağacı → gün batımı; her durakta önceki bölümlerin karakterleri biner (fare, kurbağa, ördekler, arı).
+- Gag'ler: korna çalınca bulut zıplar; silecekler yağmuru değil göletten sıçrayan suyu siler; kapı açılınca kurbağa zıplayıp tavana yapışır; ördekler sırayla değil hep birden sıkışır; final Fıstık hortumla korna olur.
