@@ -89,6 +89,7 @@ FistikFil/
     ├── 11-dandini-ninni/ 12-bes-kucuk-ordek/ 13-otobusun-tekerlegi/ ← suno-prompt.txt (özgün söz + bilinen başlık kancası)
     ├── derleme/                  ← build.py (SONGS sırası + "Sıradaki şarkı!" kartları), src/bumper.html, derle.py (birleştirme), kapak.py (§7.9)
     ├── intro/                    ← açılış/kapanış/abone bandı: src/(intro.html, abone.html), build.py, make_jingle.py, render.sh, intro_ekle.py (§6.6)
+    ├── hibrit/                   ← yapay zekâ plakası + rig deneyi: ref_sheet.py → ref/ (Fıstık karakter referansı), r13-yesil-final/PROMPTLAR.md (Reels 13 sahne promptları)
     ├── reels/                    ← make_reel.py, make_cover.py, r1…r6b.json, r8a/r8b/r9a/r9b.json (Reels 9–12), reel_lines_v1.json
     └── marka/                    ← extract.py, make.py (profil+banner), thumb.py, poses.json, _thumb.html
 ```
@@ -648,5 +649,6 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [x] D1 derleme "20 Dakika Çocuk Şarkıları" (`D1 - …/`). Yükleme kullanıcıda.
 - [x] Bölüm 10 "Kırmızı Balık Gölde" (Canvas 2D): video + kapak + YouTube metni `10 - Kırmızı Balık Gölde/`. Yükleme kullanıcıda.
 - [ ] 11 Dandini ninnisi (A vokalli + B enstrümantal), 12 Beş Küçük Ördek, 13 Otobüsün Tekerleği: şarkılar bekleniyor (promptlar hazır). Canvas 2D altyapısı (`10-kirmizi-balik/src/paint.js`) yeniden kullanılacak.
+- [ ] Reels 13 hibrit deneme: promptlar hazır (`kaynak/hibrit/r13-yesil-final/PROMPTLAR.md`); kullanıcı plakaları (S1–S6) ve isteğe bağlı S5 kahraman klibini üretecek, sonra dikey kompozisyon kurulacak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
 - [ ] Sözlerin telif durumu (MESAM/MSG) kontrolü.
