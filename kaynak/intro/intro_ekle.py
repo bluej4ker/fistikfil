@@ -54,6 +54,8 @@ def main():
     ap.add_argument("--abone-olcek", type=float, default=1.0, help="bandın boyutu (ör. 0.75: %%25 küçük, sol alt köşeye yaslı)")
     ap.add_argument("--renders", default=os.path.join(HERE, "renders"))
     ap.add_argument("--crf", default="17"); ap.add_argument("--preset", default="slow")
+    ap.add_argument("--acilis-db", type=float, default=0.0, help="açılış jingle'ının ses kazancı (dB; ör. ninni için -5)")
+    ap.add_argument("--bant-db", type=float, default=0.0, help="abone bandı tık/zil seslerinin kazancı (dB)")
     a = ap.parse_args()
 
     W, H, fps, dur = probe(a.video)
@@ -81,7 +83,7 @@ def main():
             fc.append(f"[{cur}][bt{k}]overlay=x=0:y={H - bh}:eof_action=pass:repeatlast=0[m{k + 1}]"); cur = f"m{k + 1}"
         if not a.sessiz_bant:
             si = inp(R("abone-sfx.m4a"))
-            fc.append(f"[{si}:a]{norm_a},asplit={len(times)}" + "".join(f"[s{k}]" for k in range(len(times))))
+            fc.append(f"[{si}:a]{norm_a},volume={a.bant_db}dB,asplit={len(times)}" + "".join(f"[s{k}]" for k in range(len(times))))
             for k, t in enumerate(times):
                 ms = int(t * 1000); fc.append(f"[s{k}]adelay={ms}|{ms}[sd{k}]")
             fc.append("[ma]" + "".join(f"[sd{k}]" for k in range(len(times))) + f"amix=inputs={len(times) + 1}:duration=first:dropout_transition=0:normalize=0[ma2]")
@@ -89,7 +91,7 @@ def main():
 
     parts = []
     if not a.acilis_yok:
-        ii = inp(R(f"acilis-{suf}.mp4")); fc.append(f"[{ii}:v]{norm_v}[iv]"); fc.append(f"[{ii}:a]{norm_a}[ia]"); parts.append(("iv", "ia"))
+        ii = inp(R(f"acilis-{suf}.mp4")); fc.append(f"[{ii}:v]{norm_v}[iv]"); fc.append(f"[{ii}:a]{norm_a},volume={a.acilis_db}dB[ia]"); parts.append(("iv", "ia"))
     parts.append((cur, ma))
     if not a.kapanis_yok:
         oi = inp(R(f"kapanis-{suf}.mp4")); fc.append(f"[{oi}:v]{norm_v}[ov]"); fc.append(f"[{oi}:a]{norm_a}[oa]"); parts.append(("ov", "oa"))

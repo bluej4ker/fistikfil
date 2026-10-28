@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<script src="assets/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Baloo 2"; font-weight: 400 800; font-display: block; src: url("assets/fonts/Baloo2-wght.ttf") format("truetype"); }
+  html, body { margin: 0; background: #000; }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: "Baloo 2", sans-serif; }
+  #world { position: absolute; inset: 0; }
+  canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  .abs { position: absolute; }
+  #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 0 0; }
+  #char svg { width: 600px; height: 640px; overflow: visible; }
+  #lyric { position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%); white-space: nowrap; padding: 6px 30px 0; border-radius: 40px;
+    background: rgba(20,30,70,.45); border: 3px solid rgba(255,255,255,.25); font-size: 40px; font-weight: 600; color: rgba(220,228,255,.7); opacity: 0; }
+  #lyric b { font-weight: 700; color: #FFF3D6; }
+  #bug { position: absolute; left: 34px; top: 26px; background: rgba(255,255,255,.85); border-radius: 30px; padding: 4px 20px 0; font-size: 28px; font-weight: 800; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="/*DUR*/" data-width="1920" data-height="1080">
+  <audio id="song" src="assets/ninni_mix.m4a" data-start="0" data-duration="/*DUR*/" data-volume="1"></audio>
+  <section id="world" class="clip" data-start="0" data-duration="/*DUR*/" data-track-index="0" data-layout-allow-overflow>
+    <canvas id="cvBack"></canvas>
+    <div id="charWrap" class="abs"><div id="char"></div></div>
+    <canvas id="cvFront"></canvas>
+    <canvas id="cvOver"></canvas>
+    <div id="lyric"></div>
+    <div id="bug"><span style="color:#3D9BFF">Fıstık</span> <span style="color:#FF7A3D">Fil</span></div>
+  </section>
+</div>
+<script>
+// ═══════════════ Bölüm 11 · Dandini Dandini Dastana · Fıstık Fil Ninnisi ═══════════════
+// 6 tur: A (vokal) B (enstrümantal) A B A B. Tur k başı TS[k]. Gece, ay ve kamera bütün videoya göre;
+// tur olayları turun saati u'ya göre. render(t) saf (CLAUDE.md §6.3). Uyku videosu: yavaş, parlamasız, kesmesiz.
+window.__timelines = window.__timelines || {};
+const W = 1920, H = 1080, DPR = window.devicePixelRatio || 1, D = /*DUR*/, L = 177.3, XF = 1.5;
+const TS = [0, 1, 2, 3, 4, 5].map((k) => k * (L - XF));
+const $ = (s) => document.querySelector(s), OL = "#4C76B5";
+const LINES = /*LINES*/;
+const [bx, fx, ox] = ["cvBack", "cvFront", "cvOver"].map((id) => { const c = document.getElementById(id); c.width = W * DPR; c.height = H * DPR; return c.getContext("2d"); });
+/*PAINT*/
+/*NIGHT*/
+const io = (k) => (k = clamp(k), k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+const win = (t, a, b, fi = .5, fo = .5) => Math.min(sstep(a - fi, a, t), 1 - sstep(b, b + fo, t));
+const WT = {}; LINES.forEach((l) => (WT[l.tag] = l.words.map((w) => w[1])));
+const tourOf = (t) => { let k = 0; for (let i = 0; i < 6; i++) if (t >= TS[i]) k = i; return k; };
+
+// ─────────── kamera ───────────
+const CAM_A1 = [[0, 960, 540, 1, 0], [13, 1500, 800, 1.32, 3], [23.5, 960, 560, 1.0, 3.5], [29.5, 1320, 300, 1.6, 4], [40.5, 660, 760, 1.42, 3.5], [53, 960, 560, 1.04, 4],
+  [73.5, 420, 860, 1.38, 3.5], [79, 1220, 880, 1.32, 3.5], [84.8, 430, 650, 1.42, 3.5], [90.5, 960, 540, 1.0, 4], [117.5, 680, 760, 1.38, 4.5], [139, 960, 540, 1.0, 9]];
+const CAM_A2 = [[0, 960, 540, 1, 0], [7, 900, 500, 1.12, 7], [164, 960, 540, 1, 9]];
+const CAM_B = [[0, 960, 540, 1, 0], [22, 1500, 850, 1.28, 12], [55, 420, 860, 1.32, 12], [88, 960, 480, 1.0, 12], [120, 700, 760, 1.32, 12], [152, 960, 540, 1, 12]];
+const CAM_B6 = [[0, 960, 540, 1, 0], [22, 1500, 850, 1.28, 12], [55, 420, 860, 1.32, 12], [88, 960, 500, 1.0, 12], [112, 520, 120, 1.18, 40]];
+function camAt(u, K) {
+  let c = K[0].slice(1, 4);
+  for (const [t0, x, y, z, d] of K) { if (u < t0) break; const k = d > 0 ? io((u - t0) / d) : 1; c = [lerp(c[0], x, k), lerp(c[1], y, k), lerp(c[2], z, k)]; }
+  const z = Math.max(1, c[2]), hw = W / (2 * z), hh = H / (2 * z);
+  return [clamp(c[0], hw, W - hw), Math.min(c[1], H - hh), z];
+}
+let CAM = [960, 540, 1];
+const camOn = (x) => x.setTransform(DPR * CAM[2], 0, 0, DPR * CAM[2], DPR * (W / 2 - CAM[0] * CAM[2]), DPR * (H / 2 - CAM[1] * CAM[2]));
+const camOff = (x) => x.setTransform(DPR, 0, 0, DPR, 0, 0);
+const W2S = (x, y) => [(x - CAM[0]) * CAM[2] + W / 2, (y - CAM[1]) * CAM[2] + H / 2];
+
+// ─────────── gece, ay ───────────
+const nightAt = (t) => t < TS[1] ? lerp(.22, .85, t / TS[1]) : t < TS[2] ? lerp(.85, 1, (t - TS[1]) / (TS[2] - TS[1])) : 1;
+const moonAt = (t) => [lerp(1600, 380, t / D), t < 40 ? lerp(600, 300, io(t / 36)) : 300 - 150 * Math.sin(Math.PI * (t - 40) / (D - 40))];
+
+// ─────────── Fıstık ───────────
+/*RIG*/
+el.legs.forEach((g) => (g.style.display = "none")); el.tail.style.display = "none";
+const HAT = document.getElementById("hat");
+const BED = [760, 860], FP = [560, 940], FSC = .62, HATPOST = [1112, 772];
+function beret(x, cx, cy, s, n) {   // Fıstık'ın beresi (karyolanın ayak ucu direğinde)
+  x.save(); x.translate(cx, cy); x.scale(s, s); x.rotate(.44);
+  x.beginPath(); x.moveTo(-144, 56); x.bezierCurveTo(-140, -80, 140, -80, 144, 56); x.quadraticCurveTo(0, 30, -144, 56); const g = x.createLinearGradient(0, -80, 0, 56); g.addColorStop(0, mixC("#FFD966", "#A8975E", n)); g.addColorStop(1, mixC("#FFB627", "#9A7A40", n));
+  x.fillStyle = g; x.fill(); x.lineWidth = 5; x.strokeStyle = mixC("#D9861A", "#6E5A3A", n); x.stroke();
+  x.save(); x.clip(); x.strokeStyle = mixC("#FF8A3D", "#8A5A44", n); x.lineWidth = 16; for (const y of [-16, 16]) { x.beginPath(); x.moveTo(-150, y); x.quadraticCurveTo(0, y - 28, 150, y); x.stroke(); } x.restore();
+  x.fillStyle = mixC("#FF9F1C", "#8A6A3A", n); x.beginPath(); x.moveTo(-150, 54); x.quadraticCurveTo(0, 20, 150, 54); x.lineTo(152, 76); x.quadraticCurveTo(0, 42, -152, 78); x.closePath(); x.fill(); x.stroke();
+  x.fillStyle = mixC("#FF6B4A", "#8A4A4A", n); x.strokeStyle = mixC("#C94A2E", "#5A3030", n); x.beginPath(); x.arc(0, -64, 30, 0, 7); x.fill(); x.stroke();
+  x.restore();
+}
+const POSE = { rest: [88, -140, 22], wave: [45, -150, 28], yawn: [60, -210, 21], point: [20, -70, 27], blanket: [100, -40, 24], trumpet: [25, -110, 28] };
+const mixP = (a, b, k) => a.map((v, i) => lerp(v, b[i], k));
+const T1 = (tag, i) => WT[`t1.${tag}`][i];
+function fistikState(t) {
+  const k = tourOf(t), u = t - TS[k];
+  const st = { x: FP[0], y: FP[1], rot: 0, tr: POSE.rest.slice(), mo: .08, lids: 0, lx: .4, ly: -.5, ea: 0, hat: 0, sq: 1 };
+  const asleep = k > 0 ? 1 : sstep(129, 133.5, u);
+  if (k === 0) {
+    st.ea = 5 * Math.sin(u * 6.283 / 3.4);
+    const nod = win(u, 20.4, 25.4, .4, .6); st.rot += nod * 4 * Math.sin((u - 20.4) * 2.2);
+    const pt = win(u, 25.9, 29.6, .6, .8); st.tr = mixP(st.tr, POSE.point, pt); st.lx = lerp(st.lx, 1, pt); st.ly = lerp(st.ly, .2, pt);
+    if (u > 30 && u < 42) { st.lx = .7; st.ly = -1; }                                                  // looks at the moon/stars
+    st.hat = io((u - 42.1) / 2.2); const hw = win(u, 42.0, 44.4, .4, .6); st.tr = mixP(st.tr, POSE.wave, hw);   // beret off → bedpost
+    const yw = win(u, 47.3, 51.6, .8, 1.2); st.tr = mixP(st.tr, POSE.yawn, yw); st.mo = Math.max(st.mo, .9 * yw); st.lids = .4 * yw;
+    if (u > 52) st.lids = Math.max(st.lids, .42 + .08 * Math.sin(u * .9));
+    if (u > 53.9 && u < 73.4) st.rot += 3 * Math.sin(u * 6.283 / 5);
+    if (u > 75.3 && u < 79.8) { st.lx = -1; st.ly = .4; } else if (u > 79.8 && u < 85.4) { st.lx = 1; st.ly = .5; } else if (u > 85.4 && u < 91) { st.lx = -.8; st.ly = -.8; }
+    if (u > 91) st.lids = Math.max(st.lids, .55);
+    const bl = sstep(119.2, 122.5, u); st.tr = mixP(st.tr, POSE.blanket, bl);
+    const ep = sstep(123.4, 127.5, u); st.rot = lerp(st.rot, -14, ep); st.y += 10 * ep; st.ea = lerp(st.ea, -10, ep);
+    st.hat = Math.max(st.hat, u > 44 ? 1 : 0);
+  } else { st.hat = 1; st.tr = POSE.blanket.slice(); st.rot = -14; st.y += 10; st.ea = -10; }
+  st.lids = lerp(st.lids, 1, asleep); st.mo = lerp(st.mo, .05, asleep); st.asleep = asleep;
+  st.sq = 1 + .018 * Math.sin(t * 6.283 / 3.8) * asleep;                                                 // slow breathing
+  if (asleep > .5) st.tr = [POSE.blanket[0] + 2 * Math.sin(t * 6.283 / 3.8), POSE.blanket[1], POSE.blanket[2]];
+  return st;
+}
+function drawFistik(st, n) {
+  drawTrunk(st.tr[0], st.tr[1], st.tr[2]);
+  const my = 334, mo = st.mo, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * mo).toFixed(1)} 224 ${my} Z`;
+  el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", mo > .04 ? "#8C2F45" : "none");
+  el.tongue.setAttribute("ry", mo > .15 ? (12 * mo).toFixed(1) : 0); el.tongue.setAttribute("cy", (my + 6 + 24 * mo).toFixed(1));
+  el.lidL.setAttribute("height", (84 * st.lids).toFixed(1)); el.lidR.setAttribute("height", (84 * st.lids).toFixed(1));
+  el.pupils.setAttribute("transform", `translate(${(st.lx * 10).toFixed(1)} ${(st.ly * 9).toFixed(1)})`);
+  el.earL.setAttribute("transform", `rotate(${(-st.ea).toFixed(1)} 222 230)`);
+  el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${(-st.ea).toFixed(1)} 222 230)`);
+  // beret floats off to the bedpost (rig coords: target ≈ world (500, 575))
+  const tx = (HATPOST[0] - st.x) / FSC, ty = 620 + (HATPOST[1] - st.y) / FSC - 140, h = st.hat;
+  HAT.setAttribute("transform", h > 0 ? `translate(${(tx * h).toFixed(1)} ${(ty * h - 160 * Math.sin(h * Math.PI)).toFixed(1)}) rotate(${(25 * h).toFixed(1)} 300 140)` : "");
+  HAT.style.display = h >= 1 ? "none" : "";                                    // arrived: the canvas beret on the post takes over
+  const [sx, sy] = W2S(st.x, st.y), s = FSC * CAM[2];
+  const cw = $("#charWrap");
+  cw.style.transform = `translate(${(sx - 300 * s).toFixed(1)}px, ${(sy - 620 * s).toFixed(1)}px) scale(${s.toFixed(4)}) translate(300px, 620px) rotate(${st.rot.toFixed(2)}deg) scale(${(2 - st.sq).toFixed(4)}, ${st.sq.toFixed(4)}) translate(-300px, -620px)`;
+  cw.style.filter = `brightness(${lerp(1, .74, n).toFixed(3)}) saturate(${lerp(1, .78, n).toFixed(3)})`;
+}
+
+// ─────────── sahne ───────────
+const CALF = [[1430, 860, .8, 1, "#F3E2C7"], [1720, 930, .75, -1, "#FFFFFF"]];
+function calves(x, t, k, u, n) {
+  CALF.forEach(([cx, cy, s, f, col], i) => {
+    let px = cx, sleep = 0, walk = 0;
+    if (k === 0) { const ent = io((u - (13.5 + i * 1.2)) / 5); px = lerp(2150 + i * 120, cx, ent); walk = ent > 0 && ent < 1;
+      sleep = sstep(66 + i * 2, 70 + i * 2, u); }
+    else sleep = 1;
+    if (k === 0 && u < 13.5 + i * 1.2) return;
+    calf(x, px, cy + (sleep > .5 ? 40 : 0), s, t + i, n, { sleep, chew: sleep < .5 && !walk ? .55 + .45 * Math.sin(t * 2.6 + i) : 0, f, col });
+  });
+}
+function ducks(x, t, k, u, n) {
+  const NX = 1160, NY = 1010;
+  nest(x, NX, NY, .62, n);
+  [[0, 1, false], [-70, .7, true], [-130, .62, true]].forEach(([dx, s, baby], i) => {
+    let px = NX + dx * .7 + 10, sleep = 1, walk = false;
+    if (k === 0) { const a = io((u - (79.2 + i * .5)) / 4.2); if (u < 79.2 + i * .5) return; px = lerp(2050 + i * 110, px, a); walk = a < 1; sleep = sstep(84.5, 86, u); }
+    duck(x, px, NY - 20 - (baby ? -6 : 0), s * .62, t + i, n, { sleep, walk, f: -1, baby });
+  });
+}
+function scene(t, k, u, n) {
+  const x = bx; camOff(x); x.clearRect(0, 0, W, H); camOn(x);
+  nightSky(x, n, -1300, 660); stars(x, n, t, 7, 260, 640);
+  // a few big stars wink in "Yıldızlar göz kırpmaya başladı"
+  if (k === 0) { const wk = win(u, 36.5, 42, .5, .8); if (wk > 0) for (const [sx, sy, ph] of [[700, 120, 0], [1060, 220, 1.3], [1240, 90, 2.4], [420, 260, 3.1]]) {
+    const p = .5 + .5 * Math.sin(u * 2.4 + ph); x.fillStyle = `rgba(255,246,200,${wk * (.4 + .6 * p)})`; x.beginPath();
+    for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2, r = (i % 2 ? 4 : 13) * (1 + .4 * p); x.lineTo(sx + Math.cos(a) * r, sy + Math.sin(a) * r); } x.fill(); } }
+  for (const [tt, x0, y0] of [[TS[1] + 40, 1500, 110], [TS[3] + 70, 1300, 60], [TS[5] + 30, 1650, 140], [TS[0] + 108, 1450, 90]]) shootingStar(x, t, tt, x0, y0, n);
+  const [MX, MY] = moonAt(t), glow = k === 0 ? win(u, 30, 36.5, .8, 1.5) : 0;
+  moon(x, MX, MY, 72 * (1 + .08 * glow), t);
+  hillsNight(x, n, t);
+  for (const [tx, sc, sd] of [[150, .75, 1], [300, .6, 2], [1780, .8, 6], [1660, .62, 5]]) treeNight(x, tx, 690, sc, sd, n);
+  let g = x.createLinearGradient(0, 680, 0, H); g.addColorStop(0, mixC("#7DBF62", "#28504A", n)); g.addColorStop(1, mixC("#4E9E3C", "#1C3A38", n)); x.fillStyle = g; x.fillRect(-200, 680, W + 400, H - 680 + 200);
+  // hive + bee (verse 2 line 3), owl (from tour 4)
+  hive(x, 330, 640, .8, n);
+  if (k === 0) { const a = io((u - 85.6) / 3.2); if (u > 85.6 && u < 89.2) bee(x, lerp(700, 330, a) + Math.sin(u * 5) * 20, lerp(520, 660, a) + Math.cos(u * 4) * 14, .9, t); }
+  if (k >= 3) owl(x, 1760, 560, .7, t, n, ((t % 7.3) / 7.3) > .94 ? 1 : 0);
+  fence(x, 760, 1180, 2000, n);
+  soilRows(x, 1230, 1900, 820, 5, n);
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 6; c++) { const px = 1270 + c * 105 + (r % 2) * 50, py = 812 + r * 46; (c + r) % 2 ? cabbage(x, px, py, .55, n) : carrotTop(x, px, py, .9, n, t); }
+  // pond + frog (stops croaking in verse 2 line 1)
+  pond(x, 230, 930, 200, 70, n, t); lilyPad(x, 260, 920, 70, 1, t);
+  const fAwake = k === 0 ? 1 - sstep(78.4, 79.4, u) : 0, croak = k === 0 && u < 78.6 ? Math.max(0, Math.sin((u - 75.3) * 4)) * win(u, 75.3, 78.2, .2, .3) : 0;
+  frogPad(x, 260, 896, .8, t, n, fAwake, croak);
+  bed(x, BED[0], BED[1], 1, n, "back");
+  const pillow = k === 0 ? Math.sin(clamp((u - 45) / .9) * Math.PI) : 0;
+  if (pillow > 0) { x.save(); x.translate(580, 760); x.scale(1 + .08 * pillow, 1 + .08 * pillow); x.translate(-580, -760); bed(x, BED[0], BED[1], 1, n, "back"); x.restore(); }
+  calves(x, t, k, u, n);
+  ducks(x, t, k, u, n);
+  if (k > 0 || u > 44.3) beret(x, HATPOST[0], HATPOST[1] - 6, FSC, n);
+  // Fıstık
+  const st = fistikState(t); drawFistik(st, n);
+  // ── front
+  const f = fx; camOff(f); f.clearRect(0, 0, W, H); camOn(f);
+  const qUp = k === 0 ? sstep(119.4, 122.4, u) : 1;
+  f.save(); f.translate(0, -26 * qUp); bed(f, BED[0], BED[1] + 26 * qUp, 1, n, "quilt"); f.restore();
+  if (st.asleep > .5) zzz(f, 640, 560 + 10, t, st.asleep);
+  if (k > 0 || u > 70) for (const [cx, cy, s, fl] of CALF) snoreBubble(f, cx + 70 * fl, cy + 10, t + cx, n, 4.6);
+  // fireflies (tour 4: they gather into a heart for a while)
+  const heart = k === 3 ? win(u, 92, 104, 3, 3) : 0;
+  firefliesHeart(f, t, n, heart);
+  // dream bubble (tours 3 and 5)
+  if (k === 2 || k === 4) dream(f, t, u, n);
+  camOff(f);
+  const [mx, my] = W2S(MX, MY); g = f.createRadialGradient(mx, my, 40, mx, my, 1400); g.addColorStop(0, `rgba(255,240,200,${.12 * n})`); g.addColorStop(1, "rgba(255,240,200,0)");
+  f.globalCompositeOperation = "screen"; f.fillStyle = g; f.fillRect(0, 0, W, H); f.globalCompositeOperation = "source-over";
+}
+function firefliesHeart(x, t, n, heart) {
+  const R = rng(5);
+  for (let i = 0; i < 28; i++) {
+    const bxp = R() * W, byp = 300 + R() * 650, sp = .12 + R() * .15, ph = R() * 6.283, per = 2.5 + R() * 3;
+    let px = bxp + Math.sin(t * sp + ph) * 90, py = byp + Math.cos(t * sp * 1.3 + ph) * 50;
+    if (heart > 0) { const a = i / 28 * 6.283, hx = 960 + 16 * Math.pow(Math.sin(a), 3) * 14, hy = 400 - (13 * Math.cos(a) - 5 * Math.cos(2 * a) - 2 * Math.cos(3 * a) - Math.cos(4 * a)) * 14;
+      px = lerp(px, hx, io(heart)); py = lerp(py, hy, io(heart)); }
+    const gl = (.5 + .5 * Math.sin(t * 6.283 / per + ph)) * clamp(n * 1.6);
+    const g = x.createRadialGradient(px, py, 0, px, py, 22); g.addColorStop(0, `rgba(255,245,150,${.9 * gl})`); g.addColorStop(1, "rgba(255,245,150,0)");
+    x.fillStyle = g; x.beginPath(); x.arc(px, py, 22, 0, 7); x.fill();
+  }
+}
+// rüya bulutu: sözler bulutun içinde canlanır
+function dream(f, t, u, n) {
+  const a = win(u, 9, 166, 3, 5); if (a <= 0) return;
+  const C = [930, 300], R_ = 250, from = [640, 560];
+  dreamBubble(f, C[0], C[1], R_, a * .92, from);
+  f.save(); f.globalAlpha = a; f.beginPath(); f.ellipse(C[0], C[1], R_ * .92, R_ * .66, 0, 0, 7); f.clip();
+  const g = f.createLinearGradient(0, C[1] - R_, 0, C[1] + R_); g.addColorStop(0, "#BFD8FF"); g.addColorStop(1, "#F4E8FF"); f.fillStyle = g; f.fillRect(C[0] - R_, C[1] - R_, R_ * 2, R_ * 2);
+  const sec = u < 30 || (u > 53.5 && u < 74) || u > 139.5 ? "calves" : u < 53.5 ? "sky" : u < 96.5 ? "pond" : u < 118.8 ? "fish" : "calves";
+  if (sec === "calves") {   // counting calves jumping over a little fence
+    f.fillStyle = "#9ED48A"; f.fillRect(C[0] - R_, C[1] + 60, R_ * 2, 200); fence(f, C[1] + 70, C[0] - 40, C[0] + 40, .1);
+    for (let i = 0; i < 3; i++) { const k = ((u / 3.6 + i / 3) % 1), jx = lerp(C[0] - 230, C[0] + 230, k), jy = C[1] + 40 - Math.sin(k * Math.PI) * 120;
+      calf(f, jx, jy, .38, t + i, .1, { col: i % 2 ? "#FFFFFF" : "#F3E2C7" }); }
+  } else if (sec === "sky") { f.fillStyle = "#3B4F96"; f.fillRect(C[0] - R_, C[1] - R_, R_ * 2, R_ * 2); stars(f, 1, t, 31, 60, C[1] + 150); moon(f, C[0], C[1], 60, t); }
+  else if (sec === "pond") { f.fillStyle = "#9ED48A"; f.fillRect(C[0] - R_, C[1] + 20, R_ * 2, 200); pond(f, C[0] - 60, C[1] + 70, 140, 45, .2, t); frogPad(f, C[0] - 60, C[1] + 50, .55, t, .2, 0, 0);
+    duck(f, C[0] + 130, C[1] + 70, .5, t, .2, { sleep: 1, f: -1 }); duck(f, C[0] + 190, C[1] + 80, .35, t, .2, { sleep: 1, f: -1, baby: true }); hive(f, C[0] + 40, C[1] - 90, .6, .2); }
+  else { f.fillStyle = "#7FD0EA"; f.fillRect(C[0] - R_, C[1] - R_, R_ * 2, R_ * 2); ["red", "yellow", "blue", "green"].forEach((c, i) => fish(f, C[0] - 180 + ((u * 40 + i * 110) % 460), C[1] - 30 + Math.sin(u * 1.4 + i) * 40 + (i % 2) * 40, .32, c, u, { flip: 1 })); }
+  f.restore();
+}
+// ─────────── söz hapı (vokalli turlar) ───────────
+let lastLy = "";
+function lyric(t) {
+  let Lx = null; for (const l of LINES) if (t >= l.words[0][1] - .4 && t < l.end + .6) Lx = l;
+  const ly = $("#lyric"); if (!Lx) { ly.style.opacity = 0; return; }
+  const a = Math.min(sstep(Lx.words[0][1] - .4, Lx.words[0][1], t), 1 - sstep(Lx.end + .1, Lx.end + .6, t));
+  const html = Lx.words.map(([w, wt_]) => (t >= wt_ - .02 ? `<b>${w}</b>` : `<span>${w}</span>`)).join(" ");
+  if (html !== lastLy) { ly.innerHTML = html; lastLy = html; }
+  ly.style.opacity = (a * .9).toFixed(3);
+}
+function overlays(t) {
+  const o = ox; camOff(o); o.clearRect(0, 0, W, H);
+  vignette(o, lerp(.25, .45, nightAt(t)));
+  ditherTex(o);
+  const fade = sstep(D - 18, D - 1.5, t); if (fade > 0) { o.fillStyle = `rgba(5,8,22,${fade})`; o.fillRect(0, 0, W, H); }
+  $("#bug").style.opacity = (1 - fade) * .8;
+}
+function render(t) {
+  t = Math.max(0, Math.min(D - 1e-3, t));
+  const k = tourOf(t), u = t - TS[k], n = nightAt(t);
+  CAM = camAt(u, k === 0 ? CAM_A1 : k % 2 === 0 ? CAM_A2 : k === 5 ? CAM_B6 : CAM_B);
+  scene(t, k, u, n); overlays(t); lyric(t);
+}
+gsap.defaults({ lazy: false });
+const master = gsap.timeline({ paused: true });
+const clock = { _t: 0 };
+Object.defineProperty(clock, "t", { get() { return this._t; }, set(v) { this._t = v; render(v); } });
+master.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none", immediateRender: false }, 0);
+window.addEventListener("hf-seek", (e) => render(e?.detail ? e.detail.time : master.time()));
+render(0);
+window.__timelines["main"] = master;
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "Baloo 2"; font-weight: 400 800; src: url("../../ortak/fonts/Baloo2-wght.ttf") format("truetype"); }
+  html, body { margin: 0; background: #000; }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+  canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  .abs { position: absolute; }
+  #charWrap { left: 0; top: 0; width: 600px; height: 640px; transform-origin: 0 0; }
+  #char svg { width: 600px; height: 640px; overflow: visible; }
+</style>
+</head>
+<body>
+<div id="root">
+  <canvas id="cvBack"></canvas>
+  <div id="charWrap" class="abs"><div id="char"></div></div>
+  <canvas id="cvFront"></canvas>
+</div>
+<script>
+const W = 1920, H = 1080, DPR = window.devicePixelRatio || 1;
+const $ = (s) => document.querySelector(s), OL = "#4C76B5";
+const [bx, fx] = ["cvBack", "cvFront"].map((id) => { const c = document.getElementById(id); c.width = W * DPR; c.height = H * DPR; const x = c.getContext("2d"); x.setTransform(DPR, 0, 0, DPR, 0, 0); return x; });
+/*PAINT*/
+/*NIGHT*/
+/*RIG*/
+el.legs.forEach((g, i) => g.setAttribute("transform", `translate(${LEGP[i][0]} ${LEGP[i][1]})`));
+el.earR.setAttribute("transform", "translate(600 0) scale(-1 1)");
+function placeFistik(x, y, sc, rot, n, { asleep = 0, tr = [88, -140, 22], mo = 0 } = {}) {
+  drawTrunk(tr[0], tr[1], tr[2]);
+  const my = 334, md = `M224 ${my} Q250 ${my + 12} 276 ${my - 2} Q252 ${(my + 8 + 46 * mo).toFixed(1)} 224 ${my} Z`;
+  el.mouth.setAttribute("d", md); el.mclip.setAttribute("d", md); el.mouth.setAttribute("fill", mo > .04 ? "#8C2F45" : "none"); el.tongue.setAttribute("ry", mo > .15 ? 12 * mo : 0); el.tongue.setAttribute("cy", my + 6 + 24 * mo);
+  el.lidL.setAttribute("height", 84 * asleep); el.lidR.setAttribute("height", 84 * asleep);
+  el.earL.setAttribute("transform", `rotate(${-8 * asleep} 222 230)`); el.earR.setAttribute("transform", `translate(600 0) scale(-1 1) rotate(${-8 * asleep} 222 230)`);
+  $("#charWrap").style.transform = `translate(${x - 300 * sc}px, ${y - 620 * sc}px) scale(${sc}) translate(300px, 620px) rotate(${rot}deg) translate(-300px, -620px)`;
+  $("#charWrap").style.filter = `brightness(${lerp(1, .74, n)}) saturate(${lerp(1, .78, n)})`;
+}
+function scene(t, n, asleep) {
+  const x = bx; x.clearRect(0, 0, W, H);
+  nightSky(x, n, -1200, 640); stars(x, n, t);
+  const MX = lerp(1560, 1380, n), MY = lerp(330, 170, n); moon(x, MX, MY, lerp(66, 80, n), t);
+  hillsNight(x, n, t);
+  for (const [tx, sc, sd] of [[150, .75, 1], [300, .6, 2], [1780, .8, 6], [1660, .62, 5]]) treeNight(x, tx, 690, sc, sd, n);
+  let g = x.createLinearGradient(0, 680, 0, H); g.addColorStop(0, mixC("#7DBF62", "#28504A", n)); g.addColorStop(1, mixC("#4E9E3C", "#1C3A38", n)); x.fillStyle = g; x.fillRect(0, 680, W, H - 680);
+  fence(x, 760, 1180, 1920, n);
+  soilRows(x, 1230, 1880, 820, 5, n);
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 6; c++) { const px = 1270 + c * 105 + (r % 2) * 50, py = 812 + r * 46; (c + r) % 2 ? cabbage(x, px, py, .55, n) : carrotTop(x, px, py, .9, n, t); }
+  pond(x, 230, 930, 200, 70, n, t);
+  if (asleep) sleepFrog(x, 260, 900, .8, t, n); else { lilyPad(x, 260, 920, 70, 1, t); sleepFrog(x, 260, 896, .8, t, n); }
+  bed(x, 760, 860, 1, n, "back");
+  if (asleep) { calf(x, 1420, 900, .8, t, n, { sleep: 1 }); calf(x, 1700, 960, .75, t, n, { sleep: 1, f: -1, col: "#FFFFFF" }); }
+  else { calf(x, 1430, 860, .8, t, n, { chew: .6 + .4 * Math.sin(t * 3) }); calf(x, 1720, 930, .75, t, n, { chew: .8, f: -1, col: "#FFFFFF" }); }
+  placeFistik(560, asleep ? 950 : 940, .62, asleep ? -14 : 0, n, asleep ? { asleep: 1, tr: [100, -40, 24] } : { asleep: .35, tr: [60, -210, 21], mo: .75 });
+  const f = fx; f.clearRect(0, 0, W, H);
+  bed(f, 760, 860, 1, n, "quilt");
+  if (asleep) { zzz(f, 640, 560, t); snoreBubble(f, 1500, 890, t, n); }
+  fireflies(f, t, n);
+  g = f.createRadialGradient(MX, MY, 40, MX, MY, 1400); g.addColorStop(0, `rgba(255,240,200,${.12 * n})`); g.addColorStop(1, "rgba(255,240,200,0)"); f.globalCompositeOperation = "screen"; f.fillStyle = g; f.fillRect(0, 0, W, H); f.globalCompositeOperation = "source-over";
+  vignette(f, lerp(.25, .45, n)); ditherTex(f);
+}
+const q = new URLSearchParams(location.search);
+scene(Number(q.get("t") || 2), Number(q.get("n") || .35), q.get("s") === "1");
+</script>
+</body>
+</html>

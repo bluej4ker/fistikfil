@@ -43,7 +43,8 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 9 | Pırt Pırt Boya Döktüm · Renkleri Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:02 | Yayında (874) |
 | D1 | 20 Dakika Çocuk Şarkıları · Küçük Kurbağa, Arı Vız Vız, Ali Baba'nın Çiftliği · Fıstık Fil (derleme, 8 şarkı) | — | 19:58 | Yayında (~16 Eki; 12 günde 2,4 B) |
 | 10 | Kırmızı Balık Gölde · Renkleri Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 2:53 (açılış+kapanış dahil) | Hazır (Canvas 2D, 4K), yüklenmedi |
-| 11–13 | Dandini Ninnisi (uzun) · Beş Küçük Ördek · Otobüsün Tekerleği | — | — | Suno promptları hazır (`kaynak/11…13/suno-prompt.txt`), şarkılar bekleniyor |
+| 11 | Dandini Dandini Dastana · Fıstık Fil Ninnisi · 17 Dakika Bebek Uyku Müziği | — | 17:42 (açılış dahil, kapanış yok) | Hazır (Canvas 2D, 4K, video yerelde), yüklenmedi |
+| 12–13 | Beş Küçük Ördek · Otobüsün Tekerleği | — | — | Suno promptları hazır (`kaynak/12…13/suno-prompt.txt`), şarkılar bekleniyor |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S3–S8 | Reels 3–4 (Küçük Kurbağa), 5–6 (Fıstık Yer), 7–8 (Arı Vız Vız) | — | ~0:30 | Hazır, `Reels/` + `Reels/reels-metin.txt` |
@@ -68,6 +69,7 @@ FistikFil/
 ├── 08 - Uçağı Kaldırsana/        ← aynı düzen
 ├── 09 - Pırt Pırt Boya Döktüm/   ← aynı düzen (4 parça)
 ├── 10 - Kırmızı Balık Gölde/     ← aynı düzen (4 parça)
+├── 11 - Dandini Ninnisi/        ← kapak, youtube-metin.txt; 17 dk 4K mp4 yerelde, git dışı
 ├── D1 - 20 Dakika Çocuk Şarkıları/ ← derleme: 4K mp4 (parçalı), kapak, youtube-metin.txt (bölüm zaman damgalı)
 ├── Reels/                        ← reels-3…8 mp4 + reels-1…8 kapak png + reels-metin.txt
 │   └── 04 - Kayıp Yıldız/        ← kullanıcının 3 Reels'i + srt + kapak + reels-meta.json
@@ -86,7 +88,8 @@ FistikFil/
     ├── 08-ucagi-kaldirsana/      ← aynı düzen + suno-prompt.txt, tek-prompt.txt (§7.7)
     ├── 09-fistiksin-boya-kutusu/ ← build.py, kapak.py, lines.json (iki geçiş), src/(template, rig_part, art, sfx), storyboard/(STORYBOARD.md, ROUND_LOG.md) (§7.8)
     ├── 10-kirmizi-balik/         ← İLK CANVAS 2D BÖLÜM: build.py, src/(template.html, paint.js, rig_part.js, eskiz.html), lines_build.py, fw.py, sfx.py, kapak.py, storyboard/ (§7.10)
-    ├── 11-dandini-ninni/ 12-bes-kucuk-ordek/ 13-otobusun-tekerlegi/ ← suno-prompt.txt (özgün söz + bilinen başlık kancası)
+    ├── 11-dandini-ninni/         ← uzun ninni (Canvas 2D): build.py, src/(template, paint, night, rig_part, eskiz), lines_build.py, fw.py, kapak.py, storyboard/ (§7.11)
+    ├── 12-bes-kucuk-ordek/ 13-otobusun-tekerlegi/ ← suno-prompt.txt (özgün söz + bilinen başlık kancası)
     ├── derleme/                  ← build.py (SONGS sırası + "Sıradaki şarkı!" kartları), src/bumper.html, derle.py (birleştirme), kapak.py (§7.9)
     ├── intro/                    ← açılış/kapanış/abone bandı: src/(intro.html, abone.html), build.py, make_jingle.py, render.sh, intro_ekle.py (§6.6)
     ├── hibrit/                   ← yapay zekâ plakası + rig deneyi: ref_sheet.py → ref/ (Fıstık karakter referansı), r13-yesil-final/PROMPTLAR.md (Reels 13 sahne promptları)
@@ -467,6 +470,17 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - **Şarkı:** Gemini. v1'de "mavi" → "hip hop rap" (2. kez!) → "masmavi" ile yeniden üretildi (`tek-prompt.txt`, kısa tek blok; uzun prompta Gemini "çok uzun" dedi). 117 BPM, vokal 7,8 sn'de. Söz zamanı: `fw.py` (faster-whisper large-v3, promptsuz) → `lines_build.py`.
 - **Render:** 4K 160,7 sn ≈ 6,5 dk (380 ms/kare). Final crf 14 → 611 MB; teslim için crf 17 `-tune animation` ile yeniden kodlandı (361 MB, görsel fark yok, VideoToolbox 0 hata, −11,5 LUFS).
 
+### 7.11 Bölüm 11 — "Dandini Dandini Dastana · Fıstık Fil Ninnisi" (17:42) · uzun uyku videosu
+
+- **Şarkı:** Gemini, tek dosya (vokalli, 2:59, 67 BPM, vokal 10,5 sn'de, 96–119 sn müzik kutusu arası). Bütün sözler doğru (faster-whisper promptsuz). **Enstrümantal sürüm üretilmedi, ayrıştırıldı:** `audio-separator` + `UVR-MDX-NET-Inst_HQ_3.onnx` (yerel `.venv`, model `.venv/sep-models`; önce `audioread` kur, m4a'yı 44,1 kHz wav'a çevir) → 18 sn sürdü; enstrümantal kanalda whisper 0 kelime buldu (temiz).
+- **Yapı:** A (vokal) B (müzik kutusu) × 3 = 6 tur, tur 177,3 sn, 1,5 sn çapraz geçiş (`acrossfade qsin`), A ve B ayrı ayrı −16 LUFS; son 15 sn ses ve görüntü kararır. Toplam 1056,1 sn.
+- **Kullanıcı kararları (Ekim 2026):** ninnide **kapanış yok** (enerjik "Abone olmayı unutma" uyuyan bebeği uyandırır); açılış + abone bandı başta, **kısık**: `intro_ekle.py --kapanis-yok --abone 0.4 --max-abone 1 --abone-olcek 0.75 --acilis-db -5 --bant-db -6` (yeni seçenekler). Ses −16 LUFS (diğerleri −11). Video yalnızca yerelde (812 MB).
+- **Ses akışı:** HyperFrames render sesi kısıyor → render'ın sesi `ninni_mix.m4a` ile değiştirilip (`-c:v copy`) sonra intro_ekle. Ölçüm: açılış −17,3, ninni −15,3 LUFS.
+- **Görüntü:** bahçede açık havada yatak; gece `nightAt(t)` alacakaranlıktan (mor-turuncu) laciverde, ay `moonAt(t)` bütün video boyunca yol alır. Tur 1 sözlerle birebir: danalar bostana süzülür, ay parlar, yıldızlar göz kırpar, bere uçup karyolanın ayak ucu direğine asılır (vardıktan sonra SVG bere gizlenir, tuvalde `beret()` çizilir: Fıstık uyurken dönen rig bereyi sürüklemesin), esneme, kurbağa son vırak, ördek ailesi yuvaya, arı kovana, yorgan çekme, kulak yastık, gözler kapanır. B turları "yaşayan tablo" (horlama baloncukları, kayan yıldız, baykuş, ateş böceği kalbi). Tur 3 ve 5: **rüya bulutu** (yeni bileşen) içinde sözler: çitten atlayan danalar, ay, gölet, Kırmızı Balık'ın balıkları. Tur 6: kamera 40 sn'de aya yükselir.
+- **Uyku kuralları:** sert kesme/parlama/sarsıntı yok, ışıklar ≥ 2,2 sn döngü, **sabit dither** (t'ye bağlı gren yok; koyu gradyan bantlanmasın), söz hapı yarı saydam lacivert. Denetim 8 uyarı (tek ease, seyrek sürpriz) → defterde kabul edilen sapma olarak yazıldı.
+- **Ders:** bere hedefi Fıstık'ın başının hemen arkasına düşünce "çıkmıyor" sanıldı → hedefi kadrajda ayrık bir yere (ayak ucu direği) koy.
+- Render 4K 17,6 dk = 31 dk (278 ms/kare).
+
 ## 8. Teslimat (kullanıcının bilgisayarı)
 
 - Kullanıcı klasörü: `/Users/anil/Projects/max-digital-projects/FistikFil` (Cowork'te bağlı klasör).
@@ -648,7 +662,8 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
 - [ ] Ali Baba Reels + kapak.
 - [x] D1 derleme "20 Dakika Çocuk Şarkıları" (`D1 - …/`). Yükleme kullanıcıda.
 - [x] Bölüm 10 "Kırmızı Balık Gölde" (Canvas 2D): video + kapak + YouTube metni `10 - Kırmızı Balık Gölde/`. Yükleme kullanıcıda.
-- [ ] 11 Dandini ninnisi (A vokalli + B enstrümantal), 12 Beş Küçük Ördek, 13 Otobüsün Tekerleği: şarkılar bekleniyor (promptlar hazır). Canvas 2D altyapısı (`10-kirmizi-balik/src/paint.js`) yeniden kullanılacak.
+- [x] Bölüm 11 "Dandini Ninnisi" (17 dk uyku videosu): `11 - Dandini Ninnisi/`. Yükleme kullanıcıda; "Fıstık Fil Ninnileri" oynatma listesi önerildi.
+- [ ] 12 Beş Küçük Ördek, 13 Otobüsün Tekerleği: şarkılar bekleniyor (promptlar hazır). Canvas 2D altyapısı (`10-kirmizi-balik/src/paint.js`, `11-dandini-ninni/src/night.js`) yeniden kullanılacak.
 - [ ] Reels 13 hibrit deneme: promptlar hazır (`kaynak/hibrit/r13-yesil-final/PROMPTLAR.md`); kullanıcı plakaları (S1–S6) ve isteğe bağlı S5 kahraman klibini üretecek, sonra dikey kompozisyon kurulacak.
 - [ ] "Fıstık Fil'in Güzel Alışkanlıkları" listesinin planı.
 - [ ] Sözlerin telif durumu (MESAM/MSG) kontrolü.

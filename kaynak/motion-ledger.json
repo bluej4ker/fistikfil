@@ -515,6 +515,68 @@
         "expo.out",
         "sine.out"
       ]
+    },
+    {
+      "name": "11-dandini-ninni",
+      "date": "2026-10-28",
+      "themes": [],
+      "transitions": [
+        "slow-dolly-carry",
+        "dolly-out-wide",
+        "moon-tilt-up",
+        "slow-pan-down",
+        "slow-dolly-out",
+        "slow-dolly-left",
+        "slow-pan-carry",
+        "slow-dolly-in",
+        "slow-dolly-out",
+        "crossfade-carry",
+        "slow-crossfade-carry",
+        "dream-close-carry",
+        "slow-ripple-dissolve",
+        "dream-close-carry",
+        "moon-crane-fade"
+      ],
+      "new_components": [
+        "motif:snore-bubble",
+        "motif:snore-bubble",
+        "rüya-bulutu",
+        "motif:dream-bubble"
+      ],
+      "entrances": [
+        "moon-rise",
+        "calves-tiptoe-in",
+        "nod",
+        "moon-glow",
+        "beret-float",
+        "calves-yawn",
+        "frog-croak-stop",
+        "fireflies-wake",
+        "quilt-pull",
+        "settle",
+        "drift",
+        "dream-bubble-open",
+        "owl-perch",
+        "dream-bubble-open",
+        "drift"
+      ],
+      "eases": [
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut",
+        "sine.inOut"
+      ]
     }
   ]
 }
