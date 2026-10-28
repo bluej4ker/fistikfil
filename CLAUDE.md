@@ -49,6 +49,7 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | S2 | Dere Kurudu! Fıstık Fil Ne Yapacak? 💧 #shorts #çocukşarkıları | — | 0:31 | Shorts |
 | S3–S8 | Reels 3–4 (Küçük Kurbağa), 5–6 (Fıstık Yer), 7–8 (Arı Vız Vız) | — | ~0:30 | Hazır, `Reels/` + `Reels/reels-metin.txt` |
 | S9–S12 | Reels 9–10 (Uçağı Kaldırsana: uçak yapımı, "bir daha"), 11–12 (Pırt Pırt Boya: gri dünya, boyama defteri) | — | 0:29–0:34 | Hazır, `Reels/` + `Reels/reels-metin.txt` (Ekim 2026) |
+| S13–S14 | Reels 14 (Uyku vakti: bere uçar, danalar uyur), 15 (Rüyada danalar: çitten atlayan danalar) · Bölüm 11 | — | 0:38 | Hazır, `Reels/` + `Reels/reels-metin.txt` (Ekim 2026) |
 | KY | Kayıp Yıldız · 3 Reels (kullanıcının kendi ürettiği, `codex/kayip-yildiz-reels` dalından) | — | ~0:25 | Hazır, `Reels/04 - Kayıp Yıldız/` (kaynak kodu repoda yok) |
 
 ---
@@ -526,6 +527,7 @@ python3 intro_ekle.py ../04-kucuk-kurbaga/renders/x-1080.mp4 -o x-final.mp4 --li
   - `cuts: [t]`: kadraj o anda yumuşak kaymaz, keser. Kadraj sahnedeki hızlı bir kamera kaymasını yumuşak takip ederken bir sonraki hedefe erken kayıp boş duvarda kalıyordu (Reels 9, 20,5 sn). Hedefi kaymadan sonraki ana koy, oraya `cuts` ekle.
   - Yerelde `CHROME=<chromium_headless_shell-1243 yolu>` ortam değişkeni ile çalıştır. Bölüm 8 klasörüne önce `ortak/gsap` ve `ortak/fonts` kopyalanmalı.
   - Son kart son 2,2 sn'yi kaplar. Önemli an (ör. balığın maviye boyanması) o süreye düşüyorsa `end`'i uzat.
+- **Reels 14–15 eklentileri (Bölüm 11, ninni):** `endText` son kart yazısını değiştirir (ninnide "17 dakikalık ninni kanalda!"). `subTop` artık `[[t, top], ...]` listesi de olabilir: altyazı yakın planda karakterin altında (900), geniş planda gökyüzünde (560) durur; konum satır değişiminde değişsin. Son kart belirirken altyazı `1 − 4·endo` ile hızla söner. Canvas sahnelerde tuvaldeki nesnelerin DOM kimliği yok: kadrajı sayısal x ile ver (`W2S` ile hesapla veya `getBoundingClientRect` ile ölçülen karelerden). Ses `ninni_mix.m4a` (−16 LUFS, Reels −15,7).
 - `make_cover.py comp t out l1 l2 c1 c2 dx [hedef]`: 1080×1920 kapak (sahne kırpması + iki satırlık başlık + "YENİ!" + logo). `HIDE="#fxSvg text{display:none!important}"` ile efekt yazıları gizlenir; başlık Fıstık'ın yüzüne binmesin diye Fıstık'ın alçakta durduğu kareyi seç.
 - **Örnek ayarlar:**
   - r1: Güm Güm 21.0–51.8 s.

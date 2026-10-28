@@ -1,0 +1,14 @@
+{
+ "comp": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/11-dandini-ninni/index.html",
+ "start": 475.0,
+ "end": 512.5,
+ "audio": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/11-dandini-ninni/assets/ninni_mix.m4a",
+ "lines": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/11-dandini-ninni/lines.json",
+ "hook": "Danaları say,<br/>uykuya dal!",
+ "hookSecs": 4.0,
+ "smooth": 0.1,
+ "track": [[475.0, "head"], [484.6, 994], [501.0, "head"], [505.5, 994]],
+ "out": "/Users/anil/Projects/max-digital-projects/FistikFil/Claude outputs/reels/reels-15-ruyada-danalar",
+ "subTop": 560,
+ "endText": "17 dakikalık ninni<br/>kanalda!"
+}

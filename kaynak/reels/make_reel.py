@@ -4,7 +4,8 @@ Config keys: comp, start, end, audio (mp3/m4a/mp4), lines (list-of-lists or Vide
   bias [[t, dx]...], out, optional: gsap (local path to route CDN GSAP to), track [[t, "elementId" | x_px]...], hide ["#sel", ...],
   smooth (crop follow speed), css (extra CSS for this reel), hookHide ["#sel", ...] (hidden while the hook text is on screen),
   fxPull ["#fxSvg text", ".snd", ...] (sound/colour words: redrawn inside the crop so they are never cut at its edge; fxMinY keeps them under the hook),
-  cuts [t, ...] (scene camera cuts: crop smoothing restarts there), subTop (karaoke line top in CSS px; default 770 — move it up when the characters stand low), audioOffset (s)
+  cuts [t, ...] (scene camera cuts: crop smoothing restarts there), subTop (karaoke line top in CSS px, or [[t, top], ...]; default 770 — move it up when the characters stand low), audioOffset (s),
+  endText (end card text; default "Şarkının tamamı<br/>kanalda!")
 Seeks the composition frame by frame (DPR 2), follows Fıstık with a smoothed vertical crop,
 draws hook text + karaoke subtitles + end card inside the crop, then muxes the song segment."""
 import asyncio, json, sys, os, subprocess, math
@@ -43,7 +44,13 @@ OVERLAY_CSS = """
 #lyric, #bug, #title, #end, #vignette { display:none !important; }
 """ + "".join(f"{sel} {{ display:none !important; }}\n" for sel in cfg.get("hide", [])) + cfg.get("css", "")
 HOOKHIDE = cfg.get("hookHide", [])
-if "subTop" in cfg: OVERLAY_CSS += f"#reelOv .rsub {{ top:{cfg['subTop']}px; }}\n"
+SUBTOP = cfg.get("subTop", 770)                               # a number, or [[t, top], ...] when the action moves up/down the frame
+def subtop_at(t):
+    if not isinstance(SUBTOP, list): return SUBTOP
+    cur = SUBTOP[0][1]
+    for a, v in SUBTOP:
+        if t >= a: cur = v
+    return cur
 FXPULL = cfg.get("fxPull", []); FXMINY = cfg.get("fxMinY", 300)
 
 def line_at(t):
@@ -68,10 +75,10 @@ async def main():
             await pg.goto("file://" + cfg["comp"])
             await pg.wait_for_function("!!(window.__timelines && window.__timelines.main)")
             await pg.add_style_tag(content=OVERLAY_CSS)
-            await pg.evaluate("""(h) => { const o = document.createElement('div'); o.id = 'reelOv';
+            await pg.evaluate("""([h, e]) => { const o = document.createElement('div'); o.id = 'reelOv';
                 o.innerHTML = `<div class="logo"><span><b style="color:#3D9BFF">Fıstık</b> <b style="color:#FF7A3D">Fil</b></span></div><div class="hook">${h}</div><div class="rsub"></div><div class="fxl"></div>
-                  <div class="end"><div class="t">${'Şarkının tamamı<br/>kanalda!'}</div><div class="c">▶ Fıstık Fil</div></div>`;
-                document.getElementById('root').appendChild(o); }""", cfg["hook"])
+                  <div class="end"><div class="t">${e}</div><div class="c">▶ Fıstık Fil</div></div>`;
+                document.getElementById('root').appendChild(o); }""", [cfg["hook"], cfg.get("endText", "Şarkının tamamı<br/>kanalda!")])
             await pg.wait_for_timeout(800)                       # fonts (document.fonts.ready can hang in headless)
             st["pg"] = pg
 
@@ -118,9 +125,9 @@ async def main():
             endo = max(0.0, min(1.0, (t - (T1 - 2.2)) / 0.35))
             hooko = 1.0 if t - T0 < cfg.get("hookSecs", 4.0) else max(0.0, 1 - (t - T0 - cfg.get("hookSecs", 4.0)) / 0.4)
             async def shot(pg):
-                await pg.evaluate("""([t, left, html, endo, hooko, hh, fx, minY]) => { window.__timelines.main.seek(t);
-                    const o = document.getElementById('reelOv'); o.style.left = left + 'px';
-                    o.querySelector(".rsub").innerHTML = html; o.querySelector(".rsub").style.opacity = endo > 0.5 ? 0 : 1;
+                await pg.evaluate("""([t, left, html, endo, hooko, hh, fx, minY, sub]) => { window.__timelines.main.seek(t);
+                    const o = document.getElementById('reelOv'); o.style.left = left + 'px'; o.querySelector(".rsub").style.top = sub + 'px';
+                    o.querySelector(".rsub").innerHTML = html; o.querySelector(".rsub").style.opacity = Math.max(0, 1 - 4 * endo);
                     o.querySelector('.end').style.opacity = endo; o.querySelector('.hook').style.opacity = hooko;
                     for (const sel of hh) document.querySelectorAll(sel).forEach((n) => n.style.visibility = hooko > 0.02 ? 'hidden' : '');
                     const fxl = o.querySelector('.fxl'); fxl.innerHTML = ''; const placed = [];
@@ -136,7 +143,7 @@ async def main():
                       const cx = Math.min(Math.max(r.left + r.width / 2 - left, w / 2 + 22), 607.5 - w / 2 - 22);
                       let y = Math.min(Math.max(r.top, minY), 640); const h = d.getBoundingClientRect().height;
                       for (const b of placed) if (Math.abs(b[0] - cx) < (b[1] + w) / 2 && Math.abs(b[2] - y) < h * 0.9) y = b[2] + h * 0.9;   // two words clamped onto each other: stack them
-                      placed.push([cx, w, y]); d.style.left = (cx - w / 2) + 'px'; d.style.top = y + 'px'; }); }""", [t, left, html, endo, hooko, HOOKHIDE, FXPULL, FXMINY])
+                      placed.push([cx, w, y]); d.style.left = (cx - w / 2) + 'px'; d.style.top = y + 'px'; }); }""", [t, left, html, endo, hooko, HOOKHIDE, FXPULL, FXMINY, subtop_at(t)])
                 await pg.screenshot(path=path, clip={"x": left, "y": 0, "width": CW, "height": 1080})
             await safe(shot)
             if f % 150 == 0: print("frame", f, "/", N, flush=True)

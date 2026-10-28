@@ -1,0 +1,48 @@
+{
+ "comp": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/11-dandini-ninni/index.html",
+ "start": 36.0,
+ "end": 74.5,
+ "audio": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/11-dandini-ninni/assets/ninni_mix.m4a",
+ "lines": "/Users/anil/Projects/max-digital-projects/FistikFil/kaynak/11-dandini-ninni/lines.json",
+ "hook": "Uyku vakti,<br/>Fıstık Fil!",
+ "hookSecs": 4.0,
+ "smooth": 0.1,
+ "track": [
+  [
+   36.0,
+   1100
+  ],
+  [
+   40.6,
+   "head"
+  ],
+  [
+   42.0,
+   "hat"
+  ],
+  [
+   44.3,
+   1450
+  ],
+  [
+   46.2,
+   "head"
+  ],
+  [
+   59.0,
+   1600
+  ]
+ ],
+ "out": "/Users/anil/Projects/max-digital-projects/FistikFil/Claude outputs/reels/reels-14-uyku-vakti",
+ "subTop": [
+  [
+   36.0,
+   900
+  ],
+  [
+   58.6,
+   560
+  ]
+ ],
+ "endText": "17 dakikalık ninni<br/>kanalda!"
+}
