@@ -35,13 +35,13 @@ Bu dosya, "Fıstık Fil" YouTube kanalı için şimdiye kadar yapılan her şeyi
 | 1 | Fıstık Fil Yürüyor Güm Güm Güm · Eğlenceli Bebek ve Çocuk Şarkısı · Fıstık Fil | `wACdAOh7x_Y` | 1:31 | Yayında, 4K render |
 | 2 | Fıstık Fil ve Şırıl Şırıl Dere · Lık Lık Lık · Paylaşmayı Öğreten Çocuk Şarkısı · Fıstık Fil | `-Q7FF1rCyvY` | 3:01 | Yayında, 1080p |
 | 3 | Ali Baba'nın Çiftliği · Hayvan Sesleri · Fıstık Fil ile Çocuk Şarkıları | `QvaNHIh9SuA` | 3:01 | Yayında, 1080p, "Fıstık Fil ile Hayvanlar" listesinin 1. bölümü |
-| 4 | Küçük Kurbağa Kulağın Nerede? · Vücudumuzu Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:12 (açılış+kapanış dahil) | Hazır, yüklenmedi; "Fıstık Fil ile Hayvanlar" 2. bölüm |
-| 5 | Fıstık Fil Fıstık Yer · Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır, yüklenmedi; tekerleme tarzı ilk bölüm |
-| 6 | Arı Vız Vız · Renkleri ve Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | ~2:11 (açılış+kapanış dahil) | Hazır, yüklenmedi |
+| 4 | Küçük Kurbağa Kulağın Nerede? · Vücudumuzu Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:12 (açılış+kapanış dahil) | Yayında (28 Eki 2026: 5,8 B, kanalın en çok izleneni) |
+| 5 | Fıstık Fil Fıstık Yer · Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Yayında (2,8 B) |
+| 6 | Arı Vız Vız · Renkleri ve Paylaşmayı Öğreten Tekerleme · Fıstık Fil ile Çocuk Şarkıları | — | ~2:11 (açılış+kapanış dahil) | Yayında (2,1 B) |
 | 7 | Anneannem ve Dedem | — | — | Suno promptu hazır, şarkı bekleniyor |
-| 8 | Uçağı Kaldırsana · Hayal Kur, Dene, Başar · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Hazır (v2, Fable incelemesi sonrası 4K), yüklenmedi |
-| 9 | Pırt Pırt Boya Döktüm · Renkleri Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:02 | Yayında |
-| D1 | 20 Dakika Çocuk Şarkıları · Küçük Kurbağa, Arı Vız Vız, Ali Baba'nın Çiftliği · Fıstık Fil (derleme, 8 şarkı) | — | ~20:00 | Hazır (`D1 - 20 Dakika Çocuk Şarkıları/`), yüklenmedi |
+| 8 | Uçağı Kaldırsana · Hayal Kur, Dene, Başar · Fıstık Fil ile Çocuk Şarkıları | — | 2:27 (açılış+kapanış dahil) | Yayında (623) |
+| 9 | Pırt Pırt Boya Döktüm · Renkleri Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 3:02 | Yayında (874) |
+| D1 | 20 Dakika Çocuk Şarkıları · Küçük Kurbağa, Arı Vız Vız, Ali Baba'nın Çiftliği · Fıstık Fil (derleme, 8 şarkı) | — | 19:58 | Yayında (~16 Eki; 12 günde 2,4 B) |
 | 10 | Kırmızı Balık Gölde · Renkleri Öğreniyoruz · Fıstık Fil ile Çocuk Şarkıları | — | 2:53 (açılış+kapanış dahil) | Hazır (Canvas 2D, 4K), yüklenmedi |
 | 11–13 | Dandini Ninnisi (uzun) · Beş Küçük Ördek · Otobüsün Tekerleği | — | — | Suno promptları hazır (`kaynak/11…13/suno-prompt.txt`), şarkılar bekleniyor |
 | S1 | Fıstık Fil Yürüyor Güm Güm Güm! 🐘 #shorts #çocukşarkıları | — | 0:31 | Shorts |
